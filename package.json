@@ -1,0 +1,43 @@
+{
+  "name": "@microsoft.azure/tasks",
+  "version": "2.0.3",
+  "description": "Async tasks, exceptions  for Azure Open Source Projects",
+  "engines": {
+    "node": ">=7.10.0"
+  },
+  "main": "./dist/main.js",
+  "typings": "./dist/main.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure/perks.tasks.git"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "prepare": "npm run build",
+    "test": "npm run build && exit 0",
+    "publish-preview": "npm test && node ./.scripts/publish"
+  },
+  "keywords": [
+    "perks",
+    "tasks",
+    "autorest",
+    "azure",
+    "typescript"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azure/perks.tasks/issues"
+  },
+  "homepage": "https://github.com/Azure/perks.tasks#readme",
+  "readme": "https://github.com/Azure/perks.tasks/readme.md",
+  "devDependencies": {
+    "@types/node": "^8.0.51",
+    "semver": "^5.4.1",
+    "typescript": "^2.6.1",
+    "yarn": "^1.3.2"
+  },
+  "dependencies": {
+    "source-map-support": "^0.4.15"
+  }
+}
