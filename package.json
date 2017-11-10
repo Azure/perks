@@ -15,7 +15,8 @@
     "build": "tsc -p .",
     "prepare": "npm run build",
     "test": "npm run build && mocha dist/test ",
-    "publish-preview": "npm test && node ./.scripts/publish"
+    "publish-preview": "npm test && node ./.scripts/publish",
+    "unpack": "shx rm -rf ./package && yarn pack && gzip -cd *.tgz | tar xv && erase *.tgz"
   },
   "keywords": [
     "perks",
@@ -37,7 +38,8 @@
     "mocha-typescript": "^1.1.4",
     "semver": "^5.4.1",
     "typescript": "^2.6.1",
-    "yarn": "^1.3.2"
+    "yarn": "^1.3.2",
+    "shx": "^0.2.2"
   },
   "dependencies": {
     "source-map-support": "^0.4.15"
