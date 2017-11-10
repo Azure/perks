@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/polyfill
+# Project: @microsoft.azure/tasks
 
 This package contains common code for the developer tools for generating Azure SDKs.
 
@@ -6,7 +6,7 @@ Including:
 - AutoRest
 
 ### Description
-Polyfill'd functions for AutoRest and related tools.
+Task and Exception support for AutoRest and related tools.
 
 ----
 
