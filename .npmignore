@@ -1,8 +1,8 @@
+!dist/
 test/
 dist/test/
 package/
 .npmignore
 tsconfig.json
-*.js.map
 *.ts
 !*.d.ts
