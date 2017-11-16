@@ -1,4 +1,4 @@
-!dist/
+!dist/**/*
 test/
 dist/test/
 package/
@@ -6,3 +6,6 @@ package/
 tsconfig.json
 *.ts
 !*.d.ts
+*.tgz
+.vscode
+.scripts
