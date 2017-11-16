@@ -3,13 +3,14 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Server } from 'net';
+import { Server, ListenOptions } from 'net';
 import { ManualPromise } from "./manual-promise"
 import { Delay, When } from "./task-functions"
 import { ExclusiveLockUnavailableException, SharedLockUnavailableException } from "./exception"
 import { promisify } from "./node-promisify";
 import { tmpdir } from "os"
 import { unlink as fs_unlink, readFile as fs_readFile, writeFile as fs_writeFile } from 'fs';
+import { createHash } from 'crypto';
 
 const unlink = promisify(fs_unlink);
 const readFile = promisify(fs_readFile);
@@ -29,7 +30,12 @@ function sanitize(input: string, replacement: string = '_') {
     .replace(reservedNames, replacement)
     .replace(trailingSpaces, replacement);
 }
-
+function distill(content: any) {
+  const hash = createHash('sha256').update(JSON.stringify(content)).digest();
+  const port = hash.readUInt16BE(2) | 4096; // 4096+
+  const host = `${(hash.readUInt16BE(4) | 0x10) + 0x7f000000}`;
+  return { port, host };
+}
 /**
  * An interface for Exclusive Locking objects.
  */
@@ -53,13 +59,20 @@ export interface IExclusive {
  */
 export class Mutex implements IExclusive {
   /*@internal*/public readonly pipe: string;
-
+  /*@internal*/public readonly options: ListenOptions;
   /**
    * 
    * @param name - the resource name to create a Mutex for. Multiple instances (across processes) using the same name are operating on the same lock.
    */
   public constructor(private name: string) {
-    this.pipe = `\\\\?\\pipe\\${name}`;
+    if (process.platform === "win32") {
+      this.pipe = `\\\\.\\pipe\\${name}`;
+      this.options = { path: this.pipe, exclusive: true };
+    } else {
+      const pretendName = `${tmpdir()}/pipe_${sanitize(name)}`;
+      this.options = { ...distill(pretendName), exclusive: true };
+      this.pipe = `${tmpdir()}/pipe_${sanitize(name)}:${this.options.port}`;
+    }
   }
 
   /**
@@ -69,7 +82,7 @@ export class Mutex implements IExclusive {
    * @param delayMS - the length of time in milliseconds to retry the lock.
    * @returns - the release function to release the lock.
    */
-  public async acquire(timeoutMS: number = 20000, delayMS: number = 50): Promise<() => Promise<void>> {
+  public async acquire(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
     const fail = Date.now() + timeoutMS;
     do {
       try {
@@ -80,7 +93,7 @@ export class Mutex implements IExclusive {
         const completed = When(server, 'listening', 'error');
 
         // listening will trigger when we've acquired the pipe handle 
-        server.listen({ path: this.pipe, exclusive: true });
+        server.listen(this.options);
 
         // wait to see if we can listen to the pipe or fail trying.
         await completed;
@@ -100,7 +113,6 @@ export class Mutex implements IExclusive {
         // not really releavent why it failed. Pause for a moment.
         await Delay(delayMS);
       }
-
       // check if we're past the allowable time.
     } while (fail > Date.now())
 
@@ -130,7 +142,7 @@ export class CriticalSection implements IExclusive {
    * @param delayMS - unused.
    * @returns - the release function to release the lock.
    */
-  public async acquire(timeoutMS: number = 20000, delayMS: number = 50): Promise<() => Promise<void>> {
+  public async acquire(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
     // delayMS isn't really relavent in this case, since all aqui
     const fail = Date.now() + timeoutMS;
 
@@ -181,9 +193,9 @@ export class SharedLock {
     this.file = `${tmpdir()}/${sanitize(name)}.lock`;
   }
 
-  private async readNames(): Promise<Array<string>> {
+  private async readNames(): Promise<Array<ListenOptions>> {
     // get the list of names.
-    let results = new Array<string>();
+    let results = new Array<ListenOptions>();
     try {
       const list = JSON.parse(await readFile(this.file, 'utf8'));
       for (const each of list) {
@@ -197,11 +209,11 @@ export class SharedLock {
     return results;
   }
 
-  private async writeNames(names: Array<string>): Promise<void> {
+  private async writeNames(listeners: Array<ListenOptions>): Promise<void> {
     // write the list of names.
-    if (names && names.length > 0) {
+    if (listeners && listeners.length > 0) {
       // write the list of names into the file.
-      await writeFile(this.file, JSON.stringify(names, null, 2));
+      await writeFile(this.file, JSON.stringify(listeners, null, 2));
     } else {
       try {
         // no names in list, file should be deleted
@@ -212,23 +224,24 @@ export class SharedLock {
     }
   }
 
-  private async isLocked(lockName: string): Promise<boolean> {
+  private async isLocked(options: ListenOptions): Promise<boolean> {
+    const server = new Server();
     try {
-      const server = new Server();
-
       // possible events after listen
       const completed = When(server, 'listening', 'error');
 
       // listening will trigger when we've acquired the pipe handle 
-      server.listen({ path: lockName, exclusive: true });
+      server.listen(options);
 
       // wait to see if we can listen to the pipe or fail trying.
       await completed;
 
       // the pipe opened! It's not locked
       await server.close()
+
       return false;
     } catch {
+      server.close();
     }
     // the pipe is locked
     return true;
@@ -241,8 +254,9 @@ export class SharedLock {
   * @param delayMS - the polling interval for the exclusive lock during initialization.
   * @returns - the release function to release the shared lock.
   */
-  public async acquire(timeoutMS: number = 20000, delayMS: number = 50): Promise<() => Promise<void>> {
+  public async acquire(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
     // ensure we're the only one that can muck with things for now.
+
     const done = await this.exclusiveLock.acquire(timeoutMS, delayMS);
     try {
       // get our personal lock
@@ -250,13 +264,14 @@ export class SharedLock {
 
       const activeLocks = await this.readNames();
 
-      activeLocks.push(this.personalLock.pipe);
+      activeLocks.push(this.personalLock.options);
 
       await this.writeNames(activeLocks);
 
       await done();
       return async () => {
         // release our personal lock
+
         await personal();
 
         // try to remove our name from the list 
@@ -291,10 +306,13 @@ export class SharedLock {
     return (async () => {
       try {
         // try to lock it
-        await (await this.exclusive(0))();
+        const release = (await this.exclusive(0));
+        await release();
         return false;
       } catch {
+
       }
+
       return true;
     })();
   }
@@ -309,17 +327,16 @@ export class SharedLock {
    * @param delayMS - the polling interval for the exclusive lock during initialization.
    * @returns - the release function to release the exclusive lock.
    */
-  public async exclusive(timeoutMS: number = 20000, delayMS: number = 50): Promise<() => Promise<void>> {
+  public async exclusive(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
     // ensure we're the only one that can muck with things for now.
     const done = await this.exclusiveLock.acquire(timeoutMS, delayMS);
 
     try {
       // make sure we're the only one who has an shared lock
       const activeLocks = await this.readNames();
-      if (activeLocks.length === 0 || (activeLocks.length === 1 && activeLocks[0] === this.personalLock.pipe)) {
+      if (activeLocks.length === 0 || (activeLocks.length === 1 && JSON.stringify(activeLocks[0]) === JSON.stringify(this.personalLock.options))) {
         return done;
       }
-
     } catch {
 
     }
