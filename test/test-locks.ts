@@ -83,10 +83,8 @@ import { CriticalSection, Mutex, SharedLock, ManualPromise, Delay, Async } from 
     const sharedLock = new SharedLock("/tmp/testJqqE6h/install-pkguByBYI/echo-cli@1.0.8/bla/bla/bla");
     const release = await sharedLock.acquire();
     try {
-      console.log("\n\n\nactive lock count====")
       assert.equal(await sharedLock.activeLockCount, 1, "should be one active lock")
 
-      console.log("\n\n\nIs Exclusive====")
       assert.equal(await sharedLock.isExclusiveLocked, false, "should not be exclusive");
       const ex_release = await sharedLock.exclusive();
       assert.equal(await sharedLock.isExclusiveLocked, true, "should be exclusive");
