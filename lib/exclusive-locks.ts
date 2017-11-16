@@ -291,7 +291,7 @@ export class SharedLock {
     return (async () => {
       try {
         // try to lock it
-        await (await this.exclusive(9))();
+        await (await this.exclusive(0))();
         return false;
       } catch {
       }
