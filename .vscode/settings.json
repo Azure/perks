@@ -8,7 +8,7 @@
     "**/*.js": {
       "when": "$(basename).ts"
     },
-    "**/*.d.ts": {
+    "**/*.d.tsx": {
       "when": "$(basename).ts"
     },
     "**/.git": true,

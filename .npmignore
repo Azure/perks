@@ -6,5 +6,6 @@ package/
 tsconfig.json
 *.ts
 !*.d.ts
+*.tgz
 .vscode
 .scripts
