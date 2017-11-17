@@ -66,7 +66,7 @@ export class Mutex implements IExclusive {
    */
   public constructor(private name: string) {
     if (process.platform === "win32") {
-      this.pipe = `\\\\.\\pipe\\${name}`;
+      this.pipe = `\\\\.\\pipe\\${sanitize(name)}`;
       this.options = { path: this.pipe, exclusive: true };
     } else {
       const pretendName = `${tmpdir()}/pipe_${sanitize(name)}`;
@@ -99,14 +99,14 @@ export class Mutex implements IExclusive {
         await completed;
 
         // yes, we did, setup the release function
-        const done = new ManualPromise<void>();
+        const closedServer = new ManualPromise<void>();
 
         // the release function is returned to the consumer
         return async () => {
           // ensure that releasing twice isn't harmful.
-          if (!done.isCompleted) {
-            server.close(() => done.resolve());
-            await done;
+          if (!closedServer.isCompleted) {
+            server.close(() => closedServer.resolve());
+            await closedServer;
           }
         };
       } catch {
@@ -183,37 +183,39 @@ export class CriticalSection implements IExclusive {
  */
 export class SharedLock {
   private readonly exclusiveLock: Mutex;
+  private readonly busyLock: Mutex;
   private readonly personalLock: Mutex;
   private readonly file: string;
 
   public constructor(private name: string) {
     this.exclusiveLock = new Mutex(`${sanitize(name)}.exclusive-lock`);
+    this.busyLock = new Mutex(`${sanitize(name)}.busy-lock`);
     this.personalLock = new Mutex(`${sanitize(name)}.${Math.random() * 10000}.personal-lock`);
 
     this.file = `${tmpdir()}/${sanitize(name)}.lock`;
   }
 
-  private async readNames(): Promise<Array<ListenOptions>> {
+  private async readConnections(): Promise<Array<ListenOptions>> {
     // get the list of names.
-    let results = new Array<ListenOptions>();
+    let connections = new Array<ListenOptions>();
     try {
       const list = JSON.parse(await readFile(this.file, 'utf8'));
       for (const each of list) {
         if (await this.isLocked(each)) {
-          results.push(each);
+          connections.push(each);
         }
       }
     } catch {
     }
 
-    return results;
+    return connections;
   }
 
-  private async writeNames(listeners: Array<ListenOptions>): Promise<void> {
+  private async writeConnections(connections: Array<ListenOptions>): Promise<void> {
     // write the list of names.
-    if (listeners && listeners.length > 0) {
+    if (connections && connections.length > 0) {
       // write the list of names into the file.
-      await writeFile(this.file, JSON.stringify(listeners, null, 2));
+      await writeFile(this.file, JSON.stringify(connections, null, 2));
     } else {
       try {
         // no names in list, file should be deleted
@@ -257,31 +259,31 @@ export class SharedLock {
   public async acquire(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
     // ensure we're the only one that can muck with things for now.
 
-    const done = await this.exclusiveLock.acquire(timeoutMS, delayMS);
+    const releaseBusy = await this.busyLock.acquire(timeoutMS, delayMS);
     try {
       // get our personal lock
-      const personal = await this.personalLock.acquire();
+      const releasePersonal = await this.personalLock.acquire();
 
-      const activeLocks = await this.readNames();
+      const activeLocks = await this.readConnections();
 
       activeLocks.push(this.personalLock.options);
 
-      await this.writeNames(activeLocks);
+      await this.writeConnections(activeLocks);
 
-      await done();
+      await releaseBusy();
+
       return async () => {
         // release our personal lock
-
-        await personal();
+        await releasePersonal();
 
         // try to remove our name from the list 
         try {
-          const release = await this.exclusiveLock.acquire(timeoutMS, delayMS);
+          const releaseBusy = await this.busyLock.acquire(timeoutMS, delayMS);
           try {
-            await this.writeNames(await this.readNames());
+            await this.writeConnections(await this.readConnections());
           } finally {
-            // regardless, release the exclusive lock!
-            await release();
+            // regardless, release the busy lock!
+            await releaseBusy();
           }
 
         } catch {
@@ -291,14 +293,14 @@ export class SharedLock {
     } catch (e) {
       throw new SharedLockUnavailableException(this.name, timeoutMS);
     } finally {
-      // release the exclusive lock!
-      await done();
+      // release the busy lock!
+      await releaseBusy();
     }
   }
 
   public get activeLockCount(): Promise<number> {
     return (async () => {
-      return (await this.readNames()).length;
+      return (await this.readConnections()).length;
     })();
   }
 
@@ -328,21 +330,28 @@ export class SharedLock {
    * @returns - the release function to release the exclusive lock.
    */
   public async exclusive(timeoutMS: number = 20000, delayMS: number = 100): Promise<() => Promise<void>> {
+
+    const busyRelease = await this.busyLock.acquire(timeoutMS, delayMS);
+
     // ensure we're the only one that can muck with things for now.
-    const done = await this.exclusiveLock.acquire(timeoutMS, delayMS);
+    const exclusiveRelease = await this.exclusiveLock.acquire(timeoutMS, delayMS);
 
     try {
       // make sure we're the only one who has an shared lock
-      const activeLocks = await this.readNames();
+      const activeLocks = await this.readConnections();
       if (activeLocks.length === 0 || (activeLocks.length === 1 && JSON.stringify(activeLocks[0]) === JSON.stringify(this.personalLock.options))) {
-        return done;
+        return async () => {
+          await exclusiveRelease();
+          await busyRelease();
+        }
       }
     } catch {
 
     }
     // we didn't return the exclusive Lock, 
     // release it and throw...
-    await done();
+    await exclusiveRelease();
+    await busyRelease();
 
     throw new ExclusiveLockUnavailableException(this.name, timeoutMS);
   }
