@@ -95,6 +95,9 @@ export class Mutex implements IExclusive {
         // listening will trigger when we've acquired the pipe handle 
         server.listen(this.options);
 
+        // don't let this keep the process alive.
+        server.unref();
+
         // wait to see if we can listen to the pipe or fail trying.
         await completed;
 
