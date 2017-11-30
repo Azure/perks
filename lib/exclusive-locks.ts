@@ -33,7 +33,10 @@ function sanitize(input: string, replacement: string = '_') {
 function distill(content: any) {
   const hash = createHash('sha256').update(JSON.stringify(content)).digest();
   const port = hash.readUInt16BE(2) | 4096; // 4096+
-  const host = `${(hash.readUInt16BE(4) | 0x10) + 0x7f000000}`;
+  let host = `${(hash.readUInt16BE(4) | 0x10) + 0x7f000000}`;
+  if (process.platform === "darwin") {
+    host = `${0x7f000001}`;
+  }
   return { port, host };
 }
 /**
