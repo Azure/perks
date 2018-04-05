@@ -26,7 +26,5 @@ export class LazyPromise<T> implements Promise<T> {
   catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult> {
     return this.Value.catch(onrejected);
   }
-  finally<TResult>(onfinally?: (callback: any) => TResult | PromiseLike<TResult>): Promise<TResult> {
-    return this.Value.finally(onfinally);
-  }
+
 }
