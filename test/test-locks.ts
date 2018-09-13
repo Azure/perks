@@ -3,6 +3,10 @@ import * as assert from "assert";
 
 import { CriticalSection, Mutex, SharedLock, ManualPromise, Delay, Async } from "../main"
 
+// pull in source-map support for stack traces.
+require('source-map-support').install({ hookRequire: true });
+
+
 @suite class TestLocks {
   @test async "CriticalSection"() {
 

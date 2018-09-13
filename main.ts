@@ -4,9 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 
-// pull in source-map support for stack traces.
-require('source-map-support').install({ hookRequire: true });
-
 export * from './lib/exception'
 export * from './lib/outstanding-task-awaiter'
 export * from "./lib/lazy-promise"
