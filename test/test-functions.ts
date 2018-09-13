@@ -2,6 +2,10 @@ import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
 import * as assert from "assert";
 import { While, CriticalSection, Async } from "../main";
 
+// pull in source-map support for stack traces.
+require('source-map-support').install({ hookRequire: true });
+
+
 @suite class TestFunctions {
   @test async "Test While"() {
     let i = 10;
