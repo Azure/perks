@@ -64,6 +64,13 @@
     //    */
     //   "ignoreMissingScript": false
     // },
+    ,
+    {
+      "commandKind": "global",
+      "name": "sync-versions",
+      "summary": "sync versions of sibling projects",
+      "shellCommand": "node common/scripts/sync-versions.js"
+    }
     //
     // {
     //   /**

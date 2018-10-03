@@ -191,90 +191,30 @@
    * in the "eventHooks" section.
    */
   "telemetryEnabled": false,
-  /**
-   * Allows creation of hotfix changes. This feature is experimental so it is disabled by default.
-   */
-  // "hotfixChangeEnabled": false,
-  /**
-   * (Required) This is the inventory of projects to be managed by Rush.
-   *
-   * Rush does not automatically scan for projects using wildcards, for a few reasons:
-   * 1. Depth-first scans are expensive, particularly when tools need to repeatedly collect the list.
-   * 2. On a caching CI machine, scans can accidentally pick up files left behind from a previous build.
-   * 3. It's useful to have a centralized inventory of all projects and their important metadata.
-   */
   "projects": [
-    // {
-    //   /**
-    //    * The NPM package name of the project (must match package.json)
-    //    */
-    //   "packageName": "my-app",
-    //
-    //   /**
-    //    * The path to the project folder, relative to the rush.json config file.
-    //    */
-    //   "projectFolder": "apps/my-app",
-    //
-    //   /**
-    //    * An optional category for usage in the "browser-approved-packages.json"
-    //    * and "nonbrowser-approved-packages.json" files.  The value must be one of the
-    //    * strings from the "reviewCategories" defined above.
-    //    */
-    //   "reviewCategory": "production",
-    //
-    //   /**
-    //    * A list of local projects that appear as devDependencies for this project, but cannot be
-    //    * locally linked because it would create a cyclic dependency; instead, the last published
-    //    * version will be installed in the Common folder.
-    //    */
-    //   "cyclicDependencyProjects": [
-    //     // "my-toolchain"
-    //   ],
-    //
-    //   /**
-    //    * If true, then this project will be ignored by the "rush check" command.
-    //    * The default value is false.
-    //    */
-    //   // "skipRushCheck": false,
-    //
-    //   /**
-    //    * A flag indicating that changes to this project will be published to npm, which affects
-    //    * the Rush change and publish workflows. The default value is false.
-    //    * NOTE: "versionPolicyName" and "shouldPublish" are alternatives; you cannot specify them both.
-    //    */
-    //   // "shouldPublish": false,
-    //
-    //   /**
-    //    * An optional version policy associated with the project.  Version policies are defined
-    //    * in "version-policies.json" file.  See the "rush publish" documentation for more info.
-    //    * NOTE: "versionPolicyName" and "shouldPublish" are alternatives; you cannot specify them both.
-    //    */
-    //   // "versionPolicyName": ""
-    // },
-    //
     {
       "packageName": "@microsoft.azure/tasks",
       "projectFolder": "libraries/tasks",
       "reviewCategory": "production",
-      "versionPolicyName": "perks",
+      "versionPolicyName": "perks"
     },
     {
       "packageName": "@microsoft.azure/async-io",
       "projectFolder": "libraries/async-io",
       "reviewCategory": "production",
-      "versionPolicyName": "perks",
+      "versionPolicyName": "perks"
     },
     {
       "packageName": "@microsoft.azure/eventing",
       "projectFolder": "libraries/eventing",
       "reviewCategory": "production",
-      "versionPolicyName": "perks",
+      "versionPolicyName": "perks"
     },
     {
       "packageName": "@microsoft.azure/extension",
       "projectFolder": "libraries/extension",
       "reviewCategory": "production",
-      "versionPolicyName": "perks",
+      "versionPolicyName": "perks"
     }
   ]
 }
