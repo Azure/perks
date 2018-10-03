@@ -1,0 +1,17 @@
+{
+  "name": "@microsoft.azure/tasks",
+  "entries": [
+    {
+      "version": "2.0.28",
+      "tag": "@microsoft.azure/tasks_v2.0.28",
+      "date": "Wed, 03 Oct 2018 18:01:54 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "switch to monorepo"
+          }
+        ]
+      }
+    }
+  ]
+}

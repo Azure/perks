@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/extension",
-  "version": "2.0.30",
+  "version": "2.0.31",
   "description": "NPM-Based extension aquisition (for Azure Open Source Projects)",
   "engines": {
     "node": ">=7.10.0"
@@ -39,9 +39,9 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@microsoft.azure/async-io": "2.0.21",
-    "@microsoft.azure/eventing": "2.0.15",
-    "@microsoft.azure/tasks": "2.0.27",
+    "@microsoft.azure/async-io": "2.0.22",
+    "@microsoft.azure/eventing": "2.0.16",
+    "@microsoft.azure/tasks": "2.0.28",
     "hosted-git-info": "^2.4.2",
     "memorystream": "~0.3.1",
     "npm": "5.6.0",

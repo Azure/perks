@@ -1,0 +1,22 @@
+{
+  "name": "@microsoft.azure/eventing",
+  "entries": [
+    {
+      "version": "2.0.16",
+      "tag": "@microsoft.azure/eventing_v2.0.16",
+      "date": "Wed, 03 Oct 2018 18:01:54 GMT",
+      "comments": {
+        "patch": [
+          {
+            "comment": "switch to monorepo"
+          }
+        ],
+        "dependency": [
+          {
+            "comment": "Updating dependency \"@microsoft.azure/tasks\" from `2.0.27` to `2.0.28`"
+          }
+        ]
+      }
+    }
+  ]
+}

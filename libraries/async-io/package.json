@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/async-io",
-  "version": "2.0.21",
+  "version": "2.0.22",
   "description": "Promisify'd asnyc wrappers (for Azure Open Source Projects)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -40,7 +40,7 @@
     "@types/pify": "0.0.28"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "2.0.27",
+    "@microsoft.azure/tasks": "2.0.28",
     "file-url": "2.0.2",
     "get-uri": "^2.0.1",
     "pify": "^2.3.0",

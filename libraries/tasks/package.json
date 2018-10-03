@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/tasks",
-  "version": "2.0.27",
+  "version": "2.0.28",
   "description": "Async tasks, exceptions for Azure Open Source Projects",
   "engines": {
     "node": ">=7.10.0"
