@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/Azure/perks.async-io/issues"
   },
-  "homepage": "https://github.com/Azure/perks.async-io#readme",
+  "homepage": "https://github.com/Azure/perks#readme",
   "readme": "https://github.com/Azure/perks.async-io/readme.md",
   "devDependencies": {
     "mocha-typescript": "1.1.17",
@@ -41,7 +41,7 @@
     "@types/pify": "0.0.28"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "^2.0.28",
+    "@microsoft.azure/tasks": "^2.1.8",
     "file-url": "2.0.2",
     "get-uri": "^2.0.1",
     "pify": "^2.3.0",
