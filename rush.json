@@ -257,6 +257,11 @@
       "projectFolder": "libraries/tasks",
       "reviewCategory": "production"
     },
+    {
+      "packageName": "@microsoft.azure/async-io",
+      "projectFolder": "libraries/async-io",
+      "reviewCategory": "production"
+    }
     //
     // {
     //   "packageName": "my-toolchain",
