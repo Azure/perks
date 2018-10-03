@@ -28,5 +28,10 @@
     "editor.tabSize": 2,
     "editor.detectIndentation": false
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "[jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false
+  }
 }
