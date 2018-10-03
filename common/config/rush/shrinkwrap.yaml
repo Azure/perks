@@ -1,16 +1,23 @@
 dependencies:
   '@rush-temp/async-io': 'file:projects/async-io.tgz'
   '@rush-temp/eventing': 'file:projects/eventing.tgz'
+  '@rush-temp/extension': 'file:projects/extension.tgz'
   '@rush-temp/tasks': 'file:projects/tasks.tgz'
   '@types/mocha': 5.2.5
   '@types/node': 10.11.3
+  '@types/npm': 2.0.29
   '@types/pify': 0.0.28
   file-url: 2.0.2
   get-uri: 2.0.2
+  hosted-git-info: 2.7.1
+  memorystream: 0.3.1
   mocha: 5.2.0
   mocha-typescript: 1.1.17
+  npm: 5.6.0
+  npm-package-arg: 6.0.0
   pify: 2.3.0
   proper-lockfile: 2.0.1
+  semver: 5.5.1
   source-map-support: 0.5.9
   strip-bom: 3.0.0
   typescript: 3.1.1
@@ -24,6 +31,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-3AvcEJAh9EMatxs+OxAlvAEs7OTy6AG94mcH1iqyVDwVVndekLxzwkWQ/Z4SDbY6GO2oyUXyWW8tQ4rENSSQVQ==
+  /@types/npm/2.0.29:
+    dependencies:
+      '@types/node': 10.11.3
+    dev: false
+    resolution:
+      integrity: sha512-McqGDdeT1tSMu8sPaL0ya7xBwojQYKGVwCrlPNBcaF+o+H4wLNH03nYRTfycU11Xdu8eziEb4cgdGmu4VF/NWA==
   /@types/pify/0.0.28:
     dev: false
     resolution:
@@ -67,6 +80,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
+  /builtins/1.0.3:
+    dev: false
+    resolution:
+      integrity: sha1-y5T662HIaWRR2zZTThQi+U8K7og=
   /camelcase/4.1.0:
     dev: false
     engines:
@@ -279,6 +296,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha1-k0EP0hsAlzUVH4howvJx80J+I/0=
+  /hosted-git-info/2.7.1:
+    dev: false
+    resolution:
+      integrity: sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
   /inflight/1.0.6:
     dependencies:
       once: 1.4.0
@@ -360,6 +381,12 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-Xt1StIXKHZAP5kiVUFOZoN+kX3Y=
+  /memorystream/0.3.1:
+    dev: false
+    engines:
+      node: '>= 0.10.0'
+    resolution:
+      integrity: sha1-htcJCzDORV1j+64S3aUaR93K+bI=
   /mimic-fn/1.2.0:
     dev: false
     engines:
@@ -422,6 +449,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+  /npm-package-arg/6.0.0:
+    dependencies:
+      hosted-git-info: 2.7.1
+      osenv: 0.1.5
+      semver: 5.5.1
+      validate-npm-package-name: 3.0.0
+    dev: false
+    resolution:
+      integrity: sha512-hwC7g81KLgRmchv9ol6f3Fx4Yyc9ARX5X5niDHVILgpuvf08JRIgOZcEfpFXli3BgESoTrkauqorXm6UbvSgSg==
   /npm-run-path/2.0.2:
     dependencies:
       path-key: 2.0.1
@@ -430,6 +466,118 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-NakjLfo11wZ7TLLd8jV7GHFTbF8=
+  /npm/5.6.0:
+    bundledDependencies:
+      - abbrev
+      - ansi-regex
+      - ansicolors
+      - ansistyles
+      - aproba
+      - archy
+      - cacache
+      - call-limit
+      - bluebird
+      - bin-links
+      - chownr
+      - cli-table2
+      - cmd-shim
+      - columnify
+      - config-chain
+      - debuglog
+      - detect-indent
+      - dezalgo
+      - editor
+      - find-npm-prefix
+      - fs-vacuum
+      - fs-write-stream-atomic
+      - gentle-fs
+      - glob
+      - graceful-fs
+      - has-unicode
+      - hosted-git-info
+      - iferr
+      - imurmurhash
+      - inflight
+      - inherits
+      - ini
+      - init-package-json
+      - is-cidr
+      - JSONStream
+      - lazy-property
+      - libnpx
+      - lockfile
+      - lodash._baseindexof
+      - lodash._baseuniq
+      - lodash._bindcallback
+      - lodash._cacheindexof
+      - lodash._createcache
+      - lodash._getnative
+      - lodash.clonedeep
+      - lodash.restparam
+      - lodash.union
+      - lodash.uniq
+      - lodash.without
+      - lru-cache
+      - meant
+      - mkdirp
+      - mississippi
+      - move-concurrently
+      - nopt
+      - normalize-package-data
+      - npm-cache-filename
+      - npm-lifecycle
+      - npm-install-checks
+      - npm-package-arg
+      - npm-packlist
+      - npm-profile
+      - npm-registry-client
+      - npm-user-validate
+      - npmlog
+      - once
+      - opener
+      - osenv
+      - pacote
+      - path-is-inside
+      - promise-inflight
+      - query-string
+      - qrcode-terminal
+      - qw
+      - read
+      - read-cmd-shim
+      - read-installed
+      - read-package-json
+      - read-package-tree
+      - readable-stream
+      - readdir-scoped-modules
+      - request
+      - retry
+      - rimraf
+      - semver
+      - sha
+      - slide
+      - sorted-object
+      - sorted-union-stream
+      - ssri
+      - strip-ansi
+      - tar
+      - text-table
+      - uid-number
+      - umask
+      - unique-filename
+      - unpipe
+      - update-notifier
+      - uuid
+      - validate-npm-package-license
+      - validate-npm-package-name
+      - which
+      - wrappy
+      - write-file-atomic
+      - safe-buffer
+      - worker-farm
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-mt839mCsI5hzdBJLf1iRBwt610P35iUfvqLVuL7VFdanUwRBAmGtbsjdGIuzegplR95xx+fTHE0vBMuMJp1sLQ==
   /number-is-nan/1.0.1:
     dev: false
     engines:
@@ -442,6 +590,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
+  /os-homedir/1.0.2:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-/7xJiDNuDoM94MFox+8VISGqf7M=
   /os-locale/2.1.0:
     dependencies:
       execa: 0.7.0
@@ -452,6 +606,19 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-3sslG3zJbEYcaC4YVAvDorjGxc7tv6KVATnLPZONiljsUncvihe9BQoVCEs0RZ1kmf4Hk9OBqlZfJZWI4GanKA==
+  /os-tmpdir/1.0.2:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
+  /osenv/0.1.5:
+    dependencies:
+      os-homedir: 1.0.2
+      os-tmpdir: 1.0.2
+    dev: false
+    resolution:
+      integrity: sha512-0CWcCECdMVc2Rw3U5w9ZjqX6ga6ubk1xDVKxtBQPK7wis/0F2r9T6k4ydGYhecl7YUBxBVxhL5oisPsNxAPe2g==
   /p-finally/1.0.0:
     dev: false
     engines:
@@ -691,6 +858,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
+  /validate-npm-package-name/3.0.0:
+    dependencies:
+      builtins: 1.0.3
+    dev: false
+    resolution:
+      integrity: sha1-X6kS2B630MdK/BQN5zF/DKffQ34=
   /which-module/2.0.0:
     dev: false
     resolution:
@@ -785,6 +958,25 @@ packages:
       integrity: sha512-2OCOIX+yVFUXq3TF2B6TODfm7dxSGbkRv58uanGkk5wLn/m5ycN4uuMcYUpxzGUrpilSGBzBEPM1jjWjN+3uiw==
       tarball: 'file:projects/eventing.tgz'
     version: 0.0.0
+  'file:projects/extension.tgz':
+    dependencies:
+      '@types/mocha': 5.2.5
+      '@types/node': 10.11.3
+      '@types/npm': 2.0.29
+      hosted-git-info: 2.7.1
+      memorystream: 0.3.1
+      mocha: 5.2.0
+      mocha-typescript: 1.1.17
+      npm: 5.6.0
+      npm-package-arg: 6.0.0
+      semver: 5.5.1
+      typescript: 3.1.1
+    dev: false
+    name: '@rush-temp/extension'
+    resolution:
+      integrity: sha512-AuyxxsbbLsOhC+IzoOluyFd7kP0nofDopGr4UkO7m03bR2DUIPLdvYLtmyKQ4rIZJqDeYqySlkxgMkHt9AYH/w==
+      tarball: 'file:projects/extension.tgz'
+    version: 0.0.0
   'file:projects/tasks.tgz':
     dependencies:
       '@types/mocha': 5.2.5
@@ -805,16 +997,23 @@ shrinkwrapVersion: 3
 specifiers:
   '@rush-temp/async-io': 'file:./projects/async-io.tgz'
   '@rush-temp/eventing': 'file:./projects/eventing.tgz'
+  '@rush-temp/extension': 'file:./projects/extension.tgz'
   '@rush-temp/tasks': 'file:./projects/tasks.tgz'
   '@types/mocha': 5.2.5
   '@types/node': 10.11.3
+  '@types/npm': ^2.0.28
   '@types/pify': 0.0.28
   file-url: 2.0.2
   get-uri: ^2.0.1
+  hosted-git-info: ^2.4.2
+  memorystream: ~0.3.1
   mocha: 5.2.0
   mocha-typescript: 1.1.17
+  npm: 5.6.0
+  npm-package-arg: 6.0.0
   pify: ^2.3.0
   proper-lockfile: ^2.0.1
+  semver: ^5.3.0
   source-map-support: 0.5.9
   strip-bom: 3.0.0
   typescript: ^3.1.1

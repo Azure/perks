@@ -255,23 +255,26 @@
     {
       "packageName": "@microsoft.azure/tasks",
       "projectFolder": "libraries/tasks",
-      "reviewCategory": "production"
+      "reviewCategory": "production",
+      "shouldPublish": true,
     },
     {
       "packageName": "@microsoft.azure/async-io",
       "projectFolder": "libraries/async-io",
-      "reviewCategory": "production"
+      "reviewCategory": "production",
+      "shouldPublish": true,
     },
     {
       "packageName": "@microsoft.azure/eventing",
       "projectFolder": "libraries/eventing",
-      "reviewCategory": "production"
+      "reviewCategory": "production",
+      "shouldPublish": true,
+    },
+    {
+      "packageName": "@microsoft.azure/extension",
+      "projectFolder": "libraries/extension",
+      "reviewCategory": "production",
+      "shouldPublish": true,
     }
-    //
-    // {
-    //   "packageName": "my-toolchain",
-    //   "projectFolder": "tools/my-toolchain",
-    //   "reviewCategory": "tools"
-    // }
   ]
 }
