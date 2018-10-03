@@ -10,8 +10,7 @@
 [
   {
     "definitionName": "individualVersion",
-    "policyName": "perks",
-    "nextBump": "patch",
+    "policyName": "perks"
   }
   // {
   //   /**
