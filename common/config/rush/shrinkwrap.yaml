@@ -942,7 +942,7 @@ packages:
     dev: false
     name: '@rush-temp/async-io'
     resolution:
-      integrity: sha512-Qr/Qi5mrENc1uyMD0TsH5Tj6Ia36MXY7nOsTC+ccQSKMxtB6b8nLAGO7v5XiGwl9+VFFtRMoUJgBDpYAm3F2vg==
+      integrity: sha512-ic3/uFdJx9kC1VueQ+pjPqyM/zfR6ue3EP9xND/ueoEtD/kG9Nr+dRfZ5EPR8gUL/XlQss4+yWgmLUdIXu2/rw==
       tarball: 'file:projects/async-io.tgz'
     version: 0.0.0
   'file:projects/eventing.tgz':
@@ -955,7 +955,7 @@ packages:
     dev: false
     name: '@rush-temp/eventing'
     resolution:
-      integrity: sha512-2OCOIX+yVFUXq3TF2B6TODfm7dxSGbkRv58uanGkk5wLn/m5ycN4uuMcYUpxzGUrpilSGBzBEPM1jjWjN+3uiw==
+      integrity: sha512-jPFqWLeKhBUVczOyR3os2roKcm5SG+dS/B3mZLc/yTH8CMvz5q1dTfFmtLmVpYY34W5QcqtkRFILEi/4xPX/SA==
       tarball: 'file:projects/eventing.tgz'
     version: 0.0.0
   'file:projects/extension.tgz':
@@ -974,7 +974,7 @@ packages:
     dev: false
     name: '@rush-temp/extension'
     resolution:
-      integrity: sha512-AuyxxsbbLsOhC+IzoOluyFd7kP0nofDopGr4UkO7m03bR2DUIPLdvYLtmyKQ4rIZJqDeYqySlkxgMkHt9AYH/w==
+      integrity: sha512-5jApYOxB2iewOzhRj/8KN+majCW54VfIn96VL7RI5E/p2oz38dyuiLyZuttZPZb2LDli+gKZ3aS6RHVnjGSjag==
       tarball: 'file:projects/extension.tgz'
     version: 0.0.0
   'file:projects/tasks.tgz':
