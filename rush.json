@@ -261,6 +261,11 @@
       "packageName": "@microsoft.azure/async-io",
       "projectFolder": "libraries/async-io",
       "reviewCategory": "production"
+    },
+    {
+      "packageName": "@microsoft.azure/eventing",
+      "projectFolder": "libraries/eventing",
+      "reviewCategory": "production"
     }
     //
     // {

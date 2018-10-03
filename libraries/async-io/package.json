@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/async-io",
-  "version": "2.0.7",
+  "version": "2.0.21",
   "description": "Promisify'd asnyc wrappers (for Azure Open Source Projects)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
