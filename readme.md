@@ -15,11 +15,3 @@ Use Rush to build packages
  - `rush rebuild`
 
 
-
-# record a change when we shoudl publish
-rush change
-
-# bump version numbers when required
-rush version --bump
-
-#
