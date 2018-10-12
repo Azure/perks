@@ -1,12 +1,12 @@
-import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
-import * as assert from "assert";
-import * as asyncio from '../main'
+import * as assert from 'assert';
+import { suite, test } from 'mocha-typescript';
+import * as asyncio from '../main';
 
 // ensure
 
 @suite class AsyncIO {
 
-  @test async "Locking simple file"() {
+  @test async 'Locking simple file'() {
     const release = await asyncio.Lock.exclusive(__filename);
 
     assert.equal(await asyncio.Lock.check(__filename), true);
@@ -15,7 +15,7 @@ import * as asyncio from '../main'
 
   }
 
-  @test async "Locking - does lock deny access"() {
+  @test async 'Locking - does lock deny access'() {
     const release = await asyncio.Lock.exclusive(__filename);
     let threw = false;
     try {
@@ -29,7 +29,7 @@ import * as asyncio from '../main'
     assert.equal(await asyncio.Lock.check(__filename), false);
   }
 
-  @test async "ReadLock simple file"() {
+  @test async 'ReadLock simple file'() {
 
     // it should be not locked now
     assert.equal(await asyncio.Lock.check(__filename), false);
@@ -51,7 +51,6 @@ import * as asyncio from '../main'
       threw = true;
     }
     assert.equal(threw, true);
-
 
     release1();
     release2();

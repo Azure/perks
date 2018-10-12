@@ -25,7 +25,6 @@ dependencies:
   semver: 5.6.0
   source-map: 0.7.3
   source-map-support: 0.5.9
-  strip-bom: 3.0.0
   typescript: 3.1.3
   urijs: 1.19.1
   yaml-ast-parser: 0.0.40
@@ -1007,12 +1006,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-qEeQIusaw2iocTibY1JixQXuNo8=
-  /strip-bom/3.0.0:
-    dev: false
-    engines:
-      node: '>=4'
-    resolution:
-      integrity: sha1-IzTBjpx1n3vdVv3vfprj1YjmjtM=
   /strip-eof/1.0.0:
     dev: false
     engines:
@@ -1145,18 +1138,14 @@ packages:
     dependencies:
       '@types/mocha': 5.2.5
       '@types/node': 10.11.3
-      file-url: 2.0.2
-      get-uri: 2.0.2
       mocha: 5.2.0
       mocha-typescript: 1.1.17
       proper-lockfile: 2.0.1
-      strip-bom: 3.0.0
       typescript: 3.1.3
-      urijs: 1.19.1
     dev: false
     name: '@rush-temp/async-io'
     resolution:
-      integrity: sha512-P5cw7uztw/V9hA8tDkK25xwP7quvHvVZ5Qk/5gu7la0ntFG5eHs4eA+OzhwQT8o9n0mUbYNJcEMZufcjE28hSA==
+      integrity: sha512-tyd21D3e/m0SsaXqKVL8RCAlNw4qUYgsDWYc7TO9p3xBwo4bvSJVa/al5MgM6RTijF0xI/fnNoI6e5PVjUXhXw==
       tarball: 'file:projects/async-io.tgz'
     version: 0.0.0
   'file:projects/datastore.tgz':
@@ -1283,7 +1272,6 @@ specifiers:
   semver: ^5.3.0
   source-map: 0.7.3
   source-map-support: 0.5.9
-  strip-bom: 3.0.0
   typescript: ^3.1.3
   urijs: ^1.19.1
   yaml-ast-parser: 0.0.40

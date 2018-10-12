@@ -3,11 +3,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Delay, Exception, OutstandingTaskAwaiter, promisify } from '@microsoft.azure/tasks';
+import { Delay, Exception, promisify } from '@microsoft.azure/tasks';
 import * as fs from 'fs';
-import * as path from 'path';
-
 import { isFile } from './file-io';
+
 const { lock, check, } = require('proper-lockfile');
 
 const fs_open: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
