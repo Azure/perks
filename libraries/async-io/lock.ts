@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as fs from "fs";
-import * as path from "path";
-import * as promisify from "pify";
-import { OutstandingTaskAwaiter, Exception, Delay } from '@microsoft.azure/tasks'
-import { isFile } from "./file-io"
-const { lock, check, } = require("proper-lockfile")
+import { Delay, Exception, OutstandingTaskAwaiter } from '@microsoft.azure/tasks';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as promisify from 'pify';
+import { isFile } from './file-io';
+const { lock, check, } = require('proper-lockfile');
 
 const fs_open: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
 
@@ -55,7 +55,7 @@ export class Lock {
         // no worries. Just wait a few seconds and see if we can get it.
         await Delay(3000);
       }
-    } while (result == null && expire > Date.now())
+    } while (result == null && expire > Date.now());
 
     return result;
   }
@@ -75,7 +75,7 @@ export class Lock {
       // no worries.
     }
 
-    // try to open the file for read 
+    // try to open the file for read
     try {
       if (await isFile(p)) {
         const fd = await fs_open(p, 'r');
@@ -92,7 +92,7 @@ export class Lock {
     if (options.retries) {
       await Delay(options.delay);
       options.retries--;
-      return await this.read(path, options);
+      return this.read(path, options);
     }
     throw new UnableToReadLockException(path);
   }

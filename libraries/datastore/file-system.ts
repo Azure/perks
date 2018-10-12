@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EnumerateFiles, ToRawDataUrl, ResolveUri, ReadUri, WriteString } from '@microsoft.azure/uri';
-import { items, keys } from '@microsoft.azure/linq'
+import { items, keys } from '@microsoft.azure/linq';
+import { EnumerateFiles, ReadUri, ResolveUri, ToRawDataUrl, WriteString } from '@microsoft.azure/uri';
 import * as Constants from './constants';
 
 export interface IFileSystem {
@@ -13,7 +13,7 @@ export interface IFileSystem {
 }
 
 export class MemoryFileSystem implements IFileSystem {
-  public static readonly DefaultVirtualRootUri = "file:///";
+  public static readonly DefaultVirtualRootUri = 'file:///';
   private filesByUri: Map<string, string>;
 
   public constructor(files: Map<string, string>) {
@@ -24,7 +24,7 @@ export class MemoryFileSystem implements IFileSystem {
           ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, each.key),
           each.value
         ] as [string, string])
-    )
+    );
   }
   public readonly Outputs: Map<string, string> = new Map<string, string>();
 
@@ -43,7 +43,7 @@ export class MemoryFileSystem implements IFileSystem {
       }
 
       // not in subfolder?
-      return uri.substr(folderUri.length).indexOf("/") === -1;
+      return uri.substr(folderUri.length).indexOf('/') === -1;
     }).linq.toArray();
   }
 
@@ -56,7 +56,7 @@ export class RealFileSystem implements IFileSystem {
   public constructor() {
   }
 
-  EnumerateFileUris(folderUri: string): Promise<string[]> {
+  EnumerateFileUris(folderUri: string): Promise<Array<string>> {
     return EnumerateFiles(folderUri, [
       Constants.DefaultConfiguration
     ]);
@@ -76,7 +76,7 @@ export class EnhancedFileSystem implements IFileSystem {
   public constructor(private githubAuthToken?: string) {
   }
 
-  EnumerateFileUris(folderUri: string): Promise<string[]> {
+  EnumerateFileUris(folderUri: string): Promise<Array<string>> {
     return EnumerateFiles(folderUri, [
       Constants.DefaultConfiguration
     ]);
@@ -87,7 +87,7 @@ export class EnhancedFileSystem implements IFileSystem {
     const headers: { [key: string]: string } = {};
 
     // check for GitHub OAuth token
-    if (this.githubAuthToken && uri.startsWith("https://raw.githubusercontent.com")) {
+    if (this.githubAuthToken && uri.startsWith('https://raw.githubusercontent.com')) {
       console.log(`Used GitHub authentication token to request '${uri}'.`);
       headers.authorization = `Bearer ${this.githubAuthToken}`;
     }
