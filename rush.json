@@ -59,7 +59,7 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/library-template",
+      "packageName": "@microsoft.azure/.library-template",
       "projectFolder": "libraries/library-template",
       "reviewCategory": "production",
       "shouldPublish": false
