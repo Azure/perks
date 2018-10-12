@@ -1,0 +1,48 @@
+{
+  "name": "@microsoft.azure/linq",
+  "version": "2.1.0",
+  "description": "LINQ-like functionality for Typescript",
+  "main": "./dist/main.js",
+  "typings": "./dist/main.d.ts",
+  "engines": {
+    "node": ">=7.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure/perks.git"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
+    "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = parseInt(stdout.trim()); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
+    "prepare": "npm run build",
+    "test": "npm run build && mocha dist/test",
+    "testci": "npm run build && mocha dist/test"
+  },
+  "keywords": [
+    "perks",
+    "async",
+    "autorest",
+    "azure",
+    "typescript"
+  ],
+  "author": "Microsoft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Azure/perks/issues"
+  },
+  "homepage": "https://github.com/Azure/perks#readme",
+  "readme": "https://github.com/Azure/perks/readme.md",
+  "devDependencies": {
+    "mocha-typescript": "1.1.17",
+    "@types/mocha": "5.2.5",
+    "@types/node": "10.11.3",
+    "mocha": "5.2.0",
+    "typescript": "^3.1.1",
+    "tslint": "^5.11.0",
+    "tslint-language-service-ts3": "1.0.0",
+    "tslint-microsoft-contrib": "^5.2.1",
+    "tslint-sonarts": "^1.8.0"
+  },
+  "dependencies": {}
+}

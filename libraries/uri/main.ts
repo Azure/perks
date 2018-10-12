@@ -2,6 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import { exists, rmdir, readdir, mkdir, writeFile } from "@microsoft.azure/async-io";
 
 export function IsUri(uri: string): boolean {
   return /^([a-z0-9+.-]+):(?:\/\/(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(\/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(\/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/i.test(uri);
@@ -10,21 +11,30 @@ export function IsUri(uri: string): boolean {
 /***********************
  * Data aquisition
  ***********************/
-import * as promisify from "pify";
 import { Readable } from "stream";
 import { parse } from "url";
-import { sep } from "path";
+import { sep, extname } from "path";
 
-const stripBom: (text: string) => string = require("strip-bom");
+function stripBom(text: string): string {
+  if (text.charCodeAt(0) === 0xFEFF) {
+    return text.slice(1);
+  }
+  return text;
+}
+
+
 const getUri = require("get-uri");
-const getUriAsync: (uri: string) => Promise<Readable> = promisify(getUri);
+
+function getUriAsync(uri: string, options: { headers: { [key: string]: string } }): Promise<Readable> {
+  return new Promise((r, j) => getUri(uri, options, (err: any, rs: Readable) => err ? j(err) : r(rs)));
+}
 
 /**
  * Loads a UTF8 string from given URI.
  */
-export async function ReadUri(uri: string): Promise<string> {
+export async function ReadUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
   try {
-    const readable = await getUriAsync(uri);
+    const readable = await getUriAsync(uri, { headers: headers });
 
     const readAll = new Promise<string>(function (resolve, reject) {
       let result = "";
@@ -122,10 +132,17 @@ export function GetFilenameWithoutExtension(uri: string): string {
 }
 
 export function ToRawDataUrl(uri: string): string {
-  // special URI handlers                                                                                        
-  // - GitHub                                                                                                    
-  if (uri.startsWith("https://github")) {
-    uri = uri.replace(/^https?:\/\/(github.com)(\/[^\/]+\/[^\/]+\/)(blob|tree)\/(.*)/ig, "https://raw.githubusercontent.com$2$4");
+  // special URI handlers (the 'if's shouldn't be necessary but provide some additional isolation in case there is anything wrong with one of the regexes)
+  // - GitHub repo
+  if (uri.startsWith("https://github.com")) {
+    uri = uri.replace(/^https?:\/\/(github.com)(\/[^\/]+\/[^\/]+\/)(blob|tree)\/(.*)$/ig, "https://raw.githubusercontent.com$2$4");
+  }
+  // - GitHub gist
+  if (uri.startsWith("gist://")) {
+    uri = uri.replace(/^gist:\/\/([^\/]+\/[^\/]+)$/ig, "https://gist.githubusercontent.com/$1/raw/");
+  }
+  if (uri.startsWith("https://gist.github.com")) {
+    uri = uri.replace(/^https?:\/\/gist.github.com\/([^\/]+\/[^\/]+)$/ig, "https://gist.githubusercontent.com/$1/raw/");
   }
 
   return uri;
@@ -153,7 +170,19 @@ export function ResolveUri(baseUri: string, pathOrUri: string): string {
     throw new Error("'pathOrUri' was detected to be relative so 'baseUri' is required");
   }
   try {
-    return new URI(pathOrUri).absoluteTo(baseUri).toString();
+    const base = new URI(baseUri);
+    const relative = new URI(pathOrUri);
+    if (baseUri.startsWith("untitled:///") && pathOrUri.startsWith("untitled:")) {
+      return pathOrUri;
+    }
+    const result = relative.absoluteTo(base);
+    // GitHub simple token forwarding, for when you pass a URI to a private repo file with `?token=` query parameter.
+    // this may be easier for quick testing than getting and passing an OAuth token.
+    if (base.protocol() === "https" && base.hostname() === "raw.githubusercontent.com" &&
+      result.protocol() === "https" && result.hostname() === "raw.githubusercontent.com") {
+      result.query(base.query());
+    }
+    return result.toString()
   } catch (e) {
     throw new Error(`Failed resolving '${pathOrUri}' against '${baseUri}'.`);
   }
@@ -180,7 +209,7 @@ export function MakeRelativeUri(baseUri: string, absoluteUri: string): string {
 /***********************
  * OS abstraction (writing files, enumerating files)
  ***********************/
-import { readdir, mkdir, exists, writeFile } from "./file-io";
+
 import { lstatSync, unlinkSync, rmdirSync } from "fs";
 
 function isAccessibleFile(localPath: string) {
@@ -194,9 +223,9 @@ function isAccessibleFile(localPath: string) {
 function FileUriToLocalPath(fileUri: string): string {
   const uri = parse(fileUri);
   if (!fileUri.startsWith("file:///")) {
-    throw new Error(!fileUri.startsWith("file://")
+    throw new Error(`Cannot write data to '${fileUri}'. ` + (!fileUri.startsWith("file://")
       ? `Protocol '${uri.protocol}' not supported for writing.`
-      : `UNC paths not supported for writing.`);
+      : `UNC paths not supported for writing.`) + " Make sure to specify a local, absolute path as target file/folder.");
   }
   // convert to path
   let p = uri.path;
@@ -204,7 +233,10 @@ function FileUriToLocalPath(fileUri: string): string {
     throw new Error(`Cannot write to '${uri}'. Path not found.`);
   }
   if (sep === "\\") {
-    p = p.substr(p.startsWith("/") ? 1 : 0);
+    if (p.indexOf(':') > 0) {
+      p = p.substr(p.startsWith("/") ? 1 : 0);
+    }
+
     p = p.replace(/\//g, "\\");
   }
   return decodeURI(p);
@@ -261,20 +293,33 @@ export function WriteString(fileUri: string, data: string): Promise<void> {
  * Clears a folder on the local file system.
  * @param folderUri  Folder uri.
  */
+
 export async function ClearFolder(folderUri: string): Promise<void> {
-  const path = FileUriToLocalPath(folderUri);
-  const deleteFolderRecursive = async (path: string) => {
-    if (await exists(path)) {
-      for (const file of await readdir(path)) {
-        var curPath = path + "/" + file;
-        if (lstatSync(curPath).isDirectory()) {
-          await deleteFolderRecursive(curPath);
-        } else {
-          unlinkSync(curPath);
-        }
-      }
-      rmdirSync(path);
-    }
-  };
-  await deleteFolderRecursive(path);
+  return await rmdir(FileUriToLocalPath(folderUri));
+}
+
+export function FileUriToPath(fileUri: string): string {
+  const uri = parse(fileUri);
+  if (uri.protocol !== "file:") {
+    throw `Protocol '${uri.protocol}' not supported for writing.`;
+  }
+  // convert to path
+  let p = uri.path;
+  if (p === undefined) {
+    throw `Cannot write to '${uri}'. Path not found.`;
+  }
+  if (sep === "\\") {
+    p = p.substr(p.startsWith("/") ? 1 : 0);
+    p = p.replace(/\//g, "\\");
+  }
+  return p;
+}
+
+
+export function GetExtension(name: string) {
+  let ext = extname(name);
+  if (ext) {
+    return ext.substr(1).toLowerCase();
+  }
+  return ext;
 }

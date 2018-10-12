@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
     "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = parseInt(stdout.trim()); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
     "prepare": "npm run build",
     "test": "npm run build && mocha dist/test",
@@ -38,15 +39,19 @@
     "@types/node": "10.11.3",
     "mocha": "5.2.0",
     "typescript": "^3.1.1",
-    "@types/pify": "0.0.28"
+    "@types/pify": "0.0.28",
+    "tslint": "^5.11.0",
+    "tslint-language-service-ts3": "1.0.0",
+    "tslint-microsoft-contrib": "^5.2.1",
+    "tslint-sonarts": "^1.8.0"
   },
   "dependencies": {
     "@microsoft.azure/tasks": "^2.1.8",
     "file-url": "2.0.2",
-    "get-uri": "^2.0.1",
+    "get-uri": "^2.0.2",
     "pify": "^2.3.0",
     "proper-lockfile": "^2.0.1",
     "strip-bom": "3.0.0",
-    "urijs": "~1.18.10"
+    "urijs": "^1.19.1"
   }
 }

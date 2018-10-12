@@ -1,28 +1,12 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-        "outDir": "dist",
-    "alwaysStrict": true,
-    "forceConsistentCasingInFileNames": false,
-    "module": "commonjs",
-    "noEmitOnError": true,
+    "outDir": "dist",
     "noImplicitAny": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "sourceMap": true,
-    "strict": true,
-    "declaration": true,
-    "stripInternal": true,
-    "noEmitHelpers": false,
-    "target": "es2017",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es2017"
-    ],
-    "experimentalDecorators": true,
-    "newLine": "LF"
   },
+  "include": [
+    "."
+  ],
   "exclude": [
     "dist",
     "node_modules",

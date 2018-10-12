@@ -105,7 +105,7 @@ export class ExtensionFolderLocked extends Exception {
 function cmdlineToArray(text: string, result: Array<string> = [], matcher = /[^\s"]+|"([^"]*)"/gi, count = 0): Array<string> {
   text = text.replace(/\\"/g, "\ufffe");
   const match = matcher.exec(text);
-  return match ? cmdlineToArray(text, result, matcher, result.push(match[1] ? match[1].replace(/\ufffe/g, '\\"', ) : match[0].replace(/\ufffe/g, '\\"', ))) : result;
+  return match ? cmdlineToArray(text, result, matcher, result.push(match[1] ? match[1].replace(/\ufffe/g, '\\"') : match[0].replace(/\ufffe/g, '\\"'))) : result;
 }
 
 function getPathVariableName() {
@@ -170,7 +170,7 @@ async function getFullPath(command: string, searchPath?: string): Promise<string
 
 /**
  * A Package is a representation of a npm package.
- * 
+ *
  * Once installed, a Package is an Extension
  */
 export class Package {
@@ -207,8 +207,8 @@ export class Package {
   }
 }
 
-/** 
- * Extension is an installed Package 
+/**
+ * Extension is an installed Package
  * @extends Package
  * */
 export class Extension extends Package {
@@ -216,7 +216,7 @@ export class Extension extends Package {
     super(pkg.resolvedInfo, pkg.packageMetadata, pkg.extensionManager);
   }
   /**
-   * The installed location of the package. 
+   * The installed location of the package.
    */
   public get location(): string {
     return path.normalize(`${this.installationPath}/${this.id.replace('/', '_')}`);
@@ -277,7 +277,7 @@ export class Extension extends Package {
   }
 }
 
-/** 
+/**
  * LocalExtension is a local extension that must not be installed.
  * @extends Extension
  * */
@@ -371,7 +371,7 @@ export class ExtensionManager {
     const release = await this.sharedLock.exclusive();
 
     try {
-      // nuke the folder 
+      // nuke the folder
       await rmdir(this.installationPath);
 
       // recreate the folder
@@ -395,7 +395,7 @@ export class ExtensionManager {
   }
 
   public async findPackage(name: string, version: string = "latest"): Promise<Package> {
-    // version can be a version or any one of the formats that 
+    // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
     await npm_config;
 
@@ -407,7 +407,7 @@ export class ExtensionManager {
 
   public async getInstalledExtension(name: string, version: string): Promise<Extension | null> {
     if (!semver.validRange(version)) {
-      // if they asked for something that isn't a valid range, we have to find out what version 
+      // if they asked for something that isn't a valid range, we have to find out what version
       // the target package actually is.
       const pkg = await this.findPackage(name, version);
       version = pkg.version;
@@ -426,8 +426,8 @@ export class ExtensionManager {
     await npm_config;
     const results = new Array<Extension>();
 
-    // iterate thru the folders. 
-    // the folder name should have the pattern @ORG#NAME@VER or NAME@VER 
+    // iterate thru the folders.
+    // the folder name should have the pattern @ORG#NAME@VER or NAME@VER
     for (const folder of await readdir(this.installationPath)) {
       const fullpath = path.join(this.installationPath, folder);
       if (await isDirectory(fullpath)) {
@@ -455,7 +455,7 @@ export class ExtensionManager {
     }
 
     // each folder will contain a node_modules folder, which should have a folder by
-    // in the node_modules folder there should be a folder by the name of the 
+    // in the node_modules folder there should be a folder by the name of the
     return results;
   }
 
@@ -471,7 +471,7 @@ export class ExtensionManager {
     progress.Start.Dispatch(null);
 
     // will throw if the CriticalSection lock can't be acquired.
-    // we need this so that only one extension at a time can start installing 
+    // we need this so that only one extension at a time can start installing
     // in this process (since to use NPM right, we have to do a change dir before runinng it)
     // if we ran NPM out-of-proc, this probably wouldn't be necessary.
     const ex_release = await ExtensionManager.criticalSection.acquire(maxWait);
@@ -567,7 +567,7 @@ export class ExtensionManager {
 
   public async start(extension: Extension): Promise<ChildProcess> {
     const PathVar = getPathVariableName();
-    // look at the extension for the 
+    // look at the extension for the
     if (!extension.definition.scripts || !extension.definition.scripts.start) {
       throw new MissingStartCommandException(extension);
     }
@@ -586,7 +586,7 @@ export class ExtensionManager {
       command[0] = nodePath;
     }
 
-    // ensure parameters requiring quotes have them. 
+    // ensure parameters requiring quotes have them.
     for (let i = 0; i < command.length; i++) {
       command[i] = quoteIfNecessary(command[i]);
     }
@@ -598,10 +598,10 @@ export class ExtensionManager {
 
     // console.log(`cmdline ${fullCommandPath} ${command.slice(1).join(' ')}`);
 
-    // == special case == 
+    // == special case ==
     // on Windows, if this command has a space in the name, and it's not an .EXE
     // then we're going to have to add the folder to the PATH
-    // and execute it by just the filename 
+    // and execute it by just the filename
     // and set the path back when we're done.
     if (process.platform === 'win32' && fullCommandPath.indexOf(' ') > -1 && !/.exe$/ig.exec(fullCommandPath)) {
       // preserve the current path

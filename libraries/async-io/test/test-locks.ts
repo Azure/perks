@@ -1,7 +1,7 @@
 import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
 import * as assert from "assert";
 import * as asyncio from '../main'
-import * as os from 'os'
+
 // ensure
 
 @suite class AsyncIO {
