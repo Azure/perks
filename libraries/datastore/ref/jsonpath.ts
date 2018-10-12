@@ -2,59 +2,58 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { safeEval } from "./safe-eval";
-
-import * as jsonpath from "jsonpath";
+import * as jsonpath from 'jsonpath';
+import { safeEval } from './safe-eval';
 
 // patch in smart filter expressions
-const handlers = (jsonpath as any).handlers;
-handlers.register("subscript-descendant-filter_expression", function (component: any, partial: any, count: any) {
+const handlers = (<any>jsonpath).handlers;
+handlers.register('subscript-descendant-filter_expression', function (component: any, partial: any, count: any) {
   const src = component.expression.value.slice(1);
 
   const passable = function (key: any, value: any) {
     try {
-      return safeEval(src.replace(/\@/g, "$$$$"), { "$$": value });
+      return safeEval(src.replace(/\@/g, '$$$$'), { '$$': value });
     } catch (e) {
       return false;
     }
-  }
+  };
 
-  return eval("this").traverse(partial, null, passable, count);
+  return eval('this').traverse(partial, null, passable, count);
 });
-handlers.register("subscript-child-filter_expression", function (component: any, partial: any, count: any) {
+handlers.register('subscript-child-filter_expression', function (component: any, partial: any, count: any) {
   const src = component.expression.value.slice(1);
 
   const passable = function (key: any, value: any) {
     try {
-      return safeEval(src.replace(/\@/g, "$$$$"), { "$$": value });
+      return safeEval(src.replace(/\@/g, '$$$$'), { '$$': value });
     } catch (e) {
       return false;
     }
-  }
+  };
 
-  return eval("this").descend(partial, null, passable, count);
+  return eval('this').descend(partial, null, passable, count);
 });
 // patch end
 
 export type JsonPathComponent = jsonpath.PathComponent;
-export type JsonPath = JsonPathComponent[];
+export type JsonPath = Array<JsonPathComponent>;
 
 export function parse(jsonPath: string): JsonPath {
   return jsonpath.parse(jsonPath).map(part => part.expression.value).slice(1);
 }
 
 export function stringify(jsonPath: JsonPath): string {
-  return jsonpath.stringify(["$" as JsonPathComponent].concat(jsonPath));
+  return jsonpath.stringify(['$' as JsonPathComponent].concat(jsonPath));
 }
 
-export function paths<T>(obj: T, jsonQuery: string): JsonPath[] {
+export function paths<T>(obj: T, jsonQuery: string): Array<JsonPath> {
   return nodes(obj, jsonQuery).map(x => x.path);
 }
 
-export function nodes<T>(obj: T, jsonQuery: string): { path: JsonPath, value: any }[] {
+export function nodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, value: any }> {
   // jsonpath only accepts objects
   if (obj instanceof Object) {
-    let result = jsonpath.nodes(obj, jsonQuery).map(x => { return { path: x.path.slice(1), value: x.value }; });
+    let result = jsonpath.nodes(obj, jsonQuery).map(x => ({ path: x.path.slice(1), value: x.value }));
     const comp = (a: string, b: string) => a < b ? -1 : (a > b ? 1 : 0);
     result = result.sort((a, b) => comp(JSON.stringify(a.path), JSON.stringify(b.path)));
     result = result.filter((x, i) => i === 0 || JSON.stringify(x.path) !== JSON.stringify(result[i - 1].path));
@@ -79,7 +78,7 @@ export function IsPrefix(prefix: JsonPath, path: JsonPath): boolean {
 export function CreateObject(jsonPath: JsonPath, leafObject: any): any {
   let obj = leafObject;
   for (const jsonPathComponent of jsonPath.slice().reverse()) {
-    obj = typeof jsonPathComponent === "number"
+    obj = typeof jsonPathComponent === 'number'
       ? (() => { const result = Array.apply(null, Array(jsonPathComponent + 1)); result[jsonPathComponent] = obj; return result; })()
       : (() => { const result: any = {}; result[jsonPathComponent] = obj; return result; })();
   }
@@ -96,5 +95,5 @@ export function matches(jsonQuery: string, jsonPath: JsonPath): boolean {
 }
 
 export function parseJsonPointer(jsonPointer: string): JsonPath {
-  return jsonPointer.split("/").slice(1).map(part => part.replace(/~1/g, "/").replace(/~0/g, "~"));
+  return jsonPointer.split('/').slice(1).map(part => part.replace(/~1/g, '/').replace(/~0/g, '~'));
 }

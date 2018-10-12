@@ -3,10 +3,9 @@ import * as assert from "assert";
 
 @suite class MyTests {
 
-  /*  @test async "Does Pify'd exist work"() {
+  /*  @test async "Does test  work"() {
       assert.equal(await asyncio.exists(__filename), true);
     }
-
   */
 
 }

@@ -3,4 +3,4 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-export const safeEval: <T>(expression: string, context?: any) => T = require("safe-eval");
+export const safeEval: <T>(expression: string, context?: any) => T = require('safe-eval');

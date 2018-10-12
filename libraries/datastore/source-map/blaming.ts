@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { JsonPath } from "../ref/jsonpath";
-import { Position as sourceMapPosition, MappedPosition } from "source-map";
+import { MappedPosition, Position as sourceMapPosition } from 'source-map';
+import { JsonPath } from '../ref/jsonpath';
 
-import { EncodeEnhancedPositionInName, TryDecodeEnhancedPositionFromName } from "./source-map";
-import { DataStore } from "../data-store/data-store";
-import { values } from "@microsoft.azure/linq";
+import { values } from '@microsoft.azure/linq';
+import { DataStore } from '../data-store/data-store';
+import { EncodeEnhancedPositionInName, TryDecodeEnhancedPositionFromName } from './source-map';
 
 export class BlameTree {
   public static Create(dataStore: DataStore, position: MappedPosition): BlameTree {
@@ -28,12 +28,12 @@ export class BlameTree {
 
   private constructor(
     public readonly node: MappedPosition & { path?: JsonPath },
-    public readonly blaming: BlameTree[]) { }
+    public readonly blaming: Array<BlameTree>) { }
 
-  public BlameLeafs(): MappedPosition[] {
-    const result: MappedPosition[] = [];
+  public BlameLeafs(): Array<MappedPosition> {
+    const result: Array<MappedPosition> = [];
 
-    const todos: BlameTree[] = [this];
+    const todos: Array<BlameTree> = [this];
     let todo: BlameTree | undefined;
     while (todo = todos.pop()) {
       // report self

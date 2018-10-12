@@ -5,8 +5,8 @@
 
 /* line: 1-based, column: 0-based */
 // export { Position } from "source-map";
-import { Position } from "source-map";
-import { JsonPath } from "../ref/jsonpath";
+import { Position } from 'source-map';
+import { JsonPath } from '../ref/jsonpath';
 
 // information to attach to line/column based to get a richer experience
 export interface PositionEnhancements {

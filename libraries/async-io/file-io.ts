@@ -3,10 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import * as fs from "fs";
-import * as path from "path";
-import * as promisify from "pify";
-import { OutstandingTaskAwaiter, Exception, Delay } from '@microsoft.azure/tasks'
+import { Exception, OutstandingTaskAwaiter, promisify } from '@microsoft.azure/tasks';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class PathNotFoundException extends Exception {
   constructor(path: string, public exitCode: number = 1) {
@@ -29,7 +28,6 @@ export class PathIsNotDirectoryException extends Exception {
   }
 }
 
-
 export class UnableToRemoveException extends Exception {
   constructor(path: string, public exitCode: number = 1) {
     super(`Unable to remove '${path}'.`, exitCode);
@@ -43,7 +41,6 @@ export class UnableToMakeDirectoryException extends Exception {
     Object.setPrototypeOf(this, UnableToMakeDirectoryException.prototype);
   }
 }
-
 
 export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(path, (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
@@ -60,7 +57,7 @@ const fs_close: (fs: number) => Promise<void> = promisify(fs.close);
 
 export async function mkdir(dirPath: string) {
   if (!await isDirectory(dirPath)) {
-    const p = path.normalize(dirPath + "/");
+    const p = path.normalize(dirPath + '/');
     const parent = path.dirname(dirPath);
     if (! await isDirectory(parent)) {
       if (p != parent) {
@@ -80,7 +77,7 @@ export async function mkdir(dirPath: string) {
 const fs_readFile: (filename: string, encoding: string, ) => Promise<string> = promisify(fs.readFile);
 
 export async function readFile(filename: string): Promise<string> {
-  return fs_readFile(filename, "utf-8");
+  return fs_readFile(filename, 'utf-8');
 }
 
 export async function isDirectory(dirPath: string): Promise<boolean> {
@@ -112,7 +109,7 @@ export async function rmdir(dirPath: string) {
     return;
   }
 
-  //if it's not a directory, that's bad.
+  // if it's not a directory, that's bad.
   if (!await isDirectory(dirPath)) {
     throw new PathIsNotDirectoryException(dirPath);
   }
@@ -132,11 +129,10 @@ export async function rmdir(dirPath: string) {
           const p = path.join(dirPath, file);
 
           if (await isDirectory(p)) {
-            // folders are recursively rmdir'd 
+            // folders are recursively rmdir'd
             awaiter.Await(rmdir(p));
-          }
-          else {
-            // files and symlinks are unlink'd 
+          } else {
+            // files and symlinks are unlink'd
             awaiter.Await(unlink(p).catch(() => { }));
           }
         } catch (e) {
@@ -173,7 +169,7 @@ export async function rmFile(filePath: string) {
   }
 
   try {
-    // files and symlinks are unlink'd 
+    // files and symlinks are unlink'd
     await unlink(filePath);
   } catch (e) {
     // is it gone? that's all we really care about.

@@ -5,7 +5,7 @@ import * as os from 'os'
 
 @suite class AsyncIO {
 
-  @test async "Does Pify'd exist work"() {
+  @test async "Does promisify'd exist work"() {
     assert.equal(await asyncio.exists(__filename), true);
   }
 

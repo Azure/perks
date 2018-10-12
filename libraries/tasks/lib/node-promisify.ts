@@ -1,6 +1,6 @@
-import { TypeException } from "./exception"
-import { ManualPromise } from "./manual-promise"
-import { promisify as util_promisify } from 'util'
+import { promisify as util_promisify } from 'util';
+import { TypeException } from './exception';
+import { ManualPromise } from './manual-promise';
 
 const kCustomPromisifiedSymbol = Symbol('util.promisify.custom');
 const kCustomPromisifyArgsSymbol = Symbol('customPromisifyArgs');
@@ -13,8 +13,8 @@ declare global {
 
 /**
  * Add polyfill for Object.getOwnPropertyDescriptors
- * 
- * Origin: https://github.com/tc39/proposal-object-getownpropertydescriptors 
+ *
+ * Origin: https://github.com/tc39/proposal-object-getownpropertydescriptors
  */
 if (!Object.hasOwnProperty('getOwnPropertyDescriptors')) {
   Object.defineProperty(
@@ -47,8 +47,9 @@ if (!Object.hasOwnProperty('getOwnPropertyDescriptors')) {
  * @param original original method declaration
  */
 function _promisify(original: any) {
-  if (typeof original !== 'function')
+  if (typeof original !== 'function') {
     throw new TypeException('ERR_INVALID_ARG_TYPE', 'original', 'Function');
+  }
 
   if (original[kCustomPromisifiedSymbol]) {
     const fn = original[kCustomPromisifiedSymbol];
@@ -69,16 +70,17 @@ function _promisify(original: any) {
   // arguments, e.g. ['stdout', 'stderr'] for child_process.exec.
   const argumentNames = original[kCustomPromisifyArgsSymbol];
 
-  function fn(this: any, ...args: any[]): Promise<any> {
+  function fn(this: any, ...args: Array<any>): Promise<any> {
     const promise = new ManualPromise();
     try {
-      original.call(this, ...args, (err: any, ...values: any[]) => {
+      original.call(this, ...args, (err: any, ...values: Array<any>) => {
         if (err) {
           promise.reject(err);
         } else if (argumentNames !== undefined && values.length > 1) {
           const obj: any = {};
-          for (var i = 0; i < argumentNames.length; i++)
+          for (let i = 0; i < argumentNames.length; i++) {
             obj[argumentNames[i]] = values[i];
+          }
           promise.resolve(obj);
         } else {
           promise.resolve(values[0]);

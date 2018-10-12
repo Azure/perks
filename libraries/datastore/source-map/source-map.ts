@@ -3,18 +3,18 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { IndexToPosition } from "../parsing/text-utility";
-import { EnhancedPosition, Mappings, SmartPosition } from "../ref/source-map";
-import { Descendants, ToAst } from "../ref/yaml";
-import { JsonPath, stringify } from "../ref/jsonpath";
-import * as yaml from "../parsing/yaml";
-import { DataHandle } from "../data-store/data-store";
-import { SourceMapGenerator } from "source-map";
+import { SourceMapGenerator } from 'source-map';
+import { DataHandle } from '../data-store/data-store';
+import { IndexToPosition } from '../parsing/text-utility';
+import * as yaml from '../parsing/yaml';
+import { JsonPath, stringify } from '../ref/jsonpath';
+import { EnhancedPosition, Mappings, SmartPosition } from '../ref/source-map';
+import { Descendants, ToAst } from '../ref/yaml';
 
 // for carrying over rich information into the realm of line/col based source maps
 // convention: <original name (contains no `nameWithPathSeparator`)>\n(<path>)
-const enhancedPositionSeparator = "\n\n(";
-const enhancedPositionEndMark = ")";
+const enhancedPositionSeparator = '\n\n(';
+const enhancedPositionEndMark = ')';
 export function TryDecodeEnhancedPositionFromName(name: string | undefined): EnhancedPosition | undefined {
   try {
     if (!name) {
@@ -34,7 +34,7 @@ export function EncodeEnhancedPositionInName(name: string | undefined, pos: Enha
   if (name && name.indexOf(enhancedPositionSeparator) !== -1) {
     name = name.split(enhancedPositionSeparator)[0];
   }
-  return (name || "") + enhancedPositionSeparator + JSON.stringify(pos, null, 2) + enhancedPositionEndMark;
+  return (name || '') + enhancedPositionSeparator + JSON.stringify(pos, null, 2) + enhancedPositionEndMark;
 }
 
 export function CompilePosition(position: SmartPosition, yamlFile: DataHandle): EnhancedPosition {
@@ -46,10 +46,10 @@ export function CompilePosition(position: SmartPosition, yamlFile: DataHandle): 
       return IndexToPosition(yamlFile, (position as any).index);
     }
   }
-  return position as EnhancedPosition;
+  return <EnhancedPosition>position;
 }
 
-export function Compile(mappings: Mappings, target: SourceMapGenerator, yamlFiles: DataHandle[] = []): void {
+export function Compile(mappings: Mappings, target: SourceMapGenerator, yamlFiles: Array<DataHandle> = []): void {
   // build lookup
   const yamlFileLookup: { [key: string]: DataHandle } = {};
   for (const yamlFile of yamlFiles) {

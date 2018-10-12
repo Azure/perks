@@ -7,21 +7,21 @@
 require('npm/lib/utils/output');
 require.cache[require.resolve('npm/lib/utils/output')].exports = () => { };
 
-import { config, load, commands } from 'npm'
-import { spawn, ChildProcess } from 'child_process'
-import { readdir, isFile, readFile, exists, isDirectory, mkdir, rmdir, release } from '@microsoft.azure/async-io'
-import { Exception, shallowCopy, Mutex, SharedLock, Delay, CriticalSection } from '@microsoft.azure/tasks'
-import { resolve as npmResolvePackage } from 'npm-package-arg'
-import { homedir, arch } from 'os';
+import { exists, isDirectory, isFile, mkdir, readdir, readFile, release, rmdir } from '@microsoft.azure/async-io';
+import { Progress, Subscribe } from '@microsoft.azure/eventing';
+import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@microsoft.azure/tasks';
+import { ChildProcess, spawn } from 'child_process';
+import { commands, config, load } from 'npm';
+import { resolve as npmResolvePackage } from 'npm-package-arg';
+import { arch, homedir } from 'os';
 import * as semver from 'semver';
-import { Progress, Subscribe } from '@microsoft.azure/eventing'
 
+import * as fetch from 'npm/lib/fetch-package-metadata';
 import * as path from 'path';
-import * as fetch from "npm/lib/fetch-package-metadata";
-const npmlog = require('npm/node_modules/npmlog')
+const npmlog = require('npm/node_modules/npmlog');
 
-const npmview = require('npm/lib/view')
-const MemoryStream = require('memorystream')
+const npmview = require('npm/lib/view');
+const MemoryStream = require('memorystream');
 
 const nodePath = quoteIfNecessary(process.execPath);
 
@@ -33,7 +33,7 @@ const npm_config = new Promise<Config>((r, j) => {
   npmlog.disableProgress();
   npmlog.disableColor();
   npmlog.resume = () => { };
-  npmlog.level = "silent";
+  npmlog.level = 'silent';
   npmlog.write = () => { };
   npmlog.info = () => { };
   npmlog.notice = () => { };
@@ -46,7 +46,7 @@ const npm_config = new Promise<Config>((r, j) => {
     loglevel: 'silent',
     logstream: new MemoryStream(''),
 
-    registry: "https://registry.npmjs.org/"
+    registry: 'https://registry.npmjs.org/'
   }, (e, c) => {
     // console.log("back from load : " + c)
     r(c);
@@ -81,7 +81,7 @@ export class PackageInstallationException extends Exception {
   }
 }
 export class UnsatisfiedEngineException extends Exception {
-  constructor(name: string, version: string, message: string = "") {
+  constructor(name: string, version: string, message: string = '') {
     super(`Unable to find matching engine '${name}' - '${version} ${message}'`, 1);
     Object.setPrototypeOf(this, UnsatisfiedEngineException.prototype);
   }
@@ -101,9 +101,8 @@ export class ExtensionFolderLocked extends Exception {
   }
 }
 
-
 function cmdlineToArray(text: string, result: Array<string> = [], matcher = /[^\s"]+|"([^"]*)"/gi, count = 0): Array<string> {
-  text = text.replace(/\\"/g, "\ufffe");
+  text = text.replace(/\\"/g, '\ufffe');
   const match = matcher.exec(text);
   return match ? cmdlineToArray(text, result, matcher, result.push(match[1] ? match[1].replace(/\ufffe/g, '\\"') : match[0].replace(/\ufffe/g, '\\"'))) : result;
 }
@@ -116,13 +115,13 @@ function getPathVariableName() {
       if (e.match(/^PATH$/i)) {
         PATH = e;
       }
-    })
+    });
     return PATH;
   }
-  return "PATH";
+  return 'PATH';
 }
 async function realPathWithExtension(command: string): Promise<string | undefined> {
-  const pathExt = (process.env["pathext"] || ".EXE").split(';');
+  const pathExt = (process.env.pathext || '.EXE').split(';');
   for (const each of pathExt) {
     const filename = `${command}${each}`;
     if (await isFile(filename)) {
@@ -192,8 +191,8 @@ export class Package {
 
   get source(): string {
     // work around bug that npm doesn't programatically handle exact versions.
-    if (this.resolvedInfo.type == "version" && this.resolvedInfo.registry == true) {
-      return this.packageMetadata._spec + "*";
+    if (this.resolvedInfo.type == 'version' && this.resolvedInfo.registry == true) {
+      return this.packageMetadata._spec + '*';
     }
     return this.packageMetadata._spec;
   }
@@ -240,7 +239,7 @@ export class Extension extends Package {
  */
   public get configurationPath(): Promise<string> {
     return (async () => {
-      var items = await readdir(this.modulePath);
+      const items = await readdir(this.modulePath);
       for (const each of items) {
         if (/^readme.md$/i.exec(each)) {
           const fullPath = path.normalize(`${this.modulePath}/${each}`);
@@ -249,7 +248,7 @@ export class Extension extends Package {
           }
         }
       }
-      return "";
+      return '';
     })();
   }
 
@@ -262,7 +261,7 @@ export class Extension extends Package {
     return (async () => {
       const cfgPath = await this.configurationPath;
       if (cfgPath) {
-        return await readFile(cfgPath);
+        return readFile(cfgPath);
       }
       return '';
     })();
@@ -283,7 +282,7 @@ export class Extension extends Package {
  * */
 export class LocalExtension extends Extension {
   public constructor(pkg: Package, private extensionPath: string) {
-    super(pkg, "");
+    super(pkg, '');
   }
   public get location(): string {
     return this.extensionPath;
@@ -293,7 +292,7 @@ export class LocalExtension extends Extension {
   }
 
   async remove(): Promise<void> {
-    throw new Error("Cannot remove local extension. Lifetime not our responsibility.");
+    throw new Error('Cannot remove local extension. Lifetime not our responsibility.');
   }
 }
 
@@ -302,19 +301,18 @@ function npmInstall(name: string, version: string, packageSpec: string, force: b
   return new Promise((r, j) => {
     try {
       commands.install([packageSpec], (err, r1, r2, r3, r4) => {
-        return err ? j(new PackageInstallationException(name, version, err.message)) : r([r1, r2, r3, r4])
+        return err ? j(new PackageInstallationException(name, version, err.message)) : r([r1, r2, r3, r4]);
       });
     } catch (e) {
     }
   });
 }
 
-
 function npmView(name: string): Promise<Array<any>> {
   return new Promise((r, j) => {
-    npmview([`${name}@*`, "version"], true, (err, r1, r2, r3, r4) => {
-      return err ? j(new Exception(name)) : r(r1)
-    })
+    npmview([`${name}@*`, 'version'], true, (err, r1, r2, r3, r4) => {
+      return err ? j(new Exception(name)) : r(r1);
+    });
   });
 }
 
@@ -325,7 +323,7 @@ function fetchPackageMetadata(spec: string, where: string, opts: any): Promise<a
         return j(new UnresolvedPackageException(spec));
       }
       return r(pkg);
-    })
+    });
   });
 }
 
@@ -364,7 +362,7 @@ export class ExtensionManager {
 
   public async reset() {
     if (!this.sharedLock) {
-      throw new Exception("Extension manager has been disposed.")
+      throw new Exception('Extension manager has been disposed.');
     }
 
     // get the exclusive lock
@@ -378,8 +376,7 @@ export class ExtensionManager {
       await mkdir(this.installationPath);
     } catch (e) {
       throw new ExtensionFolderLocked(this.installationPath);
-    }
-    finally {
+    } finally {
       // drop the lock
       await release();
     }
@@ -389,12 +386,12 @@ export class ExtensionManager {
 
   }
 
-  public async getPackageVersions(name: string): Promise<string[]> {
+  public async getPackageVersions(name: string): Promise<Array<string>> {
     const cc = <any>await npm_config;
-    return Object.getOwnPropertyNames(await npmView(name))
+    return Object.getOwnPropertyNames(await npmView(name));
   }
 
-  public async findPackage(name: string, version: string = "latest"): Promise<Package> {
+  public async findPackage(name: string, version: string = 'latest'): Promise<Package> {
     // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
     await npm_config;
@@ -439,7 +436,7 @@ export class ExtensionManager {
             const name = split[3];
             const version = split[4];
 
-            const actualPath = org ? path.normalize(`${fullpath}/node_modules/${org}/${name}`) : path.normalize(`${fullpath}/node_modules/${name}`)
+            const actualPath = org ? path.normalize(`${fullpath}/node_modules/${org}/${name}`) : path.normalize(`${fullpath}/node_modules/${name}`);
             const pm = await fetchPackageMetadata(actualPath, actualPath, {});
             const ext = new Extension(new Package(null, pm, this), this.installationPath);
             if (fullpath !== ext.location) {
@@ -463,7 +460,7 @@ export class ExtensionManager {
 
   public async installPackage(pkg: Package, force?: boolean, maxWait: number = 5 * 60 * 1000, progressInit: Subscribe = () => { }): Promise<Extension> {
     if (!this.sharedLock) {
-      throw new Exception("Extension manager has been disposed.")
+      throw new Exception('Extension manager has been disposed.');
     }
 
     const progress = new Progress(progressInit);
@@ -481,7 +478,7 @@ export class ExtensionManager {
     }
 
     const extension = new Extension(pkg, this.installationPath);
-    let release = await new Mutex(extension.location).acquire(maxWait / 2);
+    const release = await new Mutex(extension.location).acquire(maxWait / 2);
     const cwd = process.cwd();
 
     try {
@@ -509,13 +506,12 @@ export class ExtensionManager {
           progress.NotifyMessage(`Removing existing extension ${extension.location}`);
           await Delay(100);
           await rmdir(extension.location);
-        }
-        catch (e) {
+        } catch (e) {
           // no worries.
         }
       }
 
-      progress.Message.Dispatch("[FYI- npm does not currently support progress... this may take a few moments]");
+      progress.Message.Dispatch('[FYI- npm does not currently support progress... this may take a few moments]');
       // create the folder
       await mkdir(extension.location);
 
@@ -543,14 +539,13 @@ export class ExtensionManager {
       }
 
       if (e instanceof Exception) {
-        throw e
+        throw e;
       }
       if (e instanceof Error) {
         throw new PackageInstallationException(pkg.name, pkg.version, e.message + e.stack);
       }
       throw new PackageInstallationException(pkg.name, pkg.version, `${e}`);
-    }
-    finally {
+    } finally {
       progress.Progress.Dispatch(100);
       progress.End.Dispatch(null);
       await Promise.all([ex_release(), release()]);
@@ -559,7 +554,7 @@ export class ExtensionManager {
 
   public async removeExtension(extension: Extension): Promise<void> {
     if (await isDirectory(extension.location)) {
-      let release = await new Mutex(extension.location).acquire();
+      const release = await new Mutex(extension.location).acquire();
       await rmdir(extension.location);
       await release();
     }
@@ -576,13 +571,13 @@ export class ExtensionManager {
       throw new MissingStartCommandException(extension);
     }
     // add each engine into the front of the path.
-    let env = shallowCopy(process.env);
+    const env = shallowCopy(process.env);
 
     // add potential .bin folders (depends on platform and npm version)
-    env[PathVar] = `${path.join(extension.modulePath, "node_modules", ".bin")}${path.delimiter}${env[PathVar]}`;
-    env[PathVar] = `${path.join(extension.location, "node_modules", ".bin")}${path.delimiter}${env[PathVar]}`;
+    env[PathVar] = `${path.join(extension.modulePath, 'node_modules', '.bin')}${path.delimiter}${env[PathVar]}`;
+    env[PathVar] = `${path.join(extension.location, 'node_modules', '.bin')}${path.delimiter}${env[PathVar]}`;
 
-    if (command[0] == 'node' || command[0] == "node.exe") {
+    if (command[0] == 'node' || command[0] == 'node.exe') {
       command[0] = nodePath;
     }
 
@@ -611,13 +606,13 @@ export class ExtensionManager {
         process.env[PathVar] = `${path.dirname(fullCommandPath)}${path.delimiter}${env[PathVar]}`;
 
         // call spawn and return
-        return spawn(path.basename(fullCommandPath), command.slice(1), { env: env, cwd: extension.modulePath });
+        return spawn(path.basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath });
       } finally {
         // regardless, restore the original path on the way out!
         process.env[PathVar] = originalPath;
       }
     }
 
-    return spawn(fullCommandPath, command.slice(1), { env: env, cwd: extension.modulePath });
+    return spawn(fullCommandPath, command.slice(1), { env, cwd: extension.modulePath });
   }
 }
