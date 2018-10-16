@@ -3,9 +3,8 @@ import * as assert from "assert";
 
 @suite class MyTests {
 
-  /*  @test async "Does test  work"() {
-      assert.equal(await asyncio.exists(__filename), true);
-    }
-  */
+  @test async 'Does tests work'() { // tslint:disable-line
+    assert(1 === 1, '1 is 1');
+  }
 
 }

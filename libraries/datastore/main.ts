@@ -5,4 +5,4 @@
 // export * from "./proxy"
 export * from './file-system';
 export * from './jsonpath';
-//export * from './graph-builder';
+export * from './json-pointer';
