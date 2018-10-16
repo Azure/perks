@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { MappedPosition, Position as sourceMapPosition } from 'source-map';
-import { JsonPath } from '../ref/jsonpath';
-
 import { values } from '@microsoft.azure/linq';
+import { MappedPosition } from 'source-map';
 import { DataStore } from '../data-store/data-store';
+import { JsonPath } from '../jsonpath';
 import { EncodeEnhancedPositionInName, TryDecodeEnhancedPositionFromName } from './source-map';
+
 
 export class BlameTree {
   public static Create(dataStore: DataStore, position: MappedPosition): BlameTree {

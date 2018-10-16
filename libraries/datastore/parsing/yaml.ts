@@ -3,29 +3,14 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EnhancedPosition } from "../ref/source-map";
-import {
-  CloneAst,
-  CreateYAMLAnchorRef,
-  CreateYAMLMap,
-  CreateYAMLMapping,
-  CreateYAMLScalar,
-  Descendants,
-  Kind,
-  ParseNode,
-  ResolveAnchorRef,
-  YAMLAnchorReference,
-  YAMLMap,
-  YAMLMapping,
-  YAMLNode,
-  YAMLSequence,
-} from '../ref/yaml';
-import { JsonPath, JsonPathComponent, stringify } from "../ref/jsonpath";
-import { IndexToPosition } from "./text-utility";
-import { DataHandle } from "../data-store/data-store";
+import { DataHandle } from '../data-store/data-store';
+import { JsonPath, JsonPathComponent, stringify } from '../jsonpath';
+import { EnhancedPosition } from '../source-map/source-map';
+import { CloneAst, CreateYAMLAnchorRef, CreateYAMLMap, CreateYAMLMapping, CreateYAMLScalar, Descendants, Kind, ParseNode, ResolveAnchorRef, YAMLAnchorReference, YAMLMap, YAMLMapping, YAMLNode, YAMLSequence } from '../yaml';
+import { IndexToPosition } from './text-utility';
 
 function ResolveMapProperty(node: YAMLMap, property: string): YAMLMapping | null {
-  for (let mapping of node.mappings) {
+  for (const mapping of node.mappings) {
     if (property === mapping.key.value) {
       return mapping;
     }
@@ -45,7 +30,7 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
     case Kind.SCALAR:
       throw new Error(`Trying to retrieve '${jsonPathPart}' from scalar value`);
     case Kind.MAPPING: {
-      let astSub = yamlAstCurrent as YAMLMapping;
+      const astSub = yamlAstCurrent as YAMLMapping;
       if (deferResolvingMappings) {
         return ResolvePathPart(yamlAstRoot, astSub.value, jsonPathPart, deferResolvingMappings);
       }
@@ -55,7 +40,7 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
       return astSub.value;
     }
     case Kind.MAP: {
-      let astSub = yamlAstCurrent as YAMLMap;
+      const astSub = yamlAstCurrent as YAMLMap;
       const mapping = ResolveMapProperty(astSub, jsonPathPart.toString());
       if (mapping !== null) {
         return deferResolvingMappings
@@ -65,8 +50,8 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
       throw new Error(`Trying to retrieve '${jsonPathPart}' from mapping that contains no such key`);
     }
     case Kind.SEQ: {
-      let astSub = yamlAstCurrent as YAMLSequence;
-      if (typeof jsonPathPart !== "number") {
+      const astSub = yamlAstCurrent as YAMLSequence;
+      if (typeof jsonPathPart !== 'number') {
         throw new Error(`Trying to retrieve non-string item '${jsonPathPart}' from sequence`);
       }
       if (0 > jsonPathPart || jsonPathPart >= astSub.items.length) {
@@ -75,8 +60,8 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
       return astSub.items[jsonPathPart];
     }
     case Kind.ANCHOR_REF: {
-      let astSub = yamlAstCurrent as YAMLAnchorReference;
-      let newCurrent = ResolveAnchorRef(yamlAstRoot, astSub.referencesAnchor).node;
+      const astSub = yamlAstCurrent as YAMLAnchorReference;
+      const newCurrent = ResolveAnchorRef(yamlAstRoot, astSub.referencesAnchor).node;
       return ResolvePathPart(yamlAstRoot, newCurrent, jsonPathPart, deferResolvingMappings);
     }
     case Kind.INCLUDE_REF:
@@ -141,7 +126,7 @@ export function ReplaceNode(yamlAstRoot: YAMLNode, target: YAMLNode, value: YAML
  * Resolves the text position of a JSON path in raw YAML.
  */
 export function ResolvePath(yamlFile: DataHandle, jsonPath: JsonPath): EnhancedPosition {
-  //let node = (await (await yamlFile.ReadMetadata()).resolvePathCache)[stringify(jsonPath)];
+  // let node = (await (await yamlFile.ReadMetadata()).resolvePathCache)[stringify(jsonPath)];
   const yamlAst = yamlFile.ReadYamlAst();
   const node = ResolveRelativeNode(yamlAst, yamlAst, jsonPath);
   return CreateEnhancedPosition(yamlFile, jsonPath, node);
@@ -185,14 +170,14 @@ export function ConvertYaml2Jsonx(ast: YAMLNode): YAMLNode {
     if (node.anchorId) {
       if (node.kind === Kind.MAP) {
         const yamlNodeMapping = node as YAMLMap;
-        yamlNodeMapping.mappings.push(CreateYAMLMapping(CreateYAMLScalar("$id"), CreateYAMLScalar(node.anchorId)));
+        yamlNodeMapping.mappings.push(CreateYAMLMapping(CreateYAMLScalar('$id'), CreateYAMLScalar(node.anchorId)));
       }
       node.anchorId = undefined;
     }
     if (node.kind === Kind.ANCHOR_REF) {
       const yamlNodeAnchor = node as YAMLAnchorReference;
       const map = CreateYAMLMap();
-      map.mappings.push(CreateYAMLMapping(CreateYAMLScalar("$$ref"), CreateYAMLScalar(yamlNodeAnchor.referencesAnchor)));
+      map.mappings.push(CreateYAMLMapping(CreateYAMLScalar('$$ref'), CreateYAMLScalar(yamlNodeAnchor.referencesAnchor)));
       ReplaceNode(ast, yamlNodeAnchor, map);
     }
   }
@@ -208,20 +193,19 @@ export function ConvertJsonx2Yaml(ast: YAMLNode): YAMLNode {
     const node = nodeWithPath.node;
     if (node.kind === Kind.MAP) {
       const yamlNodeMapping = node as YAMLMap;
-      const propId = ResolveMapProperty(yamlNodeMapping, "$id");
-      let propRef = ResolveMapProperty(yamlNodeMapping, "$ref");
-      const propReff = ResolveMapProperty(yamlNodeMapping, "$$ref");
-      if (propRef && isNaN(parseInt(ParseNode<any>(propRef.value) + ""))) {
+      const propId = ResolveMapProperty(yamlNodeMapping, '$id');
+      let propRef = ResolveMapProperty(yamlNodeMapping, '$ref');
+      const propReff = ResolveMapProperty(yamlNodeMapping, '$$ref');
+      if (propRef && isNaN(parseInt(ParseNode<any>(propRef.value) + ''))) {
         propRef = null;
       }
       propRef = propRef || propReff;
 
       if (propId) {
-        yamlNodeMapping.anchorId = ParseNode<any>(propId.value) + "";
+        yamlNodeMapping.anchorId = ParseNode<any>(propId.value) + '';
         ReplaceNode(ast, propId, undefined);
-      }
-      else if (propRef) {
-        ReplaceNode(ast, yamlNodeMapping, CreateYAMLAnchorRef(ParseNode<any>(propRef.value) + ""));
+      } else if (propRef) {
+        ReplaceNode(ast, yamlNodeMapping, CreateYAMLAnchorRef(ParseNode<any>(propRef.value) + ''));
       }
     }
   }

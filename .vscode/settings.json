@@ -17,6 +17,12 @@
     "**/.hg": true,
     "**/.DS_Store": true
   },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false
+  },
   "[typescript]": {
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,

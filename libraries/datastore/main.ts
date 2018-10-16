@@ -4,4 +4,5 @@
  *--------------------------------------------------------------------------------------------*/
 // export * from "./proxy"
 export * from './file-system';
-export * from './ref/jsonpath';
+export * from './jsonpath';
+//export * from './graph-builder';

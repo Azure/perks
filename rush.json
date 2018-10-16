@@ -57,6 +57,12 @@
       "projectFolder": "libraries/uri",
       "reviewCategory": "production",
       "shouldPublish": true
+    },
+    {
+      "packageName": "@microsoft.azure/oai2-to-oai3",
+      "projectFolder": "libraries/oai2-to-oai3",
+      "reviewCategory": "production",
+      "shouldPublish": true
     }
   ]
 }

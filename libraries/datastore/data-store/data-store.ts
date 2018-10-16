@@ -3,17 +3,16 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { RawSourceMap, SourceMapConsumer, SourceMapGenerator, MappingItem, Position, MappedPosition } from "source-map";
-import { OperationCanceledException } from "@microsoft.azure/tasks";
-import { IFileSystem } from "../file-system";
-import { Lazy, LazyPromise } from "../lazy";
-import { LineIndices } from "../parsing/text-utility";
-import { CancellationToken } from "../ref/cancellation";
-import { Mapping, Mappings, SmartPosition } from "../ref/source-map";
-import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString } from "@microsoft.azure/uri";
-import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode } from "../ref/yaml";
-import { BlameTree } from "../source-map/blaming";
-import { Compile, CompilePosition } from "../source-map/source-map";
+import { OperationCanceledException } from '@microsoft.azure/tasks';
+import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString } from '@microsoft.azure/uri';
+import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
+import { CancellationToken } from '../cancellation';
+import { IFileSystem } from '../file-system';
+import { Lazy, LazyPromise } from '../lazy';
+import { LineIndices } from '../parsing/text-utility';
+import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode } from '../yaml';
+import { BlameTree } from '../source-map/blaming';
+import { Compile, CompilePosition, Mapping, SmartPosition } from '../source-map/source-map';
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
 
@@ -25,7 +24,7 @@ export interface Metadata {
   artifact: string;
   inputSourceMap: LazyPromise<RawSourceMap>;
   sourceMap: Lazy<RawSourceMap>;
-  sourceMapEachMappingByLine: Lazy<Array<MappingItem>[]>;
+  sourceMapEachMappingByLine: Lazy<Array<Array<MappingItem>>>;
   yamlAst: Lazy<YAMLNode>;
   lineIndices: Lazy<Array<number>>;
 }
@@ -35,7 +34,7 @@ export interface Data {
   metadata: Metadata;
 }
 
-interface Store { [uri: string]: Data }
+interface Store { [uri: string]: Data; }
 
 /********************************************
  * Central data controller
@@ -199,8 +198,8 @@ export class DataStore {
       return sourceMap;
     });
     const sourceMapConsumer = await new SourceMapConsumer(metadata.sourceMap.Value);
-    metadata.sourceMapEachMappingByLine = new Lazy<Array<MappingItem[]>>(() => {
-      const result: Array<MappingItem[]> = [];
+    metadata.sourceMapEachMappingByLine = new Lazy<Array<Array<MappingItem>>>(() => {
+      const result: Array<Array<MappingItem>> = [];
 
       // const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
 
@@ -312,7 +311,7 @@ export class DataSink {
     return this.write(description, data, artifact, sourceMapFactory);
   }
 
-  public async WriteData(description: string, data: string, artifact?: string, mappings: Mappings = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
+  public async WriteData(description: string, data: string, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
     return this.WriteDataWithSourceMap(description, data, artifact, readHandle => {
       const sourceMapGenerator = new SourceMapGenerator({ file: readHandle.key });
       Compile(mappings, sourceMapGenerator, mappingSources.concat(readHandle));
@@ -320,7 +319,7 @@ export class DataSink {
     });
   }
 
-  public WriteObject<T>(description: string, obj: T, artifact?: string, mappings: Mappings = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
+  public WriteObject<T>(description: string, obj: T, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
     return this.WriteData(description, FastStringify(obj), artifact, mappings, mappingSources);
   }
 

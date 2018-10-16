@@ -3,13 +3,33 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { SourceMapGenerator } from 'source-map';
+import { Position, SourceMapGenerator } from 'source-map';
 import { DataHandle } from '../data-store/data-store';
+import { JsonPath, stringify } from '../jsonpath';
 import { IndexToPosition } from '../parsing/text-utility';
 import * as yaml from '../parsing/yaml';
-import { JsonPath, stringify } from '../ref/jsonpath';
-import { EnhancedPosition, Mappings, SmartPosition } from '../ref/source-map';
-import { Descendants, ToAst } from '../ref/yaml';
+import { Descendants, ToAst } from '../yaml';
+
+// information to attach to line/column based to get a richer experience
+export interface PositionEnhancements {
+  path?: JsonPath;
+  length?: number;
+  valueOffset?: number;
+  valueLength?: number;
+}
+
+export type EnhancedPosition = Position & PositionEnhancements;
+
+export type SmartPosition = Position | { path: JsonPath };
+
+export interface Mapping {
+  generated: SmartPosition;
+  original: SmartPosition;
+  source: string;
+  name?: string;
+}
+
+
 
 // for carrying over rich information into the realm of line/col based source maps
 // convention: <original name (contains no `nameWithPathSeparator`)>\n(<path>)
@@ -30,6 +50,7 @@ export function TryDecodeEnhancedPositionFromName(name: string | undefined): Enh
     return undefined;
   }
 }
+
 export function EncodeEnhancedPositionInName(name: string | undefined, pos: EnhancedPosition): string {
   if (name && name.indexOf(enhancedPositionSeparator) !== -1) {
     name = name.split(enhancedPositionSeparator)[0];
@@ -49,7 +70,7 @@ export function CompilePosition(position: SmartPosition, yamlFile: DataHandle): 
   return <EnhancedPosition>position;
 }
 
-export function Compile(mappings: Mappings, target: SourceMapGenerator, yamlFiles: Array<DataHandle> = []): void {
+export function Compile(mappings: Array<Mapping>, target: SourceMapGenerator, yamlFiles: Array<DataHandle> = []): void {
   // build lookup
   const yamlFileLookup: { [key: string]: DataHandle } = {};
   for (const yamlFile of yamlFiles) {
@@ -76,15 +97,27 @@ export function Compile(mappings: Mappings, target: SourceMapGenerator, yamlFile
   }
 }
 
-export function CreateAssignmentMapping(assignedObject: any, sourceKey: string, sourcePath: JsonPath, targetPath: JsonPath, subject: string): Mappings {
-  const result: Mappings = [];
+/** This recursively associates a node in the 'generated' document with a node in the 'source' document
+ *
+ * @description This does make an implicit assumption that the decendents of the 'generated' node are 1:1 with the descendents in the 'source' node.
+ * In the event that is not true, elements in the target's source map will not be pointing to the correct elements in the source node.
+ */
+export function CreateAssignmentMapping(assignedObject: any, sourceKey: string, sourcePath: JsonPath, targetPath: JsonPath, subject: string, recurse: boolean = true, result = new Array<Mapping>()): Array<Mapping> {
   for (const descendant of Descendants(ToAst(assignedObject))) {
     const path = descendant.path;
     result.push({
-      name: `${subject} (${stringify(path)})`, source: sourceKey,
+      name: `${subject} (${stringify(path)})`,
+      source: sourceKey,
       original: { path: sourcePath.concat(path) },
       generated: { path: targetPath.concat(path) }
     });
+
+    // if it's just the top node that is 1:1, break now.
+    if (!recurse) {
+      break;
+    }
   }
   return result;
 }
+
+

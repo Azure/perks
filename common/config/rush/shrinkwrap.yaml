@@ -4,8 +4,10 @@ dependencies:
   '@rush-temp/eventing': 'file:projects/eventing.tgz'
   '@rush-temp/extension': 'file:projects/extension.tgz'
   '@rush-temp/linq': 'file:projects/linq.tgz'
+  '@rush-temp/oai2-to-oai3': 'file:projects/oai2-to-oai3.tgz'
   '@rush-temp/tasks': 'file:projects/tasks.tgz'
   '@rush-temp/uri': 'file:projects/uri.tgz'
+  '@types/js-yaml': 3.11.2
   '@types/jsonpath': 0.2.0
   '@types/mocha': 5.2.5
   '@types/node': 10.11.3
@@ -29,6 +31,10 @@ dependencies:
   urijs: 1.19.1
   yaml-ast-parser: 0.0.40
 packages:
+  /@types/js-yaml/3.11.2:
+    dev: false
+    resolution:
+      integrity: sha512-JRDtMPEqXrzfuYAdqbxLot1GvAr/QvicIZAnOAigZaj8xVMhuSJTg/xsv9E1TvyL+wujYhRLx9ZsQ0oFOSmwyA==
   /@types/jsonpath/0.2.0:
     dev: false
     resolution:
@@ -1212,6 +1218,20 @@ packages:
       integrity: sha512-9L3LZiWedWmphfY+joy/xaenEsKCtfP4xv4jc6asTOJ6ESOMnBsubj1o5+WcUpxhKTCwktCR2/aI/dnjtaGc2w==
       tarball: 'file:projects/linq.tgz'
     version: 0.0.0
+  'file:projects/oai2-to-oai3.tgz':
+    dependencies:
+      '@types/js-yaml': 3.11.2
+      '@types/mocha': 5.2.5
+      '@types/node': 10.11.3
+      mocha: 5.2.0
+      mocha-typescript: 1.1.17
+      typescript: 3.1.3
+    dev: false
+    name: '@rush-temp/oai2-to-oai3'
+    resolution:
+      integrity: sha512-6NrpquHEifxd7Te8xXyq5Ulk3wHIfCCPBShsI54O1WyeYFRr5uTlL4aywvOAWl2xYWa5eBq7i7+uG6ElAJEc1g==
+      tarball: 'file:projects/oai2-to-oai3.tgz'
+    version: 0.0.0
   'file:projects/tasks.tgz':
     dependencies:
       '@types/mocha': 5.2.5
@@ -1251,8 +1271,10 @@ specifiers:
   '@rush-temp/eventing': 'file:./projects/eventing.tgz'
   '@rush-temp/extension': 'file:./projects/extension.tgz'
   '@rush-temp/linq': 'file:./projects/linq.tgz'
+  '@rush-temp/oai2-to-oai3': 'file:./projects/oai2-to-oai3.tgz'
   '@rush-temp/tasks': 'file:./projects/tasks.tgz'
   '@rush-temp/uri': 'file:./projects/uri.tgz'
+  '@types/js-yaml': 3.11.2
   '@types/jsonpath': ^0.2.0
   '@types/mocha': 5.2.5
   '@types/node': 10.11.3
