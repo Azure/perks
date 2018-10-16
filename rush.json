@@ -53,6 +53,12 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@microsoft.azure/openapi",
+      "projectFolder": "libraries/openapi",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@microsoft.azure/uri",
       "projectFolder": "libraries/uri",
       "reviewCategory": "production",

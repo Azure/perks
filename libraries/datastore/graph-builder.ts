@@ -4,6 +4,18 @@ import { CreateAssignmentMapping } from './source-map/source-map';
 import { keys, length } from '@microsoft.azure/linq';
 
 /*
+export abstract class GraphWithSourceMap<T> {
+  private generated: T;
+
+  constructor(private originalGraph: any, private originalFilename: string) {
+    this.generated = newGraph([''], '');
+    jsonPointer.visit(originalGraph, this.visit);
+  }
+
+  abstract visit(node, pointer): never;
+}
+*/
+/*
 
 const q = newGraph('', );
 q.components = {};  //        './'
