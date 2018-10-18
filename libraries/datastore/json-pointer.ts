@@ -1,9 +1,16 @@
 'use strict';
-import { Dictionary, items, keys, values } from "@microsoft.azure/linq";
+import { Dictionary, items, keys, values, any } from "@microsoft.azure/linq";
 
 export type JsonPointer = string;
 export type JsonPointerTokens = Array<string>;
-
+export interface Node {
+  value: any;
+  key: string;
+  pointer: JsonPointer;
+  // reference: JsonPointerTokens;
+  // visit(): Iterable<Node>;
+  children: Iterable<Node>;
+}
 
 /**
  * Convenience wrapper around the api.
@@ -181,7 +188,7 @@ function isObjectOrArray(value: any): boolean {
  * @param {function} iterator
  * @param {function} descend
  */
-export function visit(obj: any, iterator: (value: any, pointer: string) => boolean, descend: (value: any) => boolean = isObjectOrArray) {
+export function _visit(obj: any, iterator: (value: any, pointer: string) => boolean, descend: (value: any) => boolean = isObjectOrArray) {
   const refTokens = new Array<string>();
   const next = (cur: any) => {
     for (const { key, value } of items(cur)) {
@@ -193,6 +200,18 @@ export function visit(obj: any, iterator: (value: any, pointer: string) => boole
     }
   };
   next(obj);
+}
+
+export function* visit(obj: any, parentReference: JsonPointerTokens = new Array<string>()): Iterable<Node> {
+  for (const { key, value } of items(obj)) {
+    const reference = [...parentReference, key];
+    yield {
+      value,
+      pointer: compile(reference),
+      key,
+      children: visit(value, reference)
+    };
+  }
 }
 
 /**

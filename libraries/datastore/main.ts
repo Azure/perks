@@ -6,3 +6,4 @@
 export * from './file-system';
 export * from './jsonpath';
 export * from './json-pointer';
+export * from './graph-builder';

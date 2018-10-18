@@ -1,7 +1,7 @@
-import { keys } from "@microsoft.azure/linq";
-import * as assert from "assert";
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
-import * as pointer from "../main";
+import { keys } from '@microsoft.azure/linq';
+import * as assert from 'assert';
+import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
+import * as pointer from '../main';
 
 let rfcExample: any;
 let rfcValues: any;
@@ -71,18 +71,17 @@ let rfcParsed: any;
     }
   }
   @test 'should create arrays for - and reference the (nonexistent) member after the last array element.'() {
-    let obj = <any>['foo'];
+    const obj = <any>['foo'];
     pointer.set(obj, '/-/test/-', 'expected');
     assert(Array.isArray(obj), 'should be an array');
     assert(obj.length === 2, 'length should be 2');
     assert(Array.isArray(obj[1].test), 'should be an array too');
     assert(obj[1].test.length === 1, 'should be length 1 ');
-    assert(obj[1].test[0] === 'expected', "expected");
+    assert(obj[1].test[0] === 'expected', 'expected');
   }
 
-
   @test 'should return a dictionary (pointer -> value)'() {
-    var obj = {
+    const obj = {
       bla: {
         test: 'expected'
       },
@@ -95,10 +94,10 @@ let rfcParsed: any;
   }
 
   @test 'should work with arrays'() {
-    var obj = {
-      "users": [
-        { "name": "example 1" },
-        { "name": "example 2" }
+    const obj = {
+      'users': [
+        { 'name': 'example 1' },
+        { 'name': 'example 2' }
       ]
     },
       dict = pointer.toDictionary(obj),
@@ -110,7 +109,7 @@ let rfcParsed: any;
   }
 
   @test 'should work with other arrays'() {
-    var obj = {
+    const obj = {
       bla: {
         bli: [4, 5, 6]
       }
@@ -122,7 +121,7 @@ let rfcParsed: any;
   }
 
   @test 'should return true when the pointer exists'() {
-    var obj = {
+    const obj = {
       bla: {
         test: 'expected'
       },
@@ -136,7 +135,7 @@ let rfcParsed: any;
   }
 
   @test 'should return true when the tokens point to value'() {
-    var obj = {
+    const obj = {
       bla: {
         test: 'expected'
       },
@@ -150,7 +149,7 @@ let rfcParsed: any;
   }
 
   @test 'should return false when the pointer does not exist'() {
-    var obj = {
+    const obj = {
       bla: {
         test: 'expected'
       },
@@ -163,7 +162,7 @@ let rfcParsed: any;
   }
 
   @test 'should return false when the tokens do not point to value'() {
-    var obj = {
+    const obj = {
       bla: {
         test: 'expected'
       },
@@ -180,5 +179,63 @@ let rfcParsed: any;
       assert(ptr === '/bla/test');
       assert(value === 'expected');
     });
+  }
+
+  @test 'non-recursive visit pattern'() {
+    const obj = {
+      foo: 100,
+      bar: 'hello',
+      bin: {
+        b1: 'string',
+        b2: 0,
+        b3: ['a', 'b', 'c'],
+        b4: {
+          box: 'sad'
+        }
+      }
+    };
+
+    for (const each of pointer.visit(obj)) {
+      // console.log(`Key: ${each.key}, value: ${each.value}, pointer: ${each.pointer}`);
+
+      switch (each.key) {
+        case 'foo':
+          assert(each.value === 100);
+          break;
+
+        case 'bar':
+          assert(each.value === 'hello');
+          break;
+
+        case 'bin':
+          assert(typeof each.value === 'object');
+
+          for (const item of each.visit()) {
+            // console.log(`   Key: ${item.key}, value: ${item.value}, pointer: ${item.pointer}`);
+            switch (item.key) {
+              case 'b1':
+                assert(item.value === 'string');
+                break;
+
+              case 'b2':
+                assert(item.value === 0);
+                break;
+
+              case 'b3':
+                assert(Array.isArray(item.value) === true);
+                for (const i of item.visit()) {
+                  // console.log(`      Key: ${i.key}, value: ${i.value}, pointer: ${i.pointer}`);
+                  assert(typeof i.value === 'string');
+                }
+                break;
+
+              case 'b4':
+                assert(typeof (item.value) === 'object');
+                break;
+            }
+
+          }
+      }
+    }
   }
 }
