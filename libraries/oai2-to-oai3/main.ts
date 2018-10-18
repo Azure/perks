@@ -1,15 +1,9 @@
-import { createGraphProxy, visit, Node, JsonPointer } from '@microsoft.azure/datastore';
-import { Dictionary } from '../linq/dist/main';
+import { createGraphProxy, JsonPointer, Node, visit } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
 
-
-export function doIt() {
-  return false;
-}
-
-class Oai2ToOai3 {
-  protected generated: any;
-  protected mappings = new Array<Mapping>();
+export class Oai2ToOai3 {
+  public generated: any;
+  public mappings = new Array<Mapping>();
 
   constructor(protected originalFilename: string, protected original: any) {
     this.generated = this.createGraphProxy('');
@@ -66,6 +60,8 @@ class Oai2ToOai3 {
           break;
       }
     }
+
+    return this.generated;
   }
 
   visitInfo(info: Iterable<Node>) {

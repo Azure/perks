@@ -3,12 +3,12 @@ import { JsonPointer, Node, visit } from './json-pointer';
 
 import { any, keys, length } from '@microsoft.azure/linq';
 import { create } from 'domain';
-import { paths } from './jsonpath';
+import { paths, parseJsonPointer } from './jsonpath';
 import { CreateAssignmentMapping } from './source-map/source-map';
 
 export function createGraphProxy<T extends object>(originalFileName: string, targetPointer: JsonPointer = '', mappings = new Array<Mapping>()): ProxyObject<T> {
   const instance = <any>{
-    ____hasSourceGraph: true
+    //____hasSourceGraph: true
   };
 
   return new Proxy<ProxyObject<T>>(instance, {
@@ -25,12 +25,14 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
         throw new Error('Assignment: pointer property required.');
       }
       if (typeof (value.value) === 'object' && !Array.isArray(value.value)) {
-        if (!(instance).____hasSourceGraph) {
-          throw new Error('Assignment: Objects must have source graph.');
-        }
+        /*        if (!(instance).____hasSourceGraph) {
+                  throw new Error('Assignment: Objects must have source graph.');
+                }
+        */
       }
       instance[key] = value.value;
-      CreateAssignmentMapping(value.value, value.filename || originalFileName, <any>value.pointer, [targetPointer, key], value.subject || '', false, mappings);
+
+      CreateAssignmentMapping(value.value, value.filename || originalFileName, parseJsonPointer(value.pointer), [targetPointer, key], value.subject || '', false, mappings);
       // set the value in the target object
 
       return true;

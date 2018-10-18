@@ -210,7 +210,7 @@ let rfcParsed: any;
         case 'bin':
           assert(typeof each.value === 'object');
 
-          for (const item of each.visit()) {
+          for (const item of each.children) {
             // console.log(`   Key: ${item.key}, value: ${item.value}, pointer: ${item.pointer}`);
             switch (item.key) {
               case 'b1':
@@ -223,7 +223,7 @@ let rfcParsed: any;
 
               case 'b3':
                 assert(Array.isArray(item.value) === true);
-                for (const i of item.visit()) {
+                for (const i of item.children) {
                   // console.log(`      Key: ${i.key}, value: ${i.value}, pointer: ${i.pointer}`);
                   assert(typeof i.value === 'string');
                 }
