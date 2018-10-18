@@ -15,6 +15,7 @@ import { Oai2ToOai3 } from '../main';
     const absoluteUri = 'mem://swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}../../../test/resources/conversion/swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}../../../test/resources/conversion/openapi.yaml`);
     const map = new Map<string, string>([[absoluteUri, swagger]]);
     const mfs = new datastore.MemoryFileSystem(map);
 
@@ -31,8 +32,9 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      const text = FastStringify(convert.generated);
-      console.log(text);
+      const swaggerAsText = FastStringify(convert.generated);
+      console.log(swaggerAsText);
+
 
 
     }
