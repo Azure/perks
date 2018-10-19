@@ -30,11 +30,19 @@ export class Oai2ToOai3 {
         case 'produces':
           break;
         case 'definitions':
+          if (!this.generated.components) {
+            this.generated.components = this.newObject('/components');
+          }
 
+          this.visitDefinitions(children);
           break;
         case 'parameters':
           break;
         case 'responses':
+          if (!this.generated.components) {
+            this.generated.components = this.newObject('/components');
+          }
+          this.visitResponsesDefinitions(children);
           break;
         case 'securityDefinitions':
           break;
@@ -62,6 +70,17 @@ export class Oai2ToOai3 {
     }
 
     return this.generated;
+  }
+
+  visitDefinitions(definitions: Iterable<Node>) {
+    this.generated.components.schemas = this.newObject('/components/schemas');
+    for (const { value, key, pointer } of definitions) {
+      this.visitSchema(this.generated.components.schemas, key, value, pointer)
+    }
+  }
+
+  visitSchema(target: any, key: string, value: any, pointer: string) {
+    target[key] = { value, pointer, recurse: true };
   }
 
   visitTags(tags: Iterable<Node>) {
@@ -154,6 +173,7 @@ export class Oai2ToOai3 {
         case 'options':
         case 'head':
         case 'patch':
+        case 'x-trace':
           this.visitOperation(pathItem, key, pointer, children);
           break;
         case 'parameters':
@@ -163,22 +183,24 @@ export class Oai2ToOai3 {
   }
 
   visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
-    // handle a single operation.
+
+    // trace was not supported on OpenAPI 2.0, it was an extension
+    httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
     pathItem[httpMethod] = this.newObject(jsonPointer);
+
+    // handle a single operation.
     const operation = pathItem[httpMethod];
 
-    for (const { value, key, pointer } of operationMembers) {
+    for (const { value, key, pointer, children } of operationMembers) {
       switch (key) {
         case 'tags':
-          operation.tags = { value, pointer }
-          break;
         case 'description':
         case 'summary':
+        case 'operationId':
           operation[key] = { value, pointer };
           break;
         case 'externalDocs':
-          break;
-        case 'operationId':
+          this.visitExternalDocs(operation, key, value, pointer);
           break;
         case 'consumes':
           break;
@@ -199,5 +221,30 @@ export class Oai2ToOai3 {
           break;
       }
     }
+  }
+
+  visitResponsesDefinitions(responsesDefinitions: Iterable<Node>) {
+    this.generated.components.responses = this.newObject('/components/responses');
+    for (const { key, value, pointer, children } of responsesDefinitions) {
+
+    }
+  }
+
+  // visitResponses(operationresponses: Iterable<Node>) {
+  //   const HTTPStatusCodePattern = /^[1-5][0-9][0-9]$/g
+
+  //   for (const { key, value, pointer, children } of responses) {
+  //     if (key.startsWith('x-')) {
+  //       this.visitExtensions(responses, key, value, pointer)
+  //     } else if (key === 'default' || key.match(HTTPStatusCodePattern)) {
+  //       this.visitResponse(children);
+  //     } else {
+  //       this.visitUnspecified(children)
+  //     }
+  //   }
+  // }
+
+  visitResponse(response: Iterable<Node>) {
+
   }
 }
