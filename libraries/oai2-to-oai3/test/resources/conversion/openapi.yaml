@@ -1073,7 +1073,8 @@
           "message": {
             "type": "string"
           }
-        }
+        },
+        "deprecated" : true
       }
     }
   }

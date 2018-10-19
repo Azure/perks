@@ -1,5 +1,6 @@
-import { createGraphProxy, JsonPointer, Node, visit, FastStringify } from '@microsoft.azure/datastore';
+import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
+import { parse } from 'path';
 
 export class Oai2ToOai3 {
   public generated: any;
@@ -33,8 +34,8 @@ export class Oai2ToOai3 {
           if (!this.generated.components) {
             this.generated.components = this.newObject('/components');
           }
-
-          this.visitDefinitions(children);
+          this.generated.components.schemas = this.newObject('/components/schemas');
+          //this.visitDefinitions(children);
           break;
         case 'parameters':
           break;
@@ -42,6 +43,7 @@ export class Oai2ToOai3 {
           if (!this.generated.components) {
             this.generated.components = this.newObject('/components');
           }
+          this.generated.components.responses = this.newObject('/components/responses');
           this.visitResponsesDefinitions(children);
           break;
         case 'securityDefinitions':
@@ -72,14 +74,79 @@ export class Oai2ToOai3 {
     return this.generated;
   }
 
+  /*
   visitDefinitions(definitions: Iterable<Node>) {
-    this.generated.components.schemas = this.newObject('/components/schemas');
-    for (const { value, key, pointer } of definitions) {
-      this.visitSchema(this.generated.components.schemas, key, value, pointer)
+    for (const { key: schemaName, pointer: jsonPointer, children } of definitions) {
+      const schemaPointer = `/components/schemas/${schemaName}`
+      this.generated.components.schemas[schemaName] = this.newObject(schemaPointer);
+      const schema = this.generated.components.schemas[schemaName];
+      for (const { value, key, pointer } of children) {
+        switch (key) {
+          // properties taken from JSON Schema specification and follow same specifications as OAI 2.0
+          case 'format':
+          case 'description':
+          case 'default':
+          case 'title':
+          case 'multipleOf':
+          case 'maximum':
+          case 'exclusiveMaximum':
+          case 'minimum':
+          case 'exclusiveMinimum':
+          case 'maxLength':
+          case 'minLength':
+          case 'pattern':
+          case 'maxItems':
+          case 'minItems':
+          case 'uniqueItems':
+          case 'maxProperties':
+          case 'minProperties':
+          case 'required':
+          case 'enum':
+            schema[key] = { value, pointer };
+            break;
+          case 'items':
+            break;
+          case 'allOf':
+            break;
+          case 'type':
+            break;
+          case 'properties':
+            break;
+          case 'additionalProperties':
+            break;
+          // other JSON Schema subfields used for documentation
+          case 'discriminator':
+          case 'x-discriminator':
+            break;
+          case 'readOnly':
+            break;
+          case 'xml':
+            this.visitXml(schema, key, value, pointer);
+            break;
+          case 'externalDocs':
+            this.visitExternalDocs(schema, key, value, pointer)
+          case 'example':
+            schema[key] = { value, pointer, recurse: true };
+          case 'x-deprecated':
+            const newKey = 'deprecated';
+            const newPointer = this.getPointerWithoutExtensionFlag(pointer, key, newKey);
+            schema[newKey] = { value, newPointer };
+          case '$ref':
+          default:
+            break
+        }
+      }
     }
   }
+ */
 
-  visitSchema(target: any, key: string, value: any, pointer: string) {
+  getPointerWithoutExtensionFlag(pointer: string, oldKey: string, newKey: string) {
+    const regString = `${oldKey}$`
+    const reg = new RegExp(regString);
+    return pointer.replace(reg, newKey);
+  }
+
+  visitXml(target: any, key: string, value: any, pointer: string) {
     target[key] = { value, pointer, recurse: true };
   }
 

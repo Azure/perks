@@ -11,7 +11,7 @@ import { Oai2ToOai3 } from '../main';
 
 @suite class MyTests {
 
-  /* @test */ async "test conversion"() {
+  @test  async "test conversion"() {
     const absoluteUri = 'mem://swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}../../../test/resources/conversion/swagger.yaml`);
