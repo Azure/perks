@@ -53,6 +53,7 @@
     "jsonpath": "1.0.0",
     "safe-eval": "^0.4.1",
     "source-map": "0.7.3",
-    "yaml-ast-parser": "0.0.40"
+    "yaml-ast-parser": "0.0.40",
+    "js-yaml": "3.12.0"
   }
 }
