@@ -89,38 +89,6 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitPaths(paths: Iterable<Node>) {
-    for (const { key: uri, pointer, children: pathItemMembers } of paths) {
-      this.visitPath(uri, pointer, pathItemMembers);
-    }
-  }
-
-  visitPath(uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>) {
-    this.generated.paths[uri] = this.newObject(jsonPointer);
-    const pathItem = this.generated.paths[uri];
-    for (const { value, key, pointer, children } of pathItemMembers) {
-      // handle each item in the path object
-      switch (key) {
-        case '$ref':
-        case 'x-summary':
-        case 'x-description':
-          pathItem[key] = { value, pointer };
-          break;
-        case 'get':
-        case 'put':
-        case 'post':
-        case 'delete':
-        case 'options':
-        case 'head':
-        case 'patch':
-          this.visitOperation(pathItem[key], pointer, children);
-          break;
-        case 'parameters':
-          break;
-      }
-    }
-  }
-
   visitExtensions(target: any, key: string, value: any, pointer: string) {
     target[key] = { value, pointer, recurse: true };
   }
@@ -162,14 +130,47 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitOperation(operation: any, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
+  visitPaths(paths: Iterable<Node>) {
+    for (const { key: uri, pointer, children: pathItemMembers } of paths) {
+      this.visitPath(uri, pointer, pathItemMembers);
+    }
+  }
+
+  visitPath(uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>) {
+    this.generated.paths[uri] = this.newObject(jsonPointer);
+    const pathItem = this.generated.paths[uri];
+    for (const { value, key, pointer, children } of pathItemMembers) {
+      // handle each item in the path object
+      switch (key) {
+        case '$ref':
+        case 'x-summary':
+        case 'x-description':
+          pathItem[key] = { value, pointer };
+          break;
+        case 'get':
+        case 'put':
+        case 'post':
+        case 'delete':
+        case 'options':
+        case 'head':
+        case 'patch':
+          this.visitOperation(pathItem, key, pointer, children);
+          break;
+        case 'parameters':
+          break;
+      }
+    }
+  }
+
+  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
     // handle a single operation.
-    operation = this.newObject(jsonPointer);
+    pathItem[httpMethod] = this.newObject(jsonPointer);
+    const operation = pathItem[httpMethod];
 
     for (const { value, key, pointer } of operationMembers) {
       switch (key) {
         case 'tags':
-          operation.tags = { value, pointer, recursive: true }
+          operation.tags = { value, pointer }
           break;
         case 'description':
         case 'summary':
