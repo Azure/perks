@@ -40,12 +40,12 @@ export class Oai2ToOai3 {
         case 'security':
           break;
         case 'tags':
-          this.generated.tags = this.newObject(pointer);
-          this.visitTags(<Array<Node>>children);
+          this.generated.tags = this.newArray(pointer);
+          this.visitTags(children);
           break;
         case 'externalDocs':
           this.generated.externalDocs = this.newObject(pointer);
-          //this.visitExternalDocs(children);
+          this.visitExternalDocs(this.generated.externalDocs, children);
           break;
         case 'x-ms-paths':
         case 'paths':
@@ -64,14 +64,14 @@ export class Oai2ToOai3 {
     return this.generated;
   }
 
-  visitTags(tags: Array<Node>) {
+  visitTags(tags: Iterable<Node>) {
     for (const { key: index, pointer, children: tagItemMembers } of tags) {
-      this.visitTag(parseInt(index), pointer, tagItemMembers);
+      this.visitTag(index, pointer, tagItemMembers);
     }
   }
 
-  visitTag(index: number, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
-    this.generated.tags.push(this.newObject(jsonPointer));
+  visitTag(index: string, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
+    this.generated.tags[index] = this.newObject(jsonPointer);
 
     for (const { key, pointer, value, children } of tagItemMembers) {
       switch (key) {
@@ -155,6 +155,10 @@ export class Oai2ToOai3 {
           break;
       }
     }
+  }
+
+  newArray(pointer: JsonPointer) {
+    return { value: createGraphProxy(this.originalFilename, pointer, this.mappings), pointer };
   }
 
   createGraphProxy(jsonPointer: JsonPointer) {
