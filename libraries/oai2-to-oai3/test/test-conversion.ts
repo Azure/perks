@@ -34,13 +34,8 @@ import { Oai2ToOai3 } from '../main';
 
       const swaggerAsText = FastStringify(convert.generated);
       console.log(swaggerAsText);
-
-
-
     }
-
   }
-
 
   @test async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';

@@ -1,10 +1,7 @@
 import { Mapping } from 'source-map';
 import { JsonPointer, Node, visit, parsePointer } from './json-pointer';
-
-import { any, keys, length } from '@microsoft.azure/linq';
-import { create } from 'domain';
-import { paths, parseJsonPointer } from './jsonpath';
 import { CreateAssignmentMapping } from './source-map/source-map';
+import { Exception } from '@microsoft.azure/tasks';
 
 export function createGraphProxy<T extends object>(originalFileName: string, targetPointer: JsonPointer = '', mappings = new Array<Mapping>(), instance = <any>{}): ProxyObject<T> {
 
@@ -14,8 +11,7 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
 
   const push = (value: any) => {
     instance.push(value.value);
-    const key = instance.length - 1;
-    tag(value.value, value.filename, value.pointer, key, value.subject, value.recurse);
+    tag(value.value, value.filename, value.pointer, instance.length - 1, value.subject, value.recurse);
   };
 
   return new Proxy<ProxyObject<T>>(instance, {
@@ -40,10 +36,12 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
                 }
         */
       }
+      if (instance[key]) {
+        throw new Exception("")
+      }
+
       instance[key] = value.value;
       tag(value.value, value.filename, value.pointer, key, value.subject, value.recurse);
-      // CreateAssignmentMapping(value.value, value.filename || originalFileName, parsePointer(value.pointer), [...parsePointer(targetPointer), key].filter(each => each !== ''), value.subject || '', value.recurse, mappings);
-      // set the value in the target object
 
       return true;
     },
