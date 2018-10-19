@@ -2,9 +2,7 @@
 
 This package contains common code for the developer tools for generating Azure SDKs.
 
-This code originated at https://github.com/Mermade/oas-kit
-
-
+(development-in-progress)
 
 ----
 

@@ -1,6 +1,5 @@
 {
   "name": "@microsoft.azure/openapi",
-  "private": true,
   "version": "2.1.0",
   "description": "OpenAPI common code for Azure Tools",
   "main": "./dist/main.js",
