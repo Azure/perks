@@ -18,6 +18,7 @@ dependencies:
   file-url: 2.0.2
   get-uri: 2.0.2
   hosted-git-info: 2.7.1
+  js-yaml: 3.12.0
   jsonpath: 1.0.0
   memorystream: 0.3.1
   mocha: 5.2.0
@@ -89,6 +90,12 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
+  /argparse/1.0.10:
+    dependencies:
+      sprintf-js: 1.0.3
+    dev: false
+    resolution:
+      integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   /balanced-match/1.0.0:
     dev: false
     resolution:
@@ -248,7 +255,7 @@ packages:
       node: '>=0.4.0'
     hasBin: true
     optionalDependencies:
-      source-map: 0.7.3
+      source-map: 0.5.6
     resolution:
       integrity: sha1-U9ZSz6EDA4gnlFilJmxf/HCcY8M=
   /escodegen/1.11.0:
@@ -286,6 +293,13 @@ packages:
     hasBin: true
     resolution:
       integrity: sha1-/cpRzuYTOJXjyI1TXOSdv/YqRjM=
+  /esprima/4.0.1:
+    dev: false
+    engines:
+      node: '>=4'
+    hasBin: true
+    resolution:
+      integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
   /estraverse/0.0.4:
     dev: false
     engines:
@@ -492,6 +506,14 @@ packages:
     hasBin: true
     resolution:
       integrity: sha1-kEFwfWIkE2f1iDRTK58ZwsNvrHg=
+  /js-yaml/3.12.0:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-PIt2cnwmPfL4hKNwqeiuz4bKfnzHTBv6HyVgjahA6mPLwPDzjDWrplJBMjHUFxku/N3FlmrbyPclad+I+4mJ3A==
   /jsonpath/1.0.0:
     dependencies:
       esprima: 1.2.2
@@ -966,13 +988,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
-  /source-map/0.7.3:
+  /sprintf-js/1.0.3:
     dev: false
-    engines:
-      node: '>= 8'
-    optional: true
     resolution:
-      integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
+      integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
   /static-eval/2.0.0:
     dependencies:
       escodegen: 1.11.0
@@ -1173,6 +1192,7 @@ packages:
       '@types/mocha': 5.2.5
       '@types/node': 10.11.3
       '@types/source-map': 0.5.0
+      js-yaml: 3.12.0
       jsonpath: 1.0.0
       mocha: 5.2.0
       mocha-typescript: 1.1.17
@@ -1183,7 +1203,7 @@ packages:
     dev: false
     name: '@rush-temp/datastore'
     resolution:
-      integrity: sha512-QYR5m7ZaP+fzXIjibYhhlOsiwzmY9c5Z9Rbe18jMpTTyQX1A3YrYwc48uohsTTJhTWSvhvxNBosxzeN+c241vQ==
+      integrity: sha512-F2No+9kAUjm5KyyZ8VpRGGRjPYEZaWA2P2ePzQKeANA5C2fU4bziGCH+YFeUc7fJSUpybRkNv0I5owVhqq+jRA==
       tarball: 'file:projects/datastore.tgz'
     version: 0.0.0
   'file:projects/eventing.tgz':
@@ -1315,6 +1335,7 @@ specifiers:
   file-url: 2.0.2
   get-uri: ^2.0.2
   hosted-git-info: ^2.4.2
+  js-yaml: 3.12.0
   jsonpath: 1.0.0
   memorystream: ~0.3.1
   mocha: 5.2.0
