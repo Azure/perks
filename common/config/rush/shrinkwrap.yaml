@@ -14,6 +14,7 @@ dependencies:
   '@types/node': 10.11.3
   '@types/npm': 2.0.29
   '@types/semver': 5.5.0
+  '@types/source-map': 0.5.0
   file-url: 2.0.2
   get-uri: 2.0.2
   hosted-git-info: 2.7.1
@@ -26,7 +27,7 @@ dependencies:
   proper-lockfile: 2.0.1
   safe-eval: 0.4.1
   semver: 5.6.0
-  source-map: 0.7.3
+  source-map: 0.5.6
   source-map-support: 0.5.9
   typescript: 3.1.3
   urijs: 1.19.1
@@ -58,6 +59,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-41qEJgBH/TWgo5NFSvBCJ1qkoi3Q6ONSF2avrHq1LVEZfYpdHmj0y9SuTK+u9ZhG1sYQKBL1AWXKyLWP4RaUoQ==
+  /@types/source-map/0.5.0:
+    dev: false
+    resolution:
+      integrity: sha1-3TS72OMv5OdPLj2KwH+KpbRaR6w=
   /JSONSelect/0.4.0:
     dev: false
     engines:
@@ -949,6 +954,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-gR6Rw4MvUlYy83vP0vxoVNzM6t8MUXqNuRsuBmBHQDu1Fh6X015FrLdgoDKcNdkwGubozq0P4N0Q37UyFVr1EA==
+  /source-map/0.5.6:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-dc449SvwczxafwwRjYEzSiu19BI=
   /source-map/0.6.1:
     dev: false
     engines:
@@ -959,6 +970,7 @@ packages:
     dev: false
     engines:
       node: '>= 8'
+    optional: true
     resolution:
       integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==
   /static-eval/2.0.0:
@@ -1160,17 +1172,18 @@ packages:
       '@types/jsonpath': 0.2.0
       '@types/mocha': 5.2.5
       '@types/node': 10.11.3
+      '@types/source-map': 0.5.0
       jsonpath: 1.0.0
       mocha: 5.2.0
       mocha-typescript: 1.1.17
       safe-eval: 0.4.1
-      source-map: 0.7.3
+      source-map: 0.5.6
       typescript: 3.1.3
       yaml-ast-parser: 0.0.40
     dev: false
     name: '@rush-temp/datastore'
     resolution:
-      integrity: sha512-VJGaFOznZGZSh2gnUKUPsPjP3JwYPRAV8oReUrTpk9BZslSTUHA91LEvKAbs0bJ6jXe2oRs9djtM3Hh+P0i9mA==
+      integrity: sha512-QYR5m7ZaP+fzXIjibYhhlOsiwzmY9c5Z9Rbe18jMpTTyQX1A3YrYwc48uohsTTJhTWSvhvxNBosxzeN+c241vQ==
       tarball: 'file:projects/datastore.tgz'
     version: 0.0.0
   'file:projects/eventing.tgz':
@@ -1224,13 +1237,16 @@ packages:
       '@types/js-yaml': 3.11.2
       '@types/mocha': 5.2.5
       '@types/node': 10.11.3
+      '@types/source-map': 0.5.0
       mocha: 5.2.0
       mocha-typescript: 1.1.17
+      source-map: 0.5.6
+      source-map-support: 0.5.9
       typescript: 3.1.3
     dev: false
     name: '@rush-temp/oai2-to-oai3'
     resolution:
-      integrity: sha512-6NrpquHEifxd7Te8xXyq5Ulk3wHIfCCPBShsI54O1WyeYFRr5uTlL4aywvOAWl2xYWa5eBq7i7+uG6ElAJEc1g==
+      integrity: sha512-rZN1/TfnxCjYjnMbpRIVay5P8DQu+cYbXULEWWAscTJ2MzNMf2uQDp2sWYSo2cKYj2tPaAwr5/wyqpahIzQo5Q==
       tarball: 'file:projects/oai2-to-oai3.tgz'
     version: 0.0.0
   'file:projects/openapi.tgz':
@@ -1243,7 +1259,7 @@ packages:
     dev: false
     name: '@rush-temp/openapi'
     resolution:
-      integrity: sha512-683UvecijtfwkCVhHSzElWHkYRzXduaHO1iNJH/F50U5M22koocDRWvcy687POC6H9WyafWC4lf1ZXzQUrgRQw==
+      integrity: sha512-gz4+HZ2o7SOfFH7wPdDK6dJs4WDcmuhaXVKob4hoVr7mGtR7YWpsBqFUmjGL4DhjsNmxaDV+lRGLw30G8NmUwg==
       tarball: 'file:projects/openapi.tgz'
     version: 0.0.0
   'file:projects/tasks.tgz':
@@ -1295,6 +1311,7 @@ specifiers:
   '@types/node': 10.11.3
   '@types/npm': ^2.0.28
   '@types/semver': 5.5.0
+  '@types/source-map': 0.5.0
   file-url: 2.0.2
   get-uri: ^2.0.2
   hosted-git-info: ^2.4.2
@@ -1307,7 +1324,7 @@ specifiers:
   proper-lockfile: ^2.0.1
   safe-eval: ^0.4.1
   semver: ^5.3.0
-  source-map: 0.7.3
+  source-map: 0.5.6
   source-map-support: 0.5.9
   typescript: ^3.1.3
   urijs: ^1.19.1

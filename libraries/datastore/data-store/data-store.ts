@@ -8,7 +8,7 @@ import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString } fro
 import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
-import { Lazy, LazyPromise } from '../lazy';
+import { Lazy } from '../lazy';
 import { LineIndices } from '../parsing/text-utility';
 import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode } from '../yaml';
 import { BlameTree } from '../source-map/blaming';
@@ -22,7 +22,7 @@ const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
 
 export interface Metadata {
   artifact: string;
-  inputSourceMap: LazyPromise<RawSourceMap>;
+  inputSourceMap: Lazy<RawSourceMap>;
   sourceMap: Lazy<RawSourceMap>;
   sourceMapEachMappingByLine: Lazy<Array<Array<MappingItem>>>;
   yamlAst: Lazy<YAMLNode>;
@@ -181,6 +181,10 @@ export class DataStore {
     const metadata: Metadata = <any>{};
     const result = await this.WriteDataInternal(uri, data, metadata);
     metadata.artifact = artifact;
+    metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
+    metadata.inputSourceMap = new Lazy<RawSourceMap>(() => this.CreateInputSourceMapFor(uri));
+
+    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
     metadata.sourceMap = new Lazy(() => {
       if (!sourceMapFactory) {
         return new SourceMapGenerator().toJSON();
@@ -217,9 +221,7 @@ export class DataStore {
 
       return result;
     });
-    metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
-    metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
-    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
+
     return result;
   }
 
@@ -266,13 +268,13 @@ export class DataStore {
     });
   }
 
-  private async CreateInputSourceMapFor(absoluteUri: string): Promise<RawSourceMap> {
+  private CreateInputSourceMapFor(absoluteUri: string): RawSourceMap {
     const data = this.ReadStrictSync(absoluteUri);
 
     // retrieve all target positions
     const targetPositions: Array<SmartPosition> = [];
     const metadata = data.ReadMetadata();
-    const sourceMapConsumer = await new SourceMapConsumer(metadata.sourceMap.Value);
+    const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
     sourceMapConsumer.eachMapping(m => targetPositions.push(<Position>{ column: m.generatedColumn, line: m.generatedLine }));
 
     // collect blame

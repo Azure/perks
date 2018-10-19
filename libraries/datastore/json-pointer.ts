@@ -55,7 +55,7 @@ export function api(obj: any, pointer: JsonPointer | JsonPointerTokens, value: a
  * @returns {*} - value at location, or will throw if location is not present.
  */
 export function get(obj: any, pointer: JsonPointer | JsonPointerTokens) {
-  const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);
+  const refTokens = Array.isArray(pointer) ? pointer : parsePointer(pointer);
 
   for (let i = 0; i < refTokens.length; ++i) {
     const tok = refTokens[i];
@@ -75,7 +75,7 @@ export function get(obj: any, pointer: JsonPointer | JsonPointerTokens) {
  * @param value
  */
 export function set(obj: any, pointer: JsonPointer | JsonPointerTokens, value: any) {
-  const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);
+  const refTokens = Array.isArray(pointer) ? pointer : parsePointer(pointer);
   let nextTok: string | number = refTokens[0];
 
   if (refTokens.length === 0) {
@@ -111,7 +111,7 @@ export function set(obj: any, pointer: JsonPointer | JsonPointerTokens, value: a
  * @param {JsonPointer|JsonPointerTokens} pointer - pointer or tokens to a location
  */
 export function remove(obj: any, pointer: JsonPointer | JsonPointerTokens) {
-  const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);
+  const refTokens = Array.isArray(pointer) ? pointer : parsePointer(pointer);
   const finalToken = refTokens[refTokens.length - 1];
   if (finalToken === undefined) {
     throw new Error(`Invalid JSON pointer for remove: "${pointer}"`);
@@ -256,7 +256,7 @@ function unescape(str: string) {
  * @param pointer
  * @returns {Array}
  */
-function parse(pointer: string): JsonPointerTokens {
+export function parsePointer(pointer: string): JsonPointerTokens {
   if (pointer === '') { return new Array<string>(); }
   if (pointer.charAt(0) !== '/') { throw new Error('Invalid JSON pointer: ' + pointer); }
   return pointer.substring(1).split(/\//).map(unescape);

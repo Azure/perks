@@ -1,5 +1,5 @@
 import { Mapping } from 'source-map';
-import { JsonPointer, Node, visit } from './json-pointer';
+import { JsonPointer, Node, visit, parsePointer } from './json-pointer';
 
 import { any, keys, length } from '@microsoft.azure/linq';
 import { create } from 'domain';
@@ -31,8 +31,8 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
         */
       }
       instance[key] = value.value;
-
-      CreateAssignmentMapping(value.value, value.filename || originalFileName, parseJsonPointer(value.pointer), [targetPointer, key], value.subject || '', false, mappings);
+      console.log(parsePointer(value.pointer));
+      CreateAssignmentMapping(value.value, value.filename || originalFileName, parsePointer(value.pointer), [...parsePointer(targetPointer), key].filter(each => each !== ''), value.subject || '', false, mappings);
       // set the value in the target object
 
       return true;

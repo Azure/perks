@@ -11,7 +11,7 @@ import { Oai2ToOai3 } from '../main';
 
 @suite class MyTests {
 
-  @test async "test conversion"() {
+  /* @test */ async "test conversion"() {
     const absoluteUri = 'mem://swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}../../../test/resources/conversion/swagger.yaml`);
@@ -41,20 +41,16 @@ import { Oai2ToOai3 } from '../main';
 
   }
 
-  /* do not look!
-  @test async "test conversion"() {
-    const absoluteUri = 'mem://swagger.yaml';
+
+  @test async "test conversion with sourcemap"() {
+    const absoluteUri = 'swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}../../../test/resources/conversion/swagger.yaml`);
     const map = new Map<string, string>([[absoluteUri, swagger]]);
     const mfs = new datastore.MemoryFileSystem(map);
 
-
-
     const cts: datastore.CancellationTokenSource = {
-      cancel() {
-
-      },
+      cancel() { },
       dispose() {
 
       },
@@ -67,29 +63,26 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const files = await scope.Enum();
-
-    const swaggerdata = await scope.Read(absoluteUri);
+    console.log(files);
+    const swaggerdata = await scope.Read(`file:///${absoluteUri}`);
 
     assert(swaggerdata != null);
     if (swaggerdata) {
       const swag = swaggerdata.ReadObject();
-      const convert = new Oai2ToOai3(absoluteUri, swag);
-      const result = convert.convert();
 
+      const convert = new Oai2ToOai3(swaggerdata.key, swag);
+      const result = convert.convert();
 
       const sink = ds.getDataSink();
       const text = FastStringify(convert.generated);
       console.log(text);
-      const data = await sink.WriteData('output-file', FastStringify(convert.generated), 'yaml-file', convert.mappings, [swaggerdata]);
-      console.log(data.ReadMetadata())
+      const data = await sink.WriteData('output-file', text, 'yaml-file', convert.mappings, [swaggerdata]);
+      // console.log(data.ReadMetadata());
 
+      console.log(JSON.stringify(data.ReadMetadata().sourceMap.Value));
+      await aio.writeFile("c:/tmp/swagger.yaml", swagger);
+      await aio.writeFile("c:/tmp/output.yaml", text);
+      await aio.writeFile("c:/tmp/output.yaml.map", JSON.stringify(data.ReadMetadata().sourceMap.Value));
     }
-
-
-    // const convert = new Oai2ToOai3("swagger.yaml", swagger);
-
-
-
   }
-*/
 }
