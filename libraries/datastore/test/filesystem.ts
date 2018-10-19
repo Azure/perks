@@ -4,6 +4,10 @@ import { MemoryFileSystem } from "../main";
 
 @suite class FileSystemTests {
 
+  @test fail() {
+    assert(false, 'SAD');
+  }
+
   @test async "Simple memory filesystem test"() {
     let f = new MemoryFileSystem(new Map<string, string>([['readme.md', '# this is a test\n see https://aka.ms/autorest'], ['other.md', '#My Doc.']]));
     let n = 0;
