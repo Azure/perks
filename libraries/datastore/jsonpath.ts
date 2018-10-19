@@ -95,5 +95,5 @@ export function matches(jsonQuery: string, jsonPath: JsonPath): boolean {
 }
 
 export function parseJsonPointer(jsonPointer: string): JsonPath {
-  return jsonPointer.split('/').slice(1).map(part => part.replace(/~1/g, '/').replace(/~0/g, '~'));
+  return jsonPointer.split('/').slice(1).map(part => part.replace(/~1/g, '/').replace(/~0/g, '~')).filter(each => each !== '');
 }

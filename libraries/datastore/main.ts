@@ -5,4 +5,9 @@
 // export * from "./proxy"
 export * from './file-system';
 export * from './jsonpath';
-//export * from './graph-builder';
+export * from './json-pointer';
+export * from './graph-builder';
+export * from './data-store/data-store';
+export * from './cancellation';
+export * from './source-map/source-map';
+export * from './yaml';

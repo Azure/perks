@@ -67,8 +67,9 @@ export declare namespace CancellationToken {
   function is(value: any): value is CancellationToken;
 }
 export declare class CancellationTokenSource {
-  private _token;
   readonly token: CancellationToken;
   cancel(): void;
   dispose(): void;
 }
+
+
