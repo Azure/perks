@@ -1,8 +1,7 @@
 {
   "name": "@microsoft.azure/oai2-to-oai3",
-  "private": true,
   "version": "2.1.0",
-  "description": "template project to copy/paste as for a new library in perks",
+  "description": "OpenAPI2 to OpenAPI3 conversion library that maintains souremaps for use with AutoRest.",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
