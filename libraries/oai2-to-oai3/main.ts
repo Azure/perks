@@ -30,6 +30,7 @@ export class Oai2ToOai3 {
         case 'produces':
           break;
         case 'definitions':
+
           break;
         case 'parameters':
           break;
@@ -41,12 +42,10 @@ export class Oai2ToOai3 {
           break;
         case 'tags':
           this.generated.tags = this.newArray(pointer);
-          this.generated.tags.push({ value: "hello", pointer });
-          // this.visitTags(children);
+          this.visitTags(children);
           break;
         case 'externalDocs':
-          this.generated.externalDocs = this.newObject(pointer);
-          this.visitExternalDocs(this.generated.externalDocs, children);
+          this.visitExternalDocs(this.generated, key, value, pointer);
           break;
         case 'x-ms-paths':
         case 'paths':
@@ -57,7 +56,7 @@ export class Oai2ToOai3 {
           break;
         default:
           // handle stuff liks x-* and things not recognized
-          this.visitExtensions(this, value);
+          this.visitExtensions(this.generated, key, value, pointer);
           break;
       }
     }
@@ -67,25 +66,24 @@ export class Oai2ToOai3 {
 
   visitTags(tags: Iterable<Node>) {
     for (const { key: index, pointer, children: tagItemMembers } of tags) {
-      this.visitTag(index, pointer, tagItemMembers);
+      this.visitTag(parseInt(index), pointer, tagItemMembers);
     }
   }
 
-  visitTag(index: string, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
-    this.generated.tags[index] = this.newObject(jsonPointer);
+  visitTag(index: number, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
+    this.generated.tags.push(this.newObject(jsonPointer));
 
-    for (const { key, pointer, value, children } of tagItemMembers) {
+    for (const { key, pointer, value } of tagItemMembers) {
       switch (key) {
         case 'name':
         case 'description':
           this.generated.tags[index][key] = { value, pointer };
           break;
         case 'externalDocs':
-          this.generated.tags[index].externalDocs = this.newObject(pointer);
-          this.visitExternalDocs(this.generated.tags[index].externalDocs, children);
+          this.visitExternalDocs(this.generated.tags[index], key, value, pointer);
           break;
         default:
-          this.visitExtensions(this.generated.tags[index][key], value);
+          this.visitExtensions(this.generated.tags[index], key, value, pointer);
           break;
       }
     }
@@ -104,6 +102,9 @@ export class Oai2ToOai3 {
       // handle each item in the path object
       switch (key) {
         case '$ref':
+        case 'x-summary':
+        case 'x-description':
+          pathItem[key] = { value, pointer };
           break;
         case 'get':
         case 'put':
@@ -112,7 +113,7 @@ export class Oai2ToOai3 {
         case 'options':
         case 'head':
         case 'patch':
-          this.visitOperation(pathItem, key, pointer, children);
+          this.visitOperation(pathItem[key], pointer, children);
           break;
         case 'parameters':
           break;
@@ -120,23 +121,12 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitExtensions(target: any, value: any) {
-    // add each extension to the right spot.
+  visitExtensions(target: any, key: string, value: any, pointer: string) {
+    target[key] = { value, pointer, recurse: true };
   }
 
-  visitExternalDocs(target: any, externalDocumentation: any) {
-    for (const { value, key, pointer, children } of externalDocumentation) {
-      switch (key) {
-        case 'description':
-        case 'url':
-          target[key] = { value, pointer };
-          break;
-        default:
-          this.visitExtensions(this.generated.externalDocs, value);
-          this.visitUnspecified(children);
-          break;
-      }
-    }
+  visitExternalDocs(target: any, key: string, value: any, pointer: string) {
+    target[key] = { value, pointer, recurse: true }
   }
 
   visitInfo(info: Iterable<Node>) {
@@ -151,7 +141,7 @@ export class Oai2ToOai3 {
           this.generated.info[key] = { value, pointer };
           break;
         default:
-          this.visitExtensions(this.generated.info, value);
+          this.visitExtensions(info, key, value, pointer);
           this.visitUnspecified(children);
           break;
       }
@@ -167,18 +157,19 @@ export class Oai2ToOai3 {
   }
 
   visitUnspecified(nodes: Iterable<Node>) {
-    for (const { value, key, pointer, children } of nodes) {
+    for (const { value, pointer } of nodes) {
       console.error(`?? Unknown item: ${pointer} : ${value} `);
     }
   }
 
-  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
+  visitOperation(operation: any, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
     // handle a single operation.
-    const operation = this.newObject(jsonPointer);
+    operation = this.newObject(jsonPointer);
 
     for (const { value, key, pointer } of operationMembers) {
       switch (key) {
         case 'tags':
+          operation.tags = { value, pointer, recursive: true }
           break;
         case 'description':
         case 'summary':
@@ -203,7 +194,7 @@ export class Oai2ToOai3 {
         case 'security':
           break;
         default:
-          this.visitExtensions(operation, value);
+          this.visitExtensions(operation, key, value, pointer);
           break;
       }
     }
