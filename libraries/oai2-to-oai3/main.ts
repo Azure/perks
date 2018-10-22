@@ -20,6 +20,13 @@ export class Oai2ToOai3 {
           this.generated.info = this.newObject(pointer);
           this.visitInfo(children);
           break;
+        case 'x-ms-paths':
+        case 'paths':
+          if (!this.generated.paths) {
+            this.generated.paths = this.newObject(pointer);
+          }
+          this.visitPaths(children);
+          break;
         case 'host':
           break;
         case 'basePath':
@@ -32,23 +39,31 @@ export class Oai2ToOai3 {
           break;
         case 'definitions':
           if (!this.generated.components) {
-            this.generated.components = this.newObject('/components');
+            this.generated.components = this.newObject(pointer);
           }
-          this.generated.components.schemas = this.newObject('/components/schemas');
-          //this.visitDefinitions(children);
+          this.generated.components.schemas = this.newObject(pointer);
+          this.visitDefinitions(children);
           break;
         case 'parameters':
           break;
         case 'responses':
           if (!this.generated.components) {
-            this.generated.components = this.newObject('/components');
+            this.generated.components = this.newObject(pointer);
           }
-          this.generated.components.responses = this.newObject('/components/responses');
+          this.generated.components.responses = this.newObject(pointer);
           this.visitResponsesDefinitions(children);
           break;
         case 'securityDefinitions':
+          if (!this.generated.components) {
+            this.generated.components = this.newObject(pointer);
+          }
+          this.generated.components.securitySchemes = this.newObject(pointer);
+          this.visitSecurityDefinitions(children);
           break;
+
+        // no changes to security from OA2 to OA3
         case 'security':
+          this.generated.security = { value, pointer, recurse: true };
           break;
         case 'tags':
           this.generated.tags = this.newArray(pointer);
@@ -56,13 +71,6 @@ export class Oai2ToOai3 {
           break;
         case 'externalDocs':
           this.visitExternalDocs(this.generated, key, value, pointer);
-          break;
-        case 'x-ms-paths':
-        case 'paths':
-          if (!this.generated.paths) {
-            this.generated.paths = this.newObject(pointer);
-          }
-          this.visitPaths(children);
           break;
         default:
           // handle stuff liks x-* and things not recognized
@@ -74,11 +82,82 @@ export class Oai2ToOai3 {
     return this.generated;
   }
 
-  /*
+  visitSecurityDefinitions(securityDefinitions: Iterable<Node>) {
+    for (const { key: schemeName, value: v, pointer: jsonPointer, children: securityDefinitionsItemMembers } of securityDefinitions) {
+      this.generated.components.securitySchemes[schemeName] = this.newObject(jsonPointer);
+      const securityScheme = this.generated.components.securitySchemes[schemeName];
+      switch (v.type) {
+        case 'apiKey':
+          for (const { key, value, pointer } of securityDefinitionsItemMembers) {
+            switch (key) {
+              case 'type':
+              case 'description':
+              case 'name':
+              case 'in':
+                securityScheme[key] = { value, pointer };
+                break;
+              default:
+                this.visitExtensions(securityScheme, key, value, pointer);
+                break;
+            }
+          }
+          break;
+        case 'basic':
+          for (const { key, value, pointer } of securityDefinitionsItemMembers) {
+            switch (key) {
+              case 'description':
+                securityScheme.description = { value, pointer };
+                break;
+              case 'type':
+                securityScheme.type = { value: 'http', pointer };
+                securityScheme.scheme = { value: 'basic', pointer };
+                break;
+              default:
+                this.visitExtensions(securityScheme, key, value, pointer);
+                break;
+            }
+          }
+          break;
+        case 'oauth2':
+          securityScheme.type = { value: v.type, pointer: jsonPointer };
+          securityScheme.flows = this.newObject(jsonPointer);
+          let flowName = v.flow;
+
+          // convert flow names to OpenAPI 3 flow names
+          if (v.flow === 'application') {
+            flowName = 'clientCredentials';
+          }
+
+          if (v.flow === 'accessCode') {
+            flowName = 'authorizationCode';
+          }
+
+          securityScheme.flows[flowName] = this.newObject(jsonPointer);
+
+          let authorizationUrl;
+          let tokenUrl;
+          let scopes;
+
+          if (v.authorizationUrl !== undefined) {
+            authorizationUrl = v.authorizationUrl.split('?')[0].trim() || '/';
+            securityScheme.flows[flowName].authorizationUrl = { value: authorizationUrl, pointer: jsonPointer };
+          }
+
+          if (v.tokenUrl !== undefined) {
+            tokenUrl = v.tokenUrl.split('?')[0].trim() || '/';
+            securityScheme.flows[flowName].tokenUrl = { value: tokenUrl, pointer: jsonPointer };
+          }
+
+          scopes = v.scopes || {};
+          securityScheme.flows[flowName].scopes = { value: scopes, pointer: jsonPointer };
+          break;
+      }
+    }
+  }
+
   visitDefinitions(definitions: Iterable<Node>) {
     for (const { key: schemaName, pointer: jsonPointer, children } of definitions) {
-      const schemaPointer = `/components/schemas/${schemaName}`
-      this.generated.components.schemas[schemaName] = this.newObject(schemaPointer);
+      this.generated.components.schemas[schemaName] = this.newObject(jsonPointer);
       const schema = this.generated.components.schemas[schemaName];
       for (const { value, key, pointer } of children) {
         switch (key) {
@@ -105,18 +184,25 @@ export class Oai2ToOai3 {
             schema[key] = { value, pointer };
             break;
           case 'items':
+            this.visitItems(schema, key, value, pointer);
+            break;
+          case 'type':
+            schema.type = { value, pointer };
+            if (value === null) {
+              schema.nullable = { value: true, pointer };
+            }
             break;
           case 'allOf':
             break;
-          case 'type':
-            break;
           case 'properties':
+
             break;
           case 'additionalProperties':
             break;
           // other JSON Schema subfields used for documentation
           case 'discriminator':
-          case 'x-discriminator':
+            schema.discriminator = this.newObject(pointer);
+            schema.discriminator.propertyName = { value, pointer };
             break;
           case 'readOnly':
             break;
@@ -126,11 +212,9 @@ export class Oai2ToOai3 {
           case 'externalDocs':
             this.visitExternalDocs(schema, key, value, pointer)
           case 'example':
-            schema[key] = { value, pointer, recurse: true };
+            schema.example = { value, pointer, recurse: true };
           case 'x-deprecated':
-            const newKey = 'deprecated';
-            const newPointer = this.getPointerWithoutExtensionFlag(pointer, key, newKey);
-            schema[newKey] = { value, newPointer };
+            schema.deprecated = { value, pointer };
           case '$ref':
           default:
             break
@@ -138,12 +222,21 @@ export class Oai2ToOai3 {
       }
     }
   }
- */
 
-  getPointerWithoutExtensionFlag(pointer: string, oldKey: string, newKey: string) {
-    const regString = `${oldKey}$`
-    const reg = new RegExp(regString);
-    return pointer.replace(reg, newKey);
+  visitItems(target: any, key: string, value: any, pointer: string) {
+    if (Array.isArray(target[key])) {
+      if (target[key].length === 0) {
+        // Value must be an object not an array. 
+        // See: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
+        target[key] = { value: {}, pointer };
+      } else if (target[key].length === 1) {
+        target[key] = { value: value[0], pointer, recurse: true }
+      } else {
+        target[key] = { value: { anyOf: target[key] }, pointer };
+      }
+    } else {
+      target[key] = { value, pointer, recurse: true };
+    }
   }
 
   visitXml(target: any, key: string, value: any, pointer: string) {
