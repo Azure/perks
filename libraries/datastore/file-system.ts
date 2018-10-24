@@ -2,9 +2,10 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+import { EnumerateFiles, ToRawDataUrl, ResolveUri, ReadUri, WriteString } from '@microsoft.azure/uri';
+// import { From } from "linq-es2015";
+import { items, keys } from "@microsoft.azure/linq";
 
-import { items, keys } from '@microsoft.azure/linq';
-import { EnumerateFiles, ReadUri, ResolveUri, ToRawDataUrl, WriteString } from '@microsoft.azure/uri';
 import * as Constants from './constants';
 
 export interface IFileSystem {
@@ -18,13 +19,19 @@ export class MemoryFileSystem implements IFileSystem {
 
   public constructor(files: Map<string, string>) {
     this.filesByUri = new Map<string, string>(
-
       items(files).linq.select(
         each => [
           ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, each.key),
           each.value
         ] as [string, string])
     );
+    /*
+        this.filesByUri = new Map<string, string>(
+          From(files.entries()).Select(entry => [
+            ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, entry[0]),
+            entry[1]
+          ] as [string, string]));
+          */
   }
   public readonly Outputs: Map<string, string> = new Map<string, string>();
 
@@ -36,6 +43,7 @@ export class MemoryFileSystem implements IFileSystem {
   }
 
   async EnumerateFileUris(folderUri: string = MemoryFileSystem.DefaultVirtualRootUri): Promise<Array<string>> {
+    // return await [...From(this.filesByUri.keys()).Where(uri => {
     return keys(this.filesByUri).linq.where(uri => {
       // in folder?
       if (!uri.startsWith(folderUri)) {
@@ -43,8 +51,10 @@ export class MemoryFileSystem implements IFileSystem {
       }
 
       // not in subfolder?
+      // return uri.substr(folderUri.length).indexOf("/") === -1;
       return uri.substr(folderUri.length).indexOf('/') === -1;
     }).linq.toArray();
+    //})];
   }
 
   async WriteFile(uri: string, content: string): Promise<void> {

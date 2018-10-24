@@ -67,7 +67,7 @@ export abstract class DataSource {
         key.replace(':', '')); // make key (URI) a descriptive relative path
       await WriteString(targetFileUri, data);
       await WriteString(targetFileUri + '.map', JSON.stringify(metadata.sourceMap.Value, null, 2));
-      await WriteString(targetFileUri + '.input.map', JSON.stringify(await metadata.inputSourceMap, null, 2));
+      await WriteString(targetFileUri + '.input.map', JSON.stringify(metadata.inputSourceMap.Value, null, 2));
     }
   }
 }
@@ -181,10 +181,9 @@ export class DataStore {
     const metadata: Metadata = <any>{};
     const result = await this.WriteDataInternal(uri, data, metadata);
     metadata.artifact = artifact;
-    metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
-    metadata.inputSourceMap = new Lazy<RawSourceMap>(() => this.CreateInputSourceMapFor(uri));
-
-    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
+    //metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
+    //metadata.inputSourceMap = new Lazy<RawSourceMap>(() => this.CreateInputSourceMapFor(uri));
+    //metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
     metadata.sourceMap = new Lazy(() => {
       if (!sourceMapFactory) {
         return new SourceMapGenerator().toJSON();
@@ -201,11 +200,11 @@ export class DataStore {
 
       return sourceMap;
     });
-    const sourceMapConsumer = await new SourceMapConsumer(metadata.sourceMap.Value);
+    // const sourceMapConsumer = await new SourceMapConsumer(metadata.sourceMap.Value);
     metadata.sourceMapEachMappingByLine = new Lazy<Array<Array<MappingItem>>>(() => {
       const result: Array<Array<MappingItem>> = [];
 
-      // const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
+      const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
 
       // const singleResult = sourceMapConsumer.originalPositionFor(position);
       // does NOT support multiple sources :(
@@ -221,7 +220,9 @@ export class DataStore {
 
       return result;
     });
-
+    metadata.inputSourceMap = new Lazy(() => this.CreateInputSourceMapFor(uri));
+    metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
+    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
     return result;
   }
 

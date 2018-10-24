@@ -12,6 +12,14 @@ export interface Node {
   children: Iterable<Node>;
 }
 
+class NodeImpl implements Node {
+  constructor(public value: any, public key: string, public pointer: JsonPointer, public childrenImpl: () => Iterable<Node>) {
+  }
+  get children() {
+    return this.childrenImpl();
+  }
+}
+
 /**
  * Convenience wrapper around the api.
  * Calls `.get` when called with an `object` and a `pointer`.
@@ -202,15 +210,17 @@ export function _visit(obj: any, iterator: (value: any, pointer: string) => bool
   next(obj);
 }
 
+
+
 export function* visit(obj: any, parentReference: JsonPointerTokens = new Array<string>()): Iterable<Node> {
   for (const { key, value } of items(obj)) {
     const reference = [...parentReference, key];
-    yield {
+    yield new NodeImpl(
       value,
-      pointer: compile(reference),
       key,
-      children: visit(value, reference)
-    };
+      compile(reference),
+      () => visit(value, reference)
+    );
   }
 }
 

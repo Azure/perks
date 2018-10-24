@@ -52,7 +52,7 @@
     "@microsoft.azure/uri": "^2.1.0",
     "@microsoft.azure/linq": "^2.1.0",
     "jsonpath": "1.0.0",
-    "safe-eval": "^0.4.1",
+    "safe-eval": "^0.3.0",
     "source-map": "0.5.6",
     "yaml-ast-parser": "0.0.40",
     "js-yaml": "3.12.0"
