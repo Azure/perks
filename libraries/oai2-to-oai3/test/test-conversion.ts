@@ -37,7 +37,7 @@ import { Oai2ToOai3 } from '../main';
     }
   }
 
-  /* @test */ async "test conversion with sourcemap"() {
+  @test async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}../../../test/resources/conversion/swagger.yaml`);
