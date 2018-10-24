@@ -1,6 +1,7 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
 import { parse } from 'path';
+import { values } from '../linq/dist/main';
 
 export class Oai2ToOai3 {
   public generated: any;
@@ -45,6 +46,10 @@ export class Oai2ToOai3 {
           this.visitDefinitions(children);
           break;
         case 'parameters':
+          if (!this.generated.components) {
+            this.generated.components = this.newObject(pointer);
+          }
+          this.generated.components.parameters = this.newObject(pointer);
           break;
         case 'responses':
           if (!this.generated.components) {
@@ -60,7 +65,6 @@ export class Oai2ToOai3 {
           this.generated.components.securitySchemes = this.newObject(pointer);
           this.visitSecurityDefinitions(children);
           break;
-
         // no changes to security from OA2 to OA3
         case 'security':
           this.generated.security = { value, pointer, recurse: true };
@@ -82,6 +86,27 @@ export class Oai2ToOai3 {
     return this.generated;
   }
 
+  // DONE
+  visitInfo(info: Iterable<Node>) {
+    for (const { value, key, pointer, children } of info) {
+      switch (key) {
+        case 'title':
+        case 'description':
+        case 'termsOfService':
+        case 'contact':
+        case 'license':
+        case 'version':
+          this.generated.info[key] = { value, pointer };
+          break;
+        default:
+          this.visitExtensions(info, key, value, pointer);
+          this.visitUnspecified(children);
+          break;
+      }
+    }
+  }
+
+  // DONE
   visitSecurityDefinitions(securityDefinitions: Iterable<Node>) {
     for (const { key: schemeName, value: v, pointer: jsonPointer, children: securityDefinitionsItemMembers } of securityDefinitions) {
       this.generated.components.securitySchemes[schemeName] = this.newObject(jsonPointer);
@@ -155,70 +180,82 @@ export class Oai2ToOai3 {
     }
   }
 
+  // DONE
   visitDefinitions(definitions: Iterable<Node>) {
-    for (const { key: schemaName, pointer: jsonPointer, children } of definitions) {
+    for (const { key: schemaName, value: schemaValue, pointer: jsonPointer, children: definitionsItemMembers } of definitions) {
       this.generated.components.schemas[schemaName] = this.newObject(jsonPointer);
-      const schema = this.generated.components.schemas[schemaName];
-      for (const { value, key, pointer } of children) {
-        switch (key) {
-          // properties taken from JSON Schema specification and follow same specifications as OAI 2.0
-          case 'format':
-          case 'description':
-          case 'default':
-          case 'title':
-          case 'multipleOf':
-          case 'maximum':
-          case 'exclusiveMaximum':
-          case 'minimum':
-          case 'exclusiveMinimum':
-          case 'maxLength':
-          case 'minLength':
-          case 'pattern':
-          case 'maxItems':
-          case 'minItems':
-          case 'uniqueItems':
-          case 'maxProperties':
-          case 'minProperties':
-          case 'required':
-          case 'enum':
-            schema[key] = { value, pointer };
-            break;
-          case 'items':
-            this.visitItems(schema, key, value, pointer);
-            break;
-          case 'type':
-            schema.type = { value, pointer };
-            if (value === null) {
-              schema.nullable = { value: true, pointer };
-            }
-            break;
-          case 'allOf':
-            break;
-          case 'properties':
+      const schemaItem = this.generated.components.schemas[schemaName];
+      this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
+    }
+  }
 
-            break;
-          case 'additionalProperties':
-            break;
-          // other JSON Schema subfields used for documentation
-          case 'discriminator':
-            schema.discriminator = this.newObject(pointer);
-            schema.discriminator.propertyName = { value, pointer };
-            break;
-          case 'readOnly':
-            break;
-          case 'xml':
-            this.visitXml(schema, key, value, pointer);
-            break;
-          case 'externalDocs':
-            this.visitExternalDocs(schema, key, value, pointer)
-          case 'example':
-            schema.example = { value, pointer, recurse: true };
-          case 'x-deprecated':
-            schema.deprecated = { value, pointer };
-          case '$ref':
-          default:
-            break
-        }
+  visitSchema(target: any, schemaValue: any, schemaItemMemebers: Iterable<Node>) {
+    for (const { key, value, pointer, children } of schemaItemMemebers) {
+      switch (key) {
+        case 'format':
+        case 'title':
+        case 'description':
+        case 'default':
+        case 'multipleOf':
+        case 'maximum':
+        case 'exclusiveMaximum':
+        case 'minimum':
+        case 'exclusiveMinimum':
+        case 'maxLength':
+        case 'minLength':
+        case 'pattern':
+        case 'maxItems':
+        case 'minItems':
+        case 'uniqueItems':
+        case 'maxProperties':
+        case 'minProperties':
+        case 'required':
+        case 'enum':
+        case 'allOf':
+        case 'additionalProperties':
+        case 'readOnly':
+          target[key] = { value, pointer };
+          break;
+        case 'items':
+          this.visitItems(target, key, value, pointer);
+          break;
+        case 'properties':
+          target.properties = this.newObject(pointer);
+          for (const { key: propertyName, value: v, pointer: jsonPointer, children: c } of children) {
+            // if it contains a reference object just update the reference
+            if (value[propertyName].$ref !== undefined) {
+              target.properties[propertyName] = this.newObject(jsonPointer);
+              let newReferenceValue = `#/components/schemas/${value[propertyName].$ref.replace('#/definitions/', '')}`;
+              target.properties[propertyName].$ref = { value: newReferenceValue, pointer: jsonPointer };
+            } else {
+              target.properties[propertyName] = this.newObject(jsonPointer);
+              this.visitSchema(target.properties[propertyName], v, c);
+            }
+          }
+          break;
+        case 'type':
+          target.type = { value, pointer };
+          if (value === null) {
+            target.nullable = { value: true, pointer };
+          }
+          break;
+        // in OpenAPI 3 the discriminator its an object instead of a string.
+        case 'discriminator':
+          target.discriminator = this.newObject(pointer);
+          target.discriminator.propertyName = { value, pointer };
+          break;
+        case 'xml':
+          this.visitXml(target, key, value, pointer);
+          break;
+        case 'externalDocs':
+          this.visitExternalDocs(target, key, value, pointer);
+          break;
+        case 'example':
+          target.example = { value, pointer, recurse: true };
+          break;
+        default:
+          this.visitExtensions(target, key, value, pointer);
+          break;
       }
     }
   }
@@ -276,25 +313,6 @@ export class Oai2ToOai3 {
     target[key] = { value, pointer, recurse: true }
   }
 
-  visitInfo(info: Iterable<Node>) {
-    for (const { value, key, pointer, children } of info) {
-      switch (key) {
-        case 'title':
-        case 'description':
-        case 'termsOfService':
-        case 'contact':
-        case 'license':
-        case 'version':
-          this.generated.info[key] = { value, pointer };
-          break;
-        default:
-          this.visitExtensions(info, key, value, pointer);
-          this.visitUnspecified(children);
-          break;
-      }
-    }
-  }
-
   newArray(pointer: JsonPointer) {
     return { value: createGraphProxy(this.originalFilename, pointer, this.mappings, new Array<any>()), pointer };
   }
@@ -318,7 +336,7 @@ export class Oai2ToOai3 {
   visitPath(uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>) {
     this.generated.paths[uri] = this.newObject(jsonPointer);
     const pathItem = this.generated.paths[uri];
-    for (const { value, key, pointer, children } of pathItemMembers) {
+    for (const { value, key, pointer, children: pathItemFieldMembers } of pathItemMembers) {
       // handle each item in the path object
       switch (key) {
         case '$ref':
@@ -334,7 +352,7 @@ export class Oai2ToOai3 {
         case 'head':
         case 'patch':
         case 'x-trace':
-          this.visitOperation(pathItem, key, pointer, children);
+          this.visitOperation(pathItem, key, pointer, pathItemFieldMembers, value);
           break;
         case 'parameters':
           break;
@@ -342,7 +360,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationMembers: Iterable<Node>) {
+  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any) {
 
     // trace was not supported on OpenAPI 2.0, it was an extension
     httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
@@ -350,8 +368,9 @@ export class Oai2ToOai3 {
 
     // handle a single operation.
     const operation = pathItem[httpMethod];
+    const produces = (operationValue.produces.length !== 0) ? operationValue.produces : ['*/*'];
 
-    for (const { value, key, pointer, children } of operationMembers) {
+    for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
       switch (key) {
         case 'tags':
         case 'description':
@@ -364,11 +383,26 @@ export class Oai2ToOai3 {
           break;
         case 'consumes':
           break;
-        case 'produces':
-          break;
         case 'parameters':
           break;
+        case 'produces':
+          // handled beforehand for responses
+          break;
         case 'responses':
+          operation.responses = this.newObject(pointer);
+          if (value.$ref !== undefined) {
+            // if it contains a reference object just update the reference
+            operation.responses.$ref = { value: `#/components/responses/${<string>(value.$ref).replace('#/responses/', '')}`, pointer };
+            break;
+          }
+
+          for (const { key: fieldName, pointer, value: responseValue, children: responsesFieldMembers } of operationFieldItemMembers) {
+            if (fieldName.startsWith('x-')) {
+              this.visitExtensions(operation.responses, key, value, pointer);
+            } else {
+              // this.visitResponse(operation.responses, fieldName, responseValue, responsesFieldMembers, pointer, produces);
+            }
+          }
           break;
         case 'schemes':
           break;
@@ -384,27 +418,47 @@ export class Oai2ToOai3 {
   }
 
   visitResponsesDefinitions(responsesDefinitions: Iterable<Node>) {
-    this.generated.components.responses = this.newObject('/components/responses');
-    for (const { key, value, pointer, children } of responsesDefinitions) {
-
+    for (const { key: name, pointer, children } of responsesDefinitions) {
+      this.generated.components.responses[name] = this.newObject(pointer);
+      const response = this.generated.components.responses[name];
+      //this.visitResponse(response, children);
     }
   }
 
-  // visitResponses(operationresponses: Iterable<Node>) {
-  //   const HTTPStatusCodePattern = /^[1-5][0-9][0-9]$/g
+  // visitResponse(target: any, responseCode: any, responseValue: any, responsesFieldMembers: Iterable<Node>, jsonPointer: any, produces: any) {
+  //   target[responseCode] = this.newObject(jsonPointer);
+  //   const response = target[responseCode];
 
-  //   for (const { key, value, pointer, children } of responses) {
-  //     if (key.startsWith('x-')) {
-  //       this.visitExtensions(responses, key, value, pointer)
-  //     } else if (key === 'default' || key.match(HTTPStatusCodePattern)) {
-  //       this.visitResponse(children);
-  //     } else {
-  //       this.visitUnspecified(children)
+  //   if (responseValue.description) {
+  //     response.description = { value: responseValue.description, pointer: jsonPointer };
+  //   }
+
+  //   if (responseValue.schema) {
+  //     response.content = this.newObject(jsonPointer);
+  //     for (let mimetype of produces) {
+  //       response.content[mimetype] = this.newObject(jsonPointer);
+  //       if (responseValue.schema) {
+  //         response.content[mimetype].schema = this.newObject(jsonPointer);
+  //         if (responseValue.schema.$ref) {
+  //           const newReferenceValue = `#/components/schemas/${responseValue.schema.$ref.replace('#/definitions/', '')}`;
+  //           response.content[mimetype].schema.$ref = { value: newReferenceValue, pointer: jsonPointer };
+  //         } else {
+  //           for (const { key, children: schemaItemMemebers, pointer } of responsesFieldMembers) {
+  //             if (key === 'schema') {
+  //               this.visitSchema(response.content[mimetype].schema, schemaItemMemebers);
+  //             }
+  //           }
+  //         }
+  //       }
+
+  //       // if (responseValue.examples && response.examples[mimetype]) {
+  //       //   let example = {};
+  //       //   example['value'] = response.examples[mimetype];
+  //       //   response.content[mimetype].examples = this.newObject(jsonPointer);
+  //       //   response.content[mimetype].examples.response = { value: example, pointer: jsonPointer };
+  //       // }
   //     }
   //   }
   // }
 
-  visitResponse(response: Iterable<Node>) {
-
-  }
 }

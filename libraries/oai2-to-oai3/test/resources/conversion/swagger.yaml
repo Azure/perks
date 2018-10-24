@@ -1026,8 +1026,7 @@
                 "message": {
                     "type": "string"
                 }
-            },
-            "x-deprecated": true
+            }
         }
     },
     "externalDocs": {
