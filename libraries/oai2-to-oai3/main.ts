@@ -212,26 +212,22 @@ export class Oai2ToOai3 {
         case 'required':
         case 'enum':
         case 'allOf':
-        case 'additionalProperties':
         case 'readOnly':
-          target[key] = { value, pointer };
+          target[key] = { value, pointer, recurse: true };
           break;
         case 'items':
-          this.visitItems(target, key, value, pointer);
+          target.items = this.newObject(pointer);
+          if (schemaValue.items.$ref !== undefined) {
+            let newReferenceValue = `#/components/schemas/${schemaValue.items.$ref.replace('#/definitions/', '')}`;
+            target.items.$ref = { value: newReferenceValue, pointer };
+          } else {
+            this.visitSchema(target.items, value, children)
+          }
           break;
         case 'properties':
-          target.properties = this.newObject(pointer);
-          for (const { key: propertyName, value: v, pointer: jsonPointer, children: c } of children) {
-            // if it contains a reference object just update the reference
-            if (value[propertyName].$ref !== undefined) {
-              target.properties[propertyName] = this.newObject(jsonPointer);
-              let newReferenceValue = `#/components/schemas/${value[propertyName].$ref.replace('#/definitions/', '')}`;
-              target.properties[propertyName].$ref = { value: newReferenceValue, pointer: jsonPointer };
-            } else {
-              target.properties[propertyName] = this.newObject(jsonPointer);
-              this.visitSchema(target.properties[propertyName], v, c);
-            }
-          }
+        case 'additionalProperties':
+          target[key] = this.newObject(pointer);
+          this.visitProperties(target.properties, children);
           break;
         case 'type':
           target.type = { value, pointer };
@@ -256,6 +252,18 @@ export class Oai2ToOai3 {
         default:
           this.visitExtensions(target, key, value, pointer);
           break;
+      }
+    }
+  }
+
+  visitProperties(target: any, propertiesItemMembers: Iterable<Node>) {
+    for (const { key, value, pointer, children } of propertiesItemMembers) {
+      target[key] = this.newObject(pointer);
+      if (value.$ref !== undefined) {
+        let newReferenceValue = `#/components/schemas/${value.$ref.replace('#/definitions/', '')}`;
+        target[key].$ref = { value: newReferenceValue, pointer };
+      } else {
+        this.visitSchema(target[key], value, children);
       }
     }
   }
