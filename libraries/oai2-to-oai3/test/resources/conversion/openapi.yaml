@@ -59,7 +59,21 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/Pet"
+          "x-ms-requestBody-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          },
+          "description": "Pet object that needs to be added to the store",
+          "required": true
         },
         "x-ms-requestBody-index": 0
       },
@@ -90,7 +104,21 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/Pet"
+          "x-ms-requestBody-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Pet"
+              }
+            }
+          },
+          "description": "Pet object that needs to be added to the store",
+          "required": true
         },
         "x-ms-requestBody-index": 0
       }
@@ -624,7 +652,19 @@
           }
         },
         "requestBody": {
-          "$ref": "#/components/requestBodies/UserArray"
+          "x-ms-requestBody-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "description": "List of user object",
+          "required": true
         },
         "x-ms-requestBody-index": 0
       }
@@ -643,7 +683,19 @@
           }
         },
         "requestBody": {
-          "$ref": "#/components/requestBodies/UserArray"
+          "x-ms-requestBody-name": "body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "description": "List of user object",
+          "required": true
         },
         "x-ms-requestBody-index": 0
       }
@@ -852,40 +904,6 @@
     }
   ],
   "components": {
-    "requestBodies": {
-      "UserArray": {
-        "x-ms-requestBody-name": "body",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
-        "description": "List of user object",
-        "required": true
-      },
-      "Pet": {
-        "x-ms-requestBody-name": "body",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Pet"
-            }
-          },
-          "application/xml": {
-            "schema": {
-              "$ref": "#/components/schemas/Pet"
-            }
-          }
-        },
-        "description": "Pet object that needs to be added to the store",
-        "required": true
-      }
-    },
     "securitySchemes": {
       "petstore_auth": {
         "type": "oauth2",
