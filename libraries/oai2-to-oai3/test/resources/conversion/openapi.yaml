@@ -330,7 +330,7 @@
           }
         ],
         "requestBody": {
-          "x-ms-requestBody-name": "status",
+          "x-ms-requestBody-name": "name",
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
@@ -437,7 +437,7 @@
           }
         ],
         "requestBody": {
-          "x-ms-requestBody-name": "file",
+          "x-ms-requestBody-name": "additionalMetadata",
           "content": {
             "multipart/form-data": {
               "schema": {
