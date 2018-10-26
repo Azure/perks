@@ -1,8 +1,5 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
-import { parse } from 'path';
-import { values } from '../linq/dist/main';
-import { shallowCopy } from '../tasks/dist/main';
 
 export class Oai2ToOai3 {
   public generated: any;
@@ -68,8 +65,8 @@ export class Oai2ToOai3 {
           // Already processed.  
           break;
         case 'consumes':
-          break;
         case 'produces':
+          // PENDING
           break;
         case 'definitions':
           if (!this.generated.components) {
@@ -83,13 +80,14 @@ export class Oai2ToOai3 {
             this.generated.components = this.newObject(pointer);
           }
           this.generated.components.parameters = this.newObject(pointer);
+          // PENDING
           break;
         case 'responses':
           if (!this.generated.components) {
             this.generated.components = this.newObject(pointer);
           }
           this.generated.components.responses = this.newObject(pointer);
-          //this.visitResponsesDefinitions(children);
+          this.visitResponsesDefinitions(children);
           break;
         case 'securityDefinitions':
           if (!this.generated.components) {
@@ -119,7 +117,6 @@ export class Oai2ToOai3 {
     return this.generated;
   }
 
-  // DONE
   visitInfo(info: Iterable<Node>) {
     for (const { value, key, pointer, children } of info) {
       switch (key) {
@@ -139,7 +136,6 @@ export class Oai2ToOai3 {
     }
   }
 
-  // DONE
   visitSecurityDefinitions(securityDefinitions: Iterable<Node>) {
     for (const { key: schemeName, value: v, pointer: jsonPointer, children: securityDefinitionsItemMembers } of securityDefinitions) {
       this.generated.components.securitySchemes[schemeName] = this.newObject(jsonPointer);
@@ -213,7 +209,6 @@ export class Oai2ToOai3 {
     }
   }
 
-  // DONE
   visitDefinitions(definitions: Iterable<Node>) {
     for (const { key: schemaName, value: schemaValue, pointer: jsonPointer, childIterator: definitionsItemMembers } of definitions) {
       this.generated.components.schemas[schemaName] = this.newObject(jsonPointer);
@@ -222,7 +217,6 @@ export class Oai2ToOai3 {
     }
   }
 
-  // DONE
   visitProperties(target: any, propertiesItemMembers: () => Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of propertiesItemMembers()) {
       target[key] = this.newObject(pointer);
@@ -232,6 +226,13 @@ export class Oai2ToOai3 {
       } else {
         this.visitSchema(target[key], value, childIterator);
       }
+    }
+  }
+
+  visitResponsesDefinitions(responses: Iterable<Node>) {
+    for (const { key, pointer, value, childIterator } of responses) {
+      this.generated.responses[key] = this.newObject(pointer);
+      this.visitResponse(this.generated.responses[key], value, childIterator, pointer);
     }
   }
 
@@ -455,13 +456,25 @@ export class Oai2ToOai3 {
     // the number on the request body index will depend on the number of parameters 
     // that added information to the requesBody
     const requestBodyIndex = { count: 0 };
+    let requestDescription;
 
-    for (const { key: index, pointer, value, childIterator } of parametersFieldItemMembers) {
+    for (const { pointer, value, childIterator } of parametersFieldItemMembers) {
       this.visitParameter(targetOperation, value, pointer, childIterator, consumes, requestBodyIndex);
+      requestDescription = value.description;
     }
 
     if (targetOperation.requestBody !== undefined) {
-      targetOperation['x-ms-requestBody-index'] = { value: requestBodyIndex.count, pointer };
+      if (targetOperation.parameters === undefined) {
+        targetOperation['x-ms-requestBody-index'] = { value: 0, pointer };
+        if (requestDescription) {
+          targetOperation.requestBody.description = { value: requestDescription, pointer };
+        }
+      } else {
+        targetOperation['x-ms-requestBody-index'] = { value: requestBodyIndex.count, pointer };
+        if (requestDescription && targetOperation.parameters.length === requestBodyIndex.count) {
+          targetOperation.requestBody.description = { value: requestDescription, pointer };
+        }
+      }
     }
   }
 
@@ -481,15 +494,11 @@ export class Oai2ToOai3 {
         targetOperation.requestBody.content = this.newObject(pointer);
       }
 
-      if (parameterValue.description !== undefined && targetOperation.requestBody.description === undefined) {
-        targetOperation.requestBody.description = { value: parameterValue.description, pointer };
-      }
-
-      if (parameterValue.allowEmptyValue !== undefined && targetOperation.requestBody.description === undefined) {
+      if (parameterValue.allowEmptyValue !== undefined && targetOperation.requestBody.allowEmptyValue === undefined) {
         targetOperation.requestBody.allowEmptyValue = { value: parameterValue.allowEmptyValue, pointer };
       }
 
-      if (parameterValue.required !== undefined && targetOperation.requestBody.required === undefined) {
+      if (parameterValue.required && targetOperation.requestBody.required === undefined) {
         targetOperation.requestBody.required = { value: parameterValue.required, pointer };
       }
 
@@ -728,7 +737,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitResponse(responseTarget: any, responseValue: any, responsesFieldMembers: () => Iterable<Node>, jsonPointer: any, produces: any) {
+  visitResponse(responseTarget: any, responseValue: any, responsesFieldMembers: () => Iterable<Node>, jsonPointer: any, produces?: any) {
 
     if (responseValue.description) {
       responseTarget.description = { value: responseValue.description, pointer: jsonPointer };
@@ -748,6 +757,91 @@ export class Oai2ToOai3 {
               this.visitSchema(responseTarget.content[mimetype].schema, value, childIterator);
             }
           }
+        }
+        if (responseValue.examples && responseValue.examples[mimetype]) {
+          let example: any = {};
+          example.value = responseValue.examples[mimetype];
+          responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
+          responseTarget.content[mimetype].examples.response = { value: example, pointer: jsonPointer };
+        }
+        if (responseValue.schema.type === 'file') {
+          responseTarget.content[mimetype].schema.type = { value: { type: 'string', format: 'binary' }, pointer: jsonPointer };
+        }
+      }
+    }
+
+    // examples outside produces
+    for (let mimetype in responseValue.examples) {
+      if (responseValue.content === undefined) {
+        responseTarget.content = this.newObject(jsonPointer);
+      }
+
+      if (responseValue.content[mimetype]) {
+        responseTarget.content[mimetype] = this.newObject(jsonPointer);
+      }
+
+      responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
+      responseTarget.content[mimetype].examples.response = this.newObject(jsonPointer);
+      responseTarget.content[mimetype].examples.response.value = { value: responseValue.examples[mimetype], pointer: jsonPointer }
+    }
+
+    if (responseValue.headers) {
+      responseTarget.headers = this.newObject(jsonPointer);
+      for (let h in responseValue.headers) {
+        responseTarget.headers[h] = this.newObject(jsonPointer);
+        this.visitHeader(responseTarget.headers[h], responseValue.headers[h], jsonPointer);
+      }
+    }
+  }
+
+  visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
+    if (headerValue.$ref) {
+      const newReferenceValue = `#/components/responses/${headerValue.schema.$ref.replace('#/responses/', '')}`;
+      targetHeader.$ref = { value: newReferenceValue, pointer: jsonPointer };
+    } else {
+      if (headerValue.type && headerValue.schema === undefined) {
+        targetHeader.schema = this.newObject(jsonPointer);
+      }
+
+      if (headerValue.description) {
+        targetHeader.description = { value: headerValue.description, pointer: jsonPointer };
+      }
+
+      const schemaKeys = [
+        'maximum',
+        'exclusiveMaximum',
+        'minimum',
+        'exclusiveMinimum',
+        'maxLength',
+        'minLength',
+        'pattern',
+        'maxItems',
+        'minItems',
+        'uniqueItems',
+        'enum',
+        'multipleOf',
+        'format',
+        'default'
+      ];
+
+      for (const { key, childIterator } of visit(headerValue)) {
+        if (key === 'schema') {
+          this.visitSchema(targetHeader.schema.items, headerValue.items, childIterator);
+        } else if (schemaKeys.indexOf(key) !== -1) {
+          targetHeader.schema[key] = { value: headerValue[key], pointer: jsonPointer, recurse: true };
+        }
+      }
+
+      if (headerValue.type) {
+        targetHeader.schema.type = { value: headerValue.type, pointer: jsonPointer };
+      }
+      if (headerValue.items && headerValue.items.collectionFormat) {
+        if (headerValue.collectionFormat === 'csv') {
+          targetHeader.style = { value: 'simple', pointer: jsonPointer };
+        }
+
+        if (headerValue.collectionFormat === 'multi') {
+          targetHeader.explode = { value: true, pointer: jsonPointer };
         }
       }
     }
