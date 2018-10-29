@@ -14,7 +14,7 @@ export class Oai2ToOai3 {
     if (this.original.host) {
       for (const { value: s, pointer } of visit(this.original.schemes)) {
         let server: any = {};
-        server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '');
+        server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
         extractServerParameters(server);
         if (this.generated.servers === undefined) {
           this.generated.servers = this.newArray(pointer);
@@ -341,6 +341,7 @@ export class Oai2ToOai3 {
         if (value.description) {
           target[key].description = { value: value.description, pointer };
         }
+
         let newReferenceValue = `#/components/schemas/${value.$ref.replace('#/definitions/', '')}`;
         target[key].$ref = { value: newReferenceValue, pointer };
       } else {
@@ -600,14 +601,30 @@ export class Oai2ToOai3 {
   }
 
   visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: any) {
-    // the number on the request body index will depend on the number of parameters 
-    // that added information to the requesBody
-    const requestBodyIndex = { value: -1, keepTracking: true };
-    let requestDescription;
-
+    const requestBodyTracker = { description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false };
     for (const { pointer, value, childIterator } of parametersFieldItemMembers) {
-      if (requestBodyIndex.keepTracking) {
-        requestBodyIndex.value += 1;
+
+
+      if (value.in === 'body' || value.type === 'file' || value.in === 'formData') {
+        if (!requestBodyTracker.wasSpecialParameterFound && value.description !== undefined) {
+          requestBodyTracker.description = value.description;
+        } else {
+          requestBodyTracker.description = undefined;
+        }
+      }
+
+      if (requestBodyTracker.keepTrackingIndex) {
+        if (!(value.in === 'body' || value.type === 'file' || value.in === 'formData')) {
+          if (requestBodyTracker.wasSpecialParameterFound) {
+            requestBodyTracker.keepTrackingIndex = false;
+          }
+        } else {
+          requestBodyTracker.wasSpecialParameterFound = true;
+        }
+      }
+
+      if (requestBodyTracker.keepTrackingIndex) {
+        requestBodyTracker.index += 1;
       }
 
       if (value.$ref) {
@@ -619,30 +636,27 @@ export class Oai2ToOai3 {
         let newReferenceValue = `#/components/parameters/${value.$ref.replace('#/parameters/', '')}`;
         targetOperation.parameters[targetOperation.parameters.length - 1].$ref = { value: newReferenceValue, pointer };
       } else {
-        this.visitOperationParameter(targetOperation, value, pointer, childIterator, consumes, requestBodyIndex);
-        requestDescription = value.description;
+        this.visitOperationParameter(targetOperation, value, pointer, childIterator, consumes);
       }
     }
 
     if (targetOperation.requestBody !== undefined) {
+      if (requestBodyTracker.description !== undefined && targetOperation.requestBody.description === undefined) {
+        targetOperation.requestBody.description = { value: requestBodyTracker.description, pointer };
+      }
+
       if (targetOperation.parameters === undefined) {
         targetOperation['x-ms-requestBody-index'] = { value: 0, pointer };
-        if (requestDescription) {
-          targetOperation.requestBody.description = { value: requestDescription, pointer };
-        }
+
       } else {
-        targetOperation['x-ms-requestBody-index'] = { value: requestBodyIndex.value, pointer };
-        if (requestDescription && targetOperation.parameters.length === requestBodyIndex.value) {
-          targetOperation.requestBody.description = { value: requestDescription, pointer };
-        }
+        targetOperation['x-ms-requestBody-index'] = { value: requestBodyTracker.index, pointer };
       }
     }
   }
 
-  visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>, requestBodyIndex: any) {
+  visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>) {
 
     if (parameterValue.in === 'formData' || parameterValue.in === 'body' || parameterValue.type === 'file') {
-      requestBodyIndex.keepTracking = false;
 
       if (targetOperation.requestBody === undefined) {
         targetOperation.requestBody = this.newObject(pointer);
@@ -817,6 +831,9 @@ export class Oai2ToOai3 {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);
         responseTarget.content[mimetype].schema = this.newObject(jsonPointer);
         if (responseValue.schema.$ref) {
+          if (responseValue.schema['x-ms-client-flatten']) {
+            responseTarget.content[mimetype].schema['x-ms-client-flatten'] = { value: responseValue.schema['x-ms-client-flatten'], pointer: jsonPointer };
+          }
           const newReferenceValue = `#/components/schemas/${responseValue.schema.$ref.replace('#/definitions/', '')}`;
           responseTarget.content[mimetype].schema.$ref = { value: newReferenceValue, pointer: jsonPointer };
         } else {
