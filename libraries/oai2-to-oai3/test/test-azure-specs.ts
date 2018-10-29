@@ -19,7 +19,7 @@ require('source-map-support').install();
 
 import { Oai2ToOai3 } from '../main';
 
-@suite class MyTests {
+@suite class AzureRestSpecs {
 
   async testEachfile(file: string) {
     let swagger: string;
@@ -36,11 +36,11 @@ import { Oai2ToOai3 } from '../main';
     }
 
 
-    file = file.replace(/\\/g, '/');
-    const name = file.substring(file.indexOf('specification/'));
+    const filename = file.replace(/\\/g, '/');
+    const name = filename.substring(filename.indexOf('specification/'));
     const swaggerUri = `mem://${name}`;
     const oai3Uri = `mem://oai3.yaml`;
-    console.log(`Comparing: ${swaggerUri}`);
+    console.log(`      ${name}`);
 
     const oai3 = JSON.stringify(await convertOAI2toOAI3(swaggerGraph));
 
@@ -68,7 +68,7 @@ import { Oai2ToOai3 } from '../main';
       // console.log(swaggerAsText);
 
       // assert.deepStrictEqual({ a: 1 }, { a: '1' });
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, `${file} - conversion should be identical`);
     }
   }
 
