@@ -12,13 +12,13 @@ export class Oai2ToOai3 {
   convert() {
     // process servers 
     if (this.original.host) {
+      if (this.generated.servers === undefined) {
+        this.generated.servers = this.newArray('/host');
+      }
       for (const { value: s, pointer } of visit(this.original.schemes)) {
         let server: any = {};
         server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
         extractServerParameters(server);
-        if (this.generated.servers === undefined) {
-          this.generated.servers = this.newArray(pointer);
-        }
         this.generated.servers.push({ value: server, pointer });
       }
     } else if (this.original.basePath) {
@@ -29,6 +29,11 @@ export class Oai2ToOai3 {
         this.generated.servers = this.newArray('/basePath');
       }
       this.generated.servers.push(server);
+    }
+
+    if (this.generated.servers === undefined) {
+      // empty array of servers always to have the same behavior as the previous converter
+      this.generated.servers = this.newArray('');
     }
 
     // internal function to extract server parameters
@@ -340,6 +345,15 @@ export class Oai2ToOai3 {
       if (value.$ref) {
         if (value.description) {
           target[key].description = { value: value.description, pointer };
+        }
+
+        if (value['x-ms-client-flatten'] !== undefined) {
+          target[key]['x-ms-client-flatten'] = { value: value['x-ms-client-flatten'], pointer };
+        }
+
+        // NOTE: This one should be turned OFF, a.k.a commeted when testing is finished.
+        if (value.type) {
+          target[key].type = { value: value.type, pointer };
         }
 
         let newReferenceValue = `#/components/schemas/${value.$ref.replace('#/definitions/', '')}`;

@@ -58,12 +58,16 @@ import { Oai2ToOai3 } from '../main';
 
     if (swaggerDataHandle && originalDataHandle) {
       const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const original = <any>originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
+
+      if (original.components.requestBodies !== undefined) {
+        return;
+      }
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
