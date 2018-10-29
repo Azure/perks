@@ -602,10 +602,14 @@ export class Oai2ToOai3 {
   visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: any) {
     // the number on the request body index will depend on the number of parameters 
     // that added information to the requesBody
-    const requestBodyIndex = { count: 0, keepTracking: true };
+    const requestBodyIndex = { value: -1, keepTracking: true };
     let requestDescription;
 
     for (const { pointer, value, childIterator } of parametersFieldItemMembers) {
+      if (requestBodyIndex.keepTracking) {
+        requestBodyIndex.value += 1;
+      }
+
       if (value.$ref) {
         if (targetOperation.parameters === undefined) {
           targetOperation.parameters = this.newArray(pointer);
@@ -627,8 +631,8 @@ export class Oai2ToOai3 {
           targetOperation.requestBody.description = { value: requestDescription, pointer };
         }
       } else {
-        targetOperation['x-ms-requestBody-index'] = { value: requestBodyIndex.count, pointer };
-        if (requestDescription && targetOperation.parameters.length === requestBodyIndex.count) {
+        targetOperation['x-ms-requestBody-index'] = { value: requestBodyIndex.value, pointer };
+        if (requestDescription && targetOperation.parameters.length === requestBodyIndex.value) {
           targetOperation.requestBody.description = { value: requestDescription, pointer };
         }
       }
@@ -637,16 +641,8 @@ export class Oai2ToOai3 {
 
   visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>, requestBodyIndex: any) {
 
-    if (requestBodyIndex.keepTracking) {
-      requestBodyIndex.count += 1;
-    }
-
     if (parameterValue.in === 'formData' || parameterValue.in === 'body' || parameterValue.type === 'file') {
-      if (requestBodyIndex.keepTracking) {
-        requestBodyIndex.keepTracking = false;
-        requestBodyIndex.count += 1;
-      }
-
+      requestBodyIndex.keepTracking = false;
 
       if (targetOperation.requestBody === undefined) {
         targetOperation.requestBody = this.newObject(pointer);
