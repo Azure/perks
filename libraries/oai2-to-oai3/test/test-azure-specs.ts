@@ -9,6 +9,14 @@ const convertOAI2toOAI3 = async (oa2def: any): Promise<any> => (await require("s
 
 require('source-map-support').install();
 
+// NOTE: this checks for the azure rest api specs repo to be checked out to /tmp/azure-rest-api-specs.
+// if it's not, this test will not run.
+// ie:
+// mkdir /tmp
+// cd /tmp
+// git clone https://github.com/azure/azure-rest-api-specs
+
+
 import { Oai2ToOai3 } from '../main';
 
 @suite class MyTests {
@@ -32,7 +40,7 @@ import { Oai2ToOai3 } from '../main';
     const name = file.substring(file.indexOf('specification/'));
     const swaggerUri = `mem://${name}`;
     const oai3Uri = `mem://oai3.yaml`;
-    console.log(swaggerUri);
+    console.log(`Comparing: ${swaggerUri}`);
 
     const oai3 = JSON.stringify(await convertOAI2toOAI3(swaggerGraph));
 
@@ -86,8 +94,6 @@ import { Oai2ToOai3 } from '../main';
 
 
   @test  async 'test conversion - Azure'() {
-    // NOTE: this checks for the azure rest api specs repo to be checked out to /tmp/azure-rest-api-specs.
-    // if it's not, this test will not run.
 
     if (!aio.isDirectory('/tmp/azure-rest-api-specs')) {
       return;
