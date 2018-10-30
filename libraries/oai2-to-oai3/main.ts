@@ -11,6 +11,55 @@ export class Oai2ToOai3 {
 
   convert() {
     // process servers 
+    if (this.original['x-ms-parameterized-host']) {
+      let xMsPHost: any = this.original['x-ms-parameterized-host'];
+      let server: any = {};
+      const scheme = xMsPHost.useSchemePrefix === false ? "" : ((this.original.schemes || ["http"]).map(s => s + "://")[0] || "");
+      server.url = scheme + xMsPHost.hostTemplate + (this.original.basePath || "");
+      if (xMsPHost.positionInOperation) {
+        server['x-ms-parameterized-host'] = { positionInOperation: xMsPHost.positionInOperation };
+      }
+      server.variables = {};
+      for (let msp in xMsPHost.parameters) {
+        if (!msp.startsWith('x-')) {
+
+          const originalParameter = xMsPHost.parameters[msp];
+          let param: any = {};
+
+          // TODO: Investigate why its not possible to copy 
+          // properties and filter the property 'in' using
+          // object destructuring.
+          for (const key in originalParameter) {
+            switch (key) {
+              case 'in':
+              case 'required':
+              case 'type':
+              case 'name':
+                break;
+              default:
+                param[key] = originalParameter[key];
+                break;
+            }
+          }
+
+          const parameterName = originalParameter.name;
+          if (originalParameter.default === undefined) {
+            if (originalParameter.enum) {
+              param.default = originalParameter.enum[0];
+            }
+            else {
+              param.default = '';
+            }
+          }
+
+          server.variables[parameterName] = param;
+        }
+      }
+
+      this.generated.servers = this.newArray('/x-ms-parameterized-host');
+      this.generated.servers.push({ value: server, pointer: '/x-ms-parameterized-host', recurse: true });
+    }
+
     if (this.original.host) {
       if (this.generated.servers === undefined) {
         this.generated.servers = this.newArray('/host');
@@ -32,7 +81,7 @@ export class Oai2ToOai3 {
     }
 
     if (this.generated.servers === undefined) {
-      // empty array of servers always to have the same behavior as the previous converter
+      // set to empty array to match behavior from https://github.com/fearthecowboy/swagger2openapi/blob/autorest-flavor/index.js
       this.generated.servers = this.newArray('');
     }
 
@@ -67,6 +116,7 @@ export class Oai2ToOai3 {
         case 'host':
         case 'basePath':
         case 'schemes':
+        case 'x-ms-parameterized-host':
           // host, basePath and schemes already processed 
           break;
         case 'consumes':
@@ -187,34 +237,31 @@ export class Oai2ToOai3 {
       parameterTarget.schema = this.newObject(pointer);
     }
 
-    if (parameterValue.schema !== undefined && parameterValue.schema.$ref !== undefined) {
-      let newReferenceValue = `#/components/schemas/${parameterValue.schema.$ref.replace('#/definitions/', '')}`;
-      parameterTarget.schema.$ref = { value: newReferenceValue, pointer };
-    } else {
-      const schemaKeys = [
-        'maximum',
-        'exclusiveMaximum',
-        'minimum',
-        'exclusiveMinimum',
-        'maxLength',
-        'minLength',
-        'pattern',
-        'maxItems',
-        'minItems',
-        'uniqueItems',
-        'enum',
-        'multipleOf',
-        'default',
-        'format',
-      ];
-      for (const { key, childIterator } of parameterItemMembers()) {
-        if (key === 'schema') {
-          this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
-        } else if (schemaKeys.indexOf(key) !== -1) {
-          parameterTarget.schema[key] = { value: parameterValue[key], pointer, recurse: true };
-        }
+    const schemaKeys = [
+      'maximum',
+      'exclusiveMaximum',
+      'minimum',
+      'exclusiveMinimum',
+      'maxLength',
+      'minLength',
+      'pattern',
+      'maxItems',
+      'minItems',
+      'uniqueItems',
+      'enum',
+      'multipleOf',
+      'default',
+      'format',
+    ];
+
+    for (const { key, childIterator } of parameterItemMembers()) {
+      if (key === 'schema') {
+        this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
+      } else if (schemaKeys.indexOf(key) !== -1) {
+        parameterTarget.schema[key] = { value: parameterValue[key], pointer, recurse: true };
       }
     }
+
 
     if (parameterValue.type !== undefined) {
       parameterTarget.schema.type = { value: parameterValue.type, pointer };
@@ -222,14 +269,9 @@ export class Oai2ToOai3 {
 
     if (parameterValue.items !== undefined) {
       parameterTarget.schema.items = this.newObject(pointer);
-      if (parameterValue.items.$ref !== undefined) {
-        let newReferenceValue = `#/components/schemas/${parameterValue.schema.items.$ref.replace('#/definitions/', '')}`;
-        parameterTarget.schema.items.$ref = { value: newReferenceValue, pointer };
-      } else {
-        for (const { key, childIterator } of parameterItemMembers()) {
-          if (key === 'items') {
-            this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
-          }
+      for (const { key, childIterator } of parameterItemMembers()) {
+        if (key === 'items') {
+          this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
         }
       }
     }
@@ -247,8 +289,7 @@ export class Oai2ToOai3 {
           this.generated.info[key] = { value, pointer };
           break;
         default:
-          this.visitExtensions(info, key, value, pointer);
-          this.visitUnspecified(children);
+          this.visitExtensions(this.generated.info, key, value, pointer);
           break;
       }
     }
@@ -342,25 +383,7 @@ export class Oai2ToOai3 {
   visitProperties(target: any, propertiesItemMembers: () => Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of propertiesItemMembers()) {
       target[key] = this.newObject(pointer);
-      if (value.$ref) {
-        if (value.description) {
-          target[key].description = { value: value.description, pointer };
-        }
-
-        if (value['x-ms-client-flatten'] !== undefined) {
-          target[key]['x-ms-client-flatten'] = { value: value['x-ms-client-flatten'], pointer };
-        }
-
-        // NOTE: This one should be turned OFF, a.k.a commeted when testing is finished.
-        if (value.type) {
-          target[key].type = { value: value.type, pointer };
-        }
-
-        let newReferenceValue = `#/components/schemas/${value.$ref.replace('#/definitions/', '')}`;
-        target[key].$ref = { value: newReferenceValue, pointer };
-      } else {
-        this.visitSchema(target[key], value, childIterator);
-      }
+      this.visitSchema(target[key], value, childIterator);
     }
   }
 
@@ -374,6 +397,10 @@ export class Oai2ToOai3 {
   visitSchema(target: any, schemaValue: any, schemaItemMemebers: () => Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of schemaItemMemebers()) {
       switch (key) {
+        case '$ref':
+          let newReferenceValue = value.replace('#/definitions/', '#/components/schemas/');
+          target[key] = { value: newReferenceValue, pointer };
+          break;
         case 'format':
         case 'title':
         case 'description':
@@ -403,12 +430,7 @@ export class Oai2ToOai3 {
         case 'items':
         case 'additionalProperties':
           target[key] = this.newObject(pointer);
-          if (schemaValue[key].$ref) {
-            let newReferenceValue = `#/components/schemas/${schemaValue[key].$ref.replace('#/definitions/', '')}`;
-            target[key].$ref = { value: newReferenceValue, pointer };
-          } else {
-            this.visitSchema(target[key], value, childIterator)
-          }
+          this.visitSchema(target[key], value, childIterator);
           break;
         case 'properties':
           target[key] = this.newObject(pointer);
@@ -444,17 +466,8 @@ export class Oai2ToOai3 {
   visitAllOf(target: any, allOfMembers: () => Iterable<Node>) {
     for (const { key: index, value, pointer, childIterator } of allOfMembers()) {
       target.push(this.newObject(pointer));
-      if (value.$ref) {
-        if (value.description) {
-          target[index].description = { value: value.description, pointer };
-        }
-        let newReferenceValue = `#/components/schemas/${value.$ref.replace('#/definitions/', '')}`;
-        target[index].$ref = { value: newReferenceValue, pointer };
-      } else {
-        this.visitSchema(target[index], value, childIterator);
-      }
+      this.visitSchema(target[index], value, childIterator);
     }
-
   }
 
   visitItems(target: any, key: string, value: any, pointer: string) {
@@ -647,7 +660,7 @@ export class Oai2ToOai3 {
         }
 
         targetOperation.parameters.push(this.newObject(pointer));
-        let newReferenceValue = `#/components/parameters/${value.$ref.replace('#/parameters/', '')}`;
+        let newReferenceValue = value.$ref.replace('#/parameters/', '#/components/parameters/');
         targetOperation.parameters[targetOperation.parameters.length - 1].$ref = { value: newReferenceValue, pointer };
       } else {
         this.visitOperationParameter(targetOperation, value, pointer, childIterator, consumes);
@@ -708,14 +721,9 @@ export class Oai2ToOai3 {
         }
 
         if (parameterValue.schema !== undefined) {
-          if (parameterValue.schema.$ref !== undefined) {
-            const newReferenceValue = `#/components/schemas/${parameterValue.schema.$ref.replace('#/definitions/', '')}`;
-            targetOperation.requestBody.content[contentType].schema.$ref = { value: newReferenceValue, pointer };
-          } else {
-            for (const { key, value, childIterator } of parameterItemMembers()) {
-              if (key === 'schema') {
-                this.visitSchema(targetOperation.requestBody.content[contentType].schema, value, childIterator);
-              }
+          for (const { key, value, childIterator } of parameterItemMembers()) {
+            if (key === 'schema') {
+              this.visitSchema(targetOperation.requestBody.content[contentType].schema, value, childIterator);
             }
           }
         } else {
@@ -792,14 +800,9 @@ export class Oai2ToOai3 {
           }
 
           if (parameterValue.schema !== undefined) {
-            if (parameterValue.schema.$ref !== undefined) {
-              const newReferenceValue = `#/components/schemas/${parameterValue.schema.$ref.replace('#/definitions/', '')}`;
-              targetOperation.requestBody.content[mimetype].schema.$ref = { value: newReferenceValue, pointer };
-            } else {
-              for (const { key, value, childIterator } of parameterItemMembers()) {
-                if (key === 'schema') {
-                  this.visitSchema(targetOperation.requestBody.content[mimetype].schema, value, childIterator);
-                }
+            for (const { key, value, childIterator } of parameterItemMembers()) {
+              if (key === 'schema') {
+                this.visitSchema(targetOperation.requestBody.content[mimetype].schema, value, childIterator);
               }
             }
           } else {
@@ -844,17 +847,9 @@ export class Oai2ToOai3 {
       for (let mimetype of produces) {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);
         responseTarget.content[mimetype].schema = this.newObject(jsonPointer);
-        if (responseValue.schema.$ref) {
-          if (responseValue.schema['x-ms-client-flatten']) {
-            responseTarget.content[mimetype].schema['x-ms-client-flatten'] = { value: responseValue.schema['x-ms-client-flatten'], pointer: jsonPointer };
-          }
-          const newReferenceValue = `#/components/schemas/${responseValue.schema.$ref.replace('#/definitions/', '')}`;
-          responseTarget.content[mimetype].schema.$ref = { value: newReferenceValue, pointer: jsonPointer };
-        } else {
-          for (const { key, value, childIterator } of responsesFieldMembers()) {
-            if (key === 'schema') {
-              this.visitSchema(responseTarget.content[mimetype].schema, value, childIterator);
-            }
+        for (const { key, value, childIterator } of responsesFieldMembers()) {
+          if (key === 'schema') {
+            this.visitSchema(responseTarget.content[mimetype].schema, value, childIterator);
           }
         }
         if (responseValue.examples && responseValue.examples[mimetype]) {

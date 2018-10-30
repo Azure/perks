@@ -42,7 +42,14 @@ import { Oai2ToOai3 } from '../main';
     const oai3Uri = `mem://oai3.yaml`;
     console.log(`      ${name}`);
 
-    const oai3 = JSON.stringify(await convertOAI2toOAI3(swaggerGraph));
+
+    let oai3: any;
+    try {
+      oai3 = JSON.stringify(await convertOAI2toOAI3(swaggerGraph));
+    } catch {
+      return;
+    }
+
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -66,6 +73,7 @@ import { Oai2ToOai3 } from '../main';
 
 
       if (original.components.requestBodies !== undefined) {
+        console.error(name);
         return;
       }
       // const swaggerAsText = FastStringify(convert.generated);
