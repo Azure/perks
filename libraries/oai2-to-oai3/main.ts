@@ -67,7 +67,7 @@ export class Oai2ToOai3 {
       }
 
       this.generated.servers = this.newArray('/x-ms-parameterized-host');
-      this.generated.servers.push({ value: server, pointer: '/x-ms-parameterized-host', recurse: true });
+      this.generated.servers.__push__({ value: server, pointer: '/x-ms-parameterized-host', recurse: true });
     } else if (this.original.host) {
       if (this.generated.servers === undefined) {
         this.generated.servers = this.newArray('/host');
@@ -76,7 +76,7 @@ export class Oai2ToOai3 {
         let server: any = {};
         server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
         extractServerParameters(server);
-        this.generated.servers.push({ value: server, pointer });
+        this.generated.servers.__push__({ value: server, pointer });
       }
     } else if (this.original.basePath) {
       let server: any = {};
@@ -85,7 +85,7 @@ export class Oai2ToOai3 {
       if (this.generated.servers === undefined) {
         this.generated.servers = this.newArray('/basePath');
       }
-      this.generated.servers.push(server);
+      this.generated.servers.__push__(server);
     }
 
     if (this.generated.servers === undefined) {
@@ -516,7 +516,7 @@ export class Oai2ToOai3 {
 
   visitAllOf(target: any, allOfMembers: () => Iterable<Node>) {
     for (const { key: index, value, pointer, childIterator } of allOfMembers()) {
-      target.push(this.newObject(pointer));
+      target.__push__(this.newObject(pointer));
       this.visitSchema(target[index], value, childIterator);
     }
   }
@@ -548,7 +548,7 @@ export class Oai2ToOai3 {
   }
 
   visitTag(index: number, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
-    this.generated.tags.push(this.newObject(jsonPointer));
+    this.generated.tags.__push__(this.newObject(jsonPointer));
 
     for (const { key, pointer, value } of tagItemMembers) {
       switch (key) {
@@ -646,7 +646,7 @@ export class Oai2ToOai3 {
 
   visitPathParameters(target: any, parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
-      target.push(this.newObject(pointer));
+      target.__push__(this.newObject(pointer));
       this.visitParameter(target[target.length - 1], value, pointer, childIterator);
     }
   }
@@ -706,7 +706,7 @@ export class Oai2ToOai3 {
   }
 
   visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
-    const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false };
+    const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
       if (value.$ref && value.$ref.match(/^#\/parameters\//g)) {
@@ -738,6 +738,10 @@ export class Oai2ToOai3 {
         } else if (value.name) {
           requestBodyTracker.name = value.name;
         }
+
+        if ((value.in === 'body' || value.type === 'file') && value.in !== 'formData') {
+          requestBodyTracker.wasParamRequired = value.required;
+        }
       }
 
       if (requestBodyTracker.keepTrackingIndex) {
@@ -758,6 +762,12 @@ export class Oai2ToOai3 {
     }
 
     if (targetOperation.requestBody !== undefined) {
+
+
+      if (requestBodyTracker.wasParamRequired) {
+        targetOperation.requestBody.required = { value: requestBodyTracker.wasParamRequired, pointer };
+      }
+
       if (requestBodyTracker.description !== undefined && targetOperation.requestBody.description === undefined) {
         targetOperation.requestBody.description = { value: requestBodyTracker.description, pointer };
       }
@@ -790,10 +800,6 @@ export class Oai2ToOai3 {
         targetOperation.requestBody.content = this.newObject(pointer);
       }
 
-      // if (targetOperation.requestBody['x-ms-requestBody-name'] === undefined) {
-      //   targetOperation.requestBody['x-ms-requestBody-name'] = (parameterValue['x-ms-client-name']) ? { value: parameterValue['x-ms-client-name'], pointer } : { value: parameterValue.name, pointer };
-      // }
-
       if (parameterValue['x-ms-parameter-location'] && targetOperation.requestBody['x-ms-parameter-location'] === undefined) {
         targetOperation.requestBody['x-ms-parameter-location'] = { value: parameterValue['x-ms-parameter-location'], pointer };
       }
@@ -801,10 +807,6 @@ export class Oai2ToOai3 {
       if (parameterValue['x-ms-client-flatten'] !== undefined && targetOperation.requestBody['x-ms-client-flatten'] === undefined) {
         targetOperation.requestBody['x-ms-client-flatten'] = { value: parameterValue['x-ms-client-flatten'], pointer };
       }
-
-      // if (parameterValue['x-ms-client-name'] !== undefined && targetOperation.requestBody['x-ms-client-name'] === undefined) {
-      //   targetOperation.requestBody['x-ms-client-name'] = { value: parameterValue['x-ms-client-name'], pointer };
-      // }
 
       if (parameterValue['x-ms-enum'] !== undefined && targetOperation.requestBody['x-ms-enum'] === undefined) {
         targetOperation.requestBody['x-ms-enum'] = { value: parameterValue['x-ms-enum'], pointer };
@@ -814,9 +816,9 @@ export class Oai2ToOai3 {
         targetOperation.requestBody.allowEmptyValue = { value: parameterValue.allowEmptyValue, pointer };
       }
 
-      if (parameterValue.required === true && targetOperation.requestBody.required === undefined) {
-        targetOperation.requestBody.required = { value: parameterValue.required, pointer };
-      }
+      // if (parameterValue.required === true && targetOperation.requestBody.required === undefined) {
+      //   targetOperation.requestBody.required = { value: parameterValue.required, pointer };
+      // }
 
       if (parameterValue.in === 'formData') {
 
@@ -860,7 +862,7 @@ export class Oai2ToOai3 {
           }
 
           if (parameterValue.type !== undefined) {
-            // NOTE: To be valid 3.x.x it should do the stuff commented below
+            // NOTE: To be valid 3.x.x it should do the stuff commented below, but the previous converter didn't do it.
             // if (parameterValue.type === 'file') {
             //   targetProperty.type = { value: 'string', pointer };
             //   targetProperty.format = { value: 'binary', pointer };
@@ -874,8 +876,8 @@ export class Oai2ToOai3 {
             schema.required = this.newArray(pointer);
           }
 
-          if (schema.required === true) {
-            schema.required.push({ value: parameterValue.name, pointer });
+          if (parameterValue.required === true) {
+            schema.required.__push__({ value: parameterValue.name, pointer });
           }
 
           if (parameterValue.default !== undefined) {
@@ -936,7 +938,7 @@ export class Oai2ToOai3 {
         targetOperation.parameters = this.newArray(pointer);
       }
 
-      targetOperation.parameters.push(this.newObject(pointer));
+      targetOperation.parameters.__push__(this.newObject(pointer));
       const parameter = targetOperation.parameters[targetOperation.parameters.length - 1];
       this.visitParameter(parameter, parameterValue, pointer, parameterItemMembers);
     }

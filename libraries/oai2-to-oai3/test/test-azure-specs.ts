@@ -18,7 +18,6 @@ require('source-map-support').install();
 
 
 // INVESTIGATE
-// C:\tmp\azure-rest-api-specs\specification\cognitiveservices\data-plane\SpellCheck\stable\v1.0\SpellCheck.json
 // C:/tmp/azure-rest-api-specs/specification/web/resource-manager/Microsoft.Web/stable/2016-03-01/CommonDefinitions.json
 // C:\tmp\azure-rest-api-specs\specification\web\resource-manager\Microsoft.Web\stable\2018-02-01\CommonDefinitions.json
 
