@@ -2,7 +2,7 @@
   "private": true,
   "name": "perks",
   "devDependencies": {
-    "@microsoft/rush": "5.3.1",
+    "@microsoft/rush": "5.4.0",
     "typescript": "^3.1.3",
     "tslint": "^5.11.0",
     "tslint-language-service-ts3": "1.0.0",

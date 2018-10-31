@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { OperationCanceledException } from '@microsoft.azure/tasks';
-import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString } from '@microsoft.azure/uri';
+import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString, ParentFolderUri } from '@microsoft.azure/uri';
 import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
@@ -117,6 +117,10 @@ class ReadThroughDataSource extends DataSource {
         let data: string | null = null;
         try {
           data = await this.fs.ReadFile(uri) || await ReadUri(uri);
+          if (data) {
+            const parent = ParentFolderUri(uri) || '';
+            data = data.replace(/\$\(this-folder\)/g, parent);
+          }
         } finally {
           if (!data) {
             return null;
