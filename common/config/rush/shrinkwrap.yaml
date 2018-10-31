@@ -30,6 +30,7 @@ dependencies:
   semver: 5.6.0
   source-map: 0.5.6
   source-map-support: 0.5.9
+  swagger2openapi: github.com/fearthecowboy/swagger2openapi/1c2a0039b5649fb47ef9c4583abbd3e5d0504977
   typescript: 3.1.3
   urijs: 1.19.1
   yaml-ast-parser: 0.0.40
@@ -70,6 +71,15 @@ packages:
       node: '>=0.4.7'
     resolution:
       integrity: sha1-oI7cxn6z/L6Z7WMIVTRKDPKCu40=
+  /ajv/5.5.2:
+    dependencies:
+      co: 4.6.0
+      fast-deep-equal: 1.1.0
+      fast-json-stable-stringify: 2.0.0
+      json-schema-traverse: 0.3.1
+    dev: false
+    resolution:
+      integrity: sha1-c7Xuyj+rZT49P5Qis0GtQiBdyWU=
   /ansi-regex/2.1.1:
     dev: false
     engines:
@@ -115,10 +125,20 @@ packages:
     dev: false
     resolution:
       integrity: sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
+  /builtin-modules/1.1.1:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-Jw8HbFpywC9bZaR9+Uxf46J4iS8=
   /builtins/1.0.3:
     dev: false
     resolution:
       integrity: sha1-y5T662HIaWRR2zZTThQi+U8K7og=
+  /call-me-maybe/1.0.1:
+    dev: false
+    resolution:
+      integrity: sha1-JtII6onje1y95gJQoV8DHBak1ms=
   /camelcase/4.1.0:
     dev: false
     engines:
@@ -141,6 +161,14 @@ packages:
       node: '>= 0.3.0'
     resolution:
       integrity: sha1-c82KrWXZ4VBfmvF0TTt5wVJ2gqU=
+  /cliui/3.2.0:
+    dependencies:
+      string-width: 1.0.2
+      strip-ansi: 3.0.1
+      wrap-ansi: 2.1.0
+    dev: false
+    resolution:
+      integrity: sha1-EgYBU3qRbSmUD5NNo7SNWFo5IT0=
   /cliui/4.1.0:
     dependencies:
       string-width: 2.1.1
@@ -149,6 +177,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-4FG+RSG9DL7uEwRUZXZn3SS34DiDPfzP0VOiEwtUWlE+AR2EIg+hSyvrIgUUfhdgR/UkAeW2QHgeP+hWrXs7jQ==
+  /co/4.6.0:
+    dev: false
+    engines:
+      iojs: '>= 1.0.0'
+      node: '>= 0.12.0'
+    resolution:
+      integrity: sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
   /code-point-at/1.1.0:
     dev: false
     engines:
@@ -240,6 +275,23 @@ packages:
     dev: false
     resolution:
       integrity: sha1-zR9rpHfFY4xAyX7ZtXLbW6tdgzE=
+  /encoding/0.1.12:
+    dependencies:
+      iconv-lite: 0.4.24
+    dev: false
+    resolution:
+      integrity: sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
+  /error-ex/1.3.2:
+    dependencies:
+      is-arrayish: 0.2.1
+    dev: false
+    resolution:
+      integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==
+  /es6-promise/3.3.1:
+    dev: false
+    resolution:
+      integrity: sha1-oIzd6EzNvzTQJ6FFG8kdS80ophM=
+      tarball: 'http://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz'
   /escape-string-regexp/1.0.5:
     dev: false
     engines:
@@ -336,6 +388,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
+  /fast-deep-equal/1.1.0:
+    dev: false
+    resolution:
+      integrity: sha1-wFNHeBfIa1HaqFPIHgWbcz0CNhQ=
+      tarball: 'http://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-1.1.0.tgz'
+  /fast-json-stable-stringify/2.0.0:
+    dev: false
+    resolution:
+      integrity: sha1-1RQsDK7msRifh9OnYREGT4bIu/I=
   /fast-levenshtein/2.0.6:
     dev: false
     resolution:
@@ -431,6 +492,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-7T/BxH19zbcCTa8XkMlbK5lTo1WtgkFi3GvdWEyNuc4Vex7/9Dqbnpsf4JMydcfj9HCg4zUWFTL3Za6lapg5/w==
+  /iconv-lite/0.4.24:
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
   /inflight/1.0.6:
     dependencies:
       once: 1.4.0
@@ -448,6 +517,19 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-EEqOSqym09jNFXqO+L+rLXo//bY=
+  /is-arrayish/0.2.1:
+    dev: false
+    resolution:
+      integrity: sha1-d8mYQFJ6qOyxqLppe4BkWnqSap0=
+  /is-builtin-module/1.0.0:
+    dependencies:
+      builtin-modules: 1.1.1
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-VAVy0096wxGfj3bDDLwbHgN6/74=
+      tarball: 'http://registry.npmjs.org/is-builtin-module/-/is-builtin-module-1.0.0.tgz'
   /is-fullwidth-code-point/1.0.0:
     dependencies:
       number-is-nan: 1.0.1
@@ -514,6 +596,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-PIt2cnwmPfL4hKNwqeiuz4bKfnzHTBv6HyVgjahA6mPLwPDzjDWrplJBMjHUFxku/N3FlmrbyPclad+I+4mJ3A==
+  /json-schema-traverse/0.3.1:
+    dev: false
+    resolution:
+      integrity: sha1-NJptRMU6Ud6JtAgFxdXlm0F9M0A=
   /jsonpath/1.0.0:
     dependencies:
       esprima: 1.2.2
@@ -545,6 +631,18 @@ packages:
     dev: false
     resolution:
       integrity: sha1-ZMTwJfF/1Tv7RXY/rrFvAVp0dVA=
+  /load-json-file/2.0.0:
+    dependencies:
+      graceful-fs: 4.1.11
+      parse-json: 2.2.0
+      pify: 2.3.0
+      strip-bom: 3.0.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-eUfkIUmvgNaWy/eXvKq8/h/inKg=
+      tarball: 'http://registry.npmjs.org/load-json-file/-/load-json-file-2.0.0.tgz'
   /locate-path/2.0.0:
     dependencies:
       p-locate: 2.0.0
@@ -637,6 +735,19 @@ packages:
     dev: false
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+  /node-fetch/1.7.3:
+    dependencies:
+      encoding: 0.1.12
+      is-stream: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha512-NhZ4CsKx7cYm2vSrBAr2PvFOe6sWDf0UYLRqA6svUYg7+/TSfVAu49jYC4BvQ4Sms9SZgdqGBgroqfDhJdTyKQ==
+  /node-readfiles/0.2.0:
+    dependencies:
+      es6-promise: 3.3.1
+    dev: false
+    resolution:
+      integrity: sha1-271K8SE04uY1wkXvk//Pb2BnOl0=
   /nomnom/1.5.2:
     dependencies:
       colors: 0.5.1
@@ -645,6 +756,15 @@ packages:
     dev: false
     resolution:
       integrity: sha1-9DRUSKhTz71cDSYyDyR3qwUm/i8=
+  /normalize-package-data/2.4.0:
+    dependencies:
+      hosted-git-info: 2.7.1
+      is-builtin-module: 1.0.0
+      semver: 5.6.0
+      validate-npm-package-license: 3.0.4
+    dev: false
+    resolution:
+      integrity: sha512-9jjUFbTPfEy3R/ad/2oNbKtW9Hgovl5O1FvFWKkKblNXoN/Oou6+9+KKohPK13Yc3/TyunyWhJp6gvRNR/PPAw==
   /npm-package-arg/6.0.0:
     dependencies:
       hosted-git-info: 2.7.1
@@ -856,6 +976,14 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-y8ec26+P1CKOE/Yh8rGiN8GyB7M=
+  /parse-json/2.2.0:
+    dependencies:
+      error-ex: 1.3.2
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-9ID0BDTvgHQfhGkJn43qGPVaTck=
   /path-exists/3.0.0:
     dev: false
     engines:
@@ -874,6 +1002,21 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
+  /path-type/2.0.0:
+    dependencies:
+      pify: 2.3.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-8BLMuEFbcJb8LaoQVMPXI4lZTHM=
+  /pify/2.3.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-7RQaasBDqEnqWISY59yosVMw6Qw=
+      tarball: 'http://registry.npmjs.org/pify/-/pify-2.3.0.tgz'
   /prelude-ls/1.1.2:
     dev: false
     engines:
@@ -897,6 +1040,25 @@ packages:
     dev: false
     resolution:
       integrity: sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
+  /read-pkg-up/2.0.0:
+    dependencies:
+      find-up: 2.1.0
+      read-pkg: 2.0.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-a3KoBImE4MQeeVEP1en6mbO1Sb4=
+  /read-pkg/2.0.0:
+    dependencies:
+      load-json-file: 2.0.0
+      normalize-package-data: 2.4.0
+      path-type: 2.0.0
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-jvHAYjxqbbDcZxPEv6xGMysjaPg=
   /readable-stream/1.1.14:
     dependencies:
       core-util-is: 1.0.2
@@ -920,6 +1082,10 @@ packages:
     resolution:
       integrity: sha512-tQtKA9WIAhBF3+VLAseyMqZeBjW0AHJoxOtYqSUZNJxauErmLbVm2FW1y+J/YA9dUrAC39ITejlZWhVIwawkKw==
       tarball: 'http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz'
+  /reftools/0.0.7:
+    dev: false
+    resolution:
+      integrity: sha512-Bnm/DDw8lPMnx4EE1wU0f2PIWeWH53xsuaZuk1zF1qKJsoGrCanNl4QOdpvZJO9AbF8Sk5o/NRRLl5C0eUa1lw==
   /require-directory/2.1.1:
     dev: false
     engines:
@@ -942,6 +1108,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Bs4RHuvZwYWrr/AI7A/P/Fxb4Aw=
+  /safer-buffer/2.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
   /semver/5.6.0:
     dev: false
     hasBin: true
@@ -965,6 +1135,44 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
+  /should-equal/2.0.0:
+    dependencies:
+      should-type: 1.4.0
+    dev: false
+    resolution:
+      integrity: sha512-ZP36TMrK9euEuWQYBig9W55WPC7uo37qzAEmbjHz4gfyuXrEUgF8cUvQVO+w+d3OMfPvSRQJ22lSm8MQJ43LTA==
+  /should-format/3.0.3:
+    dependencies:
+      should-type: 1.4.0
+      should-type-adaptors: 1.1.0
+    dev: false
+    resolution:
+      integrity: sha1-m/yPdPo5IFxT04w01xcwPidxJPE=
+  /should-type-adaptors/1.1.0:
+    dependencies:
+      should-type: 1.4.0
+      should-util: 1.0.0
+    dev: false
+    resolution:
+      integrity: sha512-JA4hdoLnN+kebEp2Vs8eBe9g7uy0zbRo+RMcU0EsNy+R+k049Ki+N5tT5Jagst2g7EAja+euFuoXFCa8vIklfA==
+  /should-type/1.4.0:
+    dev: false
+    resolution:
+      integrity: sha1-B1bYzoRt/QmEOmlHcZ36DUz/XPM=
+  /should-util/1.0.0:
+    dev: false
+    resolution:
+      integrity: sha1-yYzaN0qmsZDfi6h8mInCtNtiAGM=
+  /should/13.2.3:
+    dependencies:
+      should-equal: 2.0.0
+      should-format: 3.0.3
+      should-type: 1.4.0
+      should-type-adaptors: 1.1.0
+      should-util: 1.0.0
+    dev: false
+    resolution:
+      integrity: sha512-ggLesLtu2xp+ZxI+ysJTmNjh2U0TsC+rQ/pfED9bUZZ4DKefP27D+7YJVVTvKsmjLpIi9jAa7itwDGkDDmt1GQ==
   /signal-exit/3.0.2:
     dev: false
     resolution:
@@ -988,6 +1196,28 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+  /spdx-correct/3.0.2:
+    dependencies:
+      spdx-expression-parse: 3.0.0
+      spdx-license-ids: 3.0.1
+    dev: false
+    resolution:
+      integrity: sha512-q9hedtzyXHr5S0A1vEPoK/7l8NpfkFYTq6iCY+Pno2ZbdZR6WexZFtqeVGkGxW3TEJMN914Z55EnAGMmenlIQQ==
+  /spdx-exceptions/2.2.0:
+    dev: false
+    resolution:
+      integrity: sha512-2XQACfElKi9SlVb1CYadKDXvoajPgBVPn/gOQLrTvHdElaVhr7ZEbqJaRnJLVNeaI4cMEAgVCeBMKF6MWRDCRA==
+  /spdx-expression-parse/3.0.0:
+    dependencies:
+      spdx-exceptions: 2.2.0
+      spdx-license-ids: 3.0.1
+    dev: false
+    resolution:
+      integrity: sha512-Yg6D3XpRD4kkOmTpdgbUiEJFKghJH03fiC1OPll5h/0sO6neh2jqRDVHOQ4o/LMea0tgCkbMgea5ip/e+MkWyg==
+  /spdx-license-ids/3.0.1:
+    dev: false
+    resolution:
+      integrity: sha512-TfOfPcYGBB5sDuPn3deByxPhmfegAhpDYKSOXZQN81Oyrrif8ZCodOLzK3AesELnCx03kikhyDwh0pfvvQvF8w==
   /sprintf-js/1.0.3:
     dev: false
     resolution:
@@ -1044,12 +1274,19 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-qEeQIusaw2iocTibY1JixQXuNo8=
+  /strip-bom/3.0.0:
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha1-IzTBjpx1n3vdVv3vfprj1YjmjtM=
   /strip-eof/1.0.0:
     dev: false
     engines:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-u0P/VZim6wXYm1n80SnJgzE2Br8=
+      tarball: 'http://registry.npmjs.org/strip-eof/-/strip-eof-1.0.0.tgz'
   /supports-color/5.4.0:
     dependencies:
       has-flag: 3.0.0
@@ -1097,6 +1334,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
+  /validate-npm-package-license/3.0.4:
+    dependencies:
+      spdx-correct: 3.0.2
+      spdx-expression-parse: 3.0.0
+    dev: false
+    resolution:
+      integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==
   /validate-npm-package-name/3.0.0:
     dependencies:
       builtins: 1.0.3
@@ -1148,6 +1392,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-CFNtTnPTIrHJziB6uN1w4E0grm4=
+  /yargs-parser/7.0.0:
+    dependencies:
+      camelcase: 4.1.0
+    dev: false
+    resolution:
+      integrity: sha1-jQrELxbqVd69MyyvTEA4s+P139k=
   /yargs-parser/9.0.2:
     dependencies:
       camelcase: 4.1.0
@@ -1172,6 +1422,24 @@ packages:
     resolution:
       integrity: sha512-NwW69J42EsCSanF8kyn5upxvjp5ds+t3+udGBeTbFnERA+lF541DDpMawzo4z6W/QrzNM18D+BPMiOBibnFV5A==
       tarball: 'http://registry.npmjs.org/yargs/-/yargs-11.1.0.tgz'
+  /yargs/9.0.1:
+    dependencies:
+      camelcase: 4.1.0
+      cliui: 3.2.0
+      decamelize: 1.2.0
+      get-caller-file: 1.0.3
+      os-locale: 2.1.0
+      read-pkg-up: 2.0.0
+      require-directory: 2.1.1
+      require-main-filename: 1.0.1
+      set-blocking: 2.0.0
+      string-width: 2.1.1
+      which-module: 2.0.0
+      y18n: 3.2.1
+      yargs-parser: 7.0.0
+    dev: false
+    resolution:
+      integrity: sha1-UqzCP+7Kw0BCB47njAwAf1CF20w=
   'file:projects/async-io.tgz':
     dependencies:
       '@types/mocha': 5.2.5
@@ -1262,11 +1530,12 @@ packages:
       mocha-typescript: 1.1.17
       source-map: 0.5.6
       source-map-support: 0.5.9
+      swagger2openapi: github.com/fearthecowboy/swagger2openapi/1c2a0039b5649fb47ef9c4583abbd3e5d0504977
       typescript: 3.1.3
     dev: false
     name: '@rush-temp/oai2-to-oai3'
     resolution:
-      integrity: sha512-rZN1/TfnxCjYjnMbpRIVay5P8DQu+cYbXULEWWAscTJ2MzNMf2uQDp2sWYSo2cKYj2tPaAwr5/wyqpahIzQo5Q==
+      integrity: sha512-8JM/IRzt50Kl4PkQnnk9386sLE5f6SEhUzsaoEtiCqx9eIr2NMfMZ/joPvOmHRetNY9peZdNaKO9gtlgw2AuFA==
       tarball: 'file:projects/oai2-to-oai3.tgz'
     version: 0.0.0
   'file:projects/openapi.tgz':
@@ -1312,6 +1581,23 @@ packages:
       integrity: sha512-VX71ztglPGQZOpBG0heDrPwEsPSwuTaMWpVkmnZkQyyJzTx8jPJt8gZNhGpe83vg/aREv4HY5RbEoiDJ63RCOw==
       tarball: 'file:projects/uri.tgz'
     version: 0.0.0
+  github.com/fearthecowboy/swagger2openapi/1c2a0039b5649fb47ef9c4583abbd3e5d0504977:
+    dependencies:
+      ajv: 5.5.2
+      call-me-maybe: 1.0.1
+      co: 4.6.0
+      js-yaml: 3.12.0
+      node-fetch: 1.7.3
+      node-readfiles: 0.2.0
+      reftools: 0.0.7
+      should: 13.2.3
+      yargs: 9.0.1
+    dev: false
+    hasBin: true
+    name: swagger2openapi
+    resolution:
+      tarball: 'https://codeload.github.com/fearthecowboy/swagger2openapi/tar.gz/1c2a0039b5649fb47ef9c4583abbd3e5d0504977'
+    version: 2.10.0
 registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
@@ -1347,6 +1633,7 @@ specifiers:
   semver: ^5.3.0
   source-map: 0.5.6
   source-map-support: 0.5.9
+  swagger2openapi: 'github:fearthecowboy/swagger2openapi#1c2a0039b5649fb47ef9c4583abbd3e5d0504977'
   typescript: ^3.1.3
   urijs: ^1.19.1
   yaml-ast-parser: 0.0.40

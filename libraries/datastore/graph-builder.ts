@@ -16,7 +16,7 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
 
   return new Proxy<ProxyObject<T>>(instance, {
     get(target: ProxyObject<T>, key: string | number | symbol): any {
-      if (key === 'push') {
+      if (key === '__push__') {
         return push;
       }
       return (instance)[key];

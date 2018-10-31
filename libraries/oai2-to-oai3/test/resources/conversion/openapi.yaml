@@ -330,7 +330,7 @@
           }
         ],
         "requestBody": {
-          "x-ms-requestBody-name": "name",
+          "x-ms-requestBody-name": "status",
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
@@ -344,7 +344,8 @@
                     "description": "Updated status of the pet",
                     "type": "string"
                   }
-                }
+                },
+                "required": []
               }
             }
           }
@@ -437,7 +438,7 @@
           }
         ],
         "requestBody": {
-          "x-ms-requestBody-name": "additionalMetadata",
+          "x-ms-requestBody-name": "file",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -449,10 +450,10 @@
                   },
                   "file": {
                     "description": "file to upload",
-                    "type": "string",
-                    "format": "binary"
+                    "type": "file"
                   }
-                }
+                },
+                "required": []
               }
             }
           }
