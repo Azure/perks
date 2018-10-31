@@ -1,5 +1,8 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
+import { statusCodes } from './status-codes';
+
+// NOTE: after testing references should be changed to OpenAPI 3.x.x references
 
 export class Oai2ToOai3 {
   public generated: any;
@@ -23,8 +26,14 @@ export class Oai2ToOai3 {
       for (let msp in xMsPHost.parameters) {
         if (!msp.startsWith('x-')) {
 
-          const originalParameter = xMsPHost.parameters[msp];
+          let originalParameter: any = {};
           let param: any = {};
+          if (xMsPHost.parameters[msp].$ref !== undefined) {
+            const referencePointer = xMsPHost.parameters[msp].$ref.replace('#', '');
+            originalParameter = get(this.original, referencePointer);
+          } else {
+            originalParameter = xMsPHost.parameters[msp];
+          }
 
           // TODO: Investigate why its not possible to copy 
           // properties and filter the property 'in' using
@@ -58,9 +67,7 @@ export class Oai2ToOai3 {
 
       this.generated.servers = this.newArray('/x-ms-parameterized-host');
       this.generated.servers.push({ value: server, pointer: '/x-ms-parameterized-host', recurse: true });
-    }
-
-    if (this.original.host) {
+    } else if (this.original.host) {
       if (this.generated.servers === undefined) {
         this.generated.servers = this.newArray('/host');
       }
@@ -81,7 +88,8 @@ export class Oai2ToOai3 {
     }
 
     if (this.generated.servers === undefined) {
-      // set to empty array to match behavior from https://github.com/fearthecowboy/swagger2openapi/blob/autorest-flavor/index.js
+      // NOTE: set to empty array to match behavior from https://github.com/fearthecowboy/swagger2openapi/blob/autorest-flavor/index.js
+      // In reality this should not be neccesary as severs is not required for the OAI definition to be complete.
       this.generated.servers = this.newArray('');
     }
 
@@ -98,8 +106,8 @@ export class Oai2ToOai3 {
     }
 
     // extract cosumes and produces
-    const globalProduces = (!this.original.produces) ? ['application/json'] : this.original.produces;
-    const globalConsumes = (!this.original.consumes) ? [] : this.original.consumes;
+    const globalProduces = (this.original.produces) ? this.original.produces : ['*/*'];
+    const globalConsumes = (this.original.consumes) ? this.original.consumes : ['application/json'];
 
 
     for (const { value, key, pointer, children } of visit(this.original)) {
@@ -129,27 +137,17 @@ export class Oai2ToOai3 {
           // PENDING
           break;
         case 'definitions':
-          if (!this.generated.components) {
-            this.generated.components = this.newObject(pointer);
-          }
-          this.generated.components.schemas = this.newObject(pointer);
           this.visitDefinitions(children);
           break;
         case 'parameters':
-          if (!this.generated.components) {
-            this.generated.components = this.newObject(pointer);
-          }
-          if (Object.keys(value).length !== 0) {
-            this.generated.components.parameters = this.newObject(pointer);
-            this.visitParameterDefinitions(children);
-          }
+          this.visitParameterDefinitions(children);
           break;
         case 'responses':
           if (!this.generated.components) {
             this.generated.components = this.newObject(pointer);
           }
           this.generated.components.responses = this.newObject(pointer);
-          this.visitResponsesDefinitions(children);
+          this.visitResponsesDefinitions(children, globalProduces);
           break;
         case 'securityDefinitions':
           if (!this.generated.components) {
@@ -181,43 +179,48 @@ export class Oai2ToOai3 {
 
   visitParameterDefinitions(parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
-      this.generated.components.parameters[key] = this.newObject(pointer);
-      this.visitParameter(this.generated.components.parameters[key], value, pointer, childIterator);
+      if (value.in !== 'formData' && value.in !== 'body' && value.type !== 'file') {
+
+        if (this.generated.components === undefined) {
+          this.generated.components = this.newObject(pointer);
+        }
+
+        if (this.generated.components.parameters === undefined) {
+          this.generated.components.parameters = this.newObject(pointer);
+        }
+
+        this.generated.components.parameters[key] = this.newObject(pointer);
+        this.visitParameter(this.generated.components.parameters[key], value, pointer, childIterator);
+      }
     }
   }
+
 
   visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
 
     if (parameterValue.$ref !== undefined) {
-      parameterTarget.$ref = { value: this.getNewParameterReference(parameterValue.$ref), pointer };
+      parameterTarget.$ref = { value: parameterValue.$ref.replace('#/parameters/', '#/components/parameters/'), pointer };
     } else {
 
-      if (parameterValue.name !== undefined) {
-        parameterTarget.name = { value: parameterValue.name, pointer };
-      }
+      const parameterUnchangedProperties = [
+        'name',
+        'in',
+        'description',
+        'allowEmptyValue',
+        'required',
+        'x-ms-parameter-location',
+        'x-ms-skip-url-encoding',
+        'x-ms-enum',
+        'x-ms-parameter-grouping',
+        'x-ms-client-name',
+        'x-ms-client-flatten',
+        'x-ms-client-request-id'
+      ]
 
-      if (parameterValue.in !== undefined) {
-        parameterTarget.in = { value: parameterValue.in, pointer };
-      }
-
-      if (parameterValue.description !== undefined) {
-        parameterTarget.description = { value: parameterValue.description, pointer };
-      }
-
-      if (parameterValue.allowEmptyValue !== undefined) {
-        parameterTarget.allowEmptyValue = { value: parameterValue.allowEmptyValue, pointer };
-      }
-
-      if (parameterValue.required !== undefined) {
-        parameterTarget.required = { value: parameterValue.required, pointer };
-      }
-
-      if (parameterValue['x-ms-parameter-location']) {
-        parameterTarget['x-ms-parameter-location'] = { value: parameterValue['x-ms-parameter-location'], pointer };
-      }
-
-      if (parameterValue['x-ms-enum']) {
-        parameterTarget['x-ms-enum'] = { value: parameterValue['x-ms-enum'], pointer };
+      for (const key of parameterUnchangedProperties) {
+        if (parameterValue[key] !== undefined) {
+          parameterTarget[key] = { value: parameterValue[key], pointer, recurse: true };
+        }
       }
 
       // Collection Format
@@ -364,7 +367,6 @@ export class Oai2ToOai3 {
           }
 
           securityScheme.flows[flowName] = this.newObject(jsonPointer);
-
           let authorizationUrl;
           let tokenUrl;
           let scopes;
@@ -388,6 +390,14 @@ export class Oai2ToOai3 {
 
   visitDefinitions(definitions: Iterable<Node>) {
     for (const { key: schemaName, value: schemaValue, pointer: jsonPointer, childIterator: definitionsItemMembers } of definitions) {
+      if (this.generated.components === undefined) {
+        this.generated.components = this.newObject(jsonPointer);
+      }
+
+      if (this.generated.components.schemas === undefined) {
+        this.generated.components.schemas = this.newObject(jsonPointer);
+      }
+
       this.generated.components.schemas[schemaName] = this.newObject(jsonPointer);
       const schemaItem = this.generated.components.schemas[schemaName];
       this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
@@ -401,10 +411,10 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitResponsesDefinitions(responses: Iterable<Node>) {
+  visitResponsesDefinitions(responses: Iterable<Node>, globalProduces: Array<string>) {
     for (const { key, pointer, value, childIterator } of responses) {
       this.generated.responses[key] = this.newObject(pointer);
-      this.visitResponse(this.generated.responses[key], value, childIterator, pointer);
+      this.visitResponse(this.generated.responses[key], value, key, childIterator, pointer, globalProduces);
     }
   }
 
@@ -414,6 +424,7 @@ export class Oai2ToOai3 {
         case '$ref':
           target[key] = { value: this.getNewSchemaReference(value), pointer };
           break;
+        case 'required':
         case 'title':
         case 'description':
         case 'default':
@@ -430,7 +441,6 @@ export class Oai2ToOai3 {
         case 'uniqueItems':
         case 'maxProperties':
         case 'minProperties':
-        case 'required':
         case 'enum':
         case 'readOnly':
           target[key] = { value, pointer, recurse: true };
@@ -451,9 +461,6 @@ export class Oai2ToOai3 {
         case 'type':
         case 'format':
           target[key] = { value, pointer };
-          if (value === null) {
-            target.nullable = { value: true, pointer };
-          }
           break;
         // in OpenAPI 3 the discriminator its an object instead of a string.
         case 'discriminator':
@@ -468,6 +475,17 @@ export class Oai2ToOai3 {
           break;
         case 'example':
           target.example = { value, pointer, recurse: true };
+          break;
+        case 'x-nullable':
+          // NOTE: this matches the previous converter behavior
+          // ... when a $ref is inside the schema
+          // copy the properties as they are
+          // don't update names
+          if (schemaValue.$ref === undefined) {
+            target['nullable'] = { value, pointer };
+          } else {
+            target['x-nullable'] = { value, pointer };
+          }
           break;
         default:
           this.visitExtensions(target, key, value, pointer);
@@ -528,16 +546,17 @@ export class Oai2ToOai3 {
     }
   }
 
+  // AFTER TESTING CHANGE THIS BEHAVIOR.
+  // NOTE: For the previous converter external references are not 
+  // converted, but internal references are converted.
   getNewSchemaReference(oldReference: string) {
     if (oldReference.match(/^#\/definitions\//g)) {
+      //internal reference
       return oldReference.replace('#/definitions/', '#/components/schemas/');
     } else {
+      // external reference
       return oldReference;
     }
-  }
-
-  getNewParameterReference(oldReference: string) {
-    return oldReference.replace('#/parameters/', '#/components/parameters/');
   }
 
   visitExtensions(target: any, key: string, value: any, pointer: string) {
@@ -569,13 +588,13 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<String>) {
+  visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     for (const { key: uri, pointer, children: pathItemMembers } of paths) {
       this.visitPath(target, uri, pointer, pathItemMembers, globalConsumes, globalProduces);
     }
   }
 
-  visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<String>) {
+  visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     target[uri] = this.newObject(jsonPointer);
     const pathItem = target[uri];
     for (const { value, key, pointer, children: pathItemFieldMembers } of pathItemMembers) {
@@ -611,7 +630,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<String>) {
+  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
 
     // trace was not supported on OpenAPI 2.0, it was an extension
     httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
@@ -621,8 +640,13 @@ export class Oai2ToOai3 {
     const operation = pathItem[httpMethod];
 
     // preprocess produces and consumes for responses and parameters respectively;
-    const produces = (!operationValue.produces) ? [...globalProduces] : [...new Set([...operationValue.produces, ...globalProduces])];
-    const consumes = (!operationValue.consumes) ? [...globalConsumes] : [...new Set([...operationValue.consumes, ...globalConsumes])];
+    const produces = (operationValue.produces) ? (operationValue.produces.indexOf('application/json') !== -1) ? operationValue.produces
+      : [...new Set([...operationValue.produces, ...globalProduces])]
+      : globalProduces;
+
+    const consumes = (operationValue.consumes) ? (operationValue.consumes.indexOf('application/octet-stream') !== -1) ? operationValue.consumes
+      : [...new Set([...operationValue.consumes, ...globalConsumes])]
+      : globalConsumes;
     for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
       switch (key) {
         case 'tags':
@@ -660,9 +684,27 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: any) {
+  visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
     const requestBodyTracker = { description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false };
-    for (const { pointer, value, childIterator } of parametersFieldItemMembers) {
+    for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
+
+      if (value.$ref && value.$ref.match(/^#\/parameters\//g)) {
+        // local reference. it's possible to look it up.
+        const referencePointer = value.$ref.replace('#', '');
+        const dereferencedParameter = get(this.original, referencePointer);
+        if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
+          const parameterName = referencePointer.replace('/parameters/', '');
+          const dereferencedParameters = get(this.original, '/parameters');
+          for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
+            if (key === parameterName) {
+              childIterator = newChildIterator;
+            }
+          }
+          value = dereferencedParameter;
+          pointer = referencePointer;
+        }
+      }
+
       if (value.in === 'body' || value.type === 'file' || value.in === 'formData') {
         if (!requestBodyTracker.wasSpecialParameterFound && value.description !== undefined) {
           requestBodyTracker.description = value.description;
@@ -710,19 +752,35 @@ export class Oai2ToOai3 {
         targetOperation.requestBody = this.newObject(pointer);
       }
 
-      if (targetOperation.requestBody['x-ms-requestBody-name'] === undefined) {
-        targetOperation.requestBody['x-ms-requestBody-name'] = { value: parameterValue.name, pointer };
-      }
-
       if (targetOperation.requestBody.content === undefined) {
         targetOperation.requestBody.content = this.newObject(pointer);
+      }
+
+      if (targetOperation.requestBody['x-ms-requestBody-name'] === undefined) {
+        targetOperation.requestBody['x-ms-requestBody-name'] = (parameterValue['x-ms-client-name']) ? { value: parameterValue['x-ms-client-name'], pointer } : { value: parameterValue.name, pointer };
+      }
+
+      if (parameterValue['x-ms-parameter-location'] && targetOperation.requestBody['x-ms-parameter-location'] === undefined) {
+        targetOperation.requestBody['x-ms-parameter-location'] = { value: parameterValue['x-ms-parameter-location'], pointer };
+      }
+
+      if (parameterValue['x-ms-client-flatten'] !== undefined && targetOperation.requestBody['x-ms-client-flatten'] === undefined) {
+        targetOperation.requestBody['x-ms-client-flatten'] = { value: parameterValue['x-ms-client-flatten'], pointer };
+      }
+
+      if (parameterValue['x-ms-client-name'] !== undefined && targetOperation.requestBody['x-ms-client-name'] === undefined) {
+        targetOperation.requestBody['x-ms-client-name'] = { value: parameterValue['x-ms-client-name'], pointer };
+      }
+
+      if (parameterValue['x-ms-enum'] !== undefined && targetOperation.requestBody['x-ms-enum'] === undefined) {
+        targetOperation.requestBody['x-ms-enum'] = { value: parameterValue['x-ms-enum'], pointer };
       }
 
       if (parameterValue.allowEmptyValue !== undefined && targetOperation.requestBody.allowEmptyValue === undefined) {
         targetOperation.requestBody.allowEmptyValue = { value: parameterValue.allowEmptyValue, pointer };
       }
 
-      if (parameterValue.required && targetOperation.requestBody.required === undefined) {
+      if (parameterValue.required === true && targetOperation.requestBody.required === undefined) {
         targetOperation.requestBody.required = { value: parameterValue.required, pointer };
       }
 
@@ -768,23 +826,30 @@ export class Oai2ToOai3 {
           }
 
           if (parameterValue.type !== undefined) {
-            if (parameterValue.type === 'file') {
-              targetProperty.type = { value: 'string', pointer };
-              targetProperty.format = { value: 'binary', pointer };
-            } else {
-              targetProperty.type = { value: parameterValue.type, pointer };
-            }
+            // NOTE: To be valid 3.x.x it should do the stuff commented below
+            // if (parameterValue.type === 'file') {
+            //   targetProperty.type = { value: 'string', pointer };
+            //   targetProperty.format = { value: 'binary', pointer };
+            // } else {
+            //   targetProperty.type = { value: parameterValue.type, pointer };
+            // }
+            targetProperty.type = { value: parameterValue.type, pointer };
           }
 
-          if (parameterValue.required === true) {
-            if (schema.required === undefined) {
-              schema.required = this.newArray(pointer);
-              schema.required.push(parameterValue.name);
-            }
+          if (schema.required === undefined) {
+            schema.required = this.newArray(pointer);
+          }
+
+          if (schema.required === true) {
+            schema.required.push({ value: parameterValue.name, pointer });
           }
 
           if (parameterValue.default !== undefined) {
             targetProperty.default = { value: parameterValue.default, pointer };
+          }
+
+          if (parameterValue.enum !== undefined) {
+            targetProperty.enum = { value: parameterValue.enum, pointer, recurse: true };
           }
 
           if (parameterValue.allOf !== undefined) {
@@ -843,7 +908,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitResponses(target: any, responsesItemMembers: Iterable<Node>, produces: any) {
+  visitResponses(target: any, responsesItemMembers: Iterable<Node>, produces: Array<string>) {
     for (const { key, value, pointer, childIterator } of responsesItemMembers) {
       target[key] = this.newObject(pointer);
       if (value.$ref) {
@@ -852,14 +917,23 @@ export class Oai2ToOai3 {
       } else if (key.startsWith('x-')) {
         this.visitExtensions(target[key], key, value, pointer);
       } else {
-        this.visitResponse(target[key], value, childIterator, pointer, produces);
+        this.visitResponse(target[key], value, key, childIterator, pointer, produces);
       }
     }
   }
 
-  visitResponse(responseTarget: any, responseValue: any, responsesFieldMembers: () => Iterable<Node>, jsonPointer: any, produces?: any) {
+  visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
 
-    if (responseValue.description) {
+    // NOTE: The previous converter patches the description of the response because 
+    // every response should have a description.
+    // So, to match previous behavior we do too.
+    if (responseValue.description === undefined || responseValue.description === '') {
+      let sc = statusCodes.find((e) => {
+        return e.code === responseName;
+      });
+
+      responseTarget.description = { value: (sc ? sc.phrase : ''), pointer: jsonPointer };
+    } else {
       responseTarget.description = { value: responseValue.description, pointer: jsonPointer };
     }
 

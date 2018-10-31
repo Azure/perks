@@ -344,7 +344,8 @@
                     "description": "Updated status of the pet",
                     "type": "string"
                   }
-                }
+                },
+                "required": []
               }
             }
           }
@@ -449,10 +450,10 @@
                   },
                   "file": {
                     "description": "file to upload",
-                    "type": "string",
-                    "format": "binary"
+                    "type": "file"
                   }
-                }
+                },
+                "required": []
               }
             }
           }
