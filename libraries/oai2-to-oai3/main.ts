@@ -1,6 +1,7 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
 import { statusCodes } from './status-codes';
+import { keys } from '../linq/dist/main';
 
 // NOTE: after testing references should be changed to OpenAPI 3.x.x references
 
@@ -189,8 +190,10 @@ export class Oai2ToOai3 {
           this.generated.components.parameters = this.newObject(pointer);
         }
 
-        this.generated.components.parameters[key] = this.newObject(pointer);
-        this.visitParameter(this.generated.components.parameters[key], value, pointer, childIterator);
+        const cleanParamName = key.replace(/\$|\[|\]/g, '_');
+
+        this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
+        this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
       }
     }
   }
@@ -199,7 +202,8 @@ export class Oai2ToOai3 {
   visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
 
     if (parameterValue.$ref !== undefined) {
-      parameterTarget.$ref = { value: parameterValue.$ref.replace('#/parameters/', '#/components/parameters/'), pointer };
+      const cleanReferenceValue = parameterValue.$ref.replace(/\$|\[|\]/g, '_');
+      parameterTarget.$ref = { value: cleanReferenceValue.replace('#/parameters/', '#/components/parameters/'), pointer };
     } else {
 
       const parameterUnchangedProperties = [
@@ -209,8 +213,8 @@ export class Oai2ToOai3 {
         'allowEmptyValue',
         'required',
         'x-ms-parameter-location',
-        'x-ms-skip-url-encoding',
         'x-ms-enum',
+        'x-comment',
         'x-ms-parameter-grouping',
         'x-ms-client-name',
         'x-ms-client-flatten',
@@ -220,6 +224,14 @@ export class Oai2ToOai3 {
       for (const key of parameterUnchangedProperties) {
         if (parameterValue[key] !== undefined) {
           parameterTarget[key] = { value: parameterValue[key], pointer, recurse: true };
+        }
+      }
+
+      if (parameterValue['x-ms-skip-url-encoding'] !== undefined) {
+        if (parameterValue.in === 'query') {
+          parameterTarget.allowReserved = { value: true, pointer };
+        } else {
+          parameterTarget['x-ms-skip-url-encoding'] = { value: parameterValue['x-ms-skip-url-encoding'], pointer };
         }
       }
 
@@ -398,8 +410,9 @@ export class Oai2ToOai3 {
         this.generated.components.schemas = this.newObject(jsonPointer);
       }
 
-      this.generated.components.schemas[schemaName] = this.newObject(jsonPointer);
-      const schemaItem = this.generated.components.schemas[schemaName];
+      const cleanSchemaName = schemaName.replace(/\[|\]/g, '_');
+      this.generated.components.schemas[cleanSchemaName] = this.newObject(jsonPointer);
+      const schemaItem = this.generated.components.schemas[cleanSchemaName];
       this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
     }
   }
@@ -413,8 +426,8 @@ export class Oai2ToOai3 {
 
   visitResponsesDefinitions(responses: Iterable<Node>, globalProduces: Array<string>) {
     for (const { key, pointer, value, childIterator } of responses) {
-      this.generated.responses[key] = this.newObject(pointer);
-      this.visitResponse(this.generated.responses[key], value, key, childIterator, pointer, globalProduces);
+      this.generated.components.responses[key] = this.newObject(pointer);
+      this.visitResponse(this.generated.components.responses[key], value, key, childIterator, pointer, globalProduces);
     }
   }
 
@@ -423,6 +436,14 @@ export class Oai2ToOai3 {
       switch (key) {
         case '$ref':
           target[key] = { value: this.getNewSchemaReference(value), pointer };
+          break;
+        case 'additionalProperties':
+          if (typeof (value) === 'boolean') {
+            target[key] = { value, pointer };
+          } else {
+            target[key] = this.newObject(pointer);
+            this.visitSchema(target[key], value, childIterator);
+          }
           break;
         case 'required':
         case 'title':
@@ -450,7 +471,6 @@ export class Oai2ToOai3 {
           this.visitAllOf(target.allOf, childIterator);
           break;
         case 'items':
-        case 'additionalProperties':
           target[key] = this.newObject(pointer);
           this.visitSchema(target[key], value, childIterator);
           break;
@@ -550,12 +570,13 @@ export class Oai2ToOai3 {
   // NOTE: For the previous converter external references are not 
   // converted, but internal references are converted.
   getNewSchemaReference(oldReference: string) {
-    if (oldReference.match(/^#\/definitions\//g)) {
+    const cleanOldReference = oldReference.replace(/\$|\[|\]/g, '_');
+    if (cleanOldReference.match(/^#\/definitions\//g)) {
       //internal reference
-      return oldReference.replace('#/definitions/', '#/components/schemas/');
+      return cleanOldReference.replace('#/definitions/', '#/components/schemas/');
     } else {
       // external reference
-      return oldReference;
+      return cleanOldReference;
     }
   }
 
@@ -685,7 +706,7 @@ export class Oai2ToOai3 {
   }
 
   visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
-    const requestBodyTracker = { description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false };
+    const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false };
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
       if (value.$ref && value.$ref.match(/^#\/parameters\//g)) {
@@ -711,6 +732,12 @@ export class Oai2ToOai3 {
         } else {
           requestBodyTracker.description = undefined;
         }
+
+        if (value['x-ms-client-name']) {
+          requestBodyTracker.xmsname = value['x-ms-client-name'];
+        } else if (value.name) {
+          requestBodyTracker.name = value.name;
+        }
       }
 
       if (requestBodyTracker.keepTrackingIndex) {
@@ -735,6 +762,13 @@ export class Oai2ToOai3 {
         targetOperation.requestBody.description = { value: requestBodyTracker.description, pointer };
       }
 
+      if (requestBodyTracker.xmsname) {
+        targetOperation.requestBody['x-ms-client-name'] = { value: requestBodyTracker.xmsname, pointer };
+        targetOperation.requestBody['x-ms-requestBody-name'] = { value: requestBodyTracker.xmsname, pointer };
+      } else if (requestBodyTracker.name) {
+        targetOperation.requestBody['x-ms-requestBody-name'] = { value: requestBodyTracker.name, pointer };
+      }
+
       if (targetOperation.parameters === undefined) {
         targetOperation['x-ms-requestBody-index'] = { value: 0, pointer };
 
@@ -756,9 +790,9 @@ export class Oai2ToOai3 {
         targetOperation.requestBody.content = this.newObject(pointer);
       }
 
-      if (targetOperation.requestBody['x-ms-requestBody-name'] === undefined) {
-        targetOperation.requestBody['x-ms-requestBody-name'] = (parameterValue['x-ms-client-name']) ? { value: parameterValue['x-ms-client-name'], pointer } : { value: parameterValue.name, pointer };
-      }
+      // if (targetOperation.requestBody['x-ms-requestBody-name'] === undefined) {
+      //   targetOperation.requestBody['x-ms-requestBody-name'] = (parameterValue['x-ms-client-name']) ? { value: parameterValue['x-ms-client-name'], pointer } : { value: parameterValue.name, pointer };
+      // }
 
       if (parameterValue['x-ms-parameter-location'] && targetOperation.requestBody['x-ms-parameter-location'] === undefined) {
         targetOperation.requestBody['x-ms-parameter-location'] = { value: parameterValue['x-ms-parameter-location'], pointer };
@@ -768,9 +802,9 @@ export class Oai2ToOai3 {
         targetOperation.requestBody['x-ms-client-flatten'] = { value: parameterValue['x-ms-client-flatten'], pointer };
       }
 
-      if (parameterValue['x-ms-client-name'] !== undefined && targetOperation.requestBody['x-ms-client-name'] === undefined) {
-        targetOperation.requestBody['x-ms-client-name'] = { value: parameterValue['x-ms-client-name'], pointer };
-      }
+      // if (parameterValue['x-ms-client-name'] !== undefined && targetOperation.requestBody['x-ms-client-name'] === undefined) {
+      //   targetOperation.requestBody['x-ms-client-name'] = { value: parameterValue['x-ms-client-name'], pointer };
+      // }
 
       if (parameterValue['x-ms-enum'] !== undefined && targetOperation.requestBody['x-ms-enum'] === undefined) {
         targetOperation.requestBody['x-ms-enum'] = { value: parameterValue['x-ms-enum'], pointer };
@@ -958,17 +992,19 @@ export class Oai2ToOai3 {
 
     // examples outside produces
     for (let mimetype in responseValue.examples) {
-      if (responseValue.content === undefined) {
+      if (responseTarget.content === undefined) {
         responseTarget.content = this.newObject(jsonPointer);
       }
 
-      if (responseValue.content[mimetype]) {
+      if (responseTarget.content[mimetype] === undefined) {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);
       }
 
-      responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
-      responseTarget.content[mimetype].examples.response = this.newObject(jsonPointer);
-      responseTarget.content[mimetype].examples.response.value = { value: responseValue.examples[mimetype], pointer: jsonPointer }
+      if (responseTarget.content[mimetype].examples === undefined) {
+        responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
+        responseTarget.content[mimetype].examples.response = this.newObject(jsonPointer);
+        responseTarget.content[mimetype].examples.response.value = { value: responseValue.examples[mimetype], pointer: jsonPointer }
+      }
     }
 
     if (responseValue.headers) {

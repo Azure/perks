@@ -17,6 +17,11 @@ require('source-map-support').install();
 // git clone https://github.com/azure/azure-rest-api-specs
 
 
+// INVESTIGATE
+// C:\tmp\azure-rest-api-specs\specification\cognitiveservices\data-plane\SpellCheck\stable\v1.0\SpellCheck.json
+// C:/tmp/azure-rest-api-specs/specification/web/resource-manager/Microsoft.Web/stable/2016-03-01/CommonDefinitions.json
+// C:\tmp\azure-rest-api-specs\specification\web\resource-manager\Microsoft.Web\stable\2018-02-01\CommonDefinitions.json
+
 import { Oai2ToOai3 } from '../main';
 
 @suite class AzureRestSpecs {
@@ -108,7 +113,7 @@ import { Oai2ToOai3 } from '../main';
   }
 
   // @test async 'test individual file'() {
-  //   await this.testEachfile(`C:/tmp/azure-rest-api-specs/specification/cognitiveservices/data-plane/SpellCheck/stable/v1.0/SpellCheck.json`);
+  //   await this.testEachfile(`C:/tmp/azure-rest-api-specs/specification/web/resource-manager/Microsoft.Web/stable/2016-03-01/CommonDefinitions.json`);
   // }
 
   @test  async 'test conversion - Azure'() {
