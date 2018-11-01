@@ -16,11 +16,6 @@ require('source-map-support').install();
 // cd /tmp
 // git clone https://github.com/azure/azure-rest-api-specs
 
-
-// INVESTIGATE
-// C:/tmp/azure-rest-api-specs/specification/web/resource-manager/Microsoft.Web/stable/2016-03-01/CommonDefinitions.json
-// C:\tmp\azure-rest-api-specs\specification\web\resource-manager\Microsoft.Web\stable\2018-02-01\CommonDefinitions.json
-
 import { Oai2ToOai3 } from '../main';
 
 @suite class AzureRestSpecs {
