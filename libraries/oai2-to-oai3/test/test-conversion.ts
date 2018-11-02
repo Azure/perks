@@ -113,7 +113,7 @@ import { Oai2ToOai3 } from '../main';
       const sink = ds.getDataSink();
       const text = FastStringify(convert.generated);
       console.log(text);
-      const data = await sink.WriteData('output-file', text, 'yaml-file', convert.mappings, [swaggerdata]);
+      const data = await sink.WriteData('output-file', text, [absoluteUri], 'yaml-file', convert.mappings, [swaggerdata]);
       // console.log(data.ReadMetadata());
 
       console.log(JSON.stringify(data.ReadMetadata().sourceMap.Value));
