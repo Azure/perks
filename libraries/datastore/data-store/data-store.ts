@@ -32,6 +32,7 @@ export interface Metadata {
 export interface Data {
   data: string;
   metadata: Metadata;
+  identity: Array<string>;
 }
 
 interface Store { [uri: string]: Data; }
@@ -119,6 +120,7 @@ class ReadThroughDataSource extends DataSource {
           data = await this.fs.ReadFile(uri) || await ReadUri(uri);
           if (data) {
             const parent = ParentFolderUri(uri) || '';
+            // hack to let $(this-folder) resolve to the location...
             data = data.replace(/\$\(this-folder\)/g, parent);
           }
         } finally {
@@ -126,7 +128,7 @@ class ReadThroughDataSource extends DataSource {
             return null;
           }
         }
-        const readHandle = await this.store.WriteData(uri, data, 'input-file');
+        const readHandle = await this.store.WriteData(uri, data, 'input-file', [uri]);
 
         this.uris.push(uri);
         return readHandle;
@@ -165,25 +167,26 @@ export class DataStore {
 
   private uid = 0;
 
-  private async WriteDataInternal(uri: string, data: string, metadata: Metadata): Promise<DataHandle> {
+  private async WriteDataInternal(uri: string, data: string, metadata: Metadata, identity: Array<string>): Promise<DataHandle> {
     this.ThrowIfCancelled();
     if (this.store[uri]) {
       throw new Error(`can only write '${uri}' once`);
     }
     this.store[uri] = {
       data,
-      metadata
+      metadata,
+      identity
     };
 
     return this.Read(uri);
   }
 
-  public async WriteData(description: string, data: string, artifact: string, sourceMapFactory?: (self: DataHandle) => RawSourceMap): Promise<DataHandle> {
+  public async WriteData(description: string, data: string, artifact: string, identity: Array<string>, sourceMapFactory?: (self: DataHandle) => RawSourceMap): Promise<DataHandle> {
     const uri = this.createUri(description);
 
     // metadata
     const metadata: Metadata = <any>{};
-    const result = await this.WriteDataInternal(uri, data, metadata);
+    const result = await this.WriteDataInternal(uri, data, metadata, identity);
     metadata.artifact = artifact;
     //metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
     //metadata.inputSourceMap = new Lazy<RawSourceMap>(() => this.CreateInputSourceMapFor(uri));
@@ -236,7 +239,7 @@ export class DataStore {
 
   public getDataSink(defaultArtifact: string = FALLBACK_DEFAULT_OUTPUT_ARTIFACT): DataSink {
     return new DataSink(
-      (description, data, artifact, sourceMapFactory) => this.WriteData(description, data, artifact || defaultArtifact, sourceMapFactory),
+      (description, data, artifact, identity, sourceMapFactory) => this.WriteData(description, data, artifact || defaultArtifact, identity, sourceMapFactory),
       async (description, input) => {
         const uri = this.createUri(description);
         this.store[uri] = this.store[input.key];
@@ -310,24 +313,24 @@ export class DataStore {
 
 export class DataSink {
   constructor(
-    private write: (description: string, rawData: string, artifact: string | undefined, metadataFactory: (readHandle: DataHandle) => RawSourceMap) => Promise<DataHandle>,
+    private write: (description: string, rawData: string, artifact: string | undefined, identity: Array<string>, metadataFactory: (readHandle: DataHandle) => RawSourceMap) => Promise<DataHandle>,
     private forward: (description: string, input: DataHandle) => Promise<DataHandle>) {
   }
 
-  public async WriteDataWithSourceMap(description: string, data: string, artifact: string | undefined, sourceMapFactory: (readHandle: DataHandle) => RawSourceMap): Promise<DataHandle> {
-    return this.write(description, data, artifact, sourceMapFactory);
+  public async WriteDataWithSourceMap(description: string, data: string, artifact: string | undefined, identity: Array<string>, sourceMapFactory: (readHandle: DataHandle) => RawSourceMap): Promise<DataHandle> {
+    return this.write(description, data, artifact, identity, sourceMapFactory);
   }
 
-  public async WriteData(description: string, data: string, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
-    return this.WriteDataWithSourceMap(description, data, artifact, readHandle => {
+  public async WriteData(description: string, data: string, identity: Array<string>, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
+    return this.WriteDataWithSourceMap(description, data, artifact, identity, readHandle => {
       const sourceMapGenerator = new SourceMapGenerator({ file: readHandle.key });
       Compile(mappings, sourceMapGenerator, mappingSources.concat(readHandle));
       return sourceMapGenerator.toJSON();
     });
   }
 
-  public WriteObject<T>(description: string, obj: T, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
-    return this.WriteData(description, FastStringify(obj), artifact, mappings, mappingSources);
+  public WriteObject<T>(description: string, obj: T, identity: Array<string>, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
+    return this.WriteData(description, FastStringify(obj), identity, artifact, mappings, mappingSources);
   }
 
   public Forward(description: string, input: DataHandle): Promise<DataHandle> {
@@ -337,6 +340,14 @@ export class DataSink {
 
 export class DataHandle {
   constructor(public readonly key: string, private read: Data) {
+  }
+
+  public get Location() {
+    const id = this.Identity[0];
+    return id.substring(0, id.lastIndexOf('/'));
+  }
+  public get Identity() {
+    return this.read.identity;
   }
 
   public ReadData(): string {
