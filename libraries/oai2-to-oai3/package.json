@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/oai2-to-oai3",
-  "version": "2.1.0",
+  "version": "2.1.55",
   "description": "OpenAPI2 to OpenAPI3 conversion library that maintains souremaps for use with AutoRest.",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -41,18 +41,18 @@
   "devDependencies": {
     "mocha-typescript": "1.1.17",
     "@types/mocha": "5.2.5",
-    "@types/node": "10.11.3",
+    "@types/node": "^10.11.4",
     "@types/js-yaml": "3.11.2",
     "mocha": "5.2.0",
     "typescript": "^3.1.3",
-    "@microsoft.azure/async-io": "^2.1.8",
+    "@microsoft.azure/async-io": "^2.1.22",
     "source-map-support": "0.5.9",
     "@types/source-map": "0.5.0",
     "swagger2openapi": "fearthecowboy/swagger2openapi#1c2a0039b5649fb47ef9c4583abbd3e5d0504977"
   },
   "dependencies": {
-    "@microsoft.azure/datastore": "^2.1.0",
-    "@microsoft.azure/openapi": "^2.1.0",
+    "@microsoft.azure/datastore": "^2.1.31",
+    "@microsoft.azure/openapi": "^2.1.16",
     "source-map": "0.5.6"
   }
 }

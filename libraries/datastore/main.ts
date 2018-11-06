@@ -17,4 +17,5 @@ export * from './parsing/text-utility';
 export * from './safe-eval';
 export * from './parsing/yaml'
 export * from './source-map/blaming';
-export * from './parsing/stable-object'
+export * from './parsing/stable-object';
+export * from './processor';

@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/linq",
-  "version": "2.1.0",
+  "version": "2.1.14",
   "description": "LINQ-like functionality for Typescript",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "mocha-typescript": "1.1.17",
     "@types/mocha": "5.2.5",
-    "@types/node": "10.11.3",
+    "@types/node": "^10.11.4",
     "mocha": "5.2.0",
     "typescript": "^3.1.3"
   },

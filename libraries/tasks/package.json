@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/tasks",
-  "version": "2.1.8",
+  "version": "2.1.21",
   "description": "Async tasks, exceptions for Azure Open Source Projects",
   "engines": {
     "node": ">=7.10.0"
@@ -38,7 +38,7 @@
   "homepage": "https://github.com/Azure/perks.tasks#readme",
   "readme": "https://github.com/Azure/perks.tasks/readme.md",
   "devDependencies": {
-    "@types/node": "10.11.3",
+    "@types/node": "^10.11.4",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0",
     "mocha-typescript": "1.1.17",

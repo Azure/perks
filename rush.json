@@ -69,6 +69,30 @@
       "projectFolder": "libraries/oai2-to-oai3",
       "reviewCategory": "production",
       "shouldPublish": true
-    }
+    },
+    {
+      "packageName": "@microsoft.azure/autorest-extension-base",
+      "projectFolder": "libraries/autorest-extension-base",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@microsoft.azure/autorest.codemodel-v3",
+      "projectFolder": "libraries/codemodel-v3",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@microsoft.azure/codegen",
+      "projectFolder": "libraries/codegen",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
+      "packageName": "@microsoft.azure/codegen-csharp",
+      "projectFolder": "libraries/codegen-csharp",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
   ]
 }
