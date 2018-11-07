@@ -51,11 +51,15 @@ export class Processor<TInput, TOutput> {
   }
 
   protected newObject(parent: any, key: string, pointer: string) {
-    return parent[key] = this.newObjectImpl(pointer);
+    const result = this.newObjectImpl(pointer);;
+    parent[key] = result;
+    return result.value;
   }
 
   protected newArray(parent: any, key: string, pointer: string) {
-    return parent[key] = this.newArrayImpl(pointer);
+    const result = this.newArrayImpl(pointer)
+    parent[key] = result;
+    return result.value;
   }
 
   protected copy(parent: any, key: string, pointer: string, value: any, recurse: boolean = true) {

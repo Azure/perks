@@ -19,6 +19,7 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
       if (key === '__push__') {
         return push;
       }
+
       return (instance)[key];
     },
 
@@ -37,7 +38,8 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
         */
       }
       if (instance[key]) {
-        throw new Exception("")
+        throw new Exception(`Collision detected inserting into object: ${key} -- ${JSON.stringify(instance, null, 2)}`);
+        // return true;
       }
 
       instance[key] = value.value;
