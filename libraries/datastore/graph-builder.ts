@@ -5,19 +5,35 @@ import { Exception } from '@microsoft.azure/tasks';
 
 export function createGraphProxy<T extends object>(originalFileName: string, targetPointer: JsonPointer = '', mappings = new Array<Mapping>(), instance = <any>{}): ProxyObject<T> {
 
-  const tag = (value: any, filename: string | undefined, pointer: string, key: string | number, subject: string | undefined, recurse: boolean) => {
-    CreateAssignmentMapping(value, filename || originalFileName, parsePointer(pointer), [...parsePointer(targetPointer), key].filter(each => each !== ''), subject || '', recurse, mappings);
+  const tag = (value: any, filename: string, pointer: string, key: string | number, subject: string | undefined, recurse: boolean) => {
+    CreateAssignmentMapping(value, filename, parsePointer(pointer), [...parsePointer(targetPointer), key].filter(each => each !== ''), subject || '', recurse, mappings);
   };
 
   const push = (value: any) => {
     instance.push(value.value);
-    tag(value.value, value.filename, value.pointer, instance.length - 1, value.subject, value.recurse);
+    const filename = value.filename || originalFileName;
+    if (!filename) {
+      throw new Error('Assignment: filename must be specified when there is no default.');
+    }
+    const pp = parsePointer(value.pointer);
+    const q = <any>parseInt(pp[pp.length - 1], 10);
+    if (q >= 0) {
+      pp[pp.length - 1] = q;
+    }
+    CreateAssignmentMapping(value.value, filename, pp, [...parsePointer(targetPointer), instance.length - 1].filter(each => each !== ''), value.subject || '', value.recurse, mappings);
   };
+
+  const rewrite = (key: string, value: any) => {
+    instance[key] = value;
+  }
 
   return new Proxy<ProxyObject<T>>(instance, {
     get(target: ProxyObject<T>, key: string | number | symbol): any {
-      if (key === '__push__') {
-        return push;
+      switch (key) {
+        case '__push__':
+          return push;
+        case '__rewrite__':
+          return rewrite;
       }
 
       return (instance)[key];
@@ -31,33 +47,30 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
       if (value.pointer === undefined) {
         throw new Error('Assignment: pointer property required.');
       }
-      if (typeof (value.value) === 'object' && !Array.isArray(value.value)) {
-        /*        if (!(instance).____hasSourceGraph) {
-                  throw new Error('Assignment: Objects must have source graph.');
-                }
-        */
-      }
       if (instance[key]) {
         throw new Exception(`Collision detected inserting into object: ${key} -- ${JSON.stringify(instance, null, 2)}`);
-        // return true;
+      }
+      const filename = value.filename || originalFileName;
+      if (!filename) {
+        throw new Error('Assignment: filename must be specified when there is no default.');
       }
 
       instance[key] = value.value;
-      tag(value.value, value.filename, value.pointer, key, value.subject, value.recurse);
+      tag(value.value, filename, value.pointer, key, value.subject, value.recurse ? true : false);
 
       return true;
     },
   });
 }
 
-interface ProxyNode<T> {
+export interface ProxyNode<T> {
   value: T;
   pointer: string;
   filename?: string;
   subject?: string;
-  recurse: boolean;
+  recurse?: boolean;
 }
 
-export type ProxyObject<TG> = ProxyNode<TG> & {
-  [P in keyof TG]: ProxyObject<TG[P]> | ProxyNode<TG[P]>;
+export type ProxyObject<TG> = {
+  [P in keyof TG]: ProxyNode<TG[P]> | TG[P];
 };

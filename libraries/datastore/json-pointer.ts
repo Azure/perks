@@ -11,6 +11,15 @@ export interface Node {
   childIterator: () => Iterable<Node>;
 }
 
+export interface NodeT<T, K extends keyof T> {
+  value: T[K];
+  key: keyof T;
+  pointer: JsonPointer;
+  children: Iterable<NodeT<T[K], keyof T[K]>>;
+  childIterator: () => Iterable<NodeT<T[K], keyof T[K]>>;
+}
+
+
 
 /**
  * Convenience wrapper around the api.
@@ -214,6 +223,22 @@ export function* visit(obj: any, parentReference: JsonPointerTokens = new Array<
     };
   }
 }
+
+
+export function* visitT<T, K extends keyof T>(obj: T, parentReference: JsonPointerTokens = new Array<string>()): Iterable<NodeT<T, K>> {
+  for (const { key, value } of items(<any>obj)) {
+    const reference = [...parentReference, key];
+    const v = <T[K]>value;
+    yield {
+      value: v,
+      key,
+      pointer: compile(reference),
+      children: visitT(<T[K]>value, reference),
+      childIterator: () => visitT(<T[K]>value, reference),
+    };
+  }
+}
+
 
 /**
  * Tests if an object has a value for a json pointer
