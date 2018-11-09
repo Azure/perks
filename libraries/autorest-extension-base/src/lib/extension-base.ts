@@ -95,8 +95,8 @@ export class AutoRestExtension {
               return;
             }
 
-            // not a folder 
-            // try just loading a single file 
+            // not a folder
+            // try just loading a single file
             try {
 
               const content = await channel.sendRequest(IAutoRestPluginInitiator_Types.ReadFile, sessionId, path);
