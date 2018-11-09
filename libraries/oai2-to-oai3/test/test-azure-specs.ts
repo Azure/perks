@@ -1,3 +1,4 @@
+/*
 import * as aio from "@microsoft.azure/async-io"
 import * as datastore from '@microsoft.azure/datastore';
 import { CancellationToken, FastStringify, stringify } from "@microsoft.azure/datastore";
@@ -103,7 +104,7 @@ import { Oai2ToOai3 } from '../main';
       await Promise.all(all);
     } catch (E) {
       console.log(E);
-    }*/
+    }* /
   }
 
   // @test async 'test individual file'() {
@@ -118,3 +119,4 @@ import { Oai2ToOai3 } from '../main';
     await this.testFolder('/tmp/azure-rest-api-specs/specification');
   }
 }
+*/
