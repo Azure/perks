@@ -566,18 +566,12 @@ export class Oai2ToOai3 {
     }
   }
 
-  // AFTER TESTING CHANGE THIS BEHAVIOR.
   // NOTE: For the previous converter external references are not 
   // converted, but internal references are converted.
+  // Decided that updating all references makes more sense.
   getNewSchemaReference(oldReference: string) {
     const cleanOldReference = oldReference.replace(/\$|\[|\]/g, '_');
-    if (cleanOldReference.match(/^#\/definitions\//g)) {
-      //internal reference
-      return cleanOldReference.replace('#/definitions/', '#/components/schemas/');
-    } else {
-      // external reference
-      return cleanOldReference;
-    }
+    return cleanOldReference.replace('#/definitions/', '#/components/schemas/');
   }
 
   visitExtensions(target: any, key: string, value: any, pointer: string) {
