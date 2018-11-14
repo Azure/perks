@@ -11,6 +11,9 @@ import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityExc
 
 @suite class TestExtensions {
 
+  static after() {
+    process.exit();
+  }
   private tmpFolder = fs.mkdtempSync(`${fs.mkdtempSync(`${os.tmpdir()}/test`)}/install-pkg`);
 
   extensionManager!: ExtensionManager;
@@ -20,6 +23,7 @@ import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityExc
   }
 
   async after() {
+
     try {
       await this.extensionManager.dispose();
       try {
@@ -45,7 +49,7 @@ import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityExc
       const dni = await this.extensionManager.findPackage("echo-cli", "*");
       const installing = this.extensionManager.installPackage(dni, false, 60000, (i) => i.Message.Subscribe((s, m) => { console.log(`Installer:${m}`) }));
       const extension = await installing;
-      assert.notEqual(await extension.configuration, "");
+      assert.notEqual(await extension.configuration, "the configuration file isn't where it should be?");
     }
 
     {
@@ -86,10 +90,12 @@ import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityExc
   }
   */
 
+
   @test async "FindPackage- in npm"() {
     const p = await this.extensionManager.findPackage("autorest");
     assert.equal(p.name, "autorest");
   }
+
 
   @test async "FindPackage- unknown package"() {
     let threw = false;
@@ -196,8 +202,10 @@ import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityExc
       assert.notEqual(await extension.configuration, "");
       const proc = await extension.start();
       await tasks.When(proc, 'exit');
-    } catch {
+    } catch (E) {
       // oh well...
+      console.error(E);
+      assert(false, "FAILED DURING START TEST.")
     }
   }
 
