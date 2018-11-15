@@ -3,55 +3,18 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-// Hack NPM's output to shut the front door.
-require('npm/lib/utils/output');
-require.cache[require.resolve('npm/lib/utils/output')].exports = () => { };
-
-import { exists, isDirectory, isFile, mkdir, readdir, readFile, release, rmdir } from '@microsoft.azure/async-io';
+import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@microsoft.azure/async-io';
 import { Progress, Subscribe } from '@microsoft.azure/eventing';
 import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@microsoft.azure/tasks';
-import { ChildProcess, spawn } from 'child_process';
-import { commands, config, load } from 'npm';
+import { ChildProcess, spawn, SpawnOptions } from 'child_process';
 import { resolve as npmResolvePackage } from 'npm-package-arg';
-import { arch, homedir } from 'os';
+import { homedir, tmpdir } from 'os';
+import * as pacote from 'pacote';
+import { basename, delimiter, dirname, extname, isAbsolute, join, normalize, resolve } from 'path';
 import * as semver from 'semver';
-
-import * as fetch from 'npm/lib/fetch-package-metadata';
-import * as path from 'path';
-const npmlog = require('npm/node_modules/npmlog');
-
-const npmview = require('npm/lib/view');
-const MemoryStream = require('memorystream');
+import { readFileSync } from 'fs';
 
 const nodePath = quoteIfNecessary(process.execPath);
-
-type Config = typeof config;
-
-const npm_config = new Promise<Config>((r, j) => {
-  npmlog.stream = { isTTY: false };
-
-  npmlog.disableProgress();
-  npmlog.disableColor();
-  npmlog.resume = () => { };
-  npmlog.level = 'silent';
-  npmlog.write = () => { };
-  npmlog.info = () => { };
-  npmlog.notice = () => { };
-  npmlog.verbose = () => { };
-  npmlog.silent = () => { };
-  npmlog.gauge.enable = () => { };
-  npmlog.gauge.disable();
-
-  load({
-    loglevel: 'silent',
-    logstream: new MemoryStream(''),
-
-    registry: 'https://registry.npmjs.org/'
-  }, (e, c) => {
-    // console.log("back from load : " + c)
-    r(c);
-  });
-});
 
 function quoteIfNecessary(text: string): string {
   if (text && text.indexOf(' ') > -1 && text.charAt(0) != '"') {
@@ -133,9 +96,9 @@ async function realPathWithExtension(command: string): Promise<string | undefine
 
 async function getFullPath(command: string, searchPath?: string): Promise<string | undefined> {
   command = command.replace(/"/g, '');
-  const ext = path.extname(command);
+  const ext = extname(command);
 
-  if (path.isAbsolute(command)) {
+  if (isAbsolute(command)) {
     // if the file has an extension, or we're not on win32, and this is an actual file, use it.
     if (ext || process.platform !== 'win32') {
       if (await isFile(command)) {
@@ -155,9 +118,9 @@ async function getFullPath(command: string, searchPath?: string): Promise<string
   }
 
   if (searchPath) {
-    const folders = searchPath.split(path.delimiter);
+    const folders = searchPath.split(delimiter);
     for (const each of folders) {
-      const fullPath = await getFullPath(path.resolve(each, command));
+      const fullPath = await getFullPath(resolve(each, command));
       if (fullPath) {
         return fullPath;
       }
@@ -191,7 +154,7 @@ export class Package {
 
   get source(): string {
     // work around bug that npm doesn't programatically handle exact versions.
-    if (this.resolvedInfo.type == 'version' && this.resolvedInfo.registry == true) {
+    if (this.resolvedInfo.type === 'version' && this.resolvedInfo.registry === true) {
       return this.packageMetadata._spec + '*';
     }
     return this.packageMetadata._spec;
@@ -218,20 +181,20 @@ export class Extension extends Package {
    * The installed location of the package.
    */
   public get location(): string {
-    return path.normalize(`${this.installationPath}/${this.id.replace('/', '_')}`);
+    return normalize(`${this.installationPath}/${this.id.replace('/', '_')}`);
   }
   /**
    * The path to the installed npm package (internal to 'location')
    */
   public get modulePath(): string {
-    return path.normalize(`${this.location}/node_modules/${this.name}`);
+    return normalize(`${this.location}/node_modules/${this.name}`);
   }
 
   /**
    * the path to the package.json file for the npm packge.
    */
   public get packageJsonPath(): string {
-    return path.normalize(`${this.modulePath}/package.json`);
+    return normalize(`${this.modulePath}/package.json`);
   }
 
   /**
@@ -242,7 +205,7 @@ export class Extension extends Package {
       const items = await readdir(this.modulePath);
       for (const each of items) {
         if (/^readme.md$/i.exec(each)) {
-          const fullPath = path.normalize(`${this.modulePath}/${each}`);
+          const fullPath = normalize(`${this.modulePath}/${each}`);
           if (await isFile(fullPath)) {
             return fullPath;
           }
@@ -296,35 +259,98 @@ export class LocalExtension extends Extension {
   }
 }
 
-function npmInstall(name: string, version: string, packageSpec: string, force: boolean): Promise<Array<string>> {
-
-  return new Promise((r, j) => {
-    try {
-      commands.install([packageSpec], (err, r1, r2, r3, r4) => {
-        return err ? j(new PackageInstallationException(name, version, err.message)) : r([r1, r2, r3, r4]);
-      });
-    } catch (e) {
-    }
-  });
+interface MoreOptions extends SpawnOptions {
+  onCreate?(cp: ChildProcess): void;
+  onStdOutData?(chunk: any): void;
+  onStdErrData?(chunk: any): void;
 }
 
-function npmView(name: string): Promise<Array<any>> {
-  return new Promise((r, j) => {
-    npmview([`${name}@*`, 'version'], true, (err, r1, r2, r3, r4) => {
-      return err ? j(new Exception(name)) : r(r1);
-    });
-  });
-}
-
-function fetchPackageMetadata(spec: string, where: string, opts: any): Promise<any> {
-  return new Promise<any>((r, j) => {
-    fetch(spec, where, opts, (er, pkg) => {
-      if (er) {
-        return j(new UnresolvedPackageException(spec));
+let _cli = '';
+async function cli(): Promise<string> {
+  if (!_cli) {
+    for (const each of Object.keys(process.env)) {
+      if (each.startsWith('npm_')) {
+        delete process.env[each];
       }
-      return r(pkg);
+    }
+    // if we can see the cli on disk, that's ok
+    const fname = resolve(`${__dirname}/../yarn/cli.js`);
+    if ((await isFile(_cli))) {
+      _cli = fname;
+    }
+
+    // otherwise, we might be in a 'static-linked' library and
+    // we should try to load it and put a copy in $tmp somewhere.
+    _cli = join(tmpdir(), 'yarn-cli.js');
+
+    // did we copy it already?
+    if ((await isFile(_cli))) {
+      return _cli;
+    }
+
+    // no, let's copy it now.
+    await writeFile(_cli, <string><any>readFileSync(fname));
+  }
+  return _cli;
+}
+
+
+function execute(command: string, cmdlineargs: Array<string>, options: MoreOptions): Promise<{ stdout: string, stderr: string, error: Error | null, code: number }> {
+  return new Promise((r, j) => {
+    const cp = spawn(command, cmdlineargs, { ...options, stdio: 'pipe' });
+    if (options.onCreate) {
+      options.onCreate(cp);
+    }
+
+    options.onStdOutData ? cp.stdout.on('data', options.onStdOutData) : cp;
+    options.onStdErrData ? cp.stderr.on('data', options.onStdErrData) : cp;
+
+    let err = '';
+    let out = '';
+    cp.stderr.on('data', (chunk) => {
+      err += chunk;
     });
+    cp.stdout.on('data', (chunk) => {
+      out += chunk;
+    });
+    cp.on('close', (code, signal) => r({ stdout: out, stderr: err, error: code ? new Error('Process Failed.') : null, code }));
   });
+}
+
+async function yarn(folder: string, cmd: string, ...args: Array<string>) {
+  const output = await execute(process.execPath, [
+    await cli(),
+    '--no-node-version-check',
+    '--no-lockfile',
+    '--json',
+    cmd,
+    ...args
+  ], { cwd: folder });
+
+  return output;
+}
+
+async function install(directory: string, ...pkgs: Array<string>) {
+  const output = await yarn(directory,
+    'add',
+    '--global-folder', directory.replace(/\\/g, '/'),
+
+    ...pkgs);
+
+  if (output.error) {
+    throw Error(`Failed to install package '${pkgs}' -- ${output.error}`);
+  }
+}
+
+async function fetchPackageMetadata(spec: string): Promise<any> {
+  try {
+    return await pacote.manifest(spec, {
+      cache: `${tmpdir()}/cache`,
+      'full-metadata': true
+    });
+  } catch (er) {
+    throw new UnresolvedPackageException(spec);
+  }
 }
 
 function resolveName(name: string, version: string) {
@@ -340,7 +366,7 @@ function resolveName(name: string, version: string) {
 export class ExtensionManager {
   private static instances: Array<ExtensionManager> = [];
 
-  public dotnetPath = path.normalize(`${homedir()}/.dotnet`);
+  public dotnetPath = normalize(`${homedir()}/.dotnet`);
 
   public static async Create(installationPath: string): Promise<ExtensionManager> {
     if (!await exists(installationPath)) {
@@ -387,18 +413,16 @@ export class ExtensionManager {
   }
 
   public async getPackageVersions(name: string): Promise<Array<string>> {
-    const cc = <any>await npm_config;
-    return Object.getOwnPropertyNames(await npmView(name));
+    const versions = await yarn(process.cwd(), 'view', name, 'versions');
+    return JSON.parse(versions.stdout).data;
   }
 
   public async findPackage(name: string, version: string = 'latest'): Promise<Package> {
     // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
-    await npm_config;
-
     const resolved = resolveName(name, version);
     // get the package metadata
-    const pm = await fetchPackageMetadata(resolved.raw, process.cwd(), {});
+    const pm = await fetchPackageMetadata(resolved.raw);
     return new Package(resolved, pm, this);
   }
 
@@ -412,7 +436,7 @@ export class ExtensionManager {
 
     const installed = await this.getInstalledExtensions();
     for (const each of installed) {
-      if (name == each.name && semver.satisfies(each.version, version)) {
+      if (name === each.name && semver.satisfies(each.version, version)) {
         return each;
       }
     }
@@ -420,13 +444,12 @@ export class ExtensionManager {
   }
 
   public async getInstalledExtensions(): Promise<Array<Extension>> {
-    await npm_config;
     const results = new Array<Extension>();
 
     // iterate thru the folders.
     // the folder name should have the pattern @ORG#NAME@VER or NAME@VER
     for (const folder of await readdir(this.installationPath)) {
-      const fullpath = path.join(this.installationPath, folder);
+      const fullpath = join(this.installationPath, folder);
       if (await isDirectory(fullpath)) {
 
         const split = /((@.+)_)?(.+)@(.+)/.exec(folder);
@@ -436,8 +459,8 @@ export class ExtensionManager {
             const name = split[3];
             const version = split[4];
 
-            const actualPath = org ? path.normalize(`${fullpath}/node_modules/${org}/${name}`) : path.normalize(`${fullpath}/node_modules/${name}`);
-            const pm = await fetchPackageMetadata(actualPath, actualPath, {});
+            const actualPath = org ? normalize(`${fullpath}/node_modules/${org}/${name}`) : normalize(`${fullpath}/node_modules/${name}`);
+            const pm = await fetchPackageMetadata(actualPath);
             const ext = new Extension(new Package(null, pm, this), this.installationPath);
             if (fullpath !== ext.location) {
               console.trace(`WARNING: Not reporting '${fullpath}' since its package.json claims it should be at '${ext.location}' (probably symlinked once and modified later)`);
@@ -482,17 +505,9 @@ export class ExtensionManager {
     const cwd = process.cwd();
 
     try {
-      const cc = <any>await npm_config;
-
       // change directory
       process.chdir(this.installationPath);
       progress.Progress.Dispatch(25);
-
-      // set the prefix to the target location
-      cc.localPrefix = extension.location;
-      cc.globalPrefix = extension.location;
-      cc.prefix = extension.location;
-      cc.force = force;
 
       if (await isDirectory(extension.location)) {
         if (!force) {
@@ -511,14 +526,14 @@ export class ExtensionManager {
         }
       }
 
-      progress.Message.Dispatch('[FYI- npm does not currently support progress... this may take a few moments]');
+      // progress.Message.Dispatch('[FYI- npm does not currently support progress... this may take a few moments]');
       // create the folder
       await mkdir(extension.location);
 
       // run NPM INSTALL for the package.
-      progress.NotifyMessage(`Running  npm install for ${pkg.name}, ${pkg.version}`);
+      progress.NotifyMessage(`Installing ${pkg.name}, ${pkg.version}`);
 
-      const results = npmInstall(pkg.name, pkg.version, extension.source, force || false);
+      const results = force ? install(extension.location, '--force', pkg.packageMetadata._resolved) : install(extension.location, pkg.packageMetadata._resolved);
 
       await ex_release();
 
@@ -574,8 +589,8 @@ export class ExtensionManager {
     const env = shallowCopy(process.env);
 
     // add potential .bin folders (depends on platform and npm version)
-    env[PathVar] = `${path.join(extension.modulePath, 'node_modules', '.bin')}${path.delimiter}${env[PathVar]}`;
-    env[PathVar] = `${path.join(extension.location, 'node_modules', '.bin')}${path.delimiter}${env[PathVar]}`;
+    env[PathVar] = `${join(extension.modulePath, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
+    env[PathVar] = `${join(extension.location, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
 
     if (command[0] == 'node' || command[0] == 'node.exe') {
       command[0] = nodePath;
@@ -603,10 +618,10 @@ export class ExtensionManager {
       const originalPath = process.env[PathVar];
       try {
         // insert the dir into the path
-        process.env[PathVar] = `${path.dirname(fullCommandPath)}${path.delimiter}${env[PathVar]}`;
+        process.env[PathVar] = `${dirname(fullCommandPath)}${delimiter}${env[PathVar]}`;
 
         // call spawn and return
-        return spawn(path.basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath });
+        return spawn(basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath });
       } finally {
         // regardless, restore the original path on the way out!
         process.env[PathVar] = originalPath;

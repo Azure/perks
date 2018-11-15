@@ -37,8 +37,11 @@
   },
   "homepage": "https://github.com/Azure/perks.extension#readme",
   "readme": "https://github.com/Azure/perks.extension/readme.md",
-  "devDependencies": {
+  "old": {
     "@types/npm": "^2.0.28",
+    "npm": "5.6.0"
+  },
+  "devDependencies": {
     "mocha-typescript": "1.1.17",
     "@types/node": "^10.11.4",
     "@types/mocha": "5.2.5",
@@ -50,10 +53,8 @@
     "@microsoft.azure/async-io": "^2.1.22",
     "@microsoft.azure/eventing": "^2.1.19",
     "@microsoft.azure/tasks": "^2.1.21",
-    "hosted-git-info": "^2.4.2",
-    "memorystream": "~0.3.1",
-    "npm": "5.6.0",
-    "npm-package-arg": "6.0.0",
-    "semver": "^5.3.0"
+    "npm-package-arg": "6.1.0",
+    "semver": "^5.3.0",
+    "pacote": "9.2.3"
   }
 }
