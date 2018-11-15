@@ -51,13 +51,14 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
     }
     case Kind.SEQ: {
       const astSub = yamlAstCurrent as YAMLSequence;
-      if (typeof jsonPathPart !== 'number') {
+      const pathPartNumber = Number(jsonPathPart);
+      if (typeof jsonPathPart !== 'number' && isNaN(pathPartNumber)) {
         throw new Error(`Trying to retrieve non-string item '${jsonPathPart}' from sequence`);
       }
-      if (0 > jsonPathPart || jsonPathPart >= astSub.items.length) {
+      if (0 > pathPartNumber || pathPartNumber >= astSub.items.length) {
         throw new Error(`Trying to retrieve item '${jsonPathPart}' from sequence with '${astSub.items.length}' items (index out of bounds)`);
       }
-      return astSub.items[jsonPathPart];
+      return astSub.items[pathPartNumber];
     }
     case Kind.ANCHOR_REF: {
       const astSub = yamlAstCurrent as YAMLAnchorReference;
