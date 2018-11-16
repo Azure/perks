@@ -21,7 +21,7 @@ const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
  ********************************************/
 
 export interface Metadata {
-  artifact: string;
+  artifactType: string;
   inputSourceMap: Lazy<RawSourceMap>;
   sourceMap: Lazy<RawSourceMap>;
   sourceMapEachMappingByLine: Lazy<Array<Array<MappingItem>>>;
@@ -62,7 +62,7 @@ export abstract class DataSource {
     for (const key of keys) {
       const dataHandle = await this.ReadStrict(key);
       const data = dataHandle.ReadData();
-      const metadata = dataHandle.ReadMetadata();
+      const metadata = dataHandle.metadata;
       const targetFileUri = ResolveUri(
         targetDirUri,
         key.replace(':', '')); // make key (URI) a descriptive relative path
@@ -187,10 +187,7 @@ export class DataStore {
     // metadata
     const metadata: Metadata = <any>{};
     const result = await this.WriteDataInternal(uri, data, metadata, identity);
-    metadata.artifact = artifact;
-    //metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
-    //metadata.inputSourceMap = new Lazy<RawSourceMap>(() => this.CreateInputSourceMapFor(uri));
-    //metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
+    metadata.artifactType = artifact;
     metadata.sourceMap = new Lazy(() => {
       if (!sourceMapFactory) {
         return new SourceMapGenerator().toJSON();
@@ -207,13 +204,10 @@ export class DataStore {
 
       return sourceMap;
     });
-    // const sourceMapConsumer = await new SourceMapConsumer(metadata.sourceMap.Value);
     metadata.sourceMapEachMappingByLine = new Lazy<Array<Array<MappingItem>>>(() => {
       const result: Array<Array<MappingItem>> = [];
-
       const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
 
-      // const singleResult = sourceMapConsumer.originalPositionFor(position);
       // does NOT support multiple sources :(
       // `singleResult` has null-properties if there is no original
 
@@ -281,7 +275,7 @@ export class DataStore {
 
     // retrieve all target positions
     const targetPositions: Array<SmartPosition> = [];
-    const metadata = data.ReadMetadata();
+    const metadata = data.metadata;
     const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
     sourceMapConsumer.eachMapping(m => targetPositions.push(<Position>{ column: m.generatedColumn, line: m.generatedLine }));
 
@@ -342,11 +336,12 @@ export class DataHandle {
   constructor(public readonly key: string, private read: Data) {
   }
 
-  public get Location() {
-    const id = this.Identity[0];
+  public get location() {
+    const id = this.identity[0];
     return id.substring(0, id.lastIndexOf('/'));
   }
-  public get Identity() {
+
+  public get identity() {
     return this.read.identity;
   }
 
@@ -354,7 +349,7 @@ export class DataHandle {
     return this.read.data;
   }
 
-  public ReadMetadata(): Metadata {
+  public get metadata(): Metadata {
     return this.read.metadata;
   }
 
@@ -363,11 +358,11 @@ export class DataHandle {
   }
 
   public ReadYamlAst(): YAMLNode {
-    return this.ReadMetadata().yamlAst.Value;
+    return this.metadata.yamlAst.Value;
   }
 
-  public GetArtifact(): string {
-    return this.ReadMetadata().artifact;
+  public get artifactType(): string {
+    return this.metadata.artifactType;
   }
 
   public get Description(): string {
@@ -384,7 +379,7 @@ export class DataHandle {
   }
 
   public Blame(position: Position): Array<MappedPosition> {
-    const metadata = this.ReadMetadata();
+    const metadata = this.metadata;
     const sameLineResults = (metadata.sourceMapEachMappingByLine.Value[position.line] || [])
       .filter(mapping => mapping.generatedColumn <= position.column);
     const maxColumn = sameLineResults.reduce((c, m) => Math.max(c, m.generatedColumn), 0);

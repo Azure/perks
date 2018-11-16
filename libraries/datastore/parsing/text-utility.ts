@@ -24,7 +24,7 @@ export function Lines(text: string): string[] {
 }
 
 export function IndexToPosition(text: DataHandle | string, index: number): sourceMapPosition {
-  const startIndices = typeof text === "string" ? LineIndices(text) : text.ReadMetadata().lineIndices.Value;
+  const startIndices = typeof text === "string" ? LineIndices(text) : text.metadata.lineIndices.Value;
   // bin. search for last `<item> <= index`
   let lineIndexMin = 0;
   let lineIndexMax = startIndices.length;

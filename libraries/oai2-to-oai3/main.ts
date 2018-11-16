@@ -1,7 +1,6 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@microsoft.azure/datastore';
 import { Mapping } from 'source-map';
 import { statusCodes } from './status-codes';
-import { keys } from '../linq/dist/main';
 
 // NOTE: after testing references should be changed to OpenAPI 3.x.x references
 
@@ -14,7 +13,7 @@ export class Oai2ToOai3 {
   }
 
   convert() {
-    // process servers 
+    // process servers
     if (this.original['x-ms-parameterized-host']) {
       let xMsPHost: any = this.original['x-ms-parameterized-host'];
       let server: any = {};
@@ -36,7 +35,7 @@ export class Oai2ToOai3 {
             originalParameter = xMsPHost.parameters[msp];
           }
 
-          // TODO: Investigate why its not possible to copy 
+          // TODO: Investigate why its not possible to copy
           // properties and filter the property 'in' using
           // object destructuring.
           for (const key in originalParameter) {
@@ -131,7 +130,7 @@ export class Oai2ToOai3 {
         case 'basePath':
         case 'schemes':
         case 'x-ms-parameterized-host':
-          // host, basePath and schemes already processed 
+          // host, basePath and schemes already processed
           break;
         case 'consumes':
         case 'produces':
@@ -524,7 +523,7 @@ export class Oai2ToOai3 {
   visitItems(target: any, key: string, value: any, pointer: string) {
     if (Array.isArray(target[key])) {
       if (target[key].length === 0) {
-        // Value must be an object not an array. 
+        // Value must be an object not an array.
         // See: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
         target[key] = { value: {}, pointer };
       } else if (target[key].length === 1) {
@@ -566,7 +565,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  // NOTE: For the previous converter external references are not 
+  // NOTE: For the previous converter external references are not
   // converted, but internal references are converted.
   // Decided that updating all references makes more sense.
   getNewSchemaReference(oldReference: string) {
@@ -954,7 +953,7 @@ export class Oai2ToOai3 {
 
   visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
 
-    // NOTE: The previous converter patches the description of the response because 
+    // NOTE: The previous converter patches the description of the response because
     // every response should have a description.
     // So, to match previous behavior we do too.
     if (responseValue.description === undefined || responseValue.description === '') {

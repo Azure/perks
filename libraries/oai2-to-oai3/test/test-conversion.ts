@@ -114,12 +114,11 @@ import { Oai2ToOai3 } from '../main';
       const text = FastStringify(convert.generated);
       console.log(text);
       const data = await sink.WriteData('output-file', text, [absoluteUri], 'yaml-file', convert.mappings, [swaggerdata]);
-      // console.log(data.ReadMetadata());
 
-      console.log(JSON.stringify(data.ReadMetadata().sourceMap.Value));
+      console.log(JSON.stringify(data.metadata.sourceMap.Value));
       await aio.writeFile("c:/tmp/swagger.yaml", swagger);
       await aio.writeFile("c:/tmp/output.yaml", text);
-      await aio.writeFile("c:/tmp/output.yaml.map", JSON.stringify(data.ReadMetadata().sourceMap.Value));
+      await aio.writeFile("c:/tmp/output.yaml.map", JSON.stringify(data.metadata.sourceMap.Value));
     }
   }
 }

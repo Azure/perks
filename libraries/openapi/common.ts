@@ -70,9 +70,7 @@ export function dereference<T>(document: any, item: Refable<T>, stack = new Arra
   return { instance: item, name: undefined };
 }
 
-export function clone(object: any) {
-  return object ? JSON.parse(JSON.stringify(object)) : undefined;
-}
+
 
 export function getExtensionProperties(dictionary: Dictionary<any>): Dictionary<any> {
   return ToDictionary(includeXDash(dictionary), each => dictionary[each]);

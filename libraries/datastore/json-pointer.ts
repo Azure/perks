@@ -20,42 +20,6 @@ export interface NodeT<T, K extends keyof T> {
 }
 
 
-
-/**
- * Convenience wrapper around the api.
- * Calls `.get` when called with an `object` and a `pointer`.
- * Calls `.set` when also called with `value`.
- * If only supplied `object`, returns a partially applied function, mapped to the object.
- *
- * @param {Object} obj
- * @param {String|Array} pointer
- * @param value
- * @returns {*}
- */
-
-/*
-export function api(obj: any, pointer: JsonPointer | JsonPointerTokens, value: any) {
- // .set()
- if (arguments.length === 3) {
-   return set(obj, pointer, value);
- }
- // .get()
- if (arguments.length === 2) {
-   return get(obj, pointer);
- }
- // Return a partially applied function on `obj`.
- const wrapped = bind(api, obj);
-
- // Support for oo style
- for (const name in api) {
-   if (api.hasOwnProperty(name)) {
-     wrapped[name] = api[name].bind(wrapped, obj);
-   }
- }
- return wrapped;
-}
-*/
-
 /**
  * Lookup a json pointer in an object
  *
