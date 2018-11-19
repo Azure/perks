@@ -104,10 +104,6 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
   protected clone<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string, value: TParent[K], recurse: boolean = true) {
     return target[member] = <ProxyNode<TParent[K]>>{ value: JSON.parse(JSON.stringify(value)), pointer, recurse, filename: this.key };
   }
-
-  protected push<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, pointer: string, value: TParent[K], recurse: boolean = true) {
-    return target.push(<ProxyNode<TParent[K]>>{ value: JSON.parse(JSON.stringify(value)), pointer, recurse, filename: this.key });
-  }
 }
 
 export class Processor<TInput extends object, TOutput extends object> extends MultiProcessor<TInput, TOutput> {
