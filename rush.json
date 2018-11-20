@@ -99,6 +99,6 @@
       "projectFolder": "libraries/object-comparison",
       "reviewCategory": "production",
       "shouldPublish": true
-    },
+    }
   ]
 }
