@@ -94,5 +94,11 @@
       "reviewCategory": "production",
       "shouldPublish": true
     },
+    {
+      "packageName": "@microsoft.azure/object-comparison",
+      "projectFolder": "libraries/object-comparison",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
   ]
 }
