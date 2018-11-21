@@ -1,10 +1,11 @@
-# Project: @microsoft.azure/source-maps
+# Project: @microsoft.azure/object-comparison
 
 This package contains common code for the developer tools for generating Azure SDKs.
 
-Including:
-- **insert description here**
+(development-in-progress)
 
+Including:
+- deep comparison of objects with filtering of properties.
 
 ----
 
