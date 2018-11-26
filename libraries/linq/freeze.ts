@@ -47,16 +47,15 @@ export function clone(instance: object, shouldFreeze = false, hash = new WeakMap
     return set;
   }
 
-  // NOTE by @NelsonDaniel: Should we also be doing something like this for Arrays?
-  // if (obj instanteof Array) {
-  //   let array = new Array();
-  //   for (const value of obj) {
-  //     array.push(clone(value, shouldFreeze, hash));
-  //   }
-  //   array = freeze(array);
-  //   hash.set(obj, array);
-  //   return array;
-  // }
+  if (Array.isArray(obj)) {
+    let array = new Array();
+    for (const value of obj) {
+      array.push(clone(value, shouldFreeze, hash));
+    }
+    array = freeze(array);
+    hash.set(obj, array);
+    return array;
+  }
 
   // as do Maps
   if (obj instanceof Map) {
