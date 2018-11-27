@@ -28,14 +28,8 @@ import { areSimilar } from '../main';
     // similar
     assert.strictEqual(areSimilar({ a: 4 }, { a: 4 }), true);
     assert.strictEqual(areSimilar({ a: 4, b: '2' }, { a: 4, b: '2' }), true);
-    assert.strictEqual(areSimilar(['a'], { 0: 'a' }), true);
     assert.strictEqual(areSimilar({ a: 4, b: '1' }, { b: '1', a: 4 }), true); // out of order
     assert.strictEqual(areSimilar({}, {}), true);
-
-    // TBD: is this the right behavior? if not, easy fix: check if one is array and the other is not.
-    assert.strictEqual(areSimilar([], {}), true); // treating arrays and objects to be similar if they have similar keys
-    assert.strictEqual(areSimilar(['a'], { '0': 'a' }), true); // no distinction between array and object with similar keys
-    assert.strictEqual(areSimilar(['a'], { 0: 'a' }), true);
 
     // not similar
     assert.strictEqual(areSimilar({ a: 4 }, { a: '4' }), false);
@@ -44,6 +38,11 @@ import { areSimilar } from '../main';
     assert.strictEqual(areSimilar({ a: 4 }, { b: '4' }), false);
     assert.strictEqual(areSimilar([1], { 1: '0' }), false);
     assert.strictEqual(areSimilar([0, 1, 2, 3], [3, 2, 1, 0]), false);
+
+    // this is strict about the type of object.
+    assert.strictEqual(areSimilar([], {}), false);
+    assert.strictEqual(areSimilar(['a'], { '0': 'a' }), false);
+    assert.strictEqual(areSimilar(['a'], { 0: 'a' }), false);
   }
 
   @test async 'objects and with filter applied'() {

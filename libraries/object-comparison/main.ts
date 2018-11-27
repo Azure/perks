@@ -20,6 +20,10 @@ export function areSimilar(a: any, b: any, ...exceptionList: Array<string>): boo
     return false;
   }
 
+  if ((Array.isArray(a) && !Array.isArray(b)) || (!Array.isArray(a) && Array.isArray(b))) {
+    return false;
+  }
+
   // Object similarity is determined by the same set of keys NOT in
   // the exception list (although not necessarily the same order), and equivalent values for every
   // corresponding key NOT in the exception list.
