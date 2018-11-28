@@ -15,6 +15,7 @@ export class Deduplicator {
 
   // table:
   // prevPointers -> newPointers
+  // this will serve to generate a source map externally
   public mappings = new Dictionary<string>();
 
   // table:
@@ -61,6 +62,9 @@ export class Deduplicator {
     callbacks: new Set<string>()
   };
 
+  // sets containing the UIDs of paths already deduplicated.
+  private deduplicatedPaths = new Set<string>();
+
   // initially the target is the same as the original object
   private target: any;
   constructor(originalFile: any) {
@@ -76,14 +80,83 @@ export class Deduplicator {
       }
     }
 
-    // deduplicate components
+    // 1. deduplicate components
     if (this.target.components) {
       this.deduplicateComponents();
     }
 
-    // TODO: deduplicate paths
+    // 2. deduplicate paths
+    if (this.target.paths) {
+      this.deduplicatePaths();
+    }
 
   }
+
+  private deduplicatePaths() {
+    for (let { key: pathUid } of visit(this.target.paths)) {
+      if (!this.deduplicatedPaths.has(pathUid)) {
+        const xMsMetadata = 'x-ms-metadata';
+        const path = this.target.paths[pathUid];
+
+        // extract metadata to be merged
+        let apiVersions = path[xMsMetadata].apiVersions;
+        let filename = path[xMsMetadata].filename;
+        let originalLocations = path[xMsMetadata].originalLocations;
+        const pathFromMetadata = path[xMsMetadata].path;
+
+        // extract path properties excluding metadata
+        const { 'x-ms-metadata': metadataCurrent, ...filteredPath } = path;
+
+        // iterate over all the paths
+        for (const { key: anotherPathUid, value: anotherPath } of visit(this.target.paths)) {
+
+          // ignore merge with itself
+          if (pathUid !== anotherPathUid) {
+
+            // extract the another path's properties excluding metadata
+            const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
+
+            // TODO: Add more keys to ignore.
+            const keysToIgnore: Array<string> = ['description'];
+
+            // they should have the same name to be merged and they should be similar
+            if (areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore) && path[xMsMetadata].path === anotherPath[xMsMetadata].path) {
+
+              // merge metadata
+              apiVersions = apiVersions.concat(anotherPath[xMsMetadata].apiVersions);
+              filename = filename.concat(anotherPath[xMsMetadata].filename);
+              originalLocations = originalLocations.concat(anotherPath[xMsMetadata].originalLocations);
+
+              // the discriminator to take contents is the api version
+              const maxApiVersionPath = this.getMaxApiVersion(path[xMsMetadata].apiVersions);
+              const maxApiVersionAnotherPath = this.getMaxApiVersion(anotherPath[xMsMetadata].apiVersions);
+              let uidPathToDelete = anotherPathUid;
+              if (compareVersions(maxApiVersionPath, maxApiVersionAnotherPath) === -1) {
+
+                // if the current path max api version is less than the another path, swap ids.
+                uidPathToDelete = pathUid;
+                pathUid = anotherPathUid;
+              }
+
+              // finish up
+              delete this.target.paths[uidPathToDelete];
+              this.updateMappings(`/paths/${uidPathToDelete}`, `/paths/${pathUid}`);
+              this.deduplicatedPaths.add(uidPathToDelete);
+            }
+          }
+        }
+
+        this.target.paths[pathUid][xMsMetadata] = {
+          apiVersions: [...new Set([...apiVersions])],
+          filename: [...new Set([...filename])],
+          pathFromMetadata,
+          originalLocations: [...new Set([...originalLocations])]
+        };
+        this.deduplicatedPaths.add(pathUid);
+      }
+    }
+  }
+
 
   private deduplicateComponents() {
     for (const { key: type, children: componentsMember } of visit(this.target.components)) {
@@ -142,12 +215,13 @@ export class Deduplicator {
                 filename = filename.concat(anotherComponent[xMsMetadata].filename);
                 originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
 
-                let uidComponentToDelete = anotherComponentUid;
                 // the discriminator to take contents is the api version
-                if (anotherComponent[xMsMetadata].apiVersions &&
-                  (!component[xMsMetadata].apiVersions ||
-                    compareVersions(component[xMsMetadata].apiVersions[0], anotherComponent[xMsMetadata].apiVersions[0]) === -1)) {
-                  // swap ids to prioritize the one with the latest version
+                const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
+                const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
+                let uidComponentToDelete = anotherComponentUid;
+                if (compareVersions(maxApiVersionComponent, maxApiVersionAnotherComponent) === -1) {
+
+                  // if the current component max api version is less than the another component, swap ids.
                   uidComponentToDelete = componentUid;
                   componentUid = anotherComponentUid;
                 }
@@ -176,7 +250,18 @@ export class Deduplicator {
     }
   }
 
-  private crawlComponent(uid: string, type: componentType) {
+  private getMaxApiVersion(apiVersions: Array<string>): string {
+    let result = '0';
+    for (const version of apiVersions) {
+      if (version && compareVersions(version, result) >= 0) {
+        result = version;
+      }
+    }
+
+    return result;
+  }
+
+  private crawlComponent(uid: string, type: componentType): void {
     if (!this.visitedComponents[type].has(uid)) {
       if (this.target.components[type][uid]) {
         this.visitedComponents[type].add(uid);
@@ -189,7 +274,7 @@ export class Deduplicator {
     this.crawledComponents[type].add(uid);
   }
 
-  private crawlObject(obj: any) {
+  private crawlObject(obj: any): void {
     for (const { key, value } of visit(obj)) {
       if (key === '$ref') {
         const refParts = value.split('/');
@@ -202,7 +287,7 @@ export class Deduplicator {
     }
   }
 
-  private updateRefs(obj: any) {
+  private updateRefs(obj: any): void {
     for (const { value } of visit(obj)) {
       if (typeof value === 'object') {
         const ref = value.$ref;
@@ -222,7 +307,7 @@ export class Deduplicator {
     }
   }
 
-  private updateMappings(oldPointer: string, newPointer: string) {
+  private updateMappings(oldPointer: string, newPointer: string): void {
     this.mappings[oldPointer] = newPointer;
     for (const [key, value] of Object.entries(this.mappings)) {
       if (value === oldPointer) {
