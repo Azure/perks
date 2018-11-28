@@ -68,7 +68,13 @@ export class Deduplicator {
   }
 
   private init() {
-    this.setInitialRefsTable(this.target);
+    // set initial refs table
+    // NOTE: this assumes that only components can be referenced.
+    for (const { key: type, children } of visit(this.target.components)) {
+      for (const { key: uid } of children) {
+        this.refs[`#/components/${type}/${uid}`] = `#/components/${type}/${uid}`;
+      }
+    }
 
     // deduplicate components
     if (this.target.components) {
@@ -114,7 +120,7 @@ export class Deduplicator {
           const name = component[xMsMetadata].name;
 
           // extract component properties excluding metadata
-          const { 'x-ms-metadata': metadataCurrent, ...filteredReferencedComponent } = component;
+          const { 'x-ms-metadata': metadataCurrent, ...filteredComponent } = component;
 
           // iterate over all the components of the same type of the component
           for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
@@ -123,25 +129,24 @@ export class Deduplicator {
             if (componentUid !== anotherComponentUid) {
 
               // extract the another component's properties excluding metadata
-              const { xMsMetadata: metadataSchema, ...filteredSchema } = anotherComponent;
+              const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
 
               // TODO: Add more keys to ignore.
               const keysToIgnore: Array<string> = ['description'];
 
               // they should have the same name to be merged and they should be similar
-              if (areSimilar(filteredSchema, filteredReferencedComponent, ...keysToIgnore) && anotherComponent[xMsMetadata].name === component[xMsMetadata].name) {
+              if (areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore) && anotherComponent[xMsMetadata].name === component[xMsMetadata].name) {
 
                 // merge metadata
                 apiVersions = apiVersions.concat(anotherComponent[xMsMetadata].apiVersions);
                 filename = filename.concat(anotherComponent[xMsMetadata].filename);
                 originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
 
-
                 let uidComponentToDelete = anotherComponentUid;
                 // the discriminator to take contents is the api version
                 if (anotherComponent[xMsMetadata].apiVersions &&
-                  !component[xMsMetadata].apiVersions &&
-                  compareVersions(component[xMsMetadata].apiVersions, anotherComponent[xMsMetadata].apiVersions) === -1) {
+                  (!component[xMsMetadata].apiVersions ||
+                    compareVersions(component[xMsMetadata].apiVersions[0], anotherComponent[xMsMetadata].apiVersions[0]) === -1)) {
                   // swap ids to prioritize the one with the latest version
                   uidComponentToDelete = componentUid;
                   componentUid = anotherComponentUid;
@@ -157,7 +162,7 @@ export class Deduplicator {
             }
           }
 
-          this.target.component[type][componentUid][xMsMetadata] = {
+          this.target.components[type][componentUid][xMsMetadata] = {
             apiVersions: [...new Set([...apiVersions])],
             filename: [...new Set([...filename])],
             name,
@@ -172,18 +177,16 @@ export class Deduplicator {
   }
 
   private crawlComponent(uid: string, type: componentType) {
-    if (this.visitedComponents[type]) {
-      if (!this.visitedComponents[type].has(uid)) {
-        if (this.target.components[type][uid]) {
-          this.visitedComponents[type].add(uid);
-          this.crawlObject(this.target.components[type][uid]);
-        } else {
-          throw new Error(`Trying to crawl undefined component with uid '${uid}' and type '${type}'!`);
-        }
+    if (!this.visitedComponents[type].has(uid)) {
+      if (this.target.components[type][uid]) {
+        this.visitedComponents[type].add(uid);
+        this.crawlObject(this.target.components[type][uid]);
+      } else {
+        throw new Error(`Trying to crawl undefined component with uid '${uid}' and type '${type}'!`);
       }
-
-      this.crawledComponents[type].add(uid);
     }
+
+    this.crawledComponents[type].add(uid);
   }
 
   private crawlObject(obj: any) {
@@ -193,18 +196,8 @@ export class Deduplicator {
         const componentUid = refParts.pop();
         const type = refParts.pop();
         this.deduplicateComponent(componentUid, type);
-      } else if (Array.isArray(key) || typeof (value) === 'object') {
+      } else if (value && typeof (value) === 'object') {
         this.crawlObject(value);
-      }
-    }
-  }
-
-  private setInitialRefsTable(obj: any) {
-    for (const { value, key } of visit(obj)) {
-      if (key === '$ref') {
-        this.refs[value] = value;
-      } else if (typeof value === 'object') {
-        this.setInitialRefsTable(value);
       }
     }
   }
