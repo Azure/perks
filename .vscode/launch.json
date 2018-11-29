@@ -13,7 +13,7 @@
         "dist/test",
         "--timeout=2000000"
       ],
-      "cwd": "${workspaceRoot}/libraries/object-comparison",
+      "cwd": "${workspaceRoot}/libraries/deduplication",
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ]
