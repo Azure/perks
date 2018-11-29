@@ -10,7 +10,9 @@ import * as aio from "@microsoft.azure/async-io";
 
     const input = JSON.parse(await aio.readFile(`${__dirname}../../../test/resources/input.yaml`));
     const expectedOutput = JSON.parse(await aio.readFile(`${__dirname}../../../test/resources/output.yaml`));
+
+    // TODO: test mappings.
     const deduplicator = new Deduplicator(input);
     assert.deepStrictEqual(deduplicator.output, expectedOutput);
   }
-}
+} 

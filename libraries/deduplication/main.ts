@@ -17,7 +17,7 @@ export class Deduplicator {
   // table:
   // prevPointers -> newPointers
   // this will serve to generate a source map externally
-  public mappings = new Dictionary<string>();
+  private mappings = new Dictionary<string>();
 
   // table:
   // oldRefs -> newRefs
@@ -71,7 +71,8 @@ export class Deduplicator {
 
   private init() {
     // set initial refs table
-    // NOTE: this assumes that only components can be referenced.
+    // NOTE: The deduplicator assumes that the document is merged-document from multiple tree-shaken files,
+    //        and for that reason the only references in the document are local component references.
     for (const { key: type, children } of visit(this.target.components)) {
       for (const { key: uid } of children) {
         this.refs[`#/components/${type}/${uid}`] = `#/components/${type}/${uid}`;
@@ -83,22 +84,17 @@ export class Deduplicator {
       this.deduplicateComponents();
     }
 
-    // 2. deduplicate paths
-    if (this.target.paths) {
-      this.deduplicatePaths();
-    }
-
-    // 3. deduplicate other fields
-    if (this.target.servers) {
-      this.deduplicateAdditionalFieldMembers('servers');
-    }
-
-    if (this.target.security) {
-      this.deduplicateAdditionalFieldMembers('security');
-    }
-
-    if (this.target.tags) {
-      this.deduplicateAdditionalFieldMembers('tags');
+    // 2. deduplicate remaining fields
+    for (const { key: fieldName } of visit(this.target)) {
+      if (fieldName === 'paths') {
+        if (this.target.paths) {
+          this.deduplicatePaths();
+        }
+      } else {
+        if (this.target[fieldName]) {
+          this.deduplicateAdditionalFieldMembers(fieldName);
+        }
+      }
     }
   }
 
@@ -127,6 +123,18 @@ export class Deduplicator {
 
         deduplicatedMembers.add(memberUid);
       }
+    }
+
+    let counter = 0;
+    // clean up empty items if it was an array and update mappings
+    if (Array.isArray(this.target[fieldName])) {
+      this.target[fieldName] = this.target[fieldName].filter((element: any, index: number) => {
+        if (element) {
+          this.updateMappings(`/${fieldName}/${index}`, `/${fieldName}/${counter}`);
+          counter++;
+          return element;
+        }
+      });
     }
   }
 
@@ -360,5 +368,13 @@ export class Deduplicator {
       this.hasRun = true;
     }
     return this.target;
+  }
+
+  public get sourceMappings() {
+    if (!this.hasRun) {
+      this.init();
+      this.hasRun = true;
+    }
+    return this.mappings;
   }
 }
