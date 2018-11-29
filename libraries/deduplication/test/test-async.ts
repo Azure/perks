@@ -6,12 +6,11 @@ import * as aio from "@microsoft.azure/async-io";
 
 @suite class DeduplicatorTest {
 
-  @test async "schemas deduplication"() {
+  @test async "components and paths deduplication"() {
 
-    const file1 = JSON.parse(await aio.readFile(`${__dirname}../../../test/resources/input.yaml`));
-    const deduplicator = new Deduplicator(file1);
-    console.log(JSON.stringify(deduplicator.output, null, 4));
-    console.log(JSON.stringify(deduplicator.mappings, null, 4));
-
+    const input = JSON.parse(await aio.readFile(`${__dirname}../../../test/resources/input.yaml`));
+    const expectedOutput = JSON.parse(await aio.readFile(`${__dirname}../../../test/resources/output.yaml`));
+    const deduplicator = new Deduplicator(input);
+    assert.deepStrictEqual(deduplicator.output, expectedOutput);
   }
 }

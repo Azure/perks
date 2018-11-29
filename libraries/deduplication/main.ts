@@ -7,6 +7,7 @@ import { AnyObject, Data, DataHandle, DataSink, DataSource, Mapping, Node, Proce
 import { Dictionary, items, values } from '@microsoft.azure/linq';
 import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
+import { fileURLToPath } from 'url';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
@@ -62,9 +63,6 @@ export class Deduplicator {
     callbacks: new Set<string>()
   };
 
-  // sets containing the UIDs of paths already deduplicated.
-  private deduplicatedPaths = new Set<string>();
-
   // initially the target is the same as the original object
   private target: any;
   constructor(originalFile: any) {
@@ -90,11 +88,52 @@ export class Deduplicator {
       this.deduplicatePaths();
     }
 
+    // 3. deduplicate other fields
+    if (this.target.servers) {
+      this.deduplicateAdditionalFieldMembers('servers');
+    }
+
+    if (this.target.security) {
+      this.deduplicateAdditionalFieldMembers('security');
+    }
+
+    if (this.target.tags) {
+      this.deduplicateAdditionalFieldMembers('tags');
+    }
+  }
+
+  private deduplicateAdditionalFieldMembers(fieldName: string) {
+    const deduplicatedMembers = new Set<string>();
+
+    // TODO: remaining fields are arrays and not maps, so when a member is deleted
+    // it leaves an empty item. Figure out what is the best way to handle this. 
+    // convert to map and then delete?
+    for (const { key: memberUid } of visit(this.target[fieldName])) {
+      if (!deduplicatedMembers.has(memberUid)) {
+        const member = this.target[fieldName][memberUid];
+
+        // iterate over all the members
+        for (const { key: anotherMemberUid, value: anotherMember } of visit(this.target[fieldName])) {
+
+          // ignore merge with itself
+          if (memberUid !== anotherMemberUid && areSimilar(member, anotherMember)) {
+
+            // finish up
+            delete this.target[fieldName][anotherMemberUid];
+            this.updateMappings(`/${fieldName}/${anotherMemberUid}`, `/${fieldName}/${memberUid}`);
+            deduplicatedMembers.add(anotherMemberUid);
+          }
+        }
+
+        deduplicatedMembers.add(memberUid);
+      }
+    }
   }
 
   private deduplicatePaths() {
+    const deduplicatedPaths = new Set<string>();
     for (let { key: pathUid } of visit(this.target.paths)) {
-      if (!this.deduplicatedPaths.has(pathUid)) {
+      if (!deduplicatedPaths.has(pathUid)) {
         const xMsMetadata = 'x-ms-metadata';
         const path = this.target.paths[pathUid];
 
@@ -141,7 +180,7 @@ export class Deduplicator {
               // finish up
               delete this.target.paths[uidPathToDelete];
               this.updateMappings(`/paths/${uidPathToDelete}`, `/paths/${pathUid}`);
-              this.deduplicatedPaths.add(uidPathToDelete);
+              deduplicatedPaths.add(uidPathToDelete);
             }
           }
         }
@@ -149,14 +188,13 @@ export class Deduplicator {
         this.target.paths[pathUid][xMsMetadata] = {
           apiVersions: [...new Set([...apiVersions])],
           filename: [...new Set([...filename])],
-          pathFromMetadata,
+          path: pathFromMetadata,
           originalLocations: [...new Set([...originalLocations])]
         };
-        this.deduplicatedPaths.add(pathUid);
+        deduplicatedPaths.add(pathUid);
       }
     }
   }
-
 
   private deduplicateComponents() {
     for (const { key: type, children: componentsMember } of visit(this.target.components)) {
