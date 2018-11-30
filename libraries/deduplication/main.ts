@@ -90,7 +90,7 @@ export class Deduplicator {
         if (this.target.paths) {
           this.deduplicatePaths();
         }
-      } else {
+      } else if (fieldName !== 'components' && fieldName !== 'openapi') {
         if (this.target[fieldName]) {
           this.deduplicateAdditionalFieldMembers(fieldName);
         }
