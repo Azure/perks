@@ -178,7 +178,7 @@ export class Deduplicator {
               const maxApiVersionPath = this.getMaxApiVersion(path[xMsMetadata].apiVersions);
               const maxApiVersionAnotherPath = this.getMaxApiVersion(anotherPath[xMsMetadata].apiVersions);
               let uidPathToDelete = anotherPathUid;
-              if (compareVersions(maxApiVersionPath, maxApiVersionAnotherPath) === -1) {
+              if (compareVersions(this.getSemverEquivalent(maxApiVersionPath), this.getSemverEquivalent(maxApiVersionAnotherPath)) === -1) {
 
                 // if the current path max api version is less than the another path, swap ids.
                 uidPathToDelete = pathUid;
@@ -265,7 +265,7 @@ export class Deduplicator {
                 const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
                 const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
                 let uidComponentToDelete = anotherComponentUid;
-                if (compareVersions(maxApiVersionComponent, maxApiVersionAnotherComponent) === -1) {
+                if (compareVersions(this.getSemverEquivalent(maxApiVersionComponent), this.getSemverEquivalent(maxApiVersionAnotherComponent)) === -1) {
 
                   // if the current component max api version is less than the another component, swap ids.
                   uidComponentToDelete = componentUid;
@@ -299,12 +299,19 @@ export class Deduplicator {
   private getMaxApiVersion(apiVersions: Array<string>): string {
     let result = '0';
     for (const version of apiVersions) {
-      if (version && compareVersions(version, result) >= 0) {
+      if (version && compareVersions(this.getSemverEquivalent(version), this.getSemverEquivalent(result)) >= 0) {
         result = version;
       }
     }
 
     return result;
+  }
+
+  // azure rest specs currently use versioning of the form yyyy-mm-dd
+  // to take into consideration this we convert to an equivalent of
+  // semver for comparisons.
+  private getSemverEquivalent(version: string) {
+    return version.replace('-', '.');
   }
 
   private crawlComponent(uid: string, type: componentType): void {
