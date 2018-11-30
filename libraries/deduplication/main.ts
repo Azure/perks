@@ -311,7 +311,7 @@ export class Deduplicator {
   // to take into consideration this we convert to an equivalent of
   // semver for comparisons.
   private getSemverEquivalent(version: string) {
-    return version.replace('-', '.');
+    return version.replace(/-/g, '.');
   }
 
   private crawlComponent(uid: string, type: componentType): void {
