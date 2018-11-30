@@ -342,7 +342,7 @@ export class Deduplicator {
 
   private updateRefs(obj: any): void {
     for (const { value } of visit(obj)) {
-      if (typeof value === 'object') {
+      if (value && typeof value === 'object') {
         const ref = value.$ref;
         if (ref) {
           // see if this object has a $ref
