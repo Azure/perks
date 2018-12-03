@@ -15,8 +15,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://swagger.yaml';
     const oai3Uri = 'mem://oai3.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../../test/resources/conversion/swagger.yaml`);
-    const oai3 = await aio.readFile(`${__dirname}/../../../test/resources/conversion/openapi.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/openapi.yaml`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -49,8 +49,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://ApiManagementClient-swagger.json';
     const oai3Uri = 'mem://ApiManagementClient-oai3.json';
 
-    const swagger = await aio.readFile(`${__dirname}/../../../test/resources/conversion/ApiManagementClient-swagger.json`);
-    const oai3 = await aio.readFile(`${__dirname}/../../../test/resources/conversion/ApiManagementClient-openapi.json`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/ApiManagementClient-swagger.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/ApiManagementClient-openapi.json`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -82,7 +82,7 @@ import { Oai2ToOai3 } from '../main';
   /* @test */ async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../../test/resources/conversion/swagger.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/swagger.yaml`);
     const map = new Map<string, string>([[absoluteUri, swagger]]);
     const mfs = new datastore.MemoryFileSystem(map);
 
