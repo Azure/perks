@@ -336,9 +336,13 @@ export class DataHandle {
   constructor(public readonly key: string, private read: Data) {
   }
 
-  public get location() {
+  public get originalDirectory() {
     const id = this.identity[0];
     return id.substring(0, id.lastIndexOf('/'));
+  }
+
+  public get originalFullPath() {
+    return this.identity[0];
   }
 
   public get identity() {
