@@ -270,7 +270,7 @@ export class EnglishPluralizationService {
   };
 
   constructor() {
-    const flatten = <T>(l: Array<Array<T>>): Array<T> => [].concat.apply([], l);
+    const flatten = <T>(l: Array<Array<T>>): Array<T> => (<Array<T>>[]).concat.apply(<Array<T>>[], l);
 
     this.userDictionary = new StringBidirectionalDictionary();
 
