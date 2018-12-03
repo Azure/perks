@@ -155,7 +155,7 @@ export function selectNonNullable<T, V>(this: Iterable<T>, selector: (each: T) =
     for (const each of this) {
       const value = selector(each);
       if (value) {
-        yield value;
+        yield <NonNullable<V>>value;
       }
     }
   }.bind(this)());
@@ -165,7 +165,7 @@ export function nonNullable<T>(this: Iterable<T>): Linqable<NonNullable<T>> {
   return linqify(function* (this: Iterable<T>) {
     for (const each of this) {
       if (each) {
-        yield each;
+        yield <NonNullable<T>>each;
       }
     }
   }.bind(this)());
