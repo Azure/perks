@@ -27,7 +27,11 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
   private targetPointers = new Map<object, string>();
 
   protected get key(): string {
-    return this.currentInput.key;
+    if (this.currentInput) {
+      return this.currentInput.key;
+    }
+    // default to the first document if we haven't started processing yet.
+    return this.inputs[0].key;
   }
 
   constructor(inputs: Array<DataHandle>) {
@@ -71,6 +75,10 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
 
   public finish() {
     /* override this method */
+  }
+
+  public getOrCreateObject<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string) {
+    return target[member] === undefined ? this.newObject(target, member, pointer) : target[member];
   }
 
   public newObject<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string) {
