@@ -41,39 +41,46 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
     this.targetPointers.set(this.generated, '');
   }
 
-  public get output(): TOutput {
-    this.runProcess();
+  public async getOutput(): Promise<TOutput> {
+    await this.runProcess();
     return <TOutput>this.final;
   }
 
-  public get sourceMappings(): Array<Mapping> {
-    this.runProcess();
+  public async getSourceMappings(): Promise<Array<Mapping>> {
+    await this.runProcess();
     return this.mappings;
   }
+  /*
+    public get output(): Promise<TOutput> {
+      return this.runProcess().then(() => <TOutput>this.mappings);
+    }
 
-  private runProcess() {
+    public get sourceMappings(): Promise<Array<Mapping>> {
+      return this.runProcess().then(() => this.mappings);
+    }
+  */
+  private async runProcess() {
     if (!this.final) {
-      this.init();
-      for (const input of values(this.inputs)) {
-        this.currentInput = input;
-        this.current = input.ReadObject<TInput>();
-        this.process(this.generated, visit(this.current));
+      await this.init();
+      for (this.currentInput of values(this.inputs)) {
+        this.current = this.currentInput.ReadObject<TInput>();
+        await this.process(this.generated, visit(this.current));
       }
-      this.finish();
+      await this.finish();
     }
     this.final = clone(this.generated);  // should we be freezing this?
   }
 
   // public process(input: string, parent: ProxyObject<TOutput>, nodes: Iterable<NodeT<TInput, keyof TInput>>) {
-  public process(target: ProxyObject<TOutput>, nodes: Iterable<Node>) {
+  public async process(target: ProxyObject<TOutput>, nodes: Iterable<Node>) {
     /* override this method */
   }
 
-  public init() {
+  public async init() {
     /* override this method */
   }
 
-  public finish() {
+  public async finish() {
     /* override this method */
   }
 
