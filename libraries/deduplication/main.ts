@@ -158,8 +158,8 @@ export class Deduplicator {
         // iterate over all the paths
         for (const { key: anotherPathUid, value: anotherPath } of visit(this.target.paths)) {
 
-          // ignore merge with itself
-          if (pathUid !== anotherPathUid) {
+          // ignore merge with itself && anotherPath already deleted (i.e. undefined)
+          if (anotherPath !== undefined && pathUid !== anotherPathUid) {
 
             // extract the another path's properties excluding metadata
             const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
@@ -244,41 +244,43 @@ export class Deduplicator {
 
           // iterate over all the components of the same type of the component
           for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
+            // ignore merge with itself && anotherComponent already deleted (i.e. undefined)
+            if (anotherComponent !== undefined && componentUid !== anotherComponentUid) {
+              try {
+                // extract the another component's properties excluding metadata
+                const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
 
-            // ignore merge with itself
-            if (componentUid !== anotherComponentUid) {
+                // TODO: Add more keys to ignore.
+                const keysToIgnore: Array<string> = ['description'];
 
-              // extract the another component's properties excluding metadata
-              const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
+                // they should have the same name to be merged and they should be similar
+                if (areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore) && anotherComponent[xMsMetadata].name === component[xMsMetadata].name) {
 
-              // TODO: Add more keys to ignore.
-              const keysToIgnore: Array<string> = ['description'];
+                  // merge metadata
+                  apiVersions = apiVersions.concat(anotherComponent[xMsMetadata].apiVersions);
+                  filename = filename.concat(anotherComponent[xMsMetadata].filename);
+                  originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
 
-              // they should have the same name to be merged and they should be similar
-              if (areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore) && anotherComponent[xMsMetadata].name === component[xMsMetadata].name) {
+                  // the discriminator to take contents is the api version
+                  const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
+                  const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
+                  let uidComponentToDelete = anotherComponentUid;
+                  if (compareVersions(this.getSemverEquivalent(maxApiVersionComponent), this.getSemverEquivalent(maxApiVersionAnotherComponent)) === -1) {
 
-                // merge metadata
-                apiVersions = apiVersions.concat(anotherComponent[xMsMetadata].apiVersions);
-                filename = filename.concat(anotherComponent[xMsMetadata].filename);
-                originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
+                    // if the current component max api version is less than the another component, swap ids.
+                    uidComponentToDelete = componentUid;
+                    componentUid = anotherComponentUid;
+                  }
 
-                // the discriminator to take contents is the api version
-                const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
-                const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
-                let uidComponentToDelete = anotherComponentUid;
-                if (compareVersions(this.getSemverEquivalent(maxApiVersionComponent), this.getSemverEquivalent(maxApiVersionAnotherComponent)) === -1) {
-
-                  // if the current component max api version is less than the another component, swap ids.
-                  uidComponentToDelete = componentUid;
-                  componentUid = anotherComponentUid;
+                  // finish up
+                  delete this.target.components[type][uidComponentToDelete];
+                  this.refs[`#/components/${type}/${uidComponentToDelete}`] = `#/components/${type}/${componentUid}`;
+                  this.updateRefs(this.target);
+                  this.updateMappings(`/components/${type}/${uidComponentToDelete}`, `/components/${type}/${componentUid}`);
+                  this.deduplicatedComponents[type].add(uidComponentToDelete);
                 }
-
-                // finish up
-                delete this.target.components[type][uidComponentToDelete];
-                this.refs[`#/components/${type}/${uidComponentToDelete}`] = `#/components/${type}/${componentUid}`;
-                this.updateRefs(this.target);
-                this.updateMappings(`/components/${type}/${uidComponentToDelete}`, `/components/${type}/${componentUid}`);
-                this.deduplicatedComponents[type].add(uidComponentToDelete);
+              } catch (e) {
+                const dummy = "";
               }
             }
           }
