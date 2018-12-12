@@ -22,7 +22,7 @@ export function deepFreeze(instance: object) {
   return Object.freeze(obj);
 }
 
-export function clone(instance: object, shouldFreeze = false, hash = new WeakMap()): any {
+export function clone(instance: object, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = []): any {
   const freeze = shouldFreeze ? Object.freeze : (i: any) => i;
   const obj = <AnyObject>instance;
 
@@ -71,7 +71,7 @@ export function clone(instance: object, shouldFreeze = false, hash = new WeakMap
       obj instanceof RegExp ? new RegExp(obj.source, obj.flags) : {};
 
   // recurse thru children
-  Object.assign(result, ...Object.keys(obj).map(key => ({ [key]: clone(obj[key], shouldFreeze, hash) })));
+  Object.assign(result, ...Object.keys(obj).filter(key => skip.indexOf(key) === -1).map(key => ({ [key]: clone(obj[key], shouldFreeze, hash) })));
 
   // freeze it if necessary
   result = freeze(result);

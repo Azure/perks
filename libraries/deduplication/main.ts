@@ -8,6 +8,7 @@ import { Dictionary, items, values } from '@microsoft.azure/linq';
 import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
 import { fileURLToPath } from 'url';
+import { isNumber } from 'util';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
@@ -102,7 +103,7 @@ export class Deduplicator {
     const deduplicatedMembers = new Set<string>();
 
     // TODO: remaining fields are arrays and not maps, so when a member is deleted
-    // it leaves an empty item. Figure out what is the best way to handle this. 
+    // it leaves an empty item. Figure out what is the best way to handle this.
     // convert to map and then delete?
     for (const { key: memberUid } of visit(this.target[fieldName])) {
       if (!deduplicatedMembers.has(memberUid)) {
@@ -311,7 +312,15 @@ export class Deduplicator {
   // to take into consideration this we convert to an equivalent of
   // semver for comparisons.
   private getSemverEquivalent(version: string) {
-    return version.replace(/-/g, '.');
+    let result = '';
+    for (const i of version.split('-')) {
+      if (!result) {
+        result = i;
+        continue;
+      }
+      result = Number.isNaN(Number.parseInt(i)) ? `${result}-${i}` : `${result}.${i}`;
+    }
+    return result;
   }
 
   private crawlComponent(uid: string, type: componentType): void {
