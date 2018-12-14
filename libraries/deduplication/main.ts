@@ -158,8 +158,8 @@ export class Deduplicator {
         // iterate over all the paths
         for (const { key: anotherPathUid, value: anotherPath } of visit(this.target.paths)) {
 
-          // ignore merge with itself
-          if (pathUid !== anotherPathUid) {
+          // ignore merge with itself && anotherPath already deleted (i.e. undefined)
+          if (anotherPath !== undefined && pathUid !== anotherPathUid) {
 
             // extract the another path's properties excluding metadata
             const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
@@ -244,11 +244,8 @@ export class Deduplicator {
 
           // iterate over all the components of the same type of the component
           for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
-            if (!anotherComponent) {
-              continue;
-            }
-            // ignore merge with itself
-            if (componentUid !== anotherComponentUid) {
+            // ignore merge with itself && anotherComponent already deleted (i.e. undefined)
+            if (anotherComponent !== undefined && componentUid !== anotherComponentUid) {
 
               // extract the another component's properties excluding metadata
               const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
