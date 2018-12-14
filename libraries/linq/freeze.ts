@@ -22,12 +22,12 @@ export function deepFreeze(instance: object) {
   return Object.freeze(obj);
 }
 
-export function clone(instance: object, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = []): any {
+export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = []): any {
   const freeze = shouldFreeze ? Object.freeze : (i: any) => i;
   const obj = <AnyObject>instance;
 
   if (Object(obj) !== obj) {
-    // primitives (no need to freeze)
+    // primitives (no need to clone or freeze)
     return obj;
   }
 

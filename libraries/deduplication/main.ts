@@ -244,7 +244,9 @@ export class Deduplicator {
 
           // iterate over all the components of the same type of the component
           for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
-
+            if (!anotherComponent) {
+              continue;
+            }
             // ignore merge with itself
             if (componentUid !== anotherComponentUid) {
 

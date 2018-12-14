@@ -88,6 +88,10 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
     return target[member] === undefined ? this.newObject(target, member, pointer) : target[member];
   }
 
+  public getOrCreateArray<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string) {
+    return target[member] === undefined ? this.newArray(target, member, pointer) : target[member];
+  }
+
   public newObject<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string) {
 
     const value = <ProxyObject<TParent[K]>><any>createGraphProxy(this.key, `${this.targetPointers.get(target)}/${member}`, this.mappings);
@@ -117,7 +121,8 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
     return target[member] = <ProxyNode<TParent[K]>>{ value, pointer, recurse, filename: this.key };
   }
   protected clone<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string, value: TParent[K], recurse: boolean = true) {
-    return target[member] = <ProxyNode<TParent[K]>>{ value: JSON.parse(JSON.stringify(value)), pointer, recurse, filename: this.key };
+    // return target[member] = <ProxyNode<TParent[K]>>{ value: JSON.parse(JSON.stringify(value)), pointer, recurse, filename: this.key };
+    return target[member] = <ProxyNode<TParent[K]>>{ value: clone(value), pointer, recurse, filename: this.key };
   }
 }
 
