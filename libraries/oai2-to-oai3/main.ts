@@ -702,9 +702,12 @@ export class Oai2ToOai3 {
     const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
-      if (value.$ref && value.$ref.match(/^#\/parameters\//g)) {
+      if (value.$ref && (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`))) {
         // local reference. it's possible to look it up.
-        const referencePointer = value.$ref.replace('#', '');
+        const referenceParts = value.$ref.split('/');
+        const paramName = referenceParts.pop();
+        const componentType = referenceParts.pop();
+        const referencePointer = `/${componentType}/${paramName}`;
         const dereferencedParameter = get(this.original, referencePointer);
         if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
           const parameterName = referencePointer.replace('/parameters/', '');
