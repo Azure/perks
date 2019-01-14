@@ -92,7 +92,7 @@ export class MultiProcessor<TInput extends object, TOutput extends object> {
     return target[member] === undefined ? this.newArray(target, member, pointer) : target[member];
   }
 
-  public newObject<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string) {
+  public newObject<TParent extends object, K extends keyof TParent>(target: ProxyObject<TParent>, member: K, pointer: string): AnyObject {
 
     const value = <ProxyObject<TParent[K]>><any>createGraphProxy(this.key, `${this.targetPointers.get(target)}/${member}`, this.mappings);
     this.targetPointers.set(value, `${this.targetPointers.get(target)}/${member}`);
