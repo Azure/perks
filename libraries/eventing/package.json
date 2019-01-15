@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/eventing",
-  "version": "2.1.36",
+  "version": "2.1.37",
   "description": "Typescript-based eventing framekwork (for Azure Open Source Projects)",
   "engines": {
     "node": ">=7.10.0"
@@ -45,6 +45,6 @@
     "typescript": "^3.1.3"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "^2.1.38"
+    "@microsoft.azure/tasks": "^2.1.39"
   }
 }
