@@ -131,3 +131,45 @@ export class Processor<TInput extends object, TOutput extends object> extends Mu
     super([originalFile]);
   }
 }
+
+export function typeOf(obj: any) {
+  const t = typeof (obj);
+  return t === 'object' ?
+    Array.isArray(obj) ?
+      'array' :
+      'object' :
+    t;
+}
+
+export class SimpleProcessor extends Processor<AnyObject, AnyObject> {
+  async process(target: AnyObject, originalNodes: Iterable<Node>) {
+    for (const { value, key, pointer, children } of originalNodes) {
+      if (!await this.visitLeaf(target, value, key, pointer, children)) {
+        await this.defaultCopy(target, value, key, pointer, children);
+      }
+    }
+  }
+
+  async visitLeaf(target: AnyObject, value: AnyObject, key: string, pointer: string, originalNodes: Iterable<Node>): Promise<boolean> {
+    return false;
+  }
+
+  async defaultCopy(target: AnyObject, ivalue: AnyObject, ikey: string, ipointer: string, originalNodes: Iterable<Node>) {
+    switch (typeOf(ivalue)) {
+      case 'object':
+        // objects recurse
+        const newTarget = this.newObject(target, ikey, ipointer);
+        for (const { value, key, pointer, children } of originalNodes) {
+          if (!await this.visitLeaf(newTarget, value, key, pointer, children)) {
+            await this.defaultCopy(newTarget, value, key, pointer, children);
+          }
+        }
+        break;
+
+      default:
+        /// console.error(`Cloning ${ipointer}`);
+        // everything else, just clone.
+        this.clone(target, ikey, ipointer, ivalue);
+    }
+  }
+}
