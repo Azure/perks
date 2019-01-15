@@ -1,6 +1,5 @@
 {
   "name": "@microsoft.azure/deduplication",
-  "private": true,
   "version": "1.0.0",
   "description": "this library provides functionality for deduplication of elements in OpenAPI 3 documents",
   "main": "./dist/main.js",
