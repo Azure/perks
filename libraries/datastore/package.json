@@ -51,7 +51,7 @@
     "@microsoft.azure/tasks": "^2.1.39",
     "@microsoft.azure/uri": "^2.1.33",
     "@microsoft.azure/linq": "^2.1.37",
-    "@microsoft.azure/codegen": "^1.0.36",
+    "@microsoft.azure/codegen": "^1.0.29",
     "jsonpath": "1.0.0",
     "safe-eval": "^0.3.0",
     "source-map": "0.5.6",

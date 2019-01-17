@@ -66,8 +66,8 @@ function sortWithPriorty(a: any, b: any): number {
   return ib != -1 || a > b ? 1 : a < b ? -1 : 0;
 }
 
-export async function deserialize<T>(text: string, filename: string) {
-  return <T>safeLoad(await text, {
+export function deserialize<T>(text: string, filename: string) {
+  return <T>safeLoad(text, {
     filename,
   });
 }
