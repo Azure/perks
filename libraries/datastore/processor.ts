@@ -1,7 +1,7 @@
-import { clone, items, values } from '@microsoft.azure/linq';
+import { clone, values } from '@microsoft.azure/linq';
 import { Mapping } from 'source-map';
 import { ProxyObject } from './graph-builder';
-import { createGraphProxy, DataHandle, Node, ProxyNode, visit } from './main';
+import { createGraphProxy, Node, ProxyNode, visit } from './main';
 
 export interface AnyObject {
   [key: string]: any;
@@ -12,20 +12,17 @@ type Objects<T> = { [K in keyof T]: T[K] extends object ? K : never }[keyof T];
 type ObjectMembers<T> = Pick<T, Objects<T>>;
 type Real<T> = T extends null | undefined | never ? never : T;
 
-export abstract class Transformer<TInput extends object, TOutput extends object> {
+export interface Source {
+  ReadObject<T>(): T;
+  key: string;
+}
+
+export class Transformer<TInput extends object = AnyObject, TOutput extends object= AnyObject>  {
   protected generated: TOutput;
   protected mappings = new Array<Mapping>();
   protected final?: TOutput;
   protected current!: TInput;
   private targetPointers = new Map<object, string>();
-
-  constructor() {
-    this.generated = <TOutput>createGraphProxy('', '', this.mappings);
-    this.targetPointers.set(this.generated, '');
-  }
-
-  protected abstract async runProcess(): Promise<void>;
-  protected abstract get currentInputFilename(): string;
 
   public async getOutput(): Promise<TOutput> {
     await this.runProcess();
@@ -89,15 +86,15 @@ export abstract class Transformer<TInput extends object, TOutput extends object>
     // return target[member] = <ProxyNode<TParent[K]>>{ value: JSON.parse(JSON.stringify(value)), pointer, recurse, filename: this.key };
     return target[member] = <ProxyNode<TParent[K]>>{ value: clone(value), pointer, recurse, filename: this.currentInputFilename };
   }
-}
 
-export class MultiProcessor<TInput extends object, TOutput extends object> extends Transformer<TInput, TOutput> {
-  protected inputs: Array<DataHandle>;
-  protected currentInput!: DataHandle;
 
-  constructor(inputs: Array<DataHandle>) {
-    super();
-    this.inputs = inputs;
+  protected inputs: Array<Source>;
+  protected currentInput!: Source;
+
+  constructor(inputs: Array<Source> | Source) {
+    this.generated = <TOutput>createGraphProxy('', '', this.mappings);
+    this.targetPointers.set(this.generated, '');
+    this.inputs = Array.isArray(inputs) ? inputs : [inputs];
   }
 
   protected get currentInputFilename(): string {
@@ -121,8 +118,8 @@ export class MultiProcessor<TInput extends object, TOutput extends object> exten
   }
 }
 
-export class Processor<TInput extends object, TOutput extends object> extends MultiProcessor<TInput, TOutput> {
-  constructor(originalFile: DataHandle) {
+export class Processor<TInput extends object, TOutput extends object> extends Transformer<TInput, TOutput> {
+  constructor(originalFile: Source) {
     super([originalFile]);
   }
 }
@@ -136,7 +133,7 @@ export function typeOf(obj: any) {
     t;
 }
 
-export class SimpleProcessor extends Processor<AnyObject, AnyObject> {
+export class TransformerViaPointer extends Transformer<AnyObject, AnyObject> {
   async process(target: AnyObject, originalNodes: Iterable<Node>) {
     for (const { value, key, pointer, children } of originalNodes) {
       if (!await this.visitLeaf(target, value, key, pointer, children)) {
