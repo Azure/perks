@@ -9,7 +9,7 @@ import { Host } from '@microsoft.azure/autorest-extension-base';
 
 export async function processCodeModel(processExtension: (input: Model, service: Host) => Promise<Model>, service: Host) {
   // Get the list of files
-  const files = await service.ListInputs('code-model-v2');
+  const files = await service.ListInputs('code-model-v3');
 
   // get the openapi document
   if (files.length === 0) {
@@ -24,5 +24,5 @@ export async function processCodeModel(processExtension: (input: Model, service:
   codeModel = await processExtension(codeModel, service);
 
   // output the model
-  await service.WriteFile('code-model-v2.yaml', serialize(codeModel), undefined, 'code-model-v2');
+  await service.WriteFile('code-model-v3.yaml', serialize(codeModel), undefined, 'code-model-v3');
 }

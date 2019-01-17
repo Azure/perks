@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/uri",
-  "version": "2.1.15",
+  "version": "2.1.33",
   "description": "Common URI handling code",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -49,6 +49,6 @@
     "get-uri": "^2.0.2",
     "urijs": "^1.19.1",
     "file-url": "2.0.2",
-    "@microsoft.azure/async-io": "^2.1.22"
+    "@microsoft.azure/async-io": "^2.1.40"
   }
 }

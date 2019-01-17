@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/datastore",
-  "version": "2.1.31",
+  "version": "2.1.61",
   "description": "Virtualized Filesystem with parsing and sourcemaps",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -48,10 +48,10 @@
     "typescript": "^3.1.3"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "^2.1.21",
-    "@microsoft.azure/uri": "^2.1.15",
-    "@microsoft.azure/linq": "^2.1.14",
-    "@microsoft.azure/codegen": "^1.0.36",
+    "@microsoft.azure/tasks": "^2.1.39",
+    "@microsoft.azure/uri": "^2.1.33",
+    "@microsoft.azure/linq": "^2.1.37",
+    "@microsoft.azure/codegen": "^1.0.29",
     "jsonpath": "1.0.0",
     "safe-eval": "^0.3.0",
     "source-map": "0.5.6",
