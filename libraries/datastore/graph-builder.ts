@@ -42,10 +42,10 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
     set(target: ProxyObject<T>, key: string | number, value: ProxyNode<any>): boolean {
       // check if this is a correct assignment.
       if (value.value === undefined) {
-        throw new Error('Assignment: Direct Assignment Prohibited.');
+        throw new Error(`Assignment: Value '${key}' may not be undefined.`);
       }
       if (value.pointer === undefined) {
-        throw new Error('Assignment: pointer property required.');
+        throw new Error(`Assignment: for '${key}', a json pointer property is required.`);
       }
       if (instance[key]) {
         throw new Exception(`Collision detected inserting into object: ${key} `); //-- ${JSON.stringify(instance, null, 2)}

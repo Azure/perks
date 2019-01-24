@@ -92,7 +92,7 @@ export class EnhancedFileSystem implements IFileSystem {
     ]);
   }
   async ReadFile(uri: string): Promise<string> {
-    uri = ToRawDataUrl(uri);
+    //uri = ToRawDataUrl(uri);
 
     const headers: { [key: string]: string } = {};
 

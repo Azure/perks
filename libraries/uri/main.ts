@@ -33,6 +33,7 @@ function getUriAsync(uri: string, options: { headers: { [key: string]: string } 
  * Loads a UTF8 string from given URI.
  */
 export async function ReadUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
+  uri = ToRawDataUrl(uri);
   try {
     const readable = await getUriAsync(uri, { headers: headers });
 
