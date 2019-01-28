@@ -45,6 +45,40 @@ import { Oai2ToOai3 } from '../main';
     }
   }
 
+  @test  async "test conversion - tiny"() {
+    const swaggerUri = 'mem://tiny-swagger.yaml';
+    const oai3Uri = 'mem://tiny-oai3.yaml';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/tiny-swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/tiny-openapi.yaml`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      const swaggerAsText = FastStringify(convert.generated);
+      console.log(swaggerAsText);
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
   @test  async "test conversion - ApiManagementClient"() {
     const swaggerUri = 'mem://ApiManagementClient-swagger.json';
     const oai3Uri = 'mem://ApiManagementClient-oai3.json';
@@ -78,6 +112,7 @@ import { Oai2ToOai3 } from '../main';
       assert.deepEqual(convert.generated, original, "Should be the same");
     }
   }
+
 
   /* @test */ async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';

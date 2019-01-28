@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EnumerateFiles, ToRawDataUrl, ResolveUri, ReadUri, WriteString } from '@microsoft.azure/uri';
+import { EnumerateFiles, ResolveUri, ReadUri, WriteString } from '@microsoft.azure/uri';
 // import { From } from "linq-es2015";
 import { items, keys } from "@microsoft.azure/linq";
 
@@ -92,8 +92,6 @@ export class EnhancedFileSystem implements IFileSystem {
     ]);
   }
   async ReadFile(uri: string): Promise<string> {
-    //uri = ToRawDataUrl(uri);
-
     const headers: { [key: string]: string } = {};
 
     // check for GitHub OAuth token

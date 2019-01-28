@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { OperationCanceledException } from '@microsoft.azure/tasks';
-import { EnsureIsFolderUri, ReadUri, ResolveUri, ToRawDataUrl, WriteString, ParentFolderUri } from '@microsoft.azure/uri';
+import { EnsureIsFolderUri, ReadUri, ResolveUri, WriteString, ParentFolderUri } from '@microsoft.azure/uri';
 import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
@@ -101,8 +101,6 @@ class ReadThroughDataSource extends DataSource {
   }
 
   public async Read(uri: string): Promise<DataHandle | null> {
-    //const tweakedUri = ToRawDataUrl(uri); // makes sure logical paths (like for source maps) also reference the URLs of the actual data
-
     // sync cache (inner stuff is racey!)
     if (!this.cache[uri]) {
       this.cache[uri] = (async () => {
