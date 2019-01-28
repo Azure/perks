@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/codegen",
-  "version": "1.0.32",
+  "version": "1.0.0",
   "description": "Code generator common and base classes",
   "directories": {
     "doc": "docs"
@@ -41,7 +41,7 @@
     "tslint-sonarts": "^1.8.0"
   },
   "dependencies": {
-    "@microsoft.azure/async-io": "^2.1.41",
+    "@microsoft.azure/async-io": "^2.1.42",
     "js-yaml": "3.12.0"
   }
 }
