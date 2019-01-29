@@ -38,9 +38,10 @@ export class Namespace extends Initializer {
   }
   public addClass(c: Class): Class {
     if (this.classes.indexOf(c) === -1) {
-      if (this.classes.find(each => each.name === c.name && each.fileName === c.fileName)) {
-        console.error(`Class ${c.name} already exists in namespace${this.name}`);
-        throw new Error(`Class ${c.name} already exists in namespace${this.name}`);
+      const found = this.classes.find(each => each.name === c.name && each.fileName === c.fileName);
+      if (found) {
+        console.error(`WARNING: Class ${c.name} already exists in namespace${this.name}`);
+        return found;
       }
       this.classes.push(c);
     }
