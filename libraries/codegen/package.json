@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/codegen",
-  "version": "1.0.36",
+  "version": "1.0.0",
   "description": "Code generator common and base classes",
   "directories": {
     "doc": "docs"
@@ -10,7 +10,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
-    "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = parseInt(stdout.trim()); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
+    "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = (parseInt(stdout.trim()) -1); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
     "prepare": "npm run build",
     "test": "echo codegen: No Tests."
   },
@@ -41,7 +41,7 @@
     "tslint-sonarts": "^1.8.0"
   },
   "dependencies": {
-    "@microsoft.azure/async-io": "^2.1.40",
+    "@microsoft.azure/async-io": "^2.1.42",
     "js-yaml": "3.12.0"
   }
 }

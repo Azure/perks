@@ -946,7 +946,8 @@ export class Oai2ToOai3 {
     for (const { key, value, pointer, childIterator } of responsesItemMembers) {
       target[key] = this.newObject(pointer);
       if (value.$ref) {
-        let newReferenceValue = `#/components/responses/${value.$ref.replace('#/responses/', '')}`;
+        let newReferenceValue = value.$ref.replace('#/responses/', '#/components/responses/');
+
         target[key].$ref = { value: newReferenceValue, pointer };
       } else if (key.startsWith('x-')) {
         this.visitExtensions(target[key], key, value, pointer);
@@ -1018,6 +1019,7 @@ export class Oai2ToOai3 {
 
   visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
     if (headerValue.$ref) {
+      // GS01/CRITICAL-TO-DO-NELSON -- should that be /components/headers ????
       const newReferenceValue = `#/components/responses/${headerValue.schema.$ref.replace('#/responses/', '')}`;
       targetHeader.$ref = { value: newReferenceValue, pointer: jsonPointer };
     } else {
