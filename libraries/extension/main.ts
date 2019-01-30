@@ -234,8 +234,8 @@ export class Extension extends Package {
     return this.extensionManager.removeExtension(this);
   }
 
-  async start(): Promise<ChildProcess> {
-    return this.extensionManager.start(this);
+  async start(enableDebugger: boolean = false): Promise<ChildProcess> {
+    return this.extensionManager.start(this, enableDebugger);
   }
 }
 
@@ -575,14 +575,21 @@ export class ExtensionManager {
     }
   }
 
-  public async start(extension: Extension): Promise<ChildProcess> {
+  public async start(extension: Extension, enableDebugger: boolean = false): Promise<ChildProcess> {
     const PathVar = getPathVariableName();
-    // look at the extension for the
-    if (!extension.definition.scripts || !extension.definition.scripts.start) {
+    if (!extension.definition.scripts) {
       throw new MissingStartCommandException(extension);
     }
-    const command = cmdlineToArray(extension.definition.scripts.start);
-    if (command.length == 0) {
+
+    const script = enableDebugger && extension.definition.scripts.debug ? extension.definition.scripts.debug : extension.definition.scripts.start;
+
+    // look at the extension for the
+    if (!script) {
+      throw new MissingStartCommandException(extension);
+    }
+    const command = cmdlineToArray(script);
+
+    if (command.length === 0) {
       throw new MissingStartCommandException(extension);
     }
     // add each engine into the front of the path.
@@ -592,7 +599,7 @@ export class ExtensionManager {
     env[PathVar] = `${join(extension.modulePath, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
     env[PathVar] = `${join(extension.location, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
 
-    if (command[0] == 'node' || command[0] == 'node.exe') {
+    if (command[0] === 'node' || command[0] === 'node.exe') {
       command[0] = nodePath;
     }
 

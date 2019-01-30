@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/linq",
-  "version": "2.1.37",
+  "version": "2.1.0",
   "description": "LINQ-like functionality for Typescript",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
