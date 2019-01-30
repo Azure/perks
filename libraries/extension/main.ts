@@ -400,6 +400,8 @@ export class ExtensionManager {
 
       // recreate the folder
       await mkdir(this.installationPath);
+
+      await yarn(this.installationPath, 'cache', 'clean', '--force');
     } catch (e) {
       throw new ExtensionFolderLocked(this.installationPath);
     } finally {
@@ -526,11 +528,10 @@ export class ExtensionManager {
         }
       }
 
-      // progress.Message.Dispatch('[FYI- npm does not currently support progress... this may take a few moments]');
       // create the folder
       await mkdir(extension.location);
 
-      // run NPM INSTALL for the package.
+      // run YARN ADD for the package.
       progress.NotifyMessage(`Installing ${pkg.name}, ${pkg.version}`);
 
       const results = force ? install(extension.location, '--force', pkg.packageMetadata._resolved) : install(extension.location, pkg.packageMetadata._resolved);
@@ -538,7 +539,7 @@ export class ExtensionManager {
       await ex_release();
 
       await results;
-      progress.NotifyMessage(`npm install completed ${pkg.name}, ${pkg.version}`);
+      progress.NotifyMessage(`Package Install completed ${pkg.name}, ${pkg.version}`);
 
       return extension;
     } catch (e) {
