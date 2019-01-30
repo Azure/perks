@@ -48,10 +48,10 @@
     "typescript": "^3.1.3"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "^2.1.41",
-    "@microsoft.azure/uri": "^2.1.37",
-    "@microsoft.azure/linq": "^2.1.39",
-    "@microsoft.azure/codegen": "^1.0.33",
+    "@microsoft.azure/tasks": "^2.1.0",
+    "@microsoft.azure/uri": "^2.1.0",
+    "@microsoft.azure/linq": "^2.1.0",
+    "@microsoft.azure/codegen": "^1.0.0",
     "jsonpath": "1.0.0",
     "safe-eval": "^0.3.0",
     "source-map": "0.5.6",

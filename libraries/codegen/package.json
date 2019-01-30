@@ -41,7 +41,7 @@
     "tslint-sonarts": "^1.8.0"
   },
   "dependencies": {
-    "@microsoft.azure/async-io": "^2.1.42",
+    "@microsoft.azure/async-io": "^2.1.0",
     "js-yaml": "3.12.0"
   }
 }

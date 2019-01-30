@@ -49,6 +49,6 @@
     "get-uri": "^2.0.2",
     "urijs": "^1.19.1",
     "file-url": "2.0.2",
-    "@microsoft.azure/async-io": "^2.1.42"
+    "@microsoft.azure/async-io": "^2.1.0"
   }
 }
