@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/uri",
-  "version": "2.1.33",
+  "version": "2.1.0",
   "description": "Common URI handling code",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -15,6 +15,7 @@
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
     "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = parseInt(stdout.trim()); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
+    "reset-version": "node -e \"let pkg = require('./package.json'); const v = pkg.version.split('.'); v[v.length-1] = 0; const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)\"",
     "prepare": "npm run build",
     "test": "npm run build && mocha dist/test --timeout 50000",
     "testci": "npm run build && mocha dist/test --timeout 50000",
@@ -49,6 +50,6 @@
     "get-uri": "^2.0.2",
     "urijs": "^1.19.1",
     "file-url": "2.0.2",
-    "@microsoft.azure/async-io": "^2.1.40"
+    "@microsoft.azure/async-io": "^2.1.43"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/tasks",
-  "version": "2.1.39",
+  "version": "2.1.0",
   "description": "Async tasks, exceptions for Azure Open Source Projects",
   "engines": {
     "node": ">=7.10.0"
@@ -15,6 +15,7 @@
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
     "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = parseInt(stdout.trim()); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
+    "reset-version": "node -e \"let pkg = require('./package.json'); const v = pkg.version.split('.'); v[v.length-1] = 0; const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)\"",
     "prepare": "npm run build",
     "test": "npm run build && _mocha dist/test --timeout 50000",
     "testci": "npm run build && mocha dist/test --timeout 50000",
