@@ -40,7 +40,7 @@
   "readme": "https://github.com/Azure/perks.eventing/readme.md",
   "devDependencies": {
     "mocha-typescript": "1.1.17",
-    "@types/node": "^10.11.4",
+    "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0",
     "typescript": "^3.1.3"

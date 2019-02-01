@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "mocha-typescript": "1.1.17",
-    "@types/node": "^10.11.4",
+    "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",
     "@types/semver": "5.5.0",
     "mocha": "5.2.0",

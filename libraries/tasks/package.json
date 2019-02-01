@@ -39,7 +39,7 @@
   "homepage": "https://github.com/Azure/perks.tasks#readme",
   "readme": "https://github.com/Azure/perks.tasks/readme.md",
   "devDependencies": {
-    "@types/node": "^10.11.4",
+    "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0",
     "mocha-typescript": "1.1.17",
