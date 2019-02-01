@@ -31,7 +31,7 @@ Array.prototype.joinWith = function <T>(selector: (t: T) => string, separator?: 
   return (<Array<T>>this).map(selector).filter(v => v ? true : false).join(separator || CommaChar);
 };
 
-if (Array.prototype.last === undefined) {
+if (!Array.prototype.hasOwnProperty('last')) {
   Object.defineProperty(Array.prototype, 'last', {
     get() {
       return this[this.length - 1];
