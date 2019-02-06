@@ -34,28 +34,38 @@ export function CopyDictionary<TSource, TDestination>(dictionary: Dictionary<TSo
 export type IndexOf<T> = T extends Map<T, infer V> ? T : T extends Array<infer V> ? number : string;
 
 /** returns an Linqable<> for keys in the collection */
-export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>)): Linqable<IndexOf<TSrc>> {
-  if (Array.isArray(source)) {
-    return <Linqable<IndexOf<TSrc>>>linqify((<Array<T>>source).keys());
-  }
-  if (source instanceof Map) {
-    return <Linqable<IndexOf<TSrc>>><unknown>linqify((<Map<K, T>>source).keys());
-  }
+export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Linqable<IndexOf<TSrc>> {
   if (source) {
+    if (Array.isArray(source)) {
+      return <Linqable<IndexOf<TSrc>>>linqify((<Array<T>>source).keys());
+    }
+
+    if (source instanceof Map) {
+      return <Linqable<IndexOf<TSrc>>><unknown>linqify((<Map<K, T>>source).keys());
+    }
+
     return <Linqable<IndexOf<TSrc>>>linqify((Object.getOwnPropertyNames(source)));
   }
+  // undefined/null
   return linqify([]);
 }
-
+function isIterable<T>(source: any): source is Iterable<T> {
+  return (Object.getOwnPropertySymbols(source).indexOf(Symbol.iterator) > -1);
+}
 /** returns an Linqable<> for values in the collection */
-export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Array<T> | Dictionary<T> | Map<K, T>)): Linqable<T> {
-  if (Array.isArray(source)) {
-    return linqify(function* () { for (const v of source) { yield v; } }());
-  }
-  if (source instanceof Map) {
-    return linqify(source.values());
-  }
+export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Linqable<T> {
   if (source) {
+    // map
+    if (source instanceof Map) {
+      return linqify(source.values());
+    }
+
+    // any iterable source
+    if (isIterable(source)) {
+      return linqify(source);
+    }
+
+    // dictionary (object keys)
     return linqify(function* () {
       for (const key of keys(source)) {
         const value = source[key];
@@ -65,18 +75,22 @@ export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)
       }
     }());
   }
+
+  // null/undefined
   return linqify([]);
 }
 
 /** returns an Linqable<{key,value}> for the Collection */
-export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>)): Linqable<{ key: IndexOf<TSrc>; value: T }> {
-  if (Array.isArray(source)) {
-    return <Linqable<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (let i = 0; i < source.length; i++) { yield { key: i, value: source[i] }; } }());
-  }
-  if (source instanceof Map) {
-    return <Linqable<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (const [key, value] of source.entries()) { yield { key, value }; } }());
-  }
+export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Linqable<{ key: IndexOf<TSrc>; value: T }> {
   if (source) {
+    if (Array.isArray(source)) {
+      return <Linqable<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (let i = 0; i < source.length; i++) { yield { key: i, value: source[i] }; } }());
+    }
+
+    if (source instanceof Map) {
+      return <Linqable<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (const [key, value] of source.entries()) { yield { key, value }; } }());
+    }
+
     return <Linqable<{ key: IndexOf<TSrc>; value: T }>><unknown>linqify(function* () {
       for (const key of keys(source)) {
         const value = source[<string>key];
@@ -88,6 +102,7 @@ export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>
       }
     }());
   }
+  // undefined/null
   return linqify([]);
 }
 
@@ -120,6 +135,17 @@ export function all<T>(this: Iterable<T>, predicate: (each: T) => boolean): bool
     }
   }
   return true;
+}
+
+export function concat<T>(this: Iterable<T>, more: Iterable<T>): Linqable<T> {
+  return linqify(function* (this: Iterable<T>) {
+    for (const each of this) {
+      yield each;
+    }
+    for (const each of more) {
+      yield each;
+    }
+  }.bind(this)());
 }
 
 export function select<T, V>(this: Iterable<T>, selector: (each: T) => V): Linqable<V> {

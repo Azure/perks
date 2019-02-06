@@ -27,12 +27,22 @@ export enum Purpose {
   Header = 'Header',
 }
 
+
+export interface VirtualProperty {
+  kind: 'my-property' | 'child-property' | 'parent-property';
+  property: Property;
+  propertyName: Array<string>
+  container: Schema;
+  implementation?: string;
+}
+
 export interface SchemaDetails extends ImplementationDetails {
   /** namespace of the implementation of this item */
   namespace?: string;
 
   enum?: EnumDetails;
   purpose?: Purpose;
+  virtualProperties?: Dictionary<VirtualProperty>;
 }
 
 export class Schema extends Extensions implements Schema {
