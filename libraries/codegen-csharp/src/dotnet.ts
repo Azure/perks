@@ -127,6 +127,7 @@ export const System = intersect(system, {
       });
     },
   }),
+  StringComparison: new EnumType(system, 'StringComparison'),
   DateTime: new ClassType(system, 'DateTime'),
   EventArgs: new ClassType(system, 'EventArgs'),
   Exception: new ClassType(system, 'Exception'),
@@ -213,6 +214,7 @@ export const System = intersect(system, {
   }),
   Collections: intersect(collections, {
     Hashtable: new ClassType(collections, 'Hashtable'),
+    IDictionary: new ClassType(collections, 'IDictionary'),
     Generic: intersect(generic, {
       Dictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): TypeDeclaration {
         return new ClassType(generic, `Dictionary<${keyType.declaration},${valueType.declaration}>`);
