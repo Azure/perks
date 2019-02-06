@@ -24,6 +24,7 @@ export * from './ternery';
 export * from './type-declaration';
 export * from './type';
 export * from './variable';
+export * from './type-container';
 
 export * from './statements/case';
 export * from './statements/catch';
