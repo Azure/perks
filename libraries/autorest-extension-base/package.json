@@ -18,7 +18,7 @@
   "typings": "./dist/exports.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/azure/autorest.incubator.git"
+    "url": "git+https://github.com/azure/perks.git"
   },
   "keywords": [
     "autorest",
