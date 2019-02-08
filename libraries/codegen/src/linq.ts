@@ -119,9 +119,9 @@ export function length<T, K>(source?: Dictionary<T> | Array<T> | Map<K, T>): num
   return 0;
 }
 
-export function any<T>(this: Iterable<T>, predicate: (each: T) => boolean): boolean {
+export function any<T>(this: Iterable<T>, predicate?: (each: T) => boolean): boolean {
   for (const each of this) {
-    if (predicate(each)) {
+    if (!predicate || predicate(each)) {
       return true;
     }
   }
@@ -174,6 +174,24 @@ export function where<T>(this: Iterable<T>, predicate: (each: T) => boolean): Li
       }
     }
   }.bind(this)());
+}
+
+export function forEach<T>(this: Iterable<T>, action: (each: T) => void) {
+  for (const each of this) {
+    action(each);
+  }
+}
+
+export function aggregate<T, A, R>(this: Iterable<T>, accumulator: (current: T | A, next: T) => A, seed?: T | A, resultAction?: (result?: T | A) => A | R): T | A | R | undefined {
+  let result: T | A | undefined = seed;
+  for (const each of this) {
+    if (result === undefined) {
+      result = each;
+      continue;
+    }
+    result = accumulator(result, each);
+  }
+  return resultAction !== undefined ? resultAction(result) : result;
 }
 
 export function selectNonNullable<T, V>(this: Iterable<T>, selector: (each: T) => V): Linqable<NonNullable<V>> {
