@@ -23,6 +23,6 @@ export async function processCodeModel(processExtension: (input: Model, service:
 
   codeModel = await processExtension(codeModel, service);
 
-  // output the model
+  // output the model back to the pipeline
   await service.WriteFile('code-model-v3.yaml', serialize(codeModel), undefined, 'code-model-v3');
 }
