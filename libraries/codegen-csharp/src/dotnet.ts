@@ -258,11 +258,3 @@ export const dotnet = {
   This: new LiteralExpression('this'),
 };
 
-/*
-
-const q = System.String.$BindTo(Local('text', '"helloworld"'));
-const f = Local('text', `"helloworld"`).As(System.String);
-
-f.Substring('10');
-
-*/
