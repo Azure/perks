@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure/perks.eventing.git"
+    "url": "git+https://github.com/Azure/perks.git"
   },
   "keywords": [
     "perks",
@@ -34,10 +34,10 @@
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Azure/perks.eventing/issues"
+    "url": "https://github.com/Azure/perks/issues"
   },
-  "homepage": "https://github.com/Azure/perks.eventing#readme",
-  "readme": "https://github.com/Azure/perks.eventing/readme.md",
+  "homepage": "https://github.com/Azure/perks#readme",
+  "readme": "https://github.com/Azure/perks/readme.md",
   "devDependencies": {
     "mocha-typescript": "1.1.17",
     "@types/node": "10.12.19",
