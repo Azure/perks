@@ -6,6 +6,7 @@
 import { Exception, OutstandingTaskAwaiter, promisify } from '@microsoft.azure/tasks';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath, Url, URL } from 'url';
 
 export class PathNotFoundException extends Exception {
   constructor(path: string, public exitCode: number = 1) {
@@ -41,8 +42,11 @@ export class UnableToMakeDirectoryException extends Exception {
     Object.setPrototypeOf(this, UnableToMakeDirectoryException.prototype);
   }
 }
-
-export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(path, (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
+export function filePath(path: string | Buffer | Url | URL): string {
+  path = path.toString();
+  return path.startsWith('file:///') ? fileURLToPath(path) : path;
+}
+export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(filePath(path), (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
