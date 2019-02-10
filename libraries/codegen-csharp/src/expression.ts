@@ -27,6 +27,14 @@ export interface Expression {
   Cast(toType: TypeDeclaration): Expression;
 }
 
+export function Or(expression1: ExpressionOrLiteral, expression2: ExpressionOrLiteral) {
+  return `(${expression1} || ${expression2})`;
+}
+
+export function And(expression1: ExpressionOrLiteral, expression2: ExpressionOrLiteral) {
+  return `(${expression1} && ${expression2})`;
+}
+
 export abstract class BaseExpression implements Expression {
   abstract value: string;
   toString(): string {
