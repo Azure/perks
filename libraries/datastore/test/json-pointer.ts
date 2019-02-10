@@ -196,8 +196,6 @@ let rfcParsed: any;
     };
 
     for (const each of pointer.visit(obj)) {
-      // console.log(`Key: ${each.key}, value: ${each.value}, pointer: ${each.pointer}`);
-
       switch (each.key) {
         case 'foo':
           assert(each.value === 100);
@@ -211,7 +209,6 @@ let rfcParsed: any;
           assert(typeof each.value === 'object');
 
           for (const item of each.children) {
-            // console.log(`   Key: ${item.key}, value: ${item.value}, pointer: ${item.pointer}`);
             switch (item.key) {
               case 'b1':
                 assert(item.value === 'string');
@@ -224,7 +221,6 @@ let rfcParsed: any;
               case 'b3':
                 assert(Array.isArray(item.value) === true);
                 for (const i of item.children) {
-                  // console.log(`      Key: ${i.key}, value: ${i.value}, pointer: ${i.pointer}`);
                   assert(typeof i.value === 'string');
                 }
                 break;
