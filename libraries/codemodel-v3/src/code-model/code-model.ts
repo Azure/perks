@@ -10,6 +10,7 @@ import { Info } from './info';
 import { Schema } from './schema';
 import { Dictionary } from '@microsoft.azure/codegen';
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails, SecurityRequirement, Server, Tag } from './components';
+import { uid } from './uid';
 
 // ------------------------------------------------------------------------------------------------------------------
 // Constructors for Code Model classes
@@ -43,7 +44,7 @@ export class Model extends Extensions implements Model {
 
   constructor(title: string, version: string, initializer?: Partial<Model>) {
     super();
-    this.details = { default: { name: title, description: '' } };
+    this.details = { default: { uid: `model:${uid()}`, name: title, description: '' } };
     this.info = new Info(title, version, initializer ? initializer.info : {});
     this.apply(initializer);
   }

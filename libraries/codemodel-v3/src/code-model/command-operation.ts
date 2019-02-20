@@ -9,6 +9,7 @@ import { HttpOperation } from './http-operation';
 import { ProgramaticOperationDetails, ProgrammaticOperation } from './programatic-operation';
 import { Schema } from './schema';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { uid } from './uid';
 
 
 export interface CommandOperationDetails extends ProgramaticOperationDetails {
@@ -33,6 +34,7 @@ export class CommandOperation extends Extensions implements CommandOperation {
     super();
     this.details = {
       default: {
+        uid: `command-operation:${uid()}`,
         description: 'MISSING DESCRIPTION 01',
         name,
       }

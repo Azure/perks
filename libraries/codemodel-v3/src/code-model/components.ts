@@ -6,6 +6,8 @@
 import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { uid } from "./uid";
+
 export interface IOperationBase {
 
 }
@@ -29,6 +31,7 @@ export class IParameter extends Extensions {
     this.required = false;
     this.details = {
       default: {
+        uid: `parameter:${uid()}`,
         description: this.description,
         name,
       }
@@ -85,6 +88,9 @@ export interface LanguageDetails<T extends ImplementationDetails> extends Dictio
 }
 
 export interface ImplementationDetails extends Dictionary<any> {
+  /** a unique id for correlation between cloned objects */
+  uid: string;
+
   /** name used in actual implementation */
   name: string;
 

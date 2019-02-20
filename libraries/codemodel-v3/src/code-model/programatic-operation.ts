@@ -7,6 +7,7 @@ import { ImplementationDetails, IOperation, IParameter, LanguageDetails } from '
 import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { Dictionary } from '@microsoft.azure/codegen';
+import { uid } from './uid';
 
 export interface ProgrammaticOperation extends IOperation<IParameter> {
   responses: Dictionary<Dictionary<Schema>>;
@@ -27,6 +28,7 @@ export class IntrinsicOperation extends Extensions implements IntrinsicOperation
     super();
     this.details = {
       default: {
+        uid: `intrinsic-operation:${uid()}`,
         description: 'MISSING DESCRIPTION 07',
         name,
       }

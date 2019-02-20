@@ -8,6 +8,7 @@ import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { SecurityScheme } from './security-scheme';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { uid } from './uid';
 
 export interface HttpOperationDetails extends ImplementationDetails {
 }
@@ -160,6 +161,7 @@ export class NewResponse extends Extensions implements NewResponse {
     super();
     this.details = {
       default: {
+        uid: `response:${uid()}`,
         isErrorResponse: false,
         description: 'MISSING DESCRIPTION 09',
         name: `${responseCode} ${mimeTypes.join(' ')}`,
@@ -184,6 +186,7 @@ export class HttpOperation extends Extensions implements HttpOperation {
     super();
     this.details = {
       default: {
+        uid: `http-operation:${uid()}`,
         description: 'MISSING DESCRIPTION 05',
         name: operationId,
       }
@@ -242,6 +245,7 @@ export class HttpOperationParameter extends Extensions implements HttpOperationP
     this.in = inWhere;
     this.details = {
       default: {
+        uid: `http-parameter:${uid()}`,
         description: 'MISSING DESCRIPTION 06',
         location: implementation,
         name,
