@@ -84,6 +84,10 @@ export async function readFile(filename: string): Promise<string> {
   return fs_readFile(filename, 'utf-8');
 }
 
+export async function readBinaryFile(filename: string): Promise<string> {
+  return fs_readFile(filename, 'base64');
+}
+
 export async function isDirectory(dirPath: string): Promise<boolean> {
   try {
     if (await exists(dirPath)) {
