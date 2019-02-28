@@ -214,6 +214,6 @@ ${super.declaration}
     return `this.${this.backingName}`;
   }
   public assignPrivate(expression: ExpressionOrLiteral): OneOrMoreStatements {
-    return `${this.backingName} = ${valueOf(expression)};`;
+    return `{${this.backingName} = ${valueOf(expression)};}`;
   }
 }
