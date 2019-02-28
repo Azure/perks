@@ -276,7 +276,7 @@ async function CreateDirectoryFor(filePath: string): Promise<void> {
   }
 }
 
-async function WriteStringInternal(fileName: string, data: string): Promise<void> {
+async function WriteDataInternal(fileName: string, data: string | Buffer): Promise<void> {
   await CreateDirectoryFor(fileName);
   await writeFile(fileName, data);
 }
@@ -287,7 +287,16 @@ async function WriteStringInternal(fileName: string, data: string): Promise<void
  * @param data     String to write (encoding: UTF8).
  */
 export function WriteString(fileUri: string, data: string): Promise<void> {
-  return WriteStringInternal(FileUriToLocalPath(fileUri), data);
+  return WriteDataInternal(FileUriToLocalPath(fileUri), data);
+}
+
+/**
+ * Writes binary to local file system.
+ * @param fileUri  Target file uri.
+ * @param data     String to write (encoding - base64 encoded UTF8).
+ */
+export function WriteBinary(fileUri: string, data: string): Promise<void> {
+  return WriteDataInternal(FileUriToLocalPath(fileUri), Buffer.from(data, "base64"));
 }
 
 /**

@@ -50,7 +50,7 @@ export const exists: (path: string | Buffer) => Promise<boolean> = path => new P
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
-export const writeFile: (filename: string, content: string) => Promise<void> = (filename, content) => Promise.resolve(fs.writeFileSync(filename, content)); // for some reason writeFile only produced empty files
+export const writeFile: (filename: string, content: string | Buffer) => Promise<void> = (filename, content) => Promise.resolve(fs.writeFileSync(filename, content)); // for some reason writeFile only produced empty files
 export const lstat: (path: string | Buffer) => Promise<fs.Stats> = promisify(fs.lstat);
 
 const fs_rmdir: (path: string | Buffer) => Promise<void> = promisify(fs.rmdir);
