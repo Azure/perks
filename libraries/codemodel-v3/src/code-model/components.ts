@@ -64,9 +64,6 @@ export class Components<TOperation extends IOperation<TParameter>, TParameter ex
    */
   public operations = new Dictionary<TOperation>();
 
-  /** Parameters for Operations */
-  public parameters = new Dictionary<TParameter>();
-
   constructor(initializer?: Partial<Components<TOperation, TParameter>>) {
     super();
     this.apply(initializer);
