@@ -151,6 +151,7 @@ export class Deduplicator {
         let filename = path[xMsMetadata].filename;
         let originalLocations = path[xMsMetadata].originalLocations;
         const pathFromMetadata = path[xMsMetadata].path;
+        let profiles: Dictionary<string> = path[xMsMetadata].profiles;
 
         // extract path properties excluding metadata
         const { 'x-ms-metadata': metadataCurrent, ...filteredPath } = path;
@@ -174,6 +175,7 @@ export class Deduplicator {
               apiVersions = apiVersions.concat(anotherPath[xMsMetadata].apiVersions);
               filename = filename.concat(anotherPath[xMsMetadata].filename);
               originalLocations = originalLocations.concat(anotherPath[xMsMetadata].originalLocations);
+              profiles = getMergedProfilesMetadata(profiles, anotherPath[xMsMetadata].profiles);
 
               // the discriminator to take contents is the api version
               const maxApiVersionPath = this.getMaxApiVersion(path[xMsMetadata].apiVersions);
@@ -198,6 +200,7 @@ export class Deduplicator {
           apiVersions: [...new Set([...apiVersions])],
           filename: [...new Set([...filename])],
           path: pathFromMetadata,
+          profiles,
           originalLocations: [...new Set([...originalLocations])]
         };
         deduplicatedPaths.add(pathUid);
@@ -392,4 +395,20 @@ export class Deduplicator {
     }
     return this.mappings;
   }
+}
+
+function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>): Dictionary<string> {
+  const result = new Dictionary<string>();
+  for (const item of items(dict1)) {
+    result[item.key] = item.value;
+  }
+
+  for (const item of items(dict1)) {
+    if (result[item.key] !== undefined) {
+      throw Error(`Deduplicator: There's a conflict in profile data. There should be a single path api-version per profile.`);
+    }
+    result[item.key] = item.value;
+  }
+
+  return result;
 }
