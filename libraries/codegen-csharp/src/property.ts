@@ -10,7 +10,7 @@ import { Abstract, Access, Extern, highestAccess, Modifier, New, Override, Seale
 import { Attribute } from './attribute';
 import { summary } from './doc-comments';
 import { Expression, ExpressionOrLiteral, toExpression, valueOf } from './expression';
-import { OneOrMoreStatements, Statement, Statements } from './statements/statement';
+import { OneOrMoreStatements, Statement, Statements, StatementPossibilities } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { ExpressionStatement, Instance, Variable } from './variable';
 
@@ -103,8 +103,8 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
 }
 
 export class ImplementedProperty extends Property {
-  getterStatements?: Statement;
-  setterStatements?: Statement;
+  getterStatements?: StatementPossibilities;
+  setterStatements?: StatementPossibilities;
   constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<ImplementedProperty>) {
     super(name, type);
     this.apply(objectInitializer);
@@ -129,7 +129,7 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
     }
     return `${this.getterDeclaration}
     {
-${indent(this.getterStatements.implementation, 2)}
+${indent(new Statements(this.getterStatements).implementation, 2)}
     }`.trim();
   }
 
@@ -139,7 +139,7 @@ ${indent(this.getterStatements.implementation, 2)}
     }
     return `${this.setterDeclaration}
     {
-${indent(this.setterStatements.implementation, 2)}
+${indent(new Statements(this.setterStatements).implementation, 2)}
     }`.trim();
   }
 }

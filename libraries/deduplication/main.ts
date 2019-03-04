@@ -320,7 +320,8 @@ export class Deduplicator {
         result = i;
         continue;
       }
-      result = Number.isNaN(Number.parseInt(i)) ? `${result}-${i}` : `${result}.${i}`;
+      const n = Number.parseInt(i);
+      result = Number.isNaN(n) ? `${result}-${i}` : `${result}.${n}`;
     }
     return result;
   }
