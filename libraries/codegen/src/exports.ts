@@ -7,3 +7,4 @@ export * from './pluralization'
 export * from './text-manipulation';
 export * from './utility';
 export * from './yaml';
+export * from './apiversion';

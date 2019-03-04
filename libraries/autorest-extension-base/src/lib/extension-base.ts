@@ -158,6 +158,7 @@ export class AutoRestExtension {
         });
         return true;
       } catch (e) {
+        console.error(`PLUGIN FAILURE: ${e.message}, ${e.stack}, ${JSON.stringify(e, null, 2)}`);
         channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, <Message>{
           Channel: "fatal" as any,
           Text: "" + e,

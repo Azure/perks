@@ -36,6 +36,15 @@ export class Class extends Type {
     }
   }
 
+  hasMethodWithSameDeclaration(method: Method) {
+    for (const eachMethod of this.methods) {
+      if (method.interfaceDeclaration === eachMethod.interfaceDeclaration) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public get signature(): string {
     const colon = (this.parent || this.interfaces.length > 0) ? ' : ' : '';
     const comma = (this.parent && this.interfaces.length > 0) ? ', ' : '';
