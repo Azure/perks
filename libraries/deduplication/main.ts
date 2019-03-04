@@ -403,7 +403,7 @@ function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<
     result[item.key] = item.value;
   }
 
-  for (const item of items(dict1)) {
+  for (const item of items(dict2)) {
     if (result[item.key] !== undefined) {
       throw Error(`Deduplicator: There's a conflict in profile data. There should be a single path api-version per profile.`);
     }
