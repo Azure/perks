@@ -32,7 +32,7 @@ export function applyOverrides(content: string, overrides: Dictionary<string>): 
   return content;
 }
 
-export async function copyResources(sourceFolder: string, fileWriter: (filename: string, content: string) => Promise<void>, overrides: Dictionary<string> = {}) {
+export async function copyResources(sourceFolder: string, fileWriter: (filename: string, content: string) => Promise<void>, overrides: Dictionary<string> = {}, contentManipulator: (content: string) => Promise<string> = async (i) => { return i; }) {
   const done = new Array<Promise<void>>();
   try {
     const files = await aio.readdir(sourceFolder);
@@ -40,11 +40,11 @@ export async function copyResources(sourceFolder: string, fileWriter: (filename:
     for (const file of values(files)) {
       const fullPath = join(sourceFolder, file);
       if (await aio.isDirectory(fullPath)) {
-        done.push(copyResources(fullPath, async (f, c) => fileWriter(`${file}/${f}`, c), overrides));
+        done.push(copyResources(fullPath, async (f, c) => fileWriter(`${file}/${f}`, c), overrides, contentManipulator));
         continue;
       }
       if (await aio.isFile(fullPath)) {
-        done.push(aio.readFile(fullPath).then(async (content) => fileWriter(file, applyOverrides(content, overrides))
+        done.push(aio.readFile(fullPath).then(contentManipulator).then(async (content) => fileWriter(file, applyOverrides(content, overrides))
         ));
       }
     }

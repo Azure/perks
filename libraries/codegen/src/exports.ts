@@ -8,3 +8,4 @@ export * from './text-manipulation';
 export * from './utility';
 export * from './yaml';
 export * from './apiversion';
+export * from './safe-eval';
