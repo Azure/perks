@@ -173,6 +173,23 @@ export function fixLeadingNumber(identifier: Array<string>): Array<string> {
   return identifier;
 }
 
+export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>) {
+  let newIdentifier = identifier
+  const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
+  newIdentifier = identifier.replace(regex, `$2`);
+  newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
+
+  return (skipIdentifiers !== undefined) ? (skipIdentifiers.includes(newIdentifier)) ? identifier : newIdentifier : newIdentifier;
+}
+
+export function isCapitalized(identifier: string): Boolean {
+  return /^[A-Z]/.test(identifier);
+}
+
+export function getPascalIdentifier(name: string): string {
+  return pascalCase(fixLeadingNumber(deconstruct(name)));
+}
+
 const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
 const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
