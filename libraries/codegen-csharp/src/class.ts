@@ -105,6 +105,6 @@ ${this.fullName}
   public $<T extends (Property | Method | Field)>(name: string): T {
     return <T>this.properties.find(p => p.name === name) ||
       this.methods.find(p => p.name === name) ||
-      this.fields.find(p => p.name === name) || fail(`No property ${name}`);
+      this.fields.find(p => p.name === name) || fail(`No Property/Method/Field ${name}`);
   }
 }

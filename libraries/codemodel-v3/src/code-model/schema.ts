@@ -30,10 +30,15 @@ export enum Purpose {
 
 
 export interface VirtualProperty {
-  kind: 'my-property' | 'child-property' | 'parent-property';
+  kind: 'my-property' | 'inlined-property' | 'parent-property';
+
+  // original schema and property
   property: Property;
-  propertyName: Array<string>
-  container: Schema;
+  containerType: Schema;
+
+  nameComponents: Array<string>
+  name: string;
+
   implementation?: string;
 }
 
@@ -43,7 +48,7 @@ export interface SchemaDetails extends ImplementationDetails {
 
   enum?: EnumDetails;
   purpose?: Purpose;
-  virtualProperties?: Dictionary<VirtualProperty>;
+  virtualProperties?: Array<VirtualProperty>;
 }
 
 export class Schema extends Extensions implements Schema {
