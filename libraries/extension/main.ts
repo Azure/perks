@@ -614,8 +614,6 @@ export class ExtensionManager {
       throw new Exception(`Unable to resolve full path for executable '${command[0]}' -- (cmdline '${command.join(' ')}')`);
     }
 
-    // console.log(`cmdline ${fullCommandPath} ${command.slice(1).join(' ')}`);
-
     // == special case ==
     // on Windows, if this command has a space in the name, and it's not an .EXE
     // then we're going to have to add the folder to the PATH

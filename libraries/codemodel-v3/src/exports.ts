@@ -24,3 +24,4 @@ export { command };
 export { http };
 export { codemodel };
 export { exportedModels };
+export { uid } from './code-model/uid';

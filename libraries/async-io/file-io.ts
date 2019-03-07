@@ -6,6 +6,7 @@
 import { Exception, OutstandingTaskAwaiter, promisify } from '@microsoft.azure/tasks';
 import * as fs from 'fs';
 import * as path from 'path';
+import { fileURLToPath, Url, URL } from 'url';
 
 export class PathNotFoundException extends Exception {
   constructor(path: string, public exitCode: number = 1) {
@@ -41,12 +42,15 @@ export class UnableToMakeDirectoryException extends Exception {
     Object.setPrototypeOf(this, UnableToMakeDirectoryException.prototype);
   }
 }
-
-export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(path, (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
+export function filePath(path: string | Buffer | Url | URL): string {
+  path = path.toString();
+  return path.startsWith('file:///') ? fileURLToPath(path) : path;
+}
+export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(filePath(path), (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
-export const writeFile: (filename: string, content: string) => Promise<void> = (filename, content) => Promise.resolve(fs.writeFileSync(filename, content)); // for some reason writeFile only produced empty files
+export const writeFile: (filename: string, content: string | Buffer) => Promise<void> = (filename, content) => Promise.resolve(fs.writeFileSync(filename, content)); // for some reason writeFile only produced empty files
 export const lstat: (path: string | Buffer) => Promise<fs.Stats> = promisify(fs.lstat);
 
 const fs_rmdir: (path: string | Buffer) => Promise<void> = promisify(fs.rmdir);
@@ -78,6 +82,10 @@ const fs_readFile: (filename: string, encoding: string, ) => Promise<string> = p
 
 export async function readFile(filename: string): Promise<string> {
   return fs_readFile(filename, 'utf-8');
+}
+
+export async function readBinaryFile(filename: string): Promise<string> {
+  return fs_readFile(filename, 'base64');
 }
 
 export async function isDirectory(dirPath: string): Promise<boolean> {

@@ -4,15 +4,15 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { indent } from '@microsoft.azure/codegen';
-import { Expression, valueOf } from '../expression';
+import { Expression, valueOf, ExpressionOrLiteral } from '../expression';
 import { StatementPossibilities, Statements } from './statement';
 
-export function For(initialization: Expression, condition: Expression, loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+export function For(initialization: Expression, condition: ExpressionOrLiteral, loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
   return new ForStatement(initialization, condition, loop, statements, objectInitializer);
 }
 
 export class ForStatement extends Statements {
-  constructor(public initialization: Expression, public condition: Expression, public loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+  constructor(public initialization: Expression, public condition: ExpressionOrLiteral, public loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
     super(statements);
     this.apply(objectInitializer);
   }
@@ -25,12 +25,12 @@ ${indent(super.implementation)}
   }
 }
 
-export function ForEach(variable: string, enumerable: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+export function ForEach(variable: string, enumerable: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
   return new ForEachStatement(variable, enumerable, statements, objectInitializer);
 }
 
 export class ForEachStatement extends Statements {
-  constructor(public variable: string, public enumerable: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+  constructor(public variable: string, public enumerable: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
     super(statements);
     this.apply(objectInitializer);
   }

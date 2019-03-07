@@ -22,7 +22,7 @@ export function deepFreeze(instance: object) {
   return Object.freeze(obj);
 }
 
-export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = []): any {
+export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = [], refCopyPropertyNames: Array<string> = []): any {
   const freeze = shouldFreeze ? Object.freeze : (i: any) => i;
   const obj = <AnyObject>instance;
 
@@ -40,7 +40,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   if (obj instanceof Set) {
     let set = new Set();
     for (const value of obj.values()) {
-      set.add(clone(value, shouldFreeze, hash));
+      set.add(clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
     }
     set = freeze(set);
     hash.set(obj, set);
@@ -50,7 +50,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   if (Array.isArray(obj)) {
     let array = new Array();
     for (const value of obj) {
-      array.push(clone(value, shouldFreeze, hash));
+      array.push(clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
     }
     array = freeze(array);
     hash.set(obj, array);
@@ -60,7 +60,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   // as do Maps
   if (obj instanceof Map) {
     let map = new Map<any, any>();
-    Array.from(obj, ([key, val]) => map.set(key, clone(val, shouldFreeze, hash)));
+    Array.from(obj, ([key, val]) => map.set(key, clone(val, shouldFreeze, hash, skip, refCopyPropertyNames)));
     map = freeze(map);
     hash.set(obj, map);
     return map;
@@ -71,7 +71,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
       obj instanceof RegExp ? new RegExp(obj.source, obj.flags) : {};
 
   // recurse thru children
-  Object.assign(result, ...Object.keys(obj).filter(key => skip.indexOf(key) === -1).map(key => ({ [key]: clone(obj[key], shouldFreeze, hash) })));
+  Object.assign(result, ...Object.keys(obj).filter(key => skip.indexOf(key) === -1).map(key => refCopyPropertyNames.indexOf(key) > -1 ? ({ [key]: obj[key] }) : ({ [key]: clone(obj[key], shouldFreeze, hash, skip, refCopyPropertyNames) })));
 
   // freeze it if necessary
   result = freeze(result);

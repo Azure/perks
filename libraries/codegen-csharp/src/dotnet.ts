@@ -241,6 +241,7 @@ export const dotnet = {
   ToDo: new ClassType(None, 'null'),
   Void: new ClassType(None, 'void'),
   String: new ClassType(None, 'string'),
+  StringArray: new ClassType(None, 'string[]'),
   Int: new ClassType(None, 'int'),
   Long: new ClassType(None, 'long'),
   Double: new ClassType(None, 'double'),
@@ -257,11 +258,3 @@ export const dotnet = {
   This: new LiteralExpression('this'),
 };
 
-/*
-
-const q = System.String.$BindTo(Local('text', '"helloworld"'));
-const f = Local('text', `"helloworld"`).As(System.String);
-
-f.Substring('10');
-
-*/

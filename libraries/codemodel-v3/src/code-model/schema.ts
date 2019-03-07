@@ -6,6 +6,7 @@
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails } from './components';
 import { Extensions } from './extensions';
 import { DeepPartial, Dictionary, values } from '@microsoft.azure/codegen';
+import { uid } from './uid';
 
 export interface PropertyDetails extends ImplementationDetails {
   required: boolean;
@@ -59,6 +60,7 @@ export class Schema extends Extensions implements Schema {
     super();
     this.details = {
       default: {
+        uid: `schema:${uid()}`,
         description: '',
         name
       }
@@ -95,6 +97,7 @@ export class Property extends Extensions implements Property {
     this.serializedName = name;
     this.details = {
       default: {
+        uid: `property:${uid()}`,
         description: 'MISSING DESCRIPTION 03',
         name,
         required: false

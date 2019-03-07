@@ -8,14 +8,19 @@ import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { SecurityScheme } from './security-scheme';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { uid } from './uid';
 
 export interface HttpOperationDetails extends ImplementationDetails {
 }
 
+/** 
+ * An encoding attribute is introduced to give you control over the serialization of parts of multipart request bodies. 
+ * This attribute is only applicable to multipart and application/x-www-form-urlencoded request bodies. 
+*/
 export class Encoding extends Extensions implements Encoding {
-  public headers = new Dictionary<Header>();
+  public headers = new Array<Header>();
 
-  constructor(initializer?: Partial<Encoding>) {
+  constructor(public key: string, initializer?: Partial<Encoding>) {
     super();
     this.apply(initializer);
   }
@@ -23,7 +28,7 @@ export class Encoding extends Extensions implements Encoding {
 
 export class Header extends Extensions implements Header {
 
-  public content = new Dictionary<MediaType>();
+  public content = new Array<MediaType>();
 
   constructor(initializer?: Partial<Header>) {
     super();
@@ -32,11 +37,10 @@ export class Header extends Extensions implements Header {
 }
 
 export class MediaType extends Extensions implements MediaType {
-
-  public encoding = new Dictionary<Encoding>();
+  public encoding = new Array<Encoding>();
   public accepts = new Array<string>();
 
-  constructor(initializer?: Partial<MediaType>) {
+  constructor(public key: string, initializer?: Partial<MediaType>) {
     super();
     this.apply(initializer);
   }
@@ -54,7 +58,7 @@ export class Response extends Extensions implements Response {
 
   public content = new Dictionary<MediaType>();
   public links = new Dictionary<Link>();
-  public headers = new Dictionary<Header>();
+  public headers = new Array<Header>();
 
   constructor(public description: string, initializer?: Partial<Response>) {
     super();
@@ -87,15 +91,16 @@ export type QueryEncodingStyle =
 export type PathEncodingStyle = EncodingStyle.Matrix | EncodingStyle.Label | EncodingStyle.Simple;
 
 export interface Encoding extends Extensions {
+  key: string;
   contentType?: string;
-  headers: Dictionary<Header>;
+  headers: Array<Header>;
   style?: QueryEncodingStyle;
   explode?: boolean;
   allowReserved?: boolean;
 }
 
 export interface Header extends Extensions {
-
+  key: string,
   schema: Schema;
   explode?: boolean;
   examples: Dictionary<Example>;
@@ -108,9 +113,10 @@ export interface Header extends Extensions {
 }
 
 export interface MediaType extends Extensions {
+  key: string;
   accepts: Array<string>; // equivalent media types for this media type (ie, text/json, application/json)
-  examples: Dictionary<Example>;
-  encoding: Dictionary<Encoding>;
+  examples: Array<Example>;
+  encoding: Array<Encoding>;
   schema?: Schema;
 }
 
@@ -123,7 +129,7 @@ export interface RequestBody extends Extensions {
 
 export interface Response extends Extensions {
   description: string;
-  headers: Dictionary<Header>;
+  headers: Array<Header>;
   content: Dictionary<MediaType>;
   links: Dictionary<Link>;
 }
@@ -147,7 +153,7 @@ export interface NewResponse {
   details: LanguageDetails<ResponseDetails>;
   responseCode: string;
   description: string;
-  headers: Dictionary<Header>;
+  headers: Array<Header>;
   headerSchema?: Schema;
   mimeTypes: Array<string>; // accepted equivalent media types for this media type (ie, text/json, application/json)
   schema?: Schema;
@@ -160,12 +166,13 @@ export class NewResponse extends Extensions implements NewResponse {
     super();
     this.details = {
       default: {
+        uid: `response:${uid()}`,
         isErrorResponse: false,
         description: 'MISSING DESCRIPTION 09',
         name: `${responseCode} ${mimeTypes.join(' ')}`,
       }
     };
-    this.headers = new Dictionary<Header>();
+    this.headers = new Array<Header>();
     this.apply(objectInitializer);
   }
 }
@@ -184,6 +191,7 @@ export class HttpOperation extends Extensions implements HttpOperation {
     super();
     this.details = {
       default: {
+        uid: `http-operation:${uid()}`,
         description: 'MISSING DESCRIPTION 05',
         name: operationId,
       }
@@ -203,7 +211,6 @@ export interface HttpOperation extends IOperation<HttpOperationParameter>, Exten
 
   parameters: Array<HttpOperationParameter>;
   requestBody?: RequestBody;
-  // responses: Dictionary<Response>;
   responses: Dictionary<Array<NewResponse>>;
 
   callbacks: Dictionary<Callback>;
@@ -223,7 +230,7 @@ export interface HttpOperationParameter extends IParameter {
   in: ParameterLocation;
   explode?: boolean;
 
-  encoding?: Dictionary<Encoding>;
+  encoding?: Array<Encoding>;
   mediaType?: string;
   style: EncodingStyle;
   examples?: Dictionary<any>;
@@ -242,6 +249,7 @@ export class HttpOperationParameter extends Extensions implements HttpOperationP
     this.in = inWhere;
     this.details = {
       default: {
+        uid: `http-parameter:${uid()}`,
         description: 'MISSING DESCRIPTION 06',
         location: implementation,
         name,
@@ -269,25 +277,17 @@ export interface Callback extends Dictionary<HttpOperation> {
 }
 
 export interface HttpComponents extends Components<HttpOperation, HttpOperationParameter> {
-  responses: Dictionary<Response>;
+
   examples: Dictionary<Example>;
-  requestBodies: Dictionary<RequestBody>;
-  headers: Dictionary<Header>;
   securitySchemes: Dictionary<SecurityScheme>;
   links: Dictionary<Link>;
   callbacks: Dictionary<Callback>;
 }
 
 export class HttpComponents extends Components<HttpOperation, HttpOperationParameter> implements HttpComponents {
-  public responses = new Dictionary<Response>();
   public examples = new Dictionary<Example>();
-
-  public requestBodies = new Dictionary<RequestBody>();
-  public headers = new Dictionary<Header>();
   public securitySchemes = new Dictionary<SecurityScheme>();
-
   public links = new Dictionary<Link>();
-
   public callbacks = new Dictionary<Callback>();
 
   constructor(initializer?: Partial<HttpComponents>) {

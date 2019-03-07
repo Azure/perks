@@ -26,7 +26,7 @@ export class OutstandingTaskAwaiter {
       throw new OutstandingTaskAlreadyCompletedException();
     }
     this.outstandingTasks.push(task.catch((e) => {
-      console.error("Yes. errors in the await.")
+      // console.error("Yes. errors in the await.")
       this.errors.push(e)
     }));
 

@@ -9,7 +9,7 @@
   "typings": "./dist/main.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure/perks.tasks.git"
+    "url": "git+https://github.com/Azure/perks.git"
   },
   "scripts": {
     "build": "tsc -p .",
@@ -34,10 +34,10 @@
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Azure/perks.tasks/issues"
+    "url": "https://github.com/Azure/perks/issues"
   },
-  "homepage": "https://github.com/Azure/perks.tasks#readme",
-  "readme": "https://github.com/Azure/perks.tasks/readme.md",
+  "homepage": "https://github.com/Azure/perks#readme",
+  "readme": "https://github.com/Azure/perks/readme.md",
   "devDependencies": {
     "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",

@@ -12,6 +12,10 @@ export class Constructor extends Method {
   constructor(protected containingClass: Class, objectIntializer?: Partial<Method>) {
     super(containingClass.name);
     this.apply(objectIntializer);
+
+    if (this.body) {
+      this.add(this.body);
+    }
   }
 
   public get declaration(): string {
