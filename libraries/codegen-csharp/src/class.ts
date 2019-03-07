@@ -28,6 +28,7 @@ export class Class extends Type {
 
   constructor(namespace: TypeContainer, name: string, public parent?: Class, objectIntializer?: Partial<Class>) {
     super(namespace, name);
+    this.partial = true;
     this.apply(objectIntializer);
     namespace.addClass(this);
 
