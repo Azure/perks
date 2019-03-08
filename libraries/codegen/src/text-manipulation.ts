@@ -328,7 +328,6 @@ export function setRegion(source: string, region: string, content: TextPossibili
   return result.join('«').replace(/[\r?\n]/g, '«').replace(/^«*/, '').replace(/«*$/, '').replace(/«««*/g, '««').replace(/«/g, '\n');
 }
 
-
 export function _setRegion(source: string, region: string, content: TextPossibilities, prepend = true) {
   const ct = new Text(content).text.replace(/[\r?\n]/g, '«').replace(/^«*/, '').replace(/«*$/, '');
 
