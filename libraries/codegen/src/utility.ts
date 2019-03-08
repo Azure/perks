@@ -74,3 +74,11 @@ export async function copyBinaryResources(sourceFolder: string, fileWriter: (fil
   }
   await Promise.all(done);
 }
+
+function quartet() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+export function guid() {
+  return (quartet() + quartet() + "-" + quartet() + "-4" + quartet().substr(0, 3) + "-" + quartet() + "-" + quartet() + quartet() + quartet()).toLowerCase();
+}
