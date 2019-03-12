@@ -28,18 +28,25 @@ export enum Purpose {
   Header = 'Header',
 }
 
-
 export interface VirtualProperty {
-  kind: 'my-property' | 'inlined-property' | 'parent-property';
-
-  // original schema and property
+  /** The property that this represents */
   property: Property;
-  containerType: Schema;
 
+  /** The things that went into building the name */
   nameComponents: Array<string>
+
+  /** the name of this virtual property */
   name: string;
 
-  implementation?: string;
+  /** the member that should be called to get to the virtual property. (may be recursive) */
+  accessViaProperty?: VirtualProperty;
+
+  accessViaMember?: string;
+
+  /** the member's schema */
+  accessViaSchema?: Schema;
+
+  private?: boolean;
 }
 
 export interface SchemaDetails extends ImplementationDetails {
@@ -48,7 +55,11 @@ export interface SchemaDetails extends ImplementationDetails {
 
   enum?: EnumDetails;
   purpose?: Purpose;
-  virtualProperties?: Array<VirtualProperty>;
+  virtualProperties?: {
+    owned: Array<VirtualProperty>,
+    inherited: Array<VirtualProperty>,
+    inlined: Array<VirtualProperty>,
+  };
 }
 
 export class Schema extends Extensions implements Schema {

@@ -231,6 +231,17 @@ export function* convert(num: number): Iterable<string> {
   }
 }
 
+export function* removeSequentialDuplicates(identifier: Iterable<string>) {
+  let last: string | undefined = undefined;
+
+  for (const each of identifier) {
+    if (each !== last) {
+      yield each;
+    }
+    last = each;
+  }
+}
+
 export function camelCase(identifier: Array<string>): string {
   switch (identifier.length) {
     case 0:
@@ -242,7 +253,7 @@ export function camelCase(identifier: Array<string>): string {
 }
 
 export function pascalCase(identifier: Array<string>): string {
-  return identifier.map(each => each.capitalize()).join('');
+  return [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
 }
 
 export function escapeString(text: string | undefined): string {
