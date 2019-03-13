@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/openapi",
   "version": "2.1.0",
-  "description": "OpenAPI common code for Azure Tools",
+  "description": "OpenAPI common code for Azure Tools.",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
