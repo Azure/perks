@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/object-comparison",
   "version": "2.1.0",
-  "description": "library to compare objects",
+  "description": "Library to compare objects",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {

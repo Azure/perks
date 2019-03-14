@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/eventing",
   "version": "2.1.0",
-  "description": "Typescript-based eventing framekwork (for Azure Open Source Projects)",
+  "description": "Typescript-based eventing framework (for Azure Open Source Projects)",
   "engines": {
     "node": ">=7.10.0"
   },

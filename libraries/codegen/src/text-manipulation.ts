@@ -173,13 +173,15 @@ export function fixLeadingNumber(identifier: Array<string>): Array<string> {
   return identifier;
 }
 
-export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>) {
-  let newIdentifier = identifier
-  const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
-  newIdentifier = identifier.replace(regex, `$2`);
-  newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
+export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
+  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase()) && identifier.toLowerCase() !== prohibitedPrefix.toLowerCase()) {
+    const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
+    let newIdentifier = identifier.replace(regex, `$2`);
+    newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
+    return (skipIdentifiers !== undefined) ? skipIdentifiers.includes(newIdentifier) ? identifier : newIdentifier : newIdentifier;
+  }
 
-  return (skipIdentifiers !== undefined) ? (skipIdentifiers.includes(newIdentifier)) ? identifier : newIdentifier : newIdentifier;
+  return identifier;
 }
 
 export function isCapitalized(identifier: string): Boolean {

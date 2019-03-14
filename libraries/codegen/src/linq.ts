@@ -255,7 +255,7 @@ function distinct<T>(this: Iterable<T>, selector?: (each: T) => any): Linqable<T
 
 export interface Linqable<T> extends Iterable<T> {
   linq: {
-    any(predicate: (each: T) => boolean): boolean;
+    any(predicate?: (each: T) => boolean): boolean;
     all(predicate: (each: T) => boolean): boolean;
     bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
     distinct(selector?: (each: T) => any): Linqable<T>;
@@ -264,6 +264,8 @@ export interface Linqable<T> extends Iterable<T> {
     select<V>(selector: (each: T) => V): Linqable<V>;
     selectMany<V>(selector: (each: T) => Iterable<V>): Linqable<V>;
     where(predicate: (each: T) => boolean): Linqable<T>;
+    forEach(action: (each: T) => void): void;
+    aggregate<A, R>(accumulator: (current: T | A, next: T) => A, seed?: T | A, resultAction?: (result?: T | A) => A | R): T | A | R | undefined;
     toArray(): Array<T>;
   };
 }
@@ -282,6 +284,8 @@ function linqify<T>(iterable: Iterable<T>): Linqable<T> {
         selectNonNullable: selectNonNullable.bind(iterable),
         toArray: toArray.bind(iterable),
         where: where.bind(iterable),
+        forEach: forEach.bind(iterable),
+        aggregate: aggregate.bind(iterable),
       };
     }
   });
