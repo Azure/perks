@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/codegen-csharp",
   "version": "1.0.0",
-  "description": "AutoRest code generator base classes for c#",
+  "description": "AutoRest code generator base classes for CSharp#",
   "directories": {
     "doc": "docs"
   },

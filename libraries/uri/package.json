@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/uri",
   "version": "2.1.0",
-  "description": "Common URI handling code",
+  "description": "Common URI handling code.",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
