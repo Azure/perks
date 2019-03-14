@@ -49,6 +49,7 @@ export interface VirtualProperty {
   private?: boolean;
 }
 
+
 export interface SchemaDetails extends ImplementationDetails {
   /** namespace of the implementation of this item */
   namespace?: string;

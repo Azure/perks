@@ -7,12 +7,16 @@ import { Components, IParameter, LanguageDetails } from './components';
 import { Extensions } from './extensions';
 import { HttpOperation } from './http-operation';
 import { ProgramaticOperationDetails, ProgrammaticOperation } from './programatic-operation';
-import { Schema } from './schema';
+import { Schema, VirtualProperty } from './schema';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
 import { uid } from './uid';
 
 
 export interface CommandOperationDetails extends ProgramaticOperationDetails {
+  virtualParameters?: {
+    body: Array<VirtualParameter>,
+    operation: Array<VirtualParameter>
+  }
 }
 
 export interface CommandOperation extends ProgrammaticOperation {
@@ -22,6 +26,15 @@ export interface CommandOperation extends ProgrammaticOperation {
   category: string;
   asjob: boolean;
   callGraph: Array<HttpOperation>;
+}
+
+export interface VirtualParameter {
+  name: string;
+  description: string;
+  required: boolean;
+  schema: Schema;
+  origin: VirtualProperty | IParameter;
+
 }
 
 export class CommandOperation extends Extensions implements CommandOperation {
