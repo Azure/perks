@@ -34,7 +34,7 @@ export interface VirtualParameter {
   required: boolean;
   schema: Schema;
   origin: VirtualProperty | IParameter;
-
+  alias: Array<string>
 }
 
 export class CommandOperation extends Extensions implements CommandOperation {

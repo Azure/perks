@@ -47,6 +47,10 @@ export interface VirtualProperty {
   accessViaSchema?: Schema;
 
   private?: boolean;
+
+  alias: Array<string>;
+
+  description: string;
 }
 
 
