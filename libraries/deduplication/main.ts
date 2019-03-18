@@ -166,7 +166,7 @@ export class Deduplicator {
             const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
 
             // TODO: Add more keys to ignore.
-            const keysToIgnore: Array<string> = ['description'];
+            const keysToIgnore: Array<string> = ['description', 'tags'];
 
             // they should have the same name to be merged and they should be similar
             if (areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore) && path[xMsMetadata].path === anotherPath[xMsMetadata].path) {
