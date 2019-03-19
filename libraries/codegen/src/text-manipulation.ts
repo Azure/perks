@@ -362,3 +362,29 @@ export function _setRegion(source: string, region: string, content: TextPossibil
   source = source.replace(/«««*/g, '««').replace(/«/g, '\n');
   return source;
 }
+
+export function selectName(nameOptions: Array<string>, reservedNames: Set<string>) {
+  // we're here because the original name is in conflict.
+  // so we start with the alternatives  (skip the 0th!)
+  for (const each of nameOptions.slice(1)) {
+    if (!reservedNames.has(each)) {
+      reservedNames.add(each);
+      return each;
+    }
+  }
+
+  // hmm, none of the names were suitable. 
+  // use the first one, and tack on a number until we have a free value
+  let i = 1;
+  do {
+    const name = `${nameOptions[0]}${i}`;
+    if (!reservedNames.has(name)) {
+      reservedNames.add(name);
+      return name;
+    }
+  } while (i < 100);
+
+  // after an unreasonalbe search, return something invalid
+  return `InvalidPropertyName${nameOptions[0]}`;
+}
+

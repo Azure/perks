@@ -11,12 +11,13 @@ import { Schema, VirtualProperty } from './schema';
 import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
 import { uid } from './uid';
 
+export interface VirtualParameters {
+  body: Array<VirtualParameter>;
+  operation: Array<VirtualParameter>;
+}
 
 export interface CommandOperationDetails extends ProgramaticOperationDetails {
-  virtualParameters?: {
-    body: Array<VirtualParameter>,
-    operation: Array<VirtualParameter>
-  }
+  virtualParameters?: VirtualParameters;
 }
 
 export interface CommandOperation extends ProgrammaticOperation {
@@ -33,6 +34,7 @@ export interface VirtualParameter {
   description: string;
   required: boolean;
   schema: Schema;
+  nameOptions: Array<string>;
   origin: VirtualProperty | IParameter;
   alias: Array<string>
 }

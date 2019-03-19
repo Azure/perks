@@ -25,4 +25,5 @@ export { http };
 export { codemodel };
 export { exportedModels };
 export { uid } from './code-model/uid';
-export { VirtualParameter } from './code-model/command-operation';
+export { VirtualParameter, VirtualParameters } from './code-model/command-operation';
+export * from './resolve-conflicts';

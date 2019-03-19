@@ -35,6 +35,9 @@ export interface VirtualProperty {
   /** The things that went into building the name */
   nameComponents: Array<string>
 
+  /** Names To use in priority order */
+  nameOptions: Array<string>;
+
   /** the name of this virtual property */
   name: string;
 
@@ -53,6 +56,11 @@ export interface VirtualProperty {
   description: string;
 }
 
+export interface VirtualProperties {
+  owned: Array<VirtualProperty>;
+  inherited: Array<VirtualProperty>;
+  inlined: Array<VirtualProperty>;
+}
 
 export interface SchemaDetails extends ImplementationDetails {
   /** namespace of the implementation of this item */
@@ -60,11 +68,7 @@ export interface SchemaDetails extends ImplementationDetails {
 
   enum?: EnumDetails;
   purpose?: Purpose;
-  virtualProperties?: {
-    owned: Array<VirtualProperty>,
-    inherited: Array<VirtualProperty>,
-    inlined: Array<VirtualProperty>,
-  };
+  virtualProperties?: VirtualProperties;
 }
 
 export class Schema extends Extensions implements Schema {
