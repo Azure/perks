@@ -3,6 +3,17 @@ import { VirtualParameters, VirtualParameter } from "./code-model/command-operat
 import { selectName } from "@microsoft.azure/codegen";
 
 export function resolvePropertyNames(reservedNames: Iterable<string>, virtualProperties: VirtualProperties) {
+  const usedNames = new Set(reservedNames);
+
+  const allProps = [...virtualProperties.owned, ...virtualProperties.inherited, ...virtualProperties.inlined];
+
+  for (const prop of allProps) {
+    if (usedNames.has(prop.name)) {
+      prop.name = selectName(prop.nameOptions, usedNames);
+    } else {
+      usedNames.add(prop.name);
+    }
+  }
 
 }
 
