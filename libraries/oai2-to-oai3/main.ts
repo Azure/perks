@@ -29,7 +29,12 @@ export class Oai2ToOai3 {
           let originalParameter: any = {};
           let param: any = {};
           if (xMsPHost.parameters[msp].$ref !== undefined) {
-            const referencePointer = xMsPHost.parameters[msp].$ref.replace('#', '');
+            let referencePointer = xMsPHost.parameters[msp].$ref;
+            if (referencePointer.startsWith(`${this.originalFilename}#/parameters/`)) {
+              referencePointer = referencePointer.replace(this.originalFilename, '');
+            }
+
+            referencePointer = referencePointer.replace('#', '');
             originalParameter = get(this.original, referencePointer);
           } else {
             originalParameter = xMsPHost.parameters[msp];
