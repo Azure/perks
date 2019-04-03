@@ -69,6 +69,10 @@ export interface SchemaDetails extends ImplementationDetails {
   enum?: EnumDetails;
   purpose?: Purpose;
   virtualProperties?: VirtualProperties;
+
+  /** if this is a child of a polymorphic class, this will have the value of the descriminator.  */
+  discriminatorValue?: string;
+
 }
 
 export class Schema extends Extensions implements Schema {
