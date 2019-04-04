@@ -32,7 +32,7 @@ export interface IAutoRestPluginInitiator {
   WriteFile(filename: string, content: string, sourceMap?: Mapping[] | RawSourceMap, artifactType?: string): void;
   Message(message: Message): void;
   UpdateConfigurationFile(filename: string, content: string): void;
-  GetConfigurationFile(filename: string): Promise<string>
+  GetConfigurationFile(filename: string): Promise<string>;
 }
 
 export type AutoRestPluginHandler = (initiator: IAutoRestPluginInitiator) => Promise<void>;

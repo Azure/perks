@@ -4,25 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Model } from './code-model/code-model';
-import { deserialize, serialize } from '@microsoft.azure/codegen';
+import { serialize } from '@microsoft.azure/codegen';
 import { Host } from '@microsoft.azure/autorest-extension-base';
+import { ModelState } from './model-state';
 
-export async function processCodeModel(processExtension: (input: Model, service: Host) => Promise<Model>, service: Host) {
+export async function processCodeModel(processExtension: (state: ModelState<Model>) => Promise<Model>, service: Host) {
   // Get the list of files
-  const files = await service.ListInputs('code-model-v3');
-
-  // get the openapi document
-  if (files.length === 0) {
-    throw new Error('Inputs missing.');
-  }
-
-  const original = await service.ReadFile(files[0]);
-
-  // deserialize
-  let codeModel = await deserialize<Model>(original, files[0]);
-
-  codeModel = await processExtension(codeModel, service);
+  const state = await new ModelState<Model>(service).init();
 
   // output the model back to the pipeline
-  await service.WriteFile('code-model-v3.yaml', serialize(codeModel), undefined, 'code-model-v3');
+  await service.WriteFile('code-model-v3.yaml', serialize(await processExtension(state)), undefined, 'code-model-v3');
 }

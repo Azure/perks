@@ -3,16 +3,152 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Channel, Host, JsonPath } from '@microsoft.azure/autorest-extension-base';
+import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@microsoft.azure/autorest-extension-base';
+import { safeEval, deserialize, Initializer, Dictionary } from '@microsoft.azure/codegen';
 
-export class ModelState<T> {
-  protected errorCount = 0;
+export class ModelState<T extends Dictionary<any>> extends Initializer {
+  public model!: T;
+  protected documentName!: string;
+  protected currentPath: JsonPath = new Array<string>();
+  private context!: any;
 
-  constructor(public service: Host, public model: T, protected documentName: string, protected currentPath: JsonPath = new Array<string>()) {
+  public constructor(protected service: Host, objectInitializer?: Partial<ModelState<T>>) {
+    super();
+    this.apply(objectInitializer);
   }
 
-  public path(...childPath: JsonPath): ModelState<T> {
-    return new ModelState<T>(this.service, this.model, this.documentName, [...this.currentPath, ...childPath]);
+  async init() {
+    const m = await ModelState.getModel<T>(this.service);
+    this.model = m.model;
+    this.documentName = m.filename;
+    return this;
+  }
+
+  async initContext(project: any) {
+    this.context = this.context || {
+      $config: await this.service.GetValue(''),
+      $project: project,
+      $lib: {
+        path: require('path')
+      }
+    };
+    return this;
+  }
+
+  async readFile(filename: string): Promise<string> {
+    return this.service.ReadFile(filename);
+  }
+
+  async getValue(key: string): Promise<any> {
+    // check if it's in the model first
+    let value = (<any>this.model.details.default)[key];
+
+    // fall back to the configuration
+    if (value === undefined) {
+      value = this.service.GetValue(key);
+    }
+
+    // try as a safe eval execution.
+    if (value === null || value === undefined) {
+      try {
+        value = safeEval(key, this.context);
+      }
+      catch {
+        value = null;
+      }
+    }
+
+    // ensure that any content variables are resolved at the end.
+    return this.resolveVariables(value);
+  }
+
+  async setValue(key: string, value: T) {
+    (<any>this.model.details.default)[key] = value;
+  }
+
+  async listInputs(artifactType?: string | undefined): Promise<string[]> {
+    return this.service.ListInputs(artifactType);
+  }
+
+  async protectFiles(path: string): Promise<void> {
+    return this.service.ProtectFiles(path);
+  }
+
+  writeFile(filename: string, content: string, sourceMap?: Mapping[] | RawSourceMap | undefined, artifactType?: string | undefined): void {
+    return this.service.WriteFile(filename, content, sourceMap, artifactType);
+  }
+
+  message(message: Message): void {
+    return this.service.Message(message);
+  }
+
+  updateConfigurationFile(filename: string, content: string): void {
+    return this.service.UpdateConfigurationFile(filename, content);
+  }
+  async getConfigurationFile(filename: string): Promise<string> {
+    return this.service.GetConfigurationFile(filename);
+  }
+  protected errorCount = 0;
+
+  protected static async getModel<T>(service: Host) {
+    const files = await service.ListInputs();
+    const filename = files[0];
+    if (files.length === 0) {
+      throw new Error('Inputs missing.');
+    }
+    return {
+      filename,
+      model: deserialize<T>(await service.ReadFile(filename), filename)
+    };
+  }
+
+
+  cache = new Array<any>();
+  replacer(key: string, value: any) {
+    if (typeof value === 'object' && value !== null) {
+      if (this.cache.indexOf(value) !== -1) {
+        // Duplicate reference found
+        try {
+          // If this value does not reference a parent it can be deduped
+          return JSON.parse(JSON.stringify(value));
+        } catch (error) {
+          // discard key if value cannot be deduped
+          return;
+        }
+      }
+      // Store value in our collection
+      this.cache.push(value);
+    }
+    return value;
+  }
+
+  async resolveVariables(input: string) {
+    let rx = /\$\{(.*?)\}/g;
+    let output = input;
+
+    for (let match; match = rx.exec(input);) {
+      const text = match[0];
+      const inner = match[1];
+      let value = await this.getValue(inner);
+
+      if (value !== undefined && value !== null) {
+        if (typeof value === 'object') {
+          value = JSON.stringify(value, this.replacer, 2);
+        }
+        if (value === '{}') {
+          value = 'true';
+        }
+        output = output.replace(text, value);
+      }
+    }
+    return output;
+  }
+
+
+  public path(...childPath: JsonPath) {
+    const result = new ModelState<T>(this.service, this);
+    result.currentPath = [...this.currentPath, ...childPath];
+    return result;
   }
 
   public checkpoint() {
@@ -22,7 +158,7 @@ export class ModelState<T> {
   }
 
   protected msg(channel: Channel, message: string, key: Array<string>, details: any) {
-    this.service.Message({
+    this.message({
       Channel: channel,
       Key: key,
       Source: [
@@ -55,7 +191,7 @@ export class ModelState<T> {
   }
 
   protected output(channel: Channel, message: string, details?: any) {
-    this.service.Message({
+    this.message({
       Channel: channel,
       Text: message,
       Details: details
