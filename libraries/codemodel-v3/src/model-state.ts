@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@microsoft.azure/autorest-extension-base';
-import { safeEval, deserialize, Initializer, Dictionary } from '@microsoft.azure/codegen';
+import { safeEval, deserialize, Initializer, Dictionary, intersect } from '@microsoft.azure/codegen';
 
 export class ModelState<T extends Dictionary<any>> extends Initializer {
   public model!: T;
@@ -21,6 +21,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     const m = await ModelState.getModel<T>(this.service);
     this.model = m.model;
     this.documentName = m.filename;
+
     return this;
   }
 
@@ -45,7 +46,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
 
     // fall back to the configuration
     if (value === undefined) {
-      value = this.service.GetValue(key);
+      value = await this.service.GetValue(key);
     }
 
     // try as a safe eval execution.
@@ -59,10 +60,10 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     }
 
     // ensure that any content variables are resolved at the end.
-    return this.resolveVariables(value);
+    return await this.resolveVariables(value);
   }
 
-  async setValue(key: string, value: T) {
+  async setValue<V>(key: string, value: V) {
     (<any>this.model.details.default)[key] = value;
   }
 

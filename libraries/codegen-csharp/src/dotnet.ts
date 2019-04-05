@@ -11,6 +11,7 @@ import { Parameter } from './parameter';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 import { Local, Variable } from './variable';
+import { Class } from './class';
 
 export class ClassType implements TypeDeclaration {
   private get fullName() {
@@ -84,7 +85,7 @@ export interface Index<T> {
 }
 
 export const None: Namespace = new Namespace('');
-const system: Namespace = new Namespace('System');
+const system: Namespace = new Namespace('global::System');
 const threading = new Namespace('Threading', system);
 const text = new Namespace('Text', system);
 const tasks = new Namespace('Tasks', threading);
@@ -97,6 +98,7 @@ const http = new Namespace('Http', net);
 const headers = new Namespace('Headers', http);
 const task = new ClassType(tasks, 'Task');
 const encoding = new ClassType(text, 'Encoding');
+const linq = new Namespace('Linq', system);
 
 const xml = new Namespace('Xml', system);
 const xmllinq = new Namespace('Linq', xml);
@@ -113,9 +115,22 @@ export const System = intersect(system, {
       }
     })
   }),
+  Convert: intersect(new ClassType(system, 'Convert'), {
+    ToBase64String: (expression: ExpressionOrLiteral) => toExpression(`${System.Convert}.ToBase64String( ${expression})`)
+  }),
+  Linq: intersect(linq, {
+    Enumerable: intersect(new ClassType(linq, "Enumerable"), {
+      ToArray: (source: ExpressionOrLiteral) => toExpression(`${System.Linq.Enumerable}.ToArray(${valueOf(source)})`),
+      Select: (source: ExpressionOrLiteral, selector: /* delegate */ string) => toExpression(`${System.Linq.Enumerable}.Select(${valueOf(source)}, ${selector})`),
+      Where: (source: ExpressionOrLiteral, predicate: /* delegate */ string) => toExpression(`${System.Linq.Enumerable}.Where(${valueOf(source)}, ${predicate})`),
+      ToDictionary: (source: ExpressionOrLiteral, keySelector: /* delegate */ string, valueSelector: /* delegate */ string) => toExpression(`${System.Linq.Enumerable}.ToDictionary(${valueOf(source)}, ${keySelector}, ${valueSelector})`),
+      Empty: (type: TypeDeclaration) => toExpression(`${System.Linq.Enumerable}.Empty<${type.declaration}>()`),
+    }
+    )
+  }),
   Object: new ClassType(system, 'Object'),
   String: intersect(stringClass, {
-    Empty: new LiteralExpression('System.String.Empty'),
+    Empty: new LiteralExpression('global::System.String.Empty'),
     IsNullOrEmpty: (expression: ExpressionOrLiteral) => toExpression(`${System.String}.IsNullOrEmpty(${toExpression(expression)})`),
     IsNullOrWhitespace: (expression: ExpressionOrLiteral) => toExpression(`${System.String}.IsNullOrWhitespace(${toExpression(expression)})`),
     /** @description Binds a Variable to the known instance methods of this type */
@@ -129,8 +144,12 @@ export const System = intersect(system, {
   }),
   StringComparison: new EnumType(system, 'StringComparison'),
   DateTime: new ClassType(system, 'DateTime'),
+  DateTimeKind: intersect(new ClassType(system, 'DateTimeKind'), {
+    Utc: new LiteralExpression(`global::System.DateTimeKind.Utc`),
+  }),
   EventArgs: new ClassType(system, 'EventArgs'),
   Exception: new ClassType(system, 'Exception'),
+  OperationCanceledException: new ClassType(system, 'OperationCanceledException'),
   AggregateException: new ClassType(system, 'AggregateException'),
   TimeSpan: new ClassType(system, 'TimeSpan'),
   Type: new ClassType(system, 'Type'),
@@ -159,6 +178,10 @@ export const System = intersect(system, {
       HttpClientHandler: new ClassType(http, 'HttpClientHandler'),
       HttpResponseMessage: new ClassType(http, 'HttpResponseMessage'),
       Headers: intersect(headers, {
+        MediaTypeHeaderValue: intersect(
+          new ClassType(headers, 'MediaTypeHeaderValue'), {
+            Parse: (header: string) => toExpression(`${System.Net.Http.Headers.MediaTypeHeaderValue}.Parse("${header}")`)
+          }),
         HttpHeaders: new ClassType(headers, 'HttpHeaders'),
         HttpResponseHeaders: new ClassType(headers, 'HttpResponseHeaders'),
       }),
@@ -168,70 +191,112 @@ export const System = intersect(system, {
     }),
     HttpStatusCode: intersect(new ClassType(net, 'HttpStatusCode'), <Dictionary<LiteralExpression> & Index<LiteralExpression>>{
       default: new LiteralExpression(''),
-      100: new LiteralExpression('System.Net.HttpStatusCode.Continue'),
-      101: new LiteralExpression('System.Net.HttpStatusCode.SwitchingProtocols'),
-      200: new LiteralExpression('System.Net.HttpStatusCode.OK'),
-      201: new LiteralExpression('System.Net.HttpStatusCode.Created'),
-      202: new LiteralExpression('System.Net.HttpStatusCode.Accepted'),
-      203: new LiteralExpression('System.Net.HttpStatusCode.NonAuthoritativeInformation'),
-      204: new LiteralExpression('System.Net.HttpStatusCode.NoContent'),
-      205: new LiteralExpression('System.Net.HttpStatusCode.ResetContent'),
-      206: new LiteralExpression('System.Net.HttpStatusCode.PartialContent'),
-      300: new LiteralExpression('System.Net.HttpStatusCode.Ambiguous'),
-      301: new LiteralExpression('System.Net.HttpStatusCode.Moved'),
-      302: new LiteralExpression('System.Net.HttpStatusCode.Redirect'),
-      303: new LiteralExpression('System.Net.HttpStatusCode.SeeOther'),
-      304: new LiteralExpression('System.Net.HttpStatusCode.NotModified'),
-      305: new LiteralExpression('System.Net.HttpStatusCode.UseProxy'),
-      306: new LiteralExpression('System.Net.HttpStatusCode.Unused'),
-      307: new LiteralExpression('System.Net.HttpStatusCode.TemporaryRedirect'),
-      400: new LiteralExpression('System.Net.HttpStatusCode.BadRequest'),
-      401: new LiteralExpression('System.Net.HttpStatusCode.Unauthorized'),
-      402: new LiteralExpression('System.Net.HttpStatusCode.PaymentRequired'),
-      403: new LiteralExpression('System.Net.HttpStatusCode.Forbidden'),
-      404: new LiteralExpression('System.Net.HttpStatusCode.NotFound'),
-      405: new LiteralExpression('System.Net.HttpStatusCode.MethodNotAllowed'),
-      406: new LiteralExpression('System.Net.HttpStatusCode.NotAcceptable'),
-      407: new LiteralExpression('System.Net.HttpStatusCode.ProxyAuthenticationRequired'),
-      408: new LiteralExpression('System.Net.HttpStatusCode.RequestTimeout'),
-      409: new LiteralExpression('System.Net.HttpStatusCode.Conflict'),
-      410: new LiteralExpression('System.Net.HttpStatusCode.Gone'),
-      411: new LiteralExpression('System.Net.HttpStatusCode.LengthRequired'),
-      412: new LiteralExpression('System.Net.HttpStatusCode.PreconditionFailed'),
-      413: new LiteralExpression('System.Net.HttpStatusCode.RequestEntityTooLarge'),
-      414: new LiteralExpression('System.Net.HttpStatusCode.RequestUriTooLong'),
-      415: new LiteralExpression('System.Net.HttpStatusCode.UnsupportedMediaType'),
-      416: new LiteralExpression('System.Net.HttpStatusCode.RequestedRangeNotSatisfiable'),
-      417: new LiteralExpression('System.Net.HttpStatusCode.ExpectationFailed'),
-      426: new LiteralExpression('System.Net.HttpStatusCode.UpgradeRequired'),
-      500: new LiteralExpression('System.Net.HttpStatusCode.InternalServerError'),
-      501: new LiteralExpression('System.Net.HttpStatusCode.NotImplemented'),
-      502: new LiteralExpression('System.Net.HttpStatusCode.BadGateway'),
-      503: new LiteralExpression('System.Net.HttpStatusCode.ServiceUnavailable'),
-      504: new LiteralExpression('System.Net.HttpStatusCode.GatewayTimeout'),
-      505: new LiteralExpression('System.Net.HttpStatusCode.HttpVersionNotSupported')
+      100: new LiteralExpression('global::System.Net.HttpStatusCode.Continue'),
+      101: new LiteralExpression('global::System.Net.HttpStatusCode.SwitchingProtocols'),
+      200: new LiteralExpression('global::System.Net.HttpStatusCode.OK'),
+      201: new LiteralExpression('global::System.Net.HttpStatusCode.Created'),
+      202: new LiteralExpression('global::System.Net.HttpStatusCode.Accepted'),
+      203: new LiteralExpression('global::System.Net.HttpStatusCode.NonAuthoritativeInformation'),
+      204: new LiteralExpression('global::System.Net.HttpStatusCode.NoContent'),
+      205: new LiteralExpression('global::System.Net.HttpStatusCode.ResetContent'),
+      206: new LiteralExpression('global::System.Net.HttpStatusCode.PartialContent'),
+      300: new LiteralExpression('global::System.Net.HttpStatusCode.Ambiguous'),
+      301: new LiteralExpression('global::System.Net.HttpStatusCode.Moved'),
+      302: new LiteralExpression('global::System.Net.HttpStatusCode.Redirect'),
+      303: new LiteralExpression('global::System.Net.HttpStatusCode.SeeOther'),
+      304: new LiteralExpression('global::System.Net.HttpStatusCode.NotModified'),
+      305: new LiteralExpression('global::System.Net.HttpStatusCode.UseProxy'),
+      306: new LiteralExpression('global::System.Net.HttpStatusCode.Unused'),
+      307: new LiteralExpression('global::System.Net.HttpStatusCode.TemporaryRedirect'),
+      400: new LiteralExpression('global::System.Net.HttpStatusCode.BadRequest'),
+      401: new LiteralExpression('global::System.Net.HttpStatusCode.Unauthorized'),
+      402: new LiteralExpression('global::System.Net.HttpStatusCode.PaymentRequired'),
+      403: new LiteralExpression('global::System.Net.HttpStatusCode.Forbidden'),
+      404: new LiteralExpression('global::System.Net.HttpStatusCode.NotFound'),
+      405: new LiteralExpression('global::System.Net.HttpStatusCode.MethodNotAllowed'),
+      406: new LiteralExpression('global::System.Net.HttpStatusCode.NotAcceptable'),
+      407: new LiteralExpression('global::System.Net.HttpStatusCode.ProxyAuthenticationRequired'),
+      408: new LiteralExpression('global::System.Net.HttpStatusCode.RequestTimeout'),
+      409: new LiteralExpression('global::System.Net.HttpStatusCode.Conflict'),
+      410: new LiteralExpression('global::System.Net.HttpStatusCode.Gone'),
+      411: new LiteralExpression('global::System.Net.HttpStatusCode.LengthRequired'),
+      412: new LiteralExpression('global::System.Net.HttpStatusCode.PreconditionFailed'),
+      413: new LiteralExpression('global::System.Net.HttpStatusCode.RequestEntityTooLarge'),
+      414: new LiteralExpression('global::System.Net.HttpStatusCode.RequestUriTooLong'),
+      415: new LiteralExpression('global::System.Net.HttpStatusCode.UnsupportedMediaType'),
+      416: new LiteralExpression('global::System.Net.HttpStatusCode.RequestedRangeNotSatisfiable'),
+      417: new LiteralExpression('global::System.Net.HttpStatusCode.ExpectationFailed'),
+      426: new LiteralExpression('global::System.Net.HttpStatusCode.UpgradeRequired'),
+      500: new LiteralExpression('global::System.Net.HttpStatusCode.InternalServerError'),
+      501: new LiteralExpression('global::System.Net.HttpStatusCode.NotImplemented'),
+      502: new LiteralExpression('global::System.Net.HttpStatusCode.BadGateway'),
+      503: new LiteralExpression('global::System.Net.HttpStatusCode.ServiceUnavailable'),
+      504: new LiteralExpression('global::System.Net.HttpStatusCode.GatewayTimeout'),
+      505: new LiteralExpression('global::System.Net.HttpStatusCode.HttpVersionNotSupported'),
+      Continue: new LiteralExpression('global::System.Net.HttpStatusCode.Continue'),
+      SwitchingProtocols: new LiteralExpression('global::System.Net.HttpStatusCode.SwitchingProtocols'),
+      OK: new LiteralExpression('global::System.Net.HttpStatusCode.OK'),
+      Created: new LiteralExpression('global::System.Net.HttpStatusCode.Created'),
+      Accepted: new LiteralExpression('global::System.Net.HttpStatusCode.Accepted'),
+      NonAuthoritativeInformation: new LiteralExpression('global::System.Net.HttpStatusCode.NonAuthoritativeInformation'),
+      NoContent: new LiteralExpression('global::System.Net.HttpStatusCode.NoContent'),
+      ResetContent: new LiteralExpression('global::System.Net.HttpStatusCode.ResetContent'),
+      PartialContent: new LiteralExpression('global::System.Net.HttpStatusCode.PartialContent'),
+      Ambiguous: new LiteralExpression('global::System.Net.HttpStatusCode.Ambiguous'),
+      Moved: new LiteralExpression('global::System.Net.HttpStatusCode.Moved'),
+      Redirect: new LiteralExpression('global::System.Net.HttpStatusCode.Redirect'),
+      SeeOther: new LiteralExpression('global::System.Net.HttpStatusCode.SeeOther'),
+      NotModified: new LiteralExpression('global::System.Net.HttpStatusCode.NotModified'),
+      UseProxy: new LiteralExpression('global::System.Net.HttpStatusCode.UseProxy'),
+      Unused: new LiteralExpression('global::System.Net.HttpStatusCode.Unused'),
+      TemporaryRedirect: new LiteralExpression('global::System.Net.HttpStatusCode.TemporaryRedirect'),
+      BadRequest: new LiteralExpression('global::System.Net.HttpStatusCode.BadRequest'),
+      Unauthorized: new LiteralExpression('global::System.Net.HttpStatusCode.Unauthorized'),
+      PaymentRequired: new LiteralExpression('global::System.Net.HttpStatusCode.PaymentRequired'),
+      Forbidden: new LiteralExpression('global::System.Net.HttpStatusCode.Forbidden'),
+      NotFound: new LiteralExpression('global::System.Net.HttpStatusCode.NotFound'),
+      MethodNotAllowed: new LiteralExpression('global::System.Net.HttpStatusCode.MethodNotAllowed'),
+      NotAcceptable: new LiteralExpression('global::System.Net.HttpStatusCode.NotAcceptable'),
+      ProxyAuthenticationRequired: new LiteralExpression('global::System.Net.HttpStatusCode.ProxyAuthenticationRequired'),
+      RequestTimeout: new LiteralExpression('global::System.Net.HttpStatusCode.RequestTimeout'),
+      Conflict: new LiteralExpression('global::System.Net.HttpStatusCode.Conflict'),
+      Gone: new LiteralExpression('global::System.Net.HttpStatusCode.Gone'),
+      LengthRequired: new LiteralExpression('global::System.Net.HttpStatusCode.LengthRequired'),
+      PreconditionFailed: new LiteralExpression('global::System.Net.HttpStatusCode.PreconditionFailed'),
+      RequestEntityTooLarge: new LiteralExpression('global::System.Net.HttpStatusCode.RequestEntityTooLarge'),
+      RequestUriTooLong: new LiteralExpression('global::System.Net.HttpStatusCode.RequestUriTooLong'),
+      UnsupportedMediaType: new LiteralExpression('global::System.Net.HttpStatusCode.UnsupportedMediaType'),
+      RequestedRangeNotSatisfiable: new LiteralExpression('global::System.Net.HttpStatusCode.RequestedRangeNotSatisfiable'),
+      ExpectationFailed: new LiteralExpression('global::System.Net.HttpStatusCode.ExpectationFailed'),
+      UpgradeRequired: new LiteralExpression('global::System.Net.HttpStatusCode.UpgradeRequired'),
+      InternalServerError: new LiteralExpression('global::System.Net.HttpStatusCode.InternalServerError'),
+      NotImplemented: new LiteralExpression('global::System.Net.HttpStatusCode.NotImplemented'),
+      BadGateway: new LiteralExpression('global::System.Net.HttpStatusCode.BadGateway'),
+      ServiceUnavailable: new LiteralExpression('global::System.Net.HttpStatusCode.ServiceUnavailable'),
+      GatewayTimeout: new LiteralExpression('global::System.Net.HttpStatusCode.GatewayTimeout'),
+      HttpVersionNotSupported: new LiteralExpression('global::System.Net.HttpStatusCode.HttpVersionNotSupported')
     }),
   }),
   Collections: intersect(collections, {
     Hashtable: new ClassType(collections, 'Hashtable'),
     IDictionary: new ClassType(collections, 'IDictionary'),
     Generic: intersect(generic, {
-      Dictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): TypeDeclaration {
+      Dictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): ClassType {
         return new ClassType(generic, `Dictionary<${keyType.declaration},${valueType.declaration}>`);
       },
-      KeyValuePair(keyType: TypeDeclaration, valueType: TypeDeclaration): TypeDeclaration {
+      KeyValuePair(keyType: TypeDeclaration, valueType: TypeDeclaration): ClassType {
         return new ClassType(generic, `KeyValuePair<${keyType.declaration},${valueType.declaration}>`);
       },
-      IEnumerable(type: TypeDeclaration): TypeDeclaration {
+      IEnumerable(type: TypeDeclaration): ClassType {
         return new ClassType(generic, `IEnumerable<${type.declaration}>`);
       }
     })
   }),
-  Action(...actionParameters: Array<TypeDeclaration>): TypeDeclaration {
+  Action(...actionParameters: Array<TypeDeclaration>): ClassType {
     return actionParameters.length === 0 ? action : new ClassType(system, `Action<${actionParameters.filter(each => each.declaration).joinWith(each => each.declaration)}>`);
   },
 
-  Func(...funcParameters: Array<TypeDeclaration>): TypeDeclaration {
+  Func(...funcParameters: Array<TypeDeclaration>): ClassType {
     return new ClassType(system, `Func<${funcParameters.joinWith(each => each.declaration)}>`);
   }
 });
