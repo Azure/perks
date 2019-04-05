@@ -17,11 +17,11 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     this.apply(objectInitializer);
   }
 
-  async init() {
+  async init(project?: any) {
     const m = await ModelState.getModel<T>(this.service);
     this.model = m.model;
     this.documentName = m.filename;
-
+    this.initContext(project);
     return this;
   }
 
@@ -40,12 +40,13 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     return this.service.ReadFile(filename);
   }
 
-  async getValue(key: string): Promise<any> {
+
+  async getValue<V>(key: string, defaultValue?: V): Promise<V> {
     // check if it's in the model first
     let value = (<any>this.model.details.default)[key];
 
     // fall back to the configuration
-    if (value === undefined) {
+    if (value == null || value === undefined) {
       value = await this.service.GetValue(key);
     }
 
@@ -59,8 +60,16 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
       }
     }
 
+    if (defaultValue === undefined && value === null) {
+      throw new Error(`No value for configuration key '${key}' was provided`);
+    }
+
+    if (typeof value === 'string') {
+      value = await this.resolveVariables(value)
+    }
+
     // ensure that any content variables are resolved at the end.
-    return await this.resolveVariables(value);
+    return <V>(value !== null ? value : defaultValue);
   }
 
   async setValue<V>(key: string, value: V) {
@@ -123,23 +132,23 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     return value;
   }
 
-  async resolveVariables(input: string) {
-    let rx = /\$\{(.*?)\}/g;
+  async resolveVariables(input: string): Promise<string> {
     let output = input;
+    for (const rx of [/\$\((.*?)\)/g, /\$\{(.*?)\}/g]) {
+      for (let match; match = rx.exec(input);) {
+        const text = match[0];
+        const inner = match[1];
+        let value = await this.getValue<any>(inner, null);
 
-    for (let match; match = rx.exec(input);) {
-      const text = match[0];
-      const inner = match[1];
-      let value = await this.getValue(inner);
-
-      if (value !== undefined && value !== null) {
-        if (typeof value === 'object') {
-          value = JSON.stringify(value, this.replacer, 2);
+        if (value !== undefined && value !== null) {
+          if (typeof value === 'object') {
+            value = JSON.stringify(value, this.replacer, 2);
+          }
+          if (value === '{}') {
+            value = 'true';
+          }
+          output = output.replace(text, value);
         }
-        if (value === '{}') {
-          value = 'true';
-        }
-        output = output.replace(text, value);
       }
     }
     return output;
