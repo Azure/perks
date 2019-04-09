@@ -5,6 +5,8 @@
 
 import { Text, TextPossibilities } from './file-generator';
 import { Dictionary, values } from './linq';
+import { type } from 'os';
+import { on } from 'cluster';
 
 let indentation = '    ';
 
@@ -163,7 +165,11 @@ export function deconstruct(identifier: string | Array<string>): Array<string> {
   if (Array.isArray(identifier)) {
     return [...values(identifier).linq.selectMany(deconstruct)];
   }
-  return identifier.replace(/([a-z]+)([A-Z])/g, '$1 $2').replace(/(\d+)([a-z|A-Z]+)/g, '$1 $2').split(/[\W|_]+/);
+  return identifier.
+    replace(/([a-z]+)([A-Z])/g, '$1 $2').
+    replace(/(\d+)([a-z|A-Z]+)/g, '$1 $2').
+    replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3').
+    split(/[\W|_]+/).map(each => each.toLowerCase());
 }
 
 export function fixLeadingNumber(identifier: Array<string>): Array<string> {
@@ -234,17 +240,50 @@ export function* convert(num: number): Iterable<string> {
 }
 
 export function* removeSequentialDuplicates(identifier: Iterable<string>) {
+  let lastlast: string | undefined = undefined;
   let last: string | undefined = undefined;
+  let kept: string | undefined = undefined;
 
   for (const each of identifier) {
-    if (each !== last) {
-      yield each;
+    if (each) {
+      const each1 = each.toLowerCase();
+
+      if (each1 !== last) {
+        if (each1 === lastlast) {
+          // wait, foo bar foo ? 
+          // let's hold onto this for a second...
+          if (!kept) {
+            lastlast = last;
+            last = each.toLowerCase();
+
+            continue;
+          }
+
+          // aha! the kept one was already there too.
+          // wipe it, and move on.
+          console.log(kept)
+          kept = undefined;
+          lastlast = last;
+          last = each.toLowerCase();
+          continue;
+        }
+
+        if (kept) {
+          yield kept;
+          kept = undefined;
+        }
+        yield each;
+      }
+      lastlast = last;
+      last = each.toLowerCase();
     }
-    last = each;
   }
 }
 
-export function camelCase(identifier: Array<string>): string {
+export function camelCase(identifier: string | Array<string>): string {
+  if (typeof (identifier) === 'string') {
+    return camelCase(fixLeadingNumber(deconstruct(identifier)));
+  }
   switch (identifier.length) {
     case 0:
       return '';
@@ -254,8 +293,10 @@ export function camelCase(identifier: Array<string>): string {
   return `${identifier[0].uncapitalize()}${pascalCase(identifier.slice(1))}`;
 }
 
-export function pascalCase(identifier: Array<string>): string {
-  return [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
+export function pascalCase(identifier: string | Array<string>): string {
+  return typeof identifier === 'string' ?
+    pascalCase(fixLeadingNumber(deconstruct(identifier))) :
+    [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
 }
 
 export function escapeString(text: string | undefined): string {

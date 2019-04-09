@@ -87,7 +87,7 @@ export class EnglishPluralizationService {
     'information', 'aircraft', 'scabies', 'traffic', 'corn', 'millet', 'rice',
     'hay', '----', 'tobacco', 'cabbage', 'okra', 'broccoli', 'asparagus',
     'lettuce', 'beef', 'pork', 'venison', 'mutton', 'cattle', 'offspring',
-    'molasses', 'shambles', 'shingles'
+    'molasses', 'shambles', 'shingles', 'https', 'sas', 'statuses', 'as', 'statistics'
   ];
 
   private irregularVerbList: { [key: string]: string } = { 'am': 'are', 'are': 'are', 'is': 'are', 'was': 'were', 'were': 'were', 'has': 'have', 'have': 'have' };
@@ -132,7 +132,7 @@ export class EnglishPluralizationService {
     'hyperbaton': 'hyperbata', 'perihelion': 'perihelia',
     'asyndeton': 'asyndeta', 'noumenon': 'noumena',
     'phenomenon': 'phenomena', 'criterion': 'criteria', 'organon': 'organa',
-    'prolegomenon': 'prolegomena', 'agendum': 'agenda', 'datum': 'data',
+    'prolegomenon': 'prolegomena', 'agendum': 'agenda',
     'extremum': 'extrema', 'bacterium': 'bacteria', 'desideratum': 'desiderata',
     'stratum': 'strata', 'candelabrum': 'candelabra', 'erratum': 'errata',
     'ovum': 'ova', 'forum': 'fora', 'addendum': 'addenda', 'stadium': 'stadia',
@@ -189,7 +189,7 @@ export class EnglishPluralizationService {
     'nexus': 'nexus', 'sinus': 'sinus', 'coitus': 'coitus', 'plexus': 'plexus',
     'status': 'status', 'hiatus': 'hiatus', 'afreet': 'afreeti',
     'afrit': 'afriti', 'efreet': 'efreeti', 'cherub': 'cherubim',
-    'goy': 'goyim', 'seraph': 'seraphim', 'alumnus': 'alumni'
+    'goy': 'goyim', 'seraph': 'seraphim', 'alumnus': 'alumni',
   };
 
   // this list contains all the plural words that being treated as singluar form, for example, "they" -> "they"
@@ -238,7 +238,7 @@ export class EnglishPluralizationService {
     'transpose': 'transposes', 'almshouse': 'almshouses',
     'customise': 'customises', 'footloose': 'footlooses',
     'galvanise': 'galvanises', 'princesse': 'princesses',
-    'universe': 'universes', 'workhorse': 'workhorses'
+    'universe': 'universes', 'workhorse': 'workhorses', 'response': 'responses', 'phrase': 'phrases'
   };
 
   private wordsEndingWithSisDictionary: { [key: string]: string } = {
@@ -260,7 +260,7 @@ export class EnglishPluralizationService {
   };
 
   private wordsEndingWithSusDictionary: { [key: string]: string } = {
-    'consensus': 'consensuses', 'census': 'censuses'
+    'consensus': 'consensuses', 'census': 'censuses', 'status': 'statuses'
   };
 
   private wordsEndingWithInxAnxYnxDictionary: { [key: string]: string } = {
@@ -667,8 +667,7 @@ export class EnglishPluralizationService {
 
   private isCapitalized(word: string): boolean {
     if (word === '') { return false; }
-    word = word.charAt(0);
-    return word.toUpperCase() === word;
+    return word.charAt(0) == word.charAt(0).toUpperCase();
   }
 
   private isAlphabets(word: string): boolean {
