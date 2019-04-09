@@ -52,6 +52,7 @@
     "@microsoft.azure/linq": "^2.1.0",
     "@microsoft.azure/object-comparison": "^2.1.0",
     "@microsoft.azure/openapi": "^2.1.0",
+    "@microsoft.azure/codegen": "^1.0.0",
     "compare-versions": "^3.4.0"
   }
 }

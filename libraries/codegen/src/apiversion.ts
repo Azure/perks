@@ -1,16 +1,66 @@
 import * as semver from 'semver';
 
+/*
+ Handling:
+
+ yyyy-mm-dd                   n(yyyy).n(mm).n(dd)
+ yyyy-mm-dd-preview           n(yyyy).n(mm).n(dd)-preview
+ yyyy-mm-dd.x1.x2             (miliseconds since 1970-01-01).x1.x2
+ x1.x2.x3.x4                  x1.x2.x3
+ x.x                          x.x.0
+ vx.x                         x.x.0
+ vx.x-preview                 x.x.0-preview
+*/
 export function toSemver(apiversion: string) {
   let result = '';
-  for (const i of apiversion.split('-')) {
-    if (!result) {
-      result = i;
-      continue;
+
+  // strip off leading "v" or "=" character
+  apiversion = apiversion.replace(/^v|^=/gi, '');
+
+  const versionedDateRegex = new RegExp(/(^\d{4}\-\d{2}\-\d{2})(\.\d+\.\d+$)/gi);
+  if (apiversion.match(versionedDateRegex)) {
+    // convert yyyy-mm-dd.x1.x2      --->     (miliseconds since 1970-01-01).x1.x2
+    const date = apiversion.replace(versionedDateRegex, '$1');
+    const miliseconds = new Date(date).getTime();
+    const lastNumbers = apiversion.replace(versionedDateRegex, '$2');
+    result = `${miliseconds}${lastNumbers}`;
+  } else {
+
+    // convert partial version to complete version
+    const partialVersionRegex = new RegExp(/^\d+\.\d+$|^\d+\.\d+\-[a-z]+$/gi);
+    if (apiversion.match(partialVersionRegex)) {
+      const parts = apiversion.split('-');
+      if (parts.length > 1) {
+        apiversion = `${parts[0]}.0-${parts[1]}`;
+      } else {
+        apiversion = `${parts[0]}.0`;
+      }
+
     }
-    const n = Number.parseInt(i);
-    result = Number.isNaN(n) ? `${result}-${i}` : `${result}.${n}`;
+
+    // drop numbers after third number
+    const longVersionRegex = new RegExp(/^(\d+\.\d+\.\d+)(\.\d+)$/gi);
+    if (apiversion.match(longVersionRegex)) {
+      apiversion = apiversion.replace(longVersionRegex, '$1');
+    }
+
+    // convert:
+    // yyyy-mm-dd                 n(yyyy).n(mm).n(dd)
+    // yyyy-mm-dd-tag             n(yyyy).n(mm).n(dd)-tag
+    // x.x.x                      x.x.x
+    // x.x.x.x                    x.x.x
+    for (const i of apiversion.split(/[\.\-]/g)) {
+      if (!result) {
+        result = i;
+        continue;
+      }
+      const n = Number.parseInt(i);
+      result = Number.isNaN(n) ? `${result}-${i}` : `${result}.${Number(n)}`;
+    }
+
   }
-  return result;
+
+  return result === '' ? '0.0.0' : result;
 }
 
 export function lt(apiVersion1: string, apiVersion2: string) {
