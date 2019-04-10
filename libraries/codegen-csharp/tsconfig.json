@@ -1,13 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "dist",
     "types": [
       "mocha"
     ],
   },
   "include": [
-    "src"
+    "."
   ],
   "exclude": [
     "dist",
