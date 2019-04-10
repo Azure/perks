@@ -10,6 +10,7 @@
   ],
   "exclude": [
     "dist",
+    "resources",
     "node_modules",
     "**/*.d.ts"
   ]
