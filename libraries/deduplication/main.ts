@@ -9,6 +9,7 @@ import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
 import { fileURLToPath } from 'url';
 import { isNumber } from 'util';
+import { toSemver, maximum } from '@microsoft.azure/codegen';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
@@ -178,10 +179,10 @@ export class Deduplicator {
               profiles = getMergedProfilesMetadata(profiles, anotherPath[xMsMetadata].profiles);
 
               // the discriminator to take contents is the api version
-              const maxApiVersionPath = this.getMaxApiVersion(path[xMsMetadata].apiVersions);
-              const maxApiVersionAnotherPath = this.getMaxApiVersion(anotherPath[xMsMetadata].apiVersions);
+              const maxApiVersionPath = maximum(path[xMsMetadata].apiVersions);
+              const maxApiVersionAnotherPath = maximum(anotherPath[xMsMetadata].apiVersions);
               let uidPathToDelete = anotherPathUid;
-              if (compareVersions(this.getSemverEquivalent(maxApiVersionPath), this.getSemverEquivalent(maxApiVersionAnotherPath)) === -1) {
+              if (compareVersions(toSemver(maxApiVersionPath), toSemver(maxApiVersionAnotherPath)) === -1) {
 
                 // if the current path max api version is less than the another path, swap ids.
                 uidPathToDelete = pathUid;
@@ -265,10 +266,10 @@ export class Deduplicator {
                 originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
 
                 // the discriminator to take contents is the api version
-                const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
-                const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
+                const maxApiVersionComponent = maximum(component[xMsMetadata].apiVersions);
+                const maxApiVersionAnotherComponent = maximum(anotherComponent[xMsMetadata].apiVersions);
                 let uidComponentToDelete = anotherComponentUid;
-                if (compareVersions(this.getSemverEquivalent(maxApiVersionComponent), this.getSemverEquivalent(maxApiVersionAnotherComponent)) === -1) {
+                if (compareVersions(toSemver(maxApiVersionComponent), toSemver(maxApiVersionAnotherComponent)) === -1) {
 
                   // if the current component max api version is less than the another component, swap ids.
                   uidComponentToDelete = componentUid;
@@ -297,33 +298,6 @@ export class Deduplicator {
       default:
         throw new Error(`Unknow component type: '${type}'`);
     }
-  }
-
-  private getMaxApiVersion(apiVersions: Array<string>): string {
-    let result = '0';
-    for (const version of apiVersions) {
-      if (version && compareVersions(this.getSemverEquivalent(version), this.getSemverEquivalent(result)) >= 0) {
-        result = version;
-      }
-    }
-
-    return result;
-  }
-
-  // azure rest specs currently use versioning of the form yyyy-mm-dd
-  // to take into consideration this we convert to an equivalent of
-  // semver for comparisons.
-  private getSemverEquivalent(version: string) {
-    let result = '';
-    for (const i of version.split('-')) {
-      if (!result) {
-        result = i;
-        continue;
-      }
-      const n = Number.parseInt(i);
-      result = Number.isNaN(n) ? `${result}-${i}` : `${result}.${n}`;
-    }
-    return result;
   }
 
   private crawlComponent(uid: string, type: componentType): void {
