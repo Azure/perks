@@ -15,6 +15,10 @@ export const docCommentPrefix = '///';
 export const EOL = '\n';
 export const CommaChar = ', ';
 
+const acronyms = new Set([
+  'ip', 'os', 'ms', 'vm', //  'ssl', 'https', 'http', ''
+]);
+
 declare global {
   interface Array<T> {
     joinWith(selector: (t: T) => string, separator?: string): string;
@@ -43,6 +47,9 @@ if (!Array.prototype.hasOwnProperty('last')) {
 
 String.prototype.capitalize = function (): string {
   const result = <string>this;
+  if (acronyms.has(result)) {
+    return result.toUpperCase();
+  }
   return result ? `${result.charAt(0).toUpperCase()}${result.substr(1)}` : result;
 };
 String.prototype.uncapitalize = function (): string {

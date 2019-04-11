@@ -44,7 +44,7 @@ export interface VirtualProperty {
   /** the member that should be called to get to the virtual property. (may be recursive) */
   accessViaProperty?: VirtualProperty;
 
-  accessViaMember?: string;
+  accessViaMember?: VirtualProperty;
 
   /** the member's schema */
   accessViaSchema?: Schema;

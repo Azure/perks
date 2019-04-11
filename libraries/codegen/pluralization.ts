@@ -87,7 +87,8 @@ export class EnglishPluralizationService {
     'information', 'aircraft', 'scabies', 'traffic', 'corn', 'millet', 'rice',
     'hay', '----', 'tobacco', 'cabbage', 'okra', 'broccoli', 'asparagus',
     'lettuce', 'beef', 'pork', 'venison', 'mutton', 'cattle', 'offspring',
-    'molasses', 'shambles', 'shingles', 'https', 'sas', 'statuses', 'as', 'statistics'
+    'molasses', 'shambles', 'shingles', 'https', 'sas', 'statuses', 'as', 'statistics',
+    'alias', 'dns', 'ms', 'os', 'vmss',
   ];
 
   private irregularVerbList: { [key: string]: string } = { 'am': 'are', 'are': 'are', 'is': 'are', 'was': 'were', 'were': 'were', 'has': 'have', 'have': 'have' };
