@@ -94,6 +94,13 @@ export class EventEmitterPromise<T> extends EventEmitter implements Promise<T> {
     super();
   }
 
+  finally(onfinally?: (() => void) | null | undefined): Promise<T> {
+    if (!this.promise) {
+      throw new UnintializedPromiseException();
+    }
+    return this.promise.finally(onfinally);
+  }
+
   public initialize(promise: Promise<T>) {
     this.promise = promise;
     return this;
