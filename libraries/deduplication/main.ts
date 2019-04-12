@@ -176,7 +176,7 @@ export class Deduplicator {
               apiVersions = apiVersions.concat(anotherPath[xMsMetadata].apiVersions);
               filename = filename.concat(anotherPath[xMsMetadata].filename);
               originalLocations = originalLocations.concat(anotherPath[xMsMetadata].originalLocations);
-              profiles = getMergedProfilesMetadata(profiles, anotherPath[xMsMetadata].profiles);
+              profiles = getMergedProfilesMetadata(profiles, anotherPath[xMsMetadata].profiles, path[xMsMetadata].path, originalLocations);
 
               // the discriminator to take contents is the api version
               const maxApiVersionPath = maximum(path[xMsMetadata].apiVersions);
@@ -372,16 +372,17 @@ export class Deduplicator {
   }
 }
 
-function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>): Dictionary<string> {
+function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): Dictionary<string> {
   const result = new Dictionary<string>();
   for (const item of items(dict1)) {
     result[item.key] = item.value;
   }
 
   for (const item of items(dict2)) {
-    if (result[item.key] !== undefined) {
-      throw Error(`Deduplicator: There's a conflict in profile data. There should be a single path api-version per profile.`);
+    if (result[item.key] !== undefined && result[item.key] !== item.value) {
+      throw Error(`Deduplicator: There's a conflict trying to deduplicate these two path objects with path ${path}, and with original locations ${originalLocations}. Both come from the same profile ${item.key}, but they have different api-versions: ${result[item.key]} and ${item.value}`);
     }
+
     result[item.key] = item.value;
   }
 
