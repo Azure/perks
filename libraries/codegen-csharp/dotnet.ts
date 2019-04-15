@@ -12,6 +12,7 @@ import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 import { Local, Variable } from './variable';
 import { Class } from './class';
+import { IInterface } from './type-container';
 
 export class ClassType implements TypeDeclaration {
   private get fullName() {
@@ -280,15 +281,29 @@ export const System = intersect(system, {
   Collections: intersect(collections, {
     Hashtable: new ClassType(collections, 'Hashtable'),
     IDictionary: new ClassType(collections, 'IDictionary'),
+    IEnumerator: new ClassType(collections, 'IEnumerator'),
+
     Generic: intersect(generic, {
       Dictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): ClassType {
         return new ClassType(generic, `Dictionary<${keyType.declaration},${valueType.declaration}>`);
+      },
+      IDictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): IInterface {
+        return {
+          fullName: `IDictionary<${keyType.declaration},${valueType.declaration}>`,
+          allProperties: []
+        };
       },
       KeyValuePair(keyType: TypeDeclaration, valueType: TypeDeclaration): ClassType {
         return new ClassType(generic, `KeyValuePair<${keyType.declaration},${valueType.declaration}>`);
       },
       IEnumerable(type: TypeDeclaration): ClassType {
         return new ClassType(generic, `IEnumerable<${type.declaration}>`);
+      },
+      IEnumerator(type: TypeDeclaration): ClassType {
+        return new ClassType(generic, `IEnumerator<${type.declaration}>`);
+      },
+      ICollection(type: TypeDeclaration): ClassType {
+        return new ClassType(generic, `ICollection<${type.declaration}>`);
       }
     })
   }),
@@ -321,5 +336,6 @@ export const dotnet = {
   False: new LiteralExpression('false'),
   Null: new LiteralExpression('null'),
   This: new LiteralExpression('this'),
+  Array: (type: TypeDeclaration) => ({ declaration: `${type.declaration}[]` })
 };
 

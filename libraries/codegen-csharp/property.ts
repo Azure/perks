@@ -9,10 +9,11 @@ import { docComment, EOL, indent } from '@microsoft.azure/codegen';
 import { Abstract, Access, Extern, highestAccess, Modifier, New, Override, Sealed, Static, Virtual } from './access-modifier';
 import { Attribute } from './attribute';
 import { summary } from './doc-comments';
-import { Expression, ExpressionOrLiteral, toExpression, valueOf } from './expression';
+import { Expression, ExpressionOrLiteral, toExpression, valueOf, isAnExpression } from './expression';
 import { OneOrMoreStatements, Statement, Statements, StatementPossibilities } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { ExpressionStatement, Instance, Variable } from './variable';
+
 
 export class Property extends Variable implements Instance {
   public 'new': New = Modifier.None;
@@ -27,6 +28,9 @@ export class Property extends Variable implements Instance {
   public attributes = new Array<Attribute>();
   public metadata: Dictionary<any> = {};
   public description: string = '';
+
+  public get?: StatementPossibilities | Expression;
+  public set?: StatementPossibilities | Expression;
 
   protected get visibility(): Access {
     return highestAccess(this.getAccess, this.setAccess);
@@ -59,19 +63,44 @@ export class Property extends Variable implements Instance {
   protected get setterDeclaration(): string {
     return this.setAccess === this.visibility ? 'set' : `${this.setAccess} set`;
   }
+
   protected get getter(): string {
-    return `${this.getterDeclaration};`;
+    if (!this.get) {
+      // if there is a set expression/body then this can't bet auto
+      return this.set ? '' : `${this.getterDeclaration};`;
+    }
+    if (isAnExpression(this.get)) {
+      return `${this.getterDeclaration} => ${valueOf(this.get)};`;
+    }
+
+    return `${this.getterDeclaration}
+    {
+${indent(new Statements(this.get).implementation, 2)}
+    }`.trim();
   }
 
   protected get setter(): string {
-    return `${this.setterDeclaration};`;
+    if (!this.set) {
+      // if there is a get expression/body then this can't bet auto
+      return this.get ? '' : `${this.setterDeclaration};`;
+    }
+    if (isAnExpression(this.set)) {
+      return `${this.getterDeclaration} => ${valueOf(this.set)};`;
+    }
+
+    return `${this.setterDeclaration}
+    {
+${indent(new Statements(this.set).implementation, 2)}
+    }`.trim();
   }
 
   public get declaration(): string {
     return `
 ${docComment(summary(this.description))}
-${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.type.declaration} ${this.name} {${this.getter}${this.setter}}
-`.slim();
+${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.type.declaration} ${this.name} {
+  ${this.getter}
+  ${this.setter}
+}`.slim();
   }
   public get value(): string {
     return `${this.name}`;
@@ -102,47 +131,6 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
 
 }
 
-export class ImplementedProperty extends Property {
-  getterStatements?: StatementPossibilities;
-  setterStatements?: StatementPossibilities;
-  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<ImplementedProperty>) {
-    super(name, type);
-    this.apply(objectInitializer);
-  }
-
-  public get declaration(): string {
-    return (`
-${docComment(summary(this.description))}
-${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.type.declaration} ${this.name}`.slim() +
-
-      `
-{
-    ${this.getter}
-    ${this.setter}
-}
-`).trim();
-  }
-
-  protected get getter(): string {
-    if (!this.getterStatements) {
-      return '';
-    }
-    return `${this.getterDeclaration}
-    {
-${indent(new Statements(this.getterStatements).implementation, 2)}
-    }`.trim();
-  }
-
-  protected get setter(): string {
-    if (!this.setterStatements) {
-      return '';
-    }
-    return `${this.setterDeclaration}
-    {
-${indent(new Statements(this.setterStatements).implementation, 2)}
-    }`.trim();
-  }
-}
 
 export class LambdaProperty extends Property {
   constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: Partial<LambdaProperty>) {
@@ -181,14 +169,14 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
   }
 }
 
-export class BackedProperty extends ImplementedProperty {
+export class BackedProperty extends Property {
   public backingName: string;
   public initializer?: ExpressionOrLiteral;
   constructor(name: string, type: TypeDeclaration, objectInitializer?: Partial<BackedProperty>) {
     const backingName = `_${name.uncapitalize()}`;
     super(name, type, {
-      getterStatements: new Statements(`return this.${backingName};`),
-      setterStatements: new Statements(`this.${backingName} = value;`)
+      get: new Statements(`return this.${backingName};`),
+      set: new Statements(`this.${backingName} = value;`)
     });
     this.backingName = backingName;
 

@@ -8,7 +8,7 @@ import { Abstract, Access, Async, Extern, Modifier, New, Override, Sealed, Stati
 import { Class } from './class';
 import { summary, xmlize } from './doc-comments';
 
-import { Expression, toExpression, valueOf } from './expression';
+import { Expression, toExpression, valueOf, isAnExpression } from './expression';
 import { Parameter } from './parameter';
 import { StatementPossibilities, Statements } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
@@ -31,15 +31,17 @@ export class Method extends Statements {
   public isPartial = false;
   public description: string = '';
   public returnsDescription: string = '';
-  public body?: StatementPossibilities;
+  public body?: StatementPossibilities | Expression;
 
   constructor(public name: string, protected returnType: TypeDeclaration = Void, objectIntializer?: Partial<Method>) {
     super();
     this.apply(objectIntializer);
     // easy access to allow statements in the initalizer.
-    if (this.body) {
+
+    if (this.body && !isAnExpression(this.body)) {
       this.add(this.body);
     }
+
     if (!this.description.trim()) {
       this.description = `FIXME: Method ${name} is MISSING DESCRIPTION`;
     }
@@ -89,6 +91,11 @@ ${this.returnType.declaration} ${this.name}(${parameterDeclaration});
   }
 
   public get implementation(): string {
+    if (isAnExpression(this.body)) {
+      return `
+${this.declaration} => ${this.body.value};
+`.trim();
+    }
     return `
 ${this.declaration}
 {

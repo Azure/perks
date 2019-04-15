@@ -27,6 +27,10 @@ export interface Expression {
   Cast(toType: TypeDeclaration): Expression;
 }
 
+export function isAnExpression(item: any): item is Expression {
+  return item && item.value ? true : false;
+}
+
 export function Or(expression1: ExpressionOrLiteral, expression2: ExpressionOrLiteral) {
   return `(${expression1} || ${expression2})`;
 }

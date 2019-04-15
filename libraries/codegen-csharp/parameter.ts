@@ -18,6 +18,7 @@ export class Parameter extends Variable {
   public modifier: ParameterModifier = ParameterModifier.None;
   public defaultInitializer?: Expression;
   public attributes = new Array<Attribute>();
+
   protected get attributeDeclaration(): string {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, ' ')} ` : '';
   }

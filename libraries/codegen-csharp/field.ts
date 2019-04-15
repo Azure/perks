@@ -20,6 +20,8 @@ export class Field extends Variable {
   public 'readonly': ReadOnly = Modifier.None;
   public volitile: Volitile = Modifier.None;
   public attributes = new Array<Attribute>();
+  public initialValue?: ExpressionOrLiteral;
+
   protected get attributeDeclaration(): string {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
@@ -36,8 +38,10 @@ export class Field extends Variable {
   }
 
   public get declaration(): string {
+    const initializer = this.initialValue ? ` = ${valueOf(this.initialValue)}` : ``;
+
     return `${docComment(xmlize('summary', this.description))}
-    ${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name};`.slim();
+    ${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name}${initializer};`.slim();
   }
 
   public get value(): string {
@@ -62,18 +66,6 @@ export class Field extends Variable {
   }
   public get declarationStatement(): Statement {
     throw new Error(`Property can not be a declaration statement`);
-  }
-}
-
-export class InitializedField extends Field {
-  constructor(name: string, type: TypeDeclaration, public valueExpression: ExpressionOrLiteral, objectInitializer?: Partial<InitializedField>) {
-    super(name, type);
-    this.apply(objectInitializer);
-  }
-
-  public get declaration(): string {
-    return `${docComment(xmlize('summary', this.description))}
-${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name} = ${valueOf(this.valueExpression)};`.slim();
   }
 }
 
