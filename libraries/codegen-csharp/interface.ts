@@ -24,7 +24,7 @@ export class Interface extends Type {
 
   public get definition(): string {
     const colon = this.interfaces.length > 0 ? ' : ' : '';
-    const implementsInterfaces = this.interfaces.map(v => v.fullName).join(', ');
+    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(', ');
     const description = comment(this.description, docCommentPrefix);
     const methods = this.methods.sort(sortByName).map(m => m.interfaceDeclaration).join(EOL);
     const properties = this.properties.sort(sortByName).map(m => m.declaration).join(EOL);

@@ -46,18 +46,22 @@ export class Class extends Type {
     return false;
   }
 
+  public get headerComment(): string {
+    return comment(xmlize('summary', this.description), docCommentPrefix) || '';
+  }
+
   public get signature(): string {
     const colon = (this.parent || this.interfaces.length > 0) ? ' : ' : '';
     const comma = (this.parent && this.interfaces.length > 0) ? ', ' : '';
 
     const extendsClass = this.parent ? this.parent.fullName : '';
-    const implementsInterfaces = this.interfaces.map(v => v.fullName).join(', ');
-    const description = comment(xmlize('summary', this.description), docCommentPrefix);
+    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(', ');
+
     const partial = this.partial ? 'partial ' : '';
     const stat = this.isStatic ? 'static ' : '';
 
     return `
-${description}
+${this.headerComment}
 ${this.attributeDeclaration}${this.accessModifier} ${stat}${partial}${this.classOrStruct} ${this.name}${colon}${extendsClass}${comma}${implementsInterfaces}
 `.trim();
   }

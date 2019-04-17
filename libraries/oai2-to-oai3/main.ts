@@ -605,7 +605,7 @@ export class Oai2ToOai3 {
 
   visitUnspecified(nodes: Iterable<Node>) {
     for (const { value, pointer } of nodes) {
-      console.error(`?? Unknown item: ${pointer} : ${value} `);
+      console.error(`?? Unknown item: ${pointer} : ${value}`);
     }
   }
 

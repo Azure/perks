@@ -48,7 +48,7 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
         throw new Error(`Assignment: for '${key}', a json pointer property is required.`);
       }
       if (instance[key]) {
-        throw new Exception(`Collision detected inserting into object: ${key} `); //-- ${JSON.stringify(instance, null, 2)}
+        throw new Exception(`Collision detected inserting into object: ${key}`); //-- ${JSON.stringify(instance, null, 2)}
       }
       const filename = value.filename || originalFileName;
       if (!filename) {

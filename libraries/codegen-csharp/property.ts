@@ -50,6 +50,7 @@ export class Property extends Variable implements Instance {
 
   constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Property>) {
     super();
+    name = name.trim();
     this.apply(objectInitializer);
 
     if (!this.description.trim()) {
@@ -73,10 +74,14 @@ export class Property extends Variable implements Instance {
       return `${this.getterDeclaration} => ${valueOf(this.get)};`;
     }
 
-    return `${this.getterDeclaration}
-    {
-${indent(new Statements(this.get).implementation, 2)}
-    }`.trim();
+    const gi = new Statements(this.get).implementation;
+    return gi.indexOf('\n') == -1 ? `${this.getterDeclaration} { ${gi} }` :
+      `${this.getterDeclaration}
+{
+${indent(gi, 2)}
+}
+`;
+
   }
 
   protected get setter(): string {
@@ -85,28 +90,69 @@ ${indent(new Statements(this.get).implementation, 2)}
       return this.get ? '' : `${this.setterDeclaration};`;
     }
     if (isAnExpression(this.set)) {
-      return `${this.getterDeclaration} => ${valueOf(this.set)};`;
+      return `${this.setterDeclaration} => ${valueOf(this.set)};`;
     }
 
-    return `${this.setterDeclaration}
-    {
-${indent(new Statements(this.set).implementation, 2)}
-    }`.trim();
+    const si = new Statements(this.set).implementation;
+    return si.indexOf('\n') == -1 ? `${this.setterDeclaration} { ${si} }` :
+      `${this.setterDeclaration}
+{
+${indent(si, 2)}
+}
+`;
   }
 
   public get declaration(): string {
-    return `
+    const s = this.setter;
+    const g = this.getter;
+
+    const decl = `
 ${docComment(summary(this.description))}
-${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.type.declaration} ${this.name} {
-  ${this.getter}
-  ${this.setter}
-}`.slim();
+${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.type.declaration} ${this.name}`;
+
+    if (g && s) {
+      return (g.indexOf('\n') > -1 || s.indexOf('\n') > -1) ?
+        // at least one is more that one line
+        `${decl}
+{
+${indent(g, 2)}
+${indent(s, 2)}
+}`.slim() :
+
+        // both are single line 
+        `${decl} { ${g} ${s} }`.slim();
+    }
+
+    if (s) {
+      // no getter?
+      return (s.indexOf('\n') > -1) ?
+        `${decl}
+{
+${indent(s, 2)}
+}`.slim() :
+
+        // both are single line 
+        `${decl} { ${s} }`.slim();
+    }
+    if (g) {
+      // no setter
+      return (g.indexOf('\n') > -1) ?
+        `${decl}
+{
+${indent(g, 2)}
+}`.slim() :
+
+        // single line 
+        `${decl} { ${g} }`.slim();
+    }
+
+    return `${decl} { get; set; }`.slim();
   }
   public get value(): string {
-    return `${this.name}`;
+    return `${this.name}`.trim();
   }
   public get valuePrivate(): string {
-    return `${this.name}`;
+    return `${this.name}`.trim();
   }
 
   public assign(expression: ExpressionOrLiteral): OneOrMoreStatements {
@@ -131,6 +177,16 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
 
 }
 
+export class Indexer extends Property {
+  constructor(public keyType: TypeDeclaration, valueType: TypeDeclaration, objectInitializer: Partial<Indexer>) {
+    super(`this[${keyType.declaration} index]`, valueType);
+    this.apply(objectInitializer);
+  }
+
+  get index() {
+    return 'index';
+  }
+}
 
 export class LambdaProperty extends Property {
   constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: Partial<LambdaProperty>) {
@@ -175,8 +231,8 @@ export class BackedProperty extends Property {
   constructor(name: string, type: TypeDeclaration, objectInitializer?: Partial<BackedProperty>) {
     const backingName = `_${name.uncapitalize()}`;
     super(name, type, {
-      get: new Statements(`return this.${backingName};`),
-      set: new Statements(`this.${backingName} = value;`)
+      get: toExpression(`this.${backingName}`),
+      set: toExpression(`this.${backingName} = value`)
     });
     this.backingName = backingName;
 

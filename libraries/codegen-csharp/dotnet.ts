@@ -289,7 +289,7 @@ export const System = intersect(system, {
       },
       IDictionary(keyType: TypeDeclaration, valueType: TypeDeclaration): IInterface {
         return {
-          fullName: `IDictionary<${keyType.declaration},${valueType.declaration}>`,
+          declaration: `${generic.fullName}.IDictionary<${keyType.declaration},${valueType.declaration}>`,
           allProperties: []
         };
       },

@@ -1,6 +1,7 @@
 import { Class } from './class';
 import { Interface } from './interface';
 import { Property } from './property';
+import { TypeDeclaration } from './type-declaration';
 
 export interface TypeContainer {
   addClass(c: Class): Class;
@@ -9,7 +10,6 @@ export interface TypeContainer {
   fullName: string;
 }
 
-export interface IInterface {
+export interface IInterface extends TypeDeclaration {
   allProperties: Array<Property>
-  fullName: string;
 }

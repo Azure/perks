@@ -11,6 +11,7 @@ export enum Access {
   PrivateProtected = 'private protected',
   Private = 'private',
   Default = '',
+  Explicit = '/* explicit */',
 }
 
 export enum Modifier {

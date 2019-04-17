@@ -21,6 +21,6 @@ export class FinallyStatement extends Statements {
 finally
 {
 ${indent(super.implementation)}
-} `.trim();
+}`.trim();
   }
 }
