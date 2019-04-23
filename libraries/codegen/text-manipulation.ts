@@ -246,45 +246,21 @@ export function* convert(num: number): Iterable<string> {
   }
 }
 
-export function* removeSequentialDuplicates(identifier: Iterable<string>) {
-  let lastlast: string | undefined = undefined;
-  let last: string | undefined = undefined;
-  let kept: string | undefined = undefined;
+export function isEqual(s1: string, s2: string): boolean {
+  return !!s1 && !s1.localeCompare(s2, undefined, { sensitivity: 'base' });
+}
 
-  for (const each of identifier) {
-    if (each) {
-      const each1 = each.toLowerCase();
-
-      if (each1 !== last) {
-        if (each1 === lastlast) {
-          // wait, foo bar foo ? 
-          // let's hold onto this for a second...
-          if (!kept) {
-            lastlast = last;
-            last = each.toLowerCase();
-
-            continue;
-          }
-
-          // aha! the kept one was already there too.
-          // wipe it, and move on.
-          console.log(kept)
-          kept = undefined;
-          lastlast = last;
-          last = each.toLowerCase();
-          continue;
-        }
-
-        if (kept) {
-          yield kept;
-          kept = undefined;
-        }
-        yield each;
-      }
-      lastlast = last;
-      last = each.toLowerCase();
+export function removeSequentialDuplicates(identifier: Iterable<string>) {
+  const ids = [...identifier].filter(each => !!each);
+  for (let i = 0; i < ids.length; i++) {
+    while (isEqual(ids[i], ids[i - 1])) {
+      ids.splice(i, 1);
+    }
+    while (isEqual(ids[i], ids[i - 2]) && isEqual(ids[i + 1], ids[i - 1])) {
+      ids.splice(i, 2);
     }
   }
+  return ids;
 }
 
 export function camelCase(identifier: string | Array<string>): string {
