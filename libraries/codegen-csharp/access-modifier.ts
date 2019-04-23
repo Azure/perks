@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 
 export enum Access {
+  Explicit = '/* explicit */',
   Public = 'public',
   Internal = 'internal',
   Protected = 'protected',
   ProtectedInternal = 'protected internal',
   PrivateProtected = 'private protected',
   Private = 'private',
-  Default = '',
-  Explicit = '/* explicit */',
+  Default = ''
 }
 
 export enum Modifier {
@@ -42,9 +42,12 @@ export type Virtual = Modifier.None | Modifier.Virtual;
 const order = [Access.Public, Access.Internal, Access.Protected, Access.ProtectedInternal, Access.PrivateProtected, Access.Private, Access.Default];
 
 export function highestAccess(first: Access, second: Access): Access {
-  const f = order.indexOf(first);
-  const s = order.indexOf(second);
-  return f < s ? order[f] : order[s];
+  if (first && second) {
+    const f = order.indexOf(first);
+    const s = order.indexOf(second);
+    return f < s ? order[f] : order[s];
+  }
+  return first ? first : second;
 }
 export function lowestAccess(first: Access, second: Access): Access {
   const f = order.indexOf(first);

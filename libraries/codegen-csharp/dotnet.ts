@@ -299,6 +299,9 @@ export const System = intersect(system, {
       IEnumerable(type: TypeDeclaration): ClassType {
         return new ClassType(generic, `IEnumerable<${type.declaration}>`);
       },
+      HashSet(type: TypeDeclaration): ClassType {
+        return new ClassType(generic, `HashSet<${type.declaration}>`);
+      },
       IEnumerator(type: TypeDeclaration): ClassType {
         return new ClassType(generic, `IEnumerator<${type.declaration}>`);
       },

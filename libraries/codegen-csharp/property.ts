@@ -33,7 +33,7 @@ export class Property extends Variable implements Instance {
   public set?: StatementPossibilities | Expression;
 
   protected get visibility(): Access {
-    return highestAccess(this.getAccess, this.setAccess);
+    return highestAccess(this.getAccess, this.setAccess) || Access.Explicit;
   }
 
   public add<T extends object>(item: T & (Attribute)): T {

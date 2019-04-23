@@ -15,6 +15,7 @@ export class Parameter extends Variable {
   public description: string = '';
   public genericParameters = new Array<string>();
   public where?: string;
+  public params: boolean = false;
   public modifier: ParameterModifier = ParameterModifier.None;
   public defaultInitializer?: Expression;
   public attributes = new Array<Attribute>();
@@ -37,9 +38,9 @@ export class Parameter extends Variable {
   }
   public get declaration(): string {
     if (this.defaultInitializer) {
-      return `${this.attributeDeclaration}${this.modifier} ${this.type.declaration} ${this.name} = ${this.defaultInitializer.value}`.trim();
+      return `${this.params ? 'params ' : ''}${this.attributeDeclaration}${this.modifier} ${this.type.declaration} ${this.name} = ${this.defaultInitializer.value}`.trim();
     }
-    return `${this.attributeDeclaration}${this.modifier} ${this.type.declaration} ${this.name}`.trim();
+    return `${this.params ? 'params ' : ''}${this.attributeDeclaration}${this.modifier} ${this.type.declaration} ${this.name}`.trim();
   }
   public get use(): string {
     return this.name;
