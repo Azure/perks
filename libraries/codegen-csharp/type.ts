@@ -22,6 +22,7 @@ export class Type extends Initializer implements TypeDeclaration {
   public accessModifier = Access.Public;
   public attributes = new Array<Attribute>();
   public partial: boolean = false;
+  private filename: string;
 
   protected get attributeDeclaration(): string {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
@@ -30,11 +31,17 @@ export class Type extends Initializer implements TypeDeclaration {
   constructor(public namespace: TypeContainer, public name: string, objectIntializer?: Partial<Type>) {
     super();
     this.apply(objectIntializer);
+    this.filename = name;
   }
 
-  public get fileName(): string {
-    return this.name;
+  get fileName() {
+    return this.filename;
   }
+
+  set fileName(value: string) {
+    this.filename = value;
+  }
+
   toString(): string {
     return this.fullName;
   }
