@@ -300,7 +300,7 @@ export function nameof(text: string): string {
 
 
 export function* getRegions(source: string, prefix: string = '#', postfix: string = '') {
-  source = source.replace(/[\r?\n]/g, '«');
+  source = source.replace(/\r?\n|\r/g, '«');
 
   const rx = new RegExp(`(.*?)«?(\\s*${prefix}\\s*region\\s*(.*?)\\s*${postfix})\\s*«(.*?)«(\\s*${prefix}\\s*endregion\\s*${postfix})\\s*?«`, 'g');
   let match;
