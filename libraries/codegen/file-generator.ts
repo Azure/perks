@@ -95,21 +95,26 @@ export class Text extends Initializer implements IText {
 }
 
 export class TextWithRegions extends Text {
-  constructor(content?: TextPossibilities, objectIntializer?: Partial<TextWithRegions>) {
+  private prefix: string;
+  private postfix: string;
+
+  constructor(content?: TextPossibilities, objectIntializer?: Partial<TextWithRegions>, prefix: string = '#', postfix: string = '') {
     super(content);
     this.apply(objectIntializer);
+    this.prefix = prefix;
+    this.postfix = postfix;
   }
 
   removeRegion(region: string) {
-    this.add({ edit: (s: string) => setRegion(s, region, '') });
+    this.add({ edit: (s: string) => setRegion(s, region, '', undefined, this.prefix, this.postfix) });
   }
 
   setRegion(region: string, content: TextPossibilities, prepend = true) {
-    this.add({ edit: (s: string) => setRegion(s, region, content, prepend) });
+    this.add({ edit: (s: string) => setRegion(s, region, content, prepend, this.prefix, this.postfix) });
   }
 
   has(name: string) {
-    for (const each of getRegions(this.text)) {
+    for (const each of getRegions(this.text, this.prefix, this.postfix)) {
       if (each.name === name) {
         return true;
       }
@@ -118,16 +123,16 @@ export class TextWithRegions extends Text {
   }
 
   append(name: string, content: TextPossibilities) {
-    this.add({ edit: (s: string) => setRegion(s, name, content, false) });
+    this.add({ edit: (s: string) => setRegion(s, name, content, false, this.prefix, this.postfix) });
   }
   prepend(name: string, content: TextPossibilities) {
-    this.add({ edit: (s: string) => setRegion(s, name, content, true) });
+    this.add({ edit: (s: string) => setRegion(s, name, content, true, this.prefix, this.postfix) });
   }
 
   get regions() {
     if (!this.text.trim()) {
       return [];
     }
-    return [...getRegions(this.text)];
+    return [...getRegions(this.text, this.prefix, this.postfix)];
   }
 }
