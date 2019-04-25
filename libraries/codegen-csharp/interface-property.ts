@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Access } from './access-modifier';
+import { Access, Modifier } from './access-modifier';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 
@@ -19,7 +19,8 @@ export class InterfaceProperty extends Property {
   public get declaration(): string {
     const get = this.getAccess === Access.Public ? 'get;' : '';
     const set = this.setAccess === Access.Public ? 'set;' : '';
+    const newModifier = this.new === Modifier.New ? 'new ' : '';
 
-    return `${this.type.declaration} ${this.name} { ${get} ${set} }`;
+    return `${newModifier}${this.type.declaration} ${this.name} { ${get} ${set} }`;
   }
 }
