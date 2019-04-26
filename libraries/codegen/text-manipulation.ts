@@ -187,9 +187,15 @@ export function fixLeadingNumber(identifier: Array<string>): Array<string> {
 }
 
 export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
-  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase()) && identifier.toLowerCase() !== prohibitedPrefix.toLowerCase()) {
+  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase())) {
     const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
     let newIdentifier = identifier.replace(regex, `$2`);
+    if (newIdentifier.length < 2) {
+      // if it results in an empty string or a single letter string
+      // then, it is not really a word.
+      return identifier;
+    }
+
     newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
     return (skipIdentifiers !== undefined) ? skipIdentifiers.includes(newIdentifier) ? identifier : newIdentifier : newIdentifier;
   }
