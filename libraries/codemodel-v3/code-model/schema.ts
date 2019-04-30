@@ -107,6 +107,26 @@ export function getAllProperties(schema: Schema): Array<Property> {
   return [...values(schema.allOf).linq.selectMany(getAllProperties), ...values(schema.properties)];
 }
 
+export function getAllPublicVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
+  const props = virtualProperties || {
+    owned: [],
+    inherited: [],
+    inlined: []
+  };
+
+  return [...values([...props.owned, ...props.inherited, ...props.inlined]).linq.where(each => !each.private)]
+}
+
+export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualProperties | undefined, propertyName: string): VirtualProperty | undefined {
+  const props = virtualProperties || {
+    owned: [],
+    inherited: [],
+    inlined: []
+  };
+  return values([...props.owned, ...props.inherited, ...props.inlined]).linq.first(each => each.property.details.default.name === propertyName);
+}
+
+
 export interface Property extends Extensions {
   details: LanguageDetails<PropertyDetails>;
 
