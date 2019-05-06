@@ -114,12 +114,13 @@ export class Namespace extends Initializer {
 
     for (const [key, classesWithSameName] of classes) {
       const contents = classesWithSameName.map(each => each.definition);
-      const interfaceName = `I${key}`;
-      const interfacesWithSameName = interfaces.get(interfaceName);
-      if (interfacesWithSameName) {
-        contents.push(...interfacesWithSameName.map(each => each.definition));
-        // remove from the list.
-        interfaces.delete(interfaceName);
+      for (const interfaceName of [`I${key}`, `I${key}Internal`]) { // pick up interfaces and interfacesInternal in the same file. 
+        const interfacesWithSameName = interfaces.get(interfaceName);
+        if (interfacesWithSameName) {
+          contents.push(...interfacesWithSameName.map(each => each.definition));
+          // remove from the list.
+          interfaces.delete(interfaceName);
+        }
       }
       await writer(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
     }

@@ -67,9 +67,9 @@ ${this.attributeDeclaration}${this.accessModifier} ${stat}${partial}${this.class
   }
 
   public get definition(): string {
-    const fields = this.fields.sort(sortByName).map(m => m.declaration).join(EOL);
-    const methods = this.methods.sort(sortByNamePartialFirst).map(m => m.implementation).join(EOL);
-    const properties = this.properties.sort(sortByName).map(m => m.declaration).join(EOL);
+    const fields = this.fields.sort(sortByName).map(m => m.declaration).join(EOL + EOL);
+    const methods = this.methods.sort(sortByNamePartialFirst).map(m => m.implementation).join(EOL + EOL);
+    const properties = this.properties.sort(sortByName).map(m => m.declaration).join(EOL + EOL);
     return `
 ${this.signature}
 {

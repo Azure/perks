@@ -49,6 +49,8 @@ export interface VirtualProperty {
   /** the member's schema */
   accessViaSchema?: Schema;
 
+  originalContainingSchema: Schema;
+
   private?: boolean;
 
   alias: Array<string>;
@@ -123,7 +125,7 @@ export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualPro
     inherited: [],
     inlined: []
   };
-  return values([...props.owned, ...props.inherited, ...props.inlined]).linq.first(each => each.property.details.default.name === propertyName);
+  return values([...props.owned, ...props.inherited, ...props.inlined]).linq.first(each => each.property.serializedName === propertyName);
 }
 
 

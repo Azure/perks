@@ -6,6 +6,7 @@
 import { indent } from '@microsoft.azure/codegen';
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from '../expression';
 import { StatementPossibilities, Statements } from './statement';
+import { TypeDeclaration } from '../type-declaration';
 
 export function If(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
   return new IfStatement(conditional, statements, objectInitializer);
@@ -86,4 +87,8 @@ ${indent(super.implementation)}
 
 export function Not(conditional: Expression): Expression {
   return new LiteralExpression(`!(${conditional.value})`);
+}
+
+export function IsAssignableFrom(targetType: TypeDeclaration, instanceType: ExpressionOrLiteral) {
+  return toExpression(`typeof(${targetType.declaration}).IsAssignableFrom( ${valueOf(instanceType)})`);
 }

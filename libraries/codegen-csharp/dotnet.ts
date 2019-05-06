@@ -89,6 +89,8 @@ export const None: Namespace = new Namespace('');
 const system: Namespace = new Namespace('global::System');
 const threading = new Namespace('Threading', system);
 const text = new Namespace('Text', system);
+const rx = new Namespace('RegularExpressions', text);
+
 const tasks = new Namespace('Tasks', threading);
 const action = new ClassType(system, 'Action');
 const collections = new Namespace('Collections', system);
@@ -168,6 +170,9 @@ export const System = intersect(system, {
   Text: intersect(text, {
     Encoding: intersect(encoding, {
       UTF8: new LiteralExpression(`${encoding.declaration}.UTF8`)
+    }),
+    RegularExpressions: intersect(rx, {
+      Regex: new ClassType(rx, "Regex")
     })
   }),
   Net: intersect(net, {
