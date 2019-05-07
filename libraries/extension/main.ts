@@ -136,7 +136,7 @@ async function getFullPath(command: string, searchPath?: string): Promise<string
  * Once installed, a Package is an Extension
  */
 export class Package {
-  /* @internal */ public constructor(/* @internal */ public resolvedInfo: any, /* @internal */ public packageMetadata: any,/* @internal */ public extensionManager: ExtensionManager) {
+  /* @internal */ public constructor(public resolvedInfo: any, /* @internal */ public packageMetadata: any,/* @internal */ public extensionManager: ExtensionManager) {
 
   }
 

@@ -9,6 +9,7 @@ import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
 import { fileURLToPath } from 'url';
 import { isNumber } from 'util';
+import { toSemver, maximum } from '@microsoft.azure/codegen';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
@@ -151,6 +152,7 @@ export class Deduplicator {
         let filename = path[xMsMetadata].filename;
         let originalLocations = path[xMsMetadata].originalLocations;
         const pathFromMetadata = path[xMsMetadata].path;
+        let profiles: Dictionary<string> = path[xMsMetadata].profiles;
 
         // extract path properties excluding metadata
         const { 'x-ms-metadata': metadataCurrent, ...filteredPath } = path;
@@ -165,7 +167,7 @@ export class Deduplicator {
             const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
 
             // TODO: Add more keys to ignore.
-            const keysToIgnore: Array<string> = ['description'];
+            const keysToIgnore: Array<string> = ['description', 'tags'];
 
             // they should have the same name to be merged and they should be similar
             if (areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore) && path[xMsMetadata].path === anotherPath[xMsMetadata].path) {
@@ -174,12 +176,13 @@ export class Deduplicator {
               apiVersions = apiVersions.concat(anotherPath[xMsMetadata].apiVersions);
               filename = filename.concat(anotherPath[xMsMetadata].filename);
               originalLocations = originalLocations.concat(anotherPath[xMsMetadata].originalLocations);
+              profiles = getMergedProfilesMetadata(profiles, anotherPath[xMsMetadata].profiles, path[xMsMetadata].path, originalLocations);
 
               // the discriminator to take contents is the api version
-              const maxApiVersionPath = this.getMaxApiVersion(path[xMsMetadata].apiVersions);
-              const maxApiVersionAnotherPath = this.getMaxApiVersion(anotherPath[xMsMetadata].apiVersions);
+              const maxApiVersionPath = maximum(path[xMsMetadata].apiVersions);
+              const maxApiVersionAnotherPath = maximum(anotherPath[xMsMetadata].apiVersions);
               let uidPathToDelete = anotherPathUid;
-              if (compareVersions(this.getSemverEquivalent(maxApiVersionPath), this.getSemverEquivalent(maxApiVersionAnotherPath)) === -1) {
+              if (compareVersions(toSemver(maxApiVersionPath), toSemver(maxApiVersionAnotherPath)) === -1) {
 
                 // if the current path max api version is less than the another path, swap ids.
                 uidPathToDelete = pathUid;
@@ -198,6 +201,7 @@ export class Deduplicator {
           apiVersions: [...new Set([...apiVersions])],
           filename: [...new Set([...filename])],
           path: pathFromMetadata,
+          profiles,
           originalLocations: [...new Set([...originalLocations])]
         };
         deduplicatedPaths.add(pathUid);
@@ -262,10 +266,10 @@ export class Deduplicator {
                 originalLocations = originalLocations.concat(anotherComponent[xMsMetadata].originalLocations);
 
                 // the discriminator to take contents is the api version
-                const maxApiVersionComponent = this.getMaxApiVersion(component[xMsMetadata].apiVersions);
-                const maxApiVersionAnotherComponent = this.getMaxApiVersion(anotherComponent[xMsMetadata].apiVersions);
+                const maxApiVersionComponent = maximum(component[xMsMetadata].apiVersions);
+                const maxApiVersionAnotherComponent = maximum(anotherComponent[xMsMetadata].apiVersions);
                 let uidComponentToDelete = anotherComponentUid;
-                if (compareVersions(this.getSemverEquivalent(maxApiVersionComponent), this.getSemverEquivalent(maxApiVersionAnotherComponent)) === -1) {
+                if (compareVersions(toSemver(maxApiVersionComponent), toSemver(maxApiVersionAnotherComponent)) === -1) {
 
                   // if the current component max api version is less than the another component, swap ids.
                   uidComponentToDelete = componentUid;
@@ -294,32 +298,6 @@ export class Deduplicator {
       default:
         throw new Error(`Unknow component type: '${type}'`);
     }
-  }
-
-  private getMaxApiVersion(apiVersions: Array<string>): string {
-    let result = '0';
-    for (const version of apiVersions) {
-      if (version && compareVersions(this.getSemverEquivalent(version), this.getSemverEquivalent(result)) >= 0) {
-        result = version;
-      }
-    }
-
-    return result;
-  }
-
-  // azure rest specs currently use versioning of the form yyyy-mm-dd
-  // to take into consideration this we convert to an equivalent of
-  // semver for comparisons.
-  private getSemverEquivalent(version: string) {
-    let result = '';
-    for (const i of version.split('-')) {
-      if (!result) {
-        result = i;
-        continue;
-      }
-      result = Number.isNaN(Number.parseInt(i)) ? `${result}-${i}` : `${result}.${i}`;
-    }
-    return result;
   }
 
   private crawlComponent(uid: string, type: componentType): void {
@@ -392,4 +370,21 @@ export class Deduplicator {
     }
     return this.mappings;
   }
+}
+
+function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): Dictionary<string> {
+  const result = new Dictionary<string>();
+  for (const item of items(dict1)) {
+    result[item.key] = item.value;
+  }
+
+  for (const item of items(dict2)) {
+    if (result[item.key] !== undefined && result[item.key] !== item.value) {
+      throw Error(`Deduplicator: There's a conflict trying to deduplicate these two path objects with path ${path}, and with original locations ${originalLocations}. Both come from the same profile ${item.key}, but they have different api-versions: ${result[item.key]} and ${item.value}`);
+    }
+
+    result[item.key] = item.value;
+  }
+
+  return result;
 }

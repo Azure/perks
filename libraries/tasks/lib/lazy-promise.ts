@@ -4,6 +4,9 @@
  *--------------------------------------------------------------------------------------------*/
 
 export class LazyPromise<T> implements Promise<T> {
+  finally(onfinally?: (() => void) | null | undefined): Promise<T> {
+    return this.Value.finally(onfinally);
+  }
   private promise: Promise<T> | null = null;
 
   public constructor(private factory: () => Promise<T>) {

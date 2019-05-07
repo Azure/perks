@@ -25,6 +25,10 @@ export class ManualPromise<T> implements Promise<T> {
   catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined): Promise<T | TResult> {
     return this.p.catch(onrejected);
   }
+  finally(onfinally?: (() => void) | null | undefined): Promise<T> {
+    return this.p.finally(onfinally);
+  }
+
   readonly [Symbol.toStringTag]: "Promise";
   private p: Promise<T>;
 

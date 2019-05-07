@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "dist"
   },
   "include": [
@@ -8,6 +9,7 @@
   ],
   "exclude": [
     "dist",
+    "resources",
     "node_modules",
     "**/*.d.ts"
   ]

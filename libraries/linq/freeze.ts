@@ -23,6 +23,9 @@ export function deepFreeze(instance: object) {
 }
 
 export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = [], refCopyPropertyNames: Array<string> = []): any {
+  return _clone(instance, shouldFreeze, hash, new Set(skip), new Set(refCopyPropertyNames));
+}
+function _clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Set<string>, refCopyPropertyNames: Set<string>): any {
   const freeze = shouldFreeze ? Object.freeze : (i: any) => i;
   const obj = <AnyObject>instance;
 
@@ -40,7 +43,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   if (obj instanceof Set) {
     let set = new Set();
     for (const value of obj.values()) {
-      set.add(clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
+      set.add(_clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
     }
     set = freeze(set);
     hash.set(obj, set);
@@ -50,7 +53,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   if (Array.isArray(obj)) {
     let array = new Array();
     for (const value of obj) {
-      array.push(clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
+      array.push(_clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
     }
     array = freeze(array);
     hash.set(obj, array);
@@ -60,7 +63,7 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
   // as do Maps
   if (obj instanceof Map) {
     let map = new Map<any, any>();
-    Array.from(obj, ([key, val]) => map.set(key, clone(val, shouldFreeze, hash, skip, refCopyPropertyNames)));
+    Array.from(obj, ([key, val]) => map.set(key, _clone(val, shouldFreeze, hash, skip, refCopyPropertyNames)));
     map = freeze(map);
     hash.set(obj, map);
     return map;
@@ -70,14 +73,26 @@ export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(),
     obj instanceof Date ? new Date(obj) :
       obj instanceof RegExp ? new RegExp(obj.source, obj.flags) : {};
 
+  // store it to prevent cyclic reference failures
+  hash.set(obj, result);
+
+
   // recurse thru children
-  Object.assign(result, ...Object.keys(obj).filter(key => skip.indexOf(key) === -1).map(key => refCopyPropertyNames.indexOf(key) > -1 ? ({ [key]: obj[key] }) : ({ [key]: clone(obj[key], shouldFreeze, hash, skip, refCopyPropertyNames) })));
+  for (const each of Object.keys(obj)) {
+    if (skip.has(each)) {
+      continue;
+    }
+    if (refCopyPropertyNames.has(each)) {
+      (<AnyObject>result)[each] = obj[each];
+    } else {
+      (<AnyObject>result)[each] = _clone(obj[each], shouldFreeze, hash, skip, refCopyPropertyNames);
+    }
+
+  }
+  // Object.assign(result, ...Object.keys(obj).filter(key => skip.indexOf(key) === -1).map(key => refCopyPropertyNames.indexOf(key) > -1 ? ({ [key]: obj[key] }) : ({ [key]: clone(obj[key], shouldFreeze, hash, skip, refCopyPropertyNames) })));
 
   // freeze it if necessary
   result = freeze(result);
-
-  // store it to prevent cyclic reference failures
-  hash.set(obj, result);
 
   return result;
 }

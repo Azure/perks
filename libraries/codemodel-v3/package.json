@@ -1,7 +1,7 @@
 {
   "name": "@microsoft.azure/autorest.codemodel-v3",
-  "version": "1.0.0",
-  "description": "AutoRest code model classes",
+  "version": "2.0.0",
+  "description": "AutoRest code model library",
   "directories": {
     "doc": "docs"
   },
@@ -42,7 +42,7 @@
     "tslint-sonarts": "^1.8.0"
   },
   "dependencies": {
-    "@microsoft.azure/autorest-extension-base": "^1.0.0",
+    "@microsoft.azure/autorest-extension-base": "^2.0.0",
     "@microsoft.azure/codegen": "^1.0.0"
   }
 }
