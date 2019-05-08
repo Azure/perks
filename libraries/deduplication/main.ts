@@ -215,8 +215,6 @@ export class Deduplicator {
     }
   }
 
-  record = false;
-
   private deduplicateComponent(componentUid: string, type: string) {
     switch (type) {
       case 'schemas':
