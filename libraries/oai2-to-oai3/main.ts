@@ -661,12 +661,14 @@ export class Oai2ToOai3 {
     const operation = pathItem[httpMethod];
 
     // preprocess produces and consumes for responses and parameters respectively;
-    const produces = (operationValue.produces) ? (operationValue.produces.indexOf('application/json') !== -1) ? operationValue.produces
-      : [...new Set([...operationValue.produces, ...globalProduces])]
-      : globalProduces;
+    const produces = (operationValue.produces) ?
+      (operationValue.produces.indexOf('application/json') !== -1) ?
+        operationValue.produces :
+        [...new Set([...operationValue.produces])] :
+      globalProduces;
 
     const consumes = (operationValue.consumes) ? (operationValue.consumes.indexOf('application/octet-stream') !== -1) ? operationValue.consumes
-      : [...new Set([...operationValue.consumes, ...globalConsumes])]
+      : [...new Set([...operationValue.consumes])]
       : globalConsumes;
     for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
       switch (key) {
@@ -945,7 +947,9 @@ export class Oai2ToOai3 {
         // copy extensions in requestBody
         for (const { key, pointer: fieldPointer, value } of parameterItemMembers()) {
           if (key.startsWith('x-')) {
-            targetOperation.requestBody[key] = { value: value, pointer: fieldPointer };
+            if (!targetOperation.requestBody[key]) {
+              targetOperation.requestBody[key] = { value: value, pointer: fieldPointer };
+            }
           }
         }
       }
