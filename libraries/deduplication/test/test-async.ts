@@ -8,8 +8,8 @@ import * as aio from "@microsoft.azure/async-io";
 
   @test async "components and paths deduplication"() {
 
-    const input = JSON.parse(await aio.readFile(`${__dirname}/../../test/resources/input.yaml`));
-    const expectedOutput = JSON.parse(await aio.readFile(`${__dirname}/../../test/resources/output.yaml`));
+    const input = JSON.parse(await aio.readFile(`${__dirname}/../../test/resources/input.json`));
+    const expectedOutput = JSON.parse(await aio.readFile(`${__dirname}/../../test/resources/output.json`));
 
     // TODO: test mappings.
     const deduplicator = new Deduplicator(input);

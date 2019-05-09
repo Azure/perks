@@ -72,8 +72,8 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      const swaggerAsText = FastStringify(convert.generated);
-      console.log(swaggerAsText);
+      // const swaggerAsText = FastStringify(convert.generated);
+      // console.log(swaggerAsText);
 
       assert.deepEqual(convert.generated, original, "Should be the same");
     }
@@ -113,6 +113,39 @@ import { Oai2ToOai3 } from '../main';
     }
   }
 
+  @test  async "request body - copying extensions"() {
+    const swaggerUri = 'mem://request-body-swagger.yaml';
+    const oai3Uri = 'mem://request-body-openapi.yaml';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/request-body-swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/request-body-openapi.yaml`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      // const swaggerAsText = FastStringify(convert.generated);
+      // console.log(swaggerAsText);
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
 
   /* @test */ async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';

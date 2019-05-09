@@ -18,55 +18,6 @@
     }
   ],
   "paths": {
-    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}?export=true": {
-      "get": {
-        "tags": [
-          "Apis"
-        ],
-        "operationId": "Apis_Export",
-        "description": "Gets the details of the API specified by its identifier.",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/ResourceGroupNameParameter"
-          },
-          {
-            "$ref": "#/components/parameters/ServiceNameParameter"
-          },
-          {
-            "$ref": "#/components/parameters/ApiIdParameter"
-          },
-          {
-            "$ref": "#/components/parameters/ApiVersionParameter"
-          },
-          {
-            "$ref": "#/components/parameters/SubscriptionIdParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The response contains a stream with a full set of API metadata and includes API entity with an embedded array of operation entities.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiExportResult"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Error response describing why the operation failed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorBodyContract"
-                }
-              }
-            }
-          }
-        }
-      
-      }
-    },
     "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis": {
       "get": {
         "tags": [
@@ -2547,6 +2498,10 @@
             "required": false,
             "description": "Policy scope.",
             "schema": {
+              "x-ms-enum": {
+                "name": "PolicyScopeContract",
+                "modelAsString": false
+              },
               "type": "string",
               "enum": [
                 "Tenant",
@@ -2554,11 +2509,7 @@
                 "Api",
                 "Operation",
                 "All"
-              ],
-              "x-ms-enum": {
-                "name": "PolicyScopeContract",
-                "modelAsString": false
-              }
+              ]
             }
           },
           {
@@ -3565,11 +3516,11 @@
             "required": true,
             "description": "Report aggregation.",
             "schema": {
-              "type": "string",
               "x-ms-enum": {
                 "name": "ReportsAggregation",
                 "modelAsString": false
               },
+              "type": "string",
               "enum": [
                 "byApi",
                 "byGeo",
@@ -5856,6 +5807,54 @@
           "required": true
         },
         "x-ms-requestBody-index": 4
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.ApiManagement/service/{serviceName}/apis/{apiId}?export=true": {
+      "get": {
+        "tags": [
+          "Apis"
+        ],
+        "operationId": "Apis_Export",
+        "description": "Gets the details of the API specified by its identifier.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ResourceGroupNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ServiceNameParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ApiIdParameter"
+          },
+          {
+            "$ref": "#/components/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/components/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The response contains a stream with a full set of API metadata and includes API entity with an embedded array of operation entities.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiExportResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBodyContract"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -8486,6 +8485,10 @@
         "description": "Identity Provider Type identifier.",
         "x-ms-parameter-location": "method",
         "schema": {
+          "x-ms-enum": {
+            "name": "IdentityProviderNameType",
+            "modelAsString": true
+          },
           "type": "string",
           "enum": [
             "facebook",
@@ -8493,11 +8496,7 @@
             "microsoft",
             "twitter",
             "aad"
-          ],
-          "x-ms-enum": {
-            "name": "IdentityProviderNameType",
-            "modelAsString": true
-          }
+          ]
         }
       },
       "QuotaCounterKeyParameter": {
