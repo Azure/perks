@@ -74,7 +74,9 @@ ${this.attributeDeclaration}${this.accessModifier} ${stat}${partial}${this.class
 ${this.signature}
 {
 ${indent(fields, 1)}
+
 ${indent(properties, 1)}
+
 ${indent(methods, 1)}
 }
 `.trim();

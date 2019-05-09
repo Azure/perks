@@ -41,7 +41,7 @@ export class Field extends Variable {
     const initializer = this.initialValue ? ` = ${valueOf(this.initialValue)}` : ``;
 
     return `${docComment(xmlize('summary', this.description))}
-    ${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name}${initializer};`.slim();
+${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name}${initializer};`.slim();
   }
 
   public get value(): string {

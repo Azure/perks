@@ -157,6 +157,6 @@ ${imports}
 
 ${body}
 }
-`.trim().replace(/ *$/gm, '').replace(/\n\n/g, '\n').replace(/^\s*EOL\s*$/igm, '');
+`.trim().replace(/ *$/gm, '').replace(/\n\n+/g, '\n\n').replace(/^\s*EOL\s*$/igm, '');
   }
 }

@@ -15,8 +15,7 @@ export function xmlize(element: string, text: string): string {
     return `
 <${element}>
 ${text}
-</${element}>
-`.trim();
+</${element}>`.trim();
   }
   return text;
 }

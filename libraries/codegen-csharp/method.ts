@@ -72,20 +72,20 @@ export class Method extends Statements {
 
   public get declaration(): string {
     const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
-    return `
-${this.summaryDocumentation}
+    const doccomment = `${this.summaryDocumentation}
 ${this.parameterDocumentation}
-${this.returnsDocumentation}
+${this.returnsDocumentation}`.replace(/\s*\n/g, '\n').replace(/\n+/g, '\n').trim();
+    return `${doccomment}
 ${this.new}${this.access} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.async} ${this.returnType.declaration} ${this.name}(${parameterDeclaration})
 `.slim();
   }
 
   public get interfaceDeclaration(): string {
     const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
-    return `
-${this.summaryDocumentation}
+    const doccomment = `${this.summaryDocumentation}
 ${this.parameterDocumentation}
-${this.returnsDocumentation}
+${this.returnsDocumentation}`.replace(/\s*\n/g, '\n').replace(/\n+/g, '\n').trim();
+    return `${doccomment}
 ${this.returnType.declaration} ${this.name}(${parameterDeclaration});
 `.slim();
   }
