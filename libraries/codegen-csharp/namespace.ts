@@ -104,9 +104,10 @@ export class Namespace extends Initializer {
 
   public async writeFiles(writer: (filename: string, content: string) => Promise<void>) {
     // write out all the files
+    const w = (filename: string, content: string) => writer(filename, content.replace(/\/\*-.*?-\*\/\s*/g, ''));
 
     // handle nested namespaces
-    const children = this.namespaces.map(async namespace => namespace.writeFiles(writer));
+    const children = this.namespaces.map(async namespace => namespace.writeFiles(w));
 
     // combine class (XYZ) and interfaces (IXYZ) together in a single file
     const classes = toMap(this.classes, c => c.fileName);
@@ -122,18 +123,18 @@ export class Namespace extends Initializer {
           interfaces.delete(interfaceName);
         }
       }
-      await writer(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
+      await w(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
     }
 
     for (const [key, interfacesWithSameName] of interfaces) {
       const contents = interfacesWithSameName.map(each => each.definition);
-      await writer(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
+      await w(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
     }
 
     // do the delegates in a single file
     const delegates = this.delegates.map(v => v.implementation).join(EOL);
     if (delegates) {
-      await writer(`${this.outputFolder}/delegates.cs`, this.render(delegates));
+      await w(`${this.outputFolder}/delegates.cs`, this.render(delegates));
     }
 
     // wait for children to finish.
