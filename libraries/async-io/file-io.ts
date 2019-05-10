@@ -112,11 +112,13 @@ export async function isFile(filePath: string): Promise<boolean> {
   return false;
 }
 
-export async function rmdir(dirPath: string) {
+export async function rmdir(dirPath: string, exceptions?: Set<string>) {
   // if it's not there, do nothing.
   if (!await exists(dirPath)) {
     return;
   }
+  exceptions = exceptions || new Set();
+
 
   // if it's not a directory, that's bad.
   if (!await isDirectory(dirPath)) {
@@ -136,10 +138,13 @@ export async function rmdir(dirPath: string) {
       for (const file of files) {
         try {
           const p = path.join(dirPath, file);
-
+          if (exceptions.has(p.toLowerCase())) {
+            continue;
+          }
+          
           if (await isDirectory(p)) {
             // folders are recursively rmdir'd
-            awaiter.Await(rmdir(p));
+            awaiter.Await(rmdir(p, exceptions));
           } else {
             // files and symlinks are unlink'd
             awaiter.Await(unlink(p).catch(() => { }));
@@ -161,7 +166,7 @@ export async function rmdir(dirPath: string) {
     // is it gone? that's all we really care about.
     if (await isDirectory(dirPath)) {
       // directory did not delete
-      throw new UnableToRemoveException(dirPath);
+      //throw new UnableToRemoveException(dirPath);
     }
   }
 }

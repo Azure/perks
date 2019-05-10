@@ -83,7 +83,6 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   async protectFiles(path: string): Promise<void> {
     return this.service.ProtectFiles(path);
   }
-
   writeFile(filename: string, content: string, sourceMap?: Mapping[] | RawSourceMap | undefined, artifactType?: string | undefined): void {
     return this.service.WriteFile(filename, content, sourceMap, artifactType);
   }

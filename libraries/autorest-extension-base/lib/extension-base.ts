@@ -20,6 +20,7 @@ module IAutoRestPluginInitiator_Types {
   export const ReadFile = new RequestType2<string, string, string, Error, void>("ReadFile");
   export const GetValue = new RequestType2<string, string, any, Error, void>("GetValue");
   export const ListInputs = new RequestType2<string, string | undefined, string[], Error, void>("ListInputs");
+  export const ProtectFiles = new NotificationType2<string, string, void>("ProtectFiles");
   export const WriteFile = new NotificationType4<string, string, string, Mapping[] | RawSourceMap | undefined, void>("WriteFile");
   export const Message = new NotificationType2<string, Message, void>("Message");
 }
@@ -66,47 +67,7 @@ export class AutoRestExtension {
         }
         await handler({
           async ProtectFiles(path: string): Promise<void> {
-            const send = (uri: string, content: string) => {
-              channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, {
-                Channel: Channel.File,
-                Details: {
-                  content: content,
-                  type: "preserved-files",
-                  uri: uri,
-                },
-                Text: content,
-                Key: ["preserved-files", uri]
-              });
-            }
-
-            const items = await channel.sendRequest(IAutoRestPluginInitiator_Types.ListInputs, sessionId, path);
-
-            if (items && items.length > 0) {
-              for (const each of items) {
-                try {
-                  const content = await channel.sendRequest(IAutoRestPluginInitiator_Types.ReadFile, sessionId, each);
-                  if (content || content === "") {
-                    send(each, content);
-                  }
-                } catch (E) {
-                }
-
-              }
-              return;
-            }
-
-            // not a folder
-            // try just loading a single file
-            try {
-
-              const content = await channel.sendRequest(IAutoRestPluginInitiator_Types.ReadFile, sessionId, path);
-              if (content || content === "") {
-                send(path, content);
-              }
-
-            } catch {
-              // didn't get that either.
-            }
+            await channel.sendNotification(IAutoRestPluginInitiator_Types.ProtectFiles, sessionId, path);
           },
           UpdateConfigurationFile(filename: string, content: string): void {
             channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, { Channel: Channel.Configuration, Key: [filename], Text: content });
