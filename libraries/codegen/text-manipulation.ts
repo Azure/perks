@@ -413,6 +413,8 @@ export function selectName(nameOptions: Array<string>, reservedNames: Set<string
       reservedNames.add(name);
       return name;
     }
+
+    i++;
   } while (i < 100);
 
   // after an unreasonalbe search, return something invalid

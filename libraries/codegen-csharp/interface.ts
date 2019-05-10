@@ -30,6 +30,7 @@ export class Interface extends Type {
 ${description}
 ${this.attributeDeclaration}${this.accessModifier} ${partial}interface ${this.name}${colon}${implementsInterfaces} {
 ${indent(properties, 1)}
+
 ${indent(methods, 1)}
 }
 `.trim();

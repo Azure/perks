@@ -6,6 +6,8 @@
 import { Access } from './access-modifier';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
+import { docComment } from '@microsoft.azure/codegen';
+import { summary } from './doc-comments';
 
 export class InterfaceProperty extends Property {
   public getAccess = Access.Public;
@@ -20,6 +22,7 @@ export class InterfaceProperty extends Property {
     const get = this.getAccess === Access.Public ? 'get;' : '';
     const set = this.setAccess === Access.Public ? 'set;' : '';
 
-    return `${this.type.declaration} ${this.name} { ${get} ${set} }`;
+    return `${docComment(summary(this.description))}
+    ${this.type.declaration} ${this.name} { ${get} ${set} }`;
   }
 }

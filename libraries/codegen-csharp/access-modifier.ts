@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 export enum Access {
-  Explicit = '/* explicit */',
+  Explicit = '/*- explicit -*/',
   Public = 'public',
   Internal = 'internal',
   Protected = 'protected',
