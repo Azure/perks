@@ -8,7 +8,7 @@ import { Abstract, Access, Async, Extern, Modifier, New, Override, Sealed, Stati
 import { Class } from './class';
 import { summary, xmlize } from './doc-comments';
 
-import { Expression, toExpression, valueOf, isAnExpression } from './expression';
+import { Expression, toExpression, valueOf, isAnExpression, ExpressionOrLiteral } from './expression';
 import { Parameter } from './parameter';
 import { StatementPossibilities, Statements } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
@@ -103,7 +103,7 @@ ${indent(super.implementation)}
 }`.trim();
   }
 
-  public invoke(...parameters: Array<Expression>): Expression {
+  public invoke(...parameters: Array<ExpressionOrLiteral>): Expression {
     return toExpression(`${this.name}(${parameters.joinWith(valueOf)})`);
   }
   public addTo(parent: Class): Method {
