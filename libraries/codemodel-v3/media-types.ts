@@ -18,6 +18,8 @@ export enum KnownMediaType {
   Stream = 'application/octet-stream',
   Multipart = 'multipart/form-data',
   Text = 'text/plain',
+  PSObject = '-PSObject-',
+  Hashtable = '-Hashtable-',
 
   None = '-none-',
   QueryParameter = '-query-parameter-',

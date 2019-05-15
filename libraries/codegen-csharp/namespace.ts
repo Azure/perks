@@ -104,9 +104,10 @@ export class Namespace extends Initializer {
 
   public async writeFiles(writer: (filename: string, content: string) => Promise<void>) {
     // write out all the files
+    const w = (filename: string, content: string) => writer(filename, content.replace(/\/\*-.*?-\*\/\s*/g, ''));
 
     // handle nested namespaces
-    const children = this.namespaces.map(async namespace => namespace.writeFiles(writer));
+    const children = this.namespaces.map(async namespace => namespace.writeFiles(w));
 
     // combine class (XYZ) and interfaces (IXYZ) together in a single file
     const classes = toMap(this.classes, c => c.fileName);
@@ -114,25 +115,26 @@ export class Namespace extends Initializer {
 
     for (const [key, classesWithSameName] of classes) {
       const contents = classesWithSameName.map(each => each.definition);
-      const interfaceName = `I${key}`;
-      const interfacesWithSameName = interfaces.get(interfaceName);
-      if (interfacesWithSameName) {
-        contents.push(...interfacesWithSameName.map(each => each.definition));
-        // remove from the list.
-        interfaces.delete(interfaceName);
+      for (const interfaceName of [`I${key}`, `I${key}Internal`]) { // pick up interfaces and interfacesInternal in the same file. 
+        const interfacesWithSameName = interfaces.get(interfaceName);
+        if (interfacesWithSameName) {
+          contents.push(...interfacesWithSameName.map(each => each.definition));
+          // remove from the list.
+          interfaces.delete(interfaceName);
+        }
       }
-      await writer(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
+      await w(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
     }
 
     for (const [key, interfacesWithSameName] of interfaces) {
       const contents = interfacesWithSameName.map(each => each.definition);
-      await writer(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
+      await w(`${this.outputFolder}/${key}.cs`, this.render(contents.join(EOL)));
     }
 
     // do the delegates in a single file
     const delegates = this.delegates.map(v => v.implementation).join(EOL);
     if (delegates) {
-      await writer(`${this.outputFolder}/delegates.cs`, this.render(delegates));
+      await w(`${this.outputFolder}/delegates.cs`, this.render(delegates));
     }
 
     // wait for children to finish.
@@ -156,6 +158,6 @@ ${imports}
 
 ${body}
 }
-`.trim().replace(/ *$/gm, '').replace(/\n\n/g, '\n').replace(/^\s*EOL\s*$/igm, '');
+`.trim().replace(/ *$/gm, '').replace(/\n\n+/g, '\n\n').replace(/^\s*EOL\s*$/igm, '');
   }
 }

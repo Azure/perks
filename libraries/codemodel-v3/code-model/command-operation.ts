@@ -21,6 +21,7 @@ export interface CommandOperationDetails extends ProgramaticOperationDetails {
 }
 
 export interface CommandOperation extends ProgrammaticOperation {
+  alias: Array<string>;
   verb: string;
   noun: string;
   variant: string;

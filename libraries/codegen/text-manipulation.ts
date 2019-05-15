@@ -187,9 +187,15 @@ export function fixLeadingNumber(identifier: Array<string>): Array<string> {
 }
 
 export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
-  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase()) && identifier.toLowerCase() !== prohibitedPrefix.toLowerCase()) {
+  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase())) {
     const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
     let newIdentifier = identifier.replace(regex, `$2`);
+    if (newIdentifier.length < 2) {
+      // if it results in an empty string or a single letter string
+      // then, it is not really a word.
+      return identifier;
+    }
+
     newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
     return (skipIdentifiers !== undefined) ? skipIdentifiers.includes(newIdentifier) ? identifier : newIdentifier : newIdentifier;
   }
@@ -299,10 +305,10 @@ export function nameof(text: string): string {
 }
 
 
-export function* getRegions(source: string) {
-  source = source.replace(/[\r?\n]/g, '«');
+export function* getRegions(source: string, prefix: string = '#', postfix: string = '') {
+  source = source.replace(/\r?\n|\r/g, '«');
 
-  const rx = new RegExp(`(.*?)«?(\\s*#\\s*region\\s*(.*?))\\s*«(.*?)«(\\s*#\\s*endregion)\\s*?«`, 'g');
+  const rx = new RegExp(`(.*?)«?(\\s*${prefix}\\s*region\\s*(.*?)\\s*${postfix})\\s*«(.*?)«(\\s*${prefix}\\s*endregion\\s*${postfix})\\s*?«`, 'g');
   let match;
   let finalPosition = 0;
   while (match = rx.exec(source)) {
@@ -337,11 +343,11 @@ export function* getRegions(source: string) {
   }
 }
 
-export function setRegion(source: string, region: string, content: TextPossibilities, prepend = true) {
+export function setRegion(source: string, region: string, content: TextPossibilities, prepend = true, prefix: string = '#', postfix: string = '') {
   const result = new Array<string>();
-  const ct = new Text(content).text.replace(/[\r?\n]/g, '«').replace(/^«*/, '').replace(/«*$/, '');
+  const ct = new Text(content).text.replace(/\r?\n|\r/g, '«').replace(/^«*/, '').replace(/«*$/, '');
   let found = false;
-  for (const each of getRegions(source)) {
+  for (const each of getRegions(source, prefix, postfix)) {
     if (each.name === region) {
       // found the region, replace it.
       // (this also makes sure that we only have one region by that name when replacing/deleting)
@@ -357,20 +363,21 @@ export function setRegion(source: string, region: string, content: TextPossibili
   }
   if (!found) {
     if (prepend) {
-      result.splice(0, 0, `# region ${region}`, ct, '# endregion«');
+      result.splice(0, 0, `${prefix} region ${region} ${postfix}`, ct, `${prefix} endregion ${postfix}«`);
     } else {
-      result.push(`# region ${region}`, ct, '# endregion«');
+      result.push(`${prefix} region ${region} ${postfix}`, ct, `${prefix} endregion ${postfix}«`);
     }
   }
-  return result.join('«').replace(/[\r?\n]/g, '«').replace(/^«*/, '').replace(/«*$/, '').replace(/«««*/g, '««').replace(/«/g, '\n');
+  return result.join('«').replace(/\r?\n|\r/g, '«').replace(/^«*/, '').replace(/«*$/, '').replace(/«««*/g, '««').replace(/«/g, '\n');
 }
 
-export function _setRegion(source: string, region: string, content: TextPossibilities, prepend = true) {
-  const ct = new Text(content).text.replace(/[\r?\n]/g, '«').replace(/^«*/, '').replace(/«*$/, '');
+// Note: Where is this used?
+export function _setRegion(source: string, region: string, content: TextPossibilities, prepend = true, prefix: string = '#', postfix: string = '') {
+  const ct = new Text(content).text.replace(/\r?\n|\r/g, '«').replace(/^«*/, '').replace(/«*$/, '');
 
-  source = source.replace(/[\r?\n]/g, '«');
+  source = source.replace(/\r?\n|\r/g, '«');
 
-  const rx = new RegExp(`«(\\s*#\\s*region\\s*${region})\\s*«.*?(«\\s*#\\s*endregion\\s*«?)`, 'g');
+  const rx = new RegExp(`«(\\s*${prefix}\\s*region\\s*${region}\\s*${postfix})\\s*«.*?(«\\s*${prefix}\\s*endregion\\s*${postfix}«?)`, 'g');
   if (rx.test(source)) {
     if (ct.length > 0) {
       source = source.replace(rx, `«$1«${ct}$2`);
@@ -379,7 +386,7 @@ export function _setRegion(source: string, region: string, content: TextPossibil
     }
   } else {
     if (ct.length > 0) {
-      const text = `«# region ${region}«${ct}«# endregion«`;
+      const text = `«${prefix} region ${region} ${postfix}«${ct}«${prefix} endregion ${postfix}«`;
       source = prepend ? text + source : source + text;
     }
   }
@@ -406,6 +413,8 @@ export function selectName(nameOptions: Array<string>, reservedNames: Set<string
       reservedNames.add(name);
       return name;
     }
+
+    i++;
   } while (i < 100);
 
   // after an unreasonalbe search, return something invalid

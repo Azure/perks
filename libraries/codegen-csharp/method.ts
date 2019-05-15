@@ -8,7 +8,7 @@ import { Abstract, Access, Async, Extern, Modifier, New, Override, Sealed, Stati
 import { Class } from './class';
 import { summary, xmlize } from './doc-comments';
 
-import { Expression, toExpression, valueOf, isAnExpression } from './expression';
+import { Expression, toExpression, valueOf, isAnExpression, ExpressionOrLiteral } from './expression';
 import { Parameter } from './parameter';
 import { StatementPossibilities, Statements } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
@@ -72,20 +72,20 @@ export class Method extends Statements {
 
   public get declaration(): string {
     const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
-    return `
-${this.summaryDocumentation}
+    const doccomment = `${this.summaryDocumentation}
 ${this.parameterDocumentation}
-${this.returnsDocumentation}
+${this.returnsDocumentation}`.replace(/\s*\n/g, '\n').replace(/\n+/g, '\n').trim();
+    return `${doccomment}
 ${this.new}${this.access} ${this.static} ${this.virtual} ${this.sealed} ${this.override} ${this.abstract} ${this.extern} ${this.async} ${this.returnType.declaration} ${this.name}(${parameterDeclaration})
 `.slim();
   }
 
   public get interfaceDeclaration(): string {
     const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
-    return `
-${this.summaryDocumentation}
+    const doccomment = `${this.summaryDocumentation}
 ${this.parameterDocumentation}
-${this.returnsDocumentation}
+${this.returnsDocumentation}`.replace(/\s*\n/g, '\n').replace(/\n+/g, '\n').trim();
+    return `${doccomment}
 ${this.returnType.declaration} ${this.name}(${parameterDeclaration});
 `.slim();
   }
@@ -103,7 +103,7 @@ ${indent(super.implementation)}
 }`.trim();
   }
 
-  public invoke(...parameters: Array<Expression>): Expression {
+  public invoke(...parameters: Array<ExpressionOrLiteral>): Expression {
     return toExpression(`${this.name}(${parameters.joinWith(valueOf)})`);
   }
   public addTo(parent: Class): Method {

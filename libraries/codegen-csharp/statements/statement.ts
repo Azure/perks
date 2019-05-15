@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EOL, Initializer } from '@microsoft.azure/codegen';
+import { EOL, Initializer, indent } from '@microsoft.azure/codegen';
 import { LiteralStatement } from './literal';
 
 export type fIterable<T> = Iterable<T> | (() => Iterable<T>);
@@ -28,6 +28,7 @@ export function toStatement(statement: StatementOrLiteral): Statement {
 export function isStatement(object: StatementPossibilities): object is Statement {
   return (<any>object).implementation ? true : false;
 }
+
 
 export class Statements extends Initializer implements Statement {
   protected statements = new Array<Statement>();
@@ -111,4 +112,11 @@ export class Statements extends Initializer implements Statement {
   public get implementation(): string {
     return `${this.statements.joinWith(each => each.implementation, EOL)}`.trim();
   }
+}
+
+
+export function* BlockStatement(statements: StatementPossibilities) {
+  yield `{`;
+  yield indent(new Statements(statements).implementation);
+  yield `}`;
 }

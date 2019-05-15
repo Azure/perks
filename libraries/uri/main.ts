@@ -304,8 +304,8 @@ export function WriteBinary(fileUri: string, data: string): Promise<void> {
  * @param folderUri  Folder uri.
  */
 
-export async function ClearFolder(folderUri: string): Promise<void> {
-  return await rmdir(FileUriToLocalPath(folderUri));
+export async function ClearFolder(folderUri: string, exceptions?: Array<string>): Promise<void> {
+  return await rmdir(FileUriToLocalPath(folderUri), new Set((exceptions || []).map(each => FileUriToLocalPath(each).toLowerCase())));
 }
 
 export function FileUriToPath(fileUri: string): string {

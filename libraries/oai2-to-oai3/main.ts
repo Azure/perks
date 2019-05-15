@@ -89,7 +89,7 @@ export class Oai2ToOai3 {
       if (this.generated.servers === undefined) {
         this.generated.servers = this.newArray('/basePath');
       }
-      this.generated.servers.__push__(server);
+      this.generated.servers.__push__({ value: server, pointer: '/basePath' });
     }
 
     if (this.generated.servers === undefined) {
@@ -666,12 +666,14 @@ export class Oai2ToOai3 {
     const operation = pathItem[httpMethod];
 
     // preprocess produces and consumes for responses and parameters respectively;
-    const produces = (operationValue.produces) ? (operationValue.produces.indexOf('application/json') !== -1) ? operationValue.produces
-      : [...new Set([...operationValue.produces, ...globalProduces])]
-      : globalProduces;
+    const produces = (operationValue.produces) ?
+      (operationValue.produces.indexOf('application/json') !== -1) ?
+        operationValue.produces :
+        [...new Set([...operationValue.produces])] :
+      globalProduces;
 
     const consumes = (operationValue.consumes) ? (operationValue.consumes.indexOf('application/octet-stream') !== -1) ? operationValue.consumes
-      : [...new Set([...operationValue.consumes, ...globalConsumes])]
+      : [...new Set([...operationValue.consumes])]
       : globalConsumes;
     for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
       switch (key) {
@@ -903,6 +905,13 @@ export class Oai2ToOai3 {
           if (parameterValue.type === 'array' && parameterValue.items !== undefined) {
             targetProperty.items = { value: parameterValue.items, pointer };
           }
+
+          // copy extensions in target property
+          for (const { key, pointer: fieldPointer, value } of parameterItemMembers()) {
+            if (key.startsWith('x-')) {
+              targetProperty[key] = { value: value, pointer: fieldPointer };
+            }
+          }
         }
       } else if (parameterValue.type === 'file') {
 
@@ -910,7 +919,6 @@ export class Oai2ToOai3 {
         targetOperation['application/octet-stream'].schema = this.newObject(pointer);
         targetOperation['application/octet-stream'].schema.type = { value: 'string', pointer };
         targetOperation['application/octet-stream'].schema.format = { value: 'binary', pointer };
-
       }
 
       if (parameterValue.in === 'body') {
@@ -939,6 +947,15 @@ export class Oai2ToOai3 {
             targetOperation.requestBody.content[mimetype].schema = this.newObject(pointer);
           }
 
+        }
+
+        // copy extensions in requestBody
+        for (const { key, pointer: fieldPointer, value } of parameterItemMembers()) {
+          if (key.startsWith('x-')) {
+            if (!targetOperation.requestBody[key]) {
+              targetOperation.requestBody[key] = { value: value, pointer: fieldPointer };
+            }
+          }
         }
       }
     } else {

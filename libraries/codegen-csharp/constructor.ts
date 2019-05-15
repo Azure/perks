@@ -20,10 +20,9 @@ export class Constructor extends Method {
 
   public get declaration(): string {
     const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
-
-    return `
-${this.summaryDocumentation}
-${this.parameterDocumentation}
+    const doccomment = `${this.summaryDocumentation}
+${this.parameterDocumentation}`.replace(/\s*\n/g, '\n').replace(/\n+/g, '\n').trim();
+    return `${doccomment}
 ${this.access} ${this.static} ${this.abstract} ${this.name}(${parameterDeclaration})
 `.slim();
   }
