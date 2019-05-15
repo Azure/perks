@@ -261,6 +261,11 @@ export class Oai2ToOai3 {
         if (parameterValue.collectionFormat === 'multi') {
           parameterTarget.explode = { value: true, pointer };
         }
+
+        // tsv is no longer supported in OAI3, but we still need to support this.
+        if (parameterValue.collectionFormat === 'tsv') {
+          parameterTarget.style = { value: 'tabDelimited', pointer };
+        }
       }
 
       if (parameterTarget.schema === undefined) {
