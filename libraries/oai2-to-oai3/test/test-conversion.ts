@@ -15,8 +15,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://swagger.yaml';
     const oai3Uri = 'mem://oai3.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/swagger.yaml`);
-    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/openapi.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/openapi.yaml`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -49,8 +49,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://tiny-swagger.yaml';
     const oai3Uri = 'mem://tiny-oai3.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/tiny-swagger.yaml`);
-    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/tiny-openapi.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/tiny-swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/tiny-openapi.yaml`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -83,8 +83,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://ApiManagementClient-swagger.json';
     const oai3Uri = 'mem://ApiManagementClient-oai3.json';
 
-    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/ApiManagementClient-swagger.json`);
-    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/ApiManagementClient-openapi.json`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/ApiManagementClient-swagger.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/ApiManagementClient-openapi.json`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -117,8 +117,8 @@ import { Oai2ToOai3 } from '../main';
     const swaggerUri = 'mem://request-body-swagger.yaml';
     const oai3Uri = 'mem://request-body-openapi.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/request-body-swagger.yaml`);
-    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/request-body-openapi.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/request-body-swagger.yaml`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/request-body-openapi.yaml`);
 
     const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
     const mfs = new datastore.MemoryFileSystem(map);
@@ -147,10 +147,134 @@ import { Oai2ToOai3 } from '../main';
     }
   }
 
+  @test  async "headers"() {
+    const swaggerUri = 'mem://header2.json';
+    const oai3Uri = 'mem://header3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/header.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/header.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
+  @test  async "additionalProperties"() {
+    const swaggerUri = 'mem://additionalProperties2.json';
+    const oai3Uri = 'mem://additionalProperties3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/additionalProperties.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/additionalProperties.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
+  @test  async "xml-service"() {
+    const swaggerUri = 'mem://xml-service2.json';
+    const oai3Uri = 'mem://xml-service3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/xml-service.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/xml-service.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
+  @test  async "xms-error-responses"() {
+    const swaggerUri = 'mem://xms-error-responses2.json';
+    const oai3Uri = 'mem://xms-error-responses3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/xms-error-responses.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/xms-error-responses.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = swaggerDataHandle.ReadObject();
+      const original = originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
   /* @test */ async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';
 
-    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/swagger.yaml`);
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/swagger.yaml`);
     const map = new Map<string, string>([[absoluteUri, swagger]]);
     const mfs = new datastore.MemoryFileSystem(map);
 

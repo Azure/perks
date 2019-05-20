@@ -1042,7 +1042,42 @@ export class Oai2ToOai3 {
         this.visitHeader(responseTarget.headers[h], responseValue.headers[h], jsonPointer);
       }
     }
+
+    // copy extensions 
+    for (const { key, pointer: fieldPointer, value } of responsesFieldMembers()) {
+      if (key.startsWith('x-') && responseTarget[key] === undefined) {
+        responseTarget[key] = { value: value, pointer: fieldPointer };
+      }
+    }
   }
+
+
+  parameterTypeProperties = [
+    'format',
+    'minimum',
+    'maximum',
+    'exclusiveMinimum',
+    'exclusiveMaximum',
+    'minLength',
+    'maxLength',
+    'multipleOf',
+    'minItems',
+    'maxItems',
+    'uniqueItems',
+    'minProperties',
+    'maxProperties',
+    'additionalProperties',
+    'pattern',
+    'enum',
+    'default'
+  ];
+
+  arrayProperties = [
+    'items',
+    'minItems',
+    'maxItems',
+    'uniqueItems'
+  ];
 
   visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
     if (headerValue.$ref) {
@@ -1058,28 +1093,13 @@ export class Oai2ToOai3 {
         targetHeader.description = { value: headerValue.description, pointer: jsonPointer };
       }
 
-      const schemaKeys = [
-        'maximum',
-        'exclusiveMaximum',
-        'minimum',
-        'exclusiveMinimum',
-        'maxLength',
-        'minLength',
-        'pattern',
-        'maxItems',
-        'minItems',
-        'uniqueItems',
-        'enum',
-        'multipleOf',
-        'format',
-        'default'
-      ];
-
       for (const { key, childIterator } of visit(headerValue)) {
         if (key === 'schema') {
           this.visitSchema(targetHeader.schema.items, headerValue.items, childIterator);
-        } else if (schemaKeys.indexOf(key) !== -1) {
+        } else if (this.parameterTypeProperties.includes(key) || this.arrayProperties.includes(key)) {
           targetHeader.schema[key] = { value: headerValue[key], pointer: jsonPointer, recurse: true };
+        } else if (key.startsWith('x-') && targetHeader[key] === undefined) {
+          targetHeader[key] = { value: headerValue[key], pointer: jsonPointer, recurse: true };
         }
       }
 
