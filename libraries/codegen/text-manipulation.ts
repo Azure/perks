@@ -396,8 +396,8 @@ export function _setRegion(source: string, region: string, content: TextPossibil
 
 export function selectName(nameOptions: Array<string>, reservedNames: Set<string>) {
   // we're here because the original name is in conflict.
-  // so we start with the alternatives  (skip the 0th!)
-  for (const each of nameOptions.slice(1)) {
+  // so we start with the alternatives  (skip the 0th!) NOT
+  for (const each of nameOptions) {
     if (!reservedNames.has(each)) {
       reservedNames.add(each);
       return each;
