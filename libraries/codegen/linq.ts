@@ -271,6 +271,9 @@ export interface Linqable<T> extends Iterable<T> {
 }
 
 function linqify<T>(iterable: Iterable<T>): Linqable<T> {
+  if (!!(<any>iterable)['linq']) {
+    return <Linqable<T>>iterable;
+  }
   return Object.defineProperty(iterable, 'linq', {
     get: () => {
       return {
