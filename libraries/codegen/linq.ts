@@ -50,7 +50,7 @@ export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(
   return linqify([]);
 }
 function isIterable<T>(source: any): source is Iterable<T> {
-  return (Object.getOwnPropertySymbols(source).indexOf(Symbol.iterator) > -1);
+  return !!source && !!source[Symbol.iterator];
 }
 /** returns an Linqable<> for values in the collection */
 export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Linqable<T> {
