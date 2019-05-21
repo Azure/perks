@@ -67,6 +67,7 @@ export class Response extends Extensions implements Response {
 }
 
 export enum ParameterLocation {
+  Uri = 'uri',
   Query = 'query',
   Header = 'header',
   Cookie = 'cookie',
@@ -187,7 +188,7 @@ export class HttpOperation extends Extensions implements HttpOperation {
   public servers = new Array<Server>();
   public deprecated = false;
 
-  constructor(operationId: string, public path: string, public method: HttpMethod, initializer?: DeepPartial<HttpOperation>) {
+  constructor(operationId: string, public baseUrl: string, public path: string, public method: HttpMethod, initializer?: DeepPartial<HttpOperation>) {
     super();
     this.details = {
       default: {
@@ -219,6 +220,7 @@ export interface HttpOperation extends IOperation<HttpOperationParameter>, Exten
   servers: Array<Server>;
 
   path: string;
+  baseUrl: string;
   method: HttpMethod;
   pathDescription?: string;
   pathSummary?: string;
@@ -244,7 +246,7 @@ export class HttpOperationParameter extends Extensions implements HttpOperationP
   public required = false;
   public allowEmptyValue = false;
 
-  constructor(public name: string, inWhere: ParameterLocation, implementation: ImplementationLocation, initializer?: Partial<HttpOperationParameter>) {
+  constructor(public name: string, inWhere: ParameterLocation, implementation: ImplementationLocation, initializer?: DeepPartial<HttpOperationParameter>) {
     super();
     this.in = inWhere;
     this.details = {
