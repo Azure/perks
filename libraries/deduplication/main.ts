@@ -4,10 +4,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { visit } from '@microsoft.azure/datastore';
-import { Dictionary, items } from '@microsoft.azure/linq';
+import { Dictionary, items, clone } from '@microsoft.azure/linq';
 import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
 import { toSemver, maximum } from '@microsoft.azure/codegen';
+
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
@@ -66,7 +67,7 @@ export class Deduplicator {
   // initially the target is the same as the original object
   private target: any;
   constructor(originalFile: any) {
-    this.target = originalFile;
+    this.target = clone(originalFile);
   }
 
   private init() {

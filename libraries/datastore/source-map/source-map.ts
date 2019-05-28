@@ -9,6 +9,7 @@ import { JsonPath, stringify } from '../jsonpath';
 import { IndexToPosition } from '../parsing/text-utility';
 import * as yaml from '../parsing/yaml';
 import { Descendants, ToAst } from '../yaml';
+import { values } from '@microsoft.azure/linq';
 
 // information to attach to line/column based to get a richer experience
 export interface PositionEnhancements {
@@ -58,10 +59,10 @@ export function EncodeEnhancedPositionInName(name: string | undefined, pos: Enha
   return (name || '') + enhancedPositionSeparator + JSON.stringify(pos, null, 2) + enhancedPositionEndMark;
 }
 
-export function CompilePosition(position: SmartPosition, yamlFile: DataHandle): EnhancedPosition {
+export async function CompilePosition(position: SmartPosition, yamlFile: DataHandle): Promise<EnhancedPosition> {
   if (!(position as EnhancedPosition).line) {
     if ((position as any).path) {
-      return yaml.ResolvePath(yamlFile, (position as any).path);
+      return await yaml.ResolvePath(yamlFile, (position as any).path);
     }
     if ((position as any).index) {
       return IndexToPosition(yamlFile, (position as any).index);
@@ -70,7 +71,7 @@ export function CompilePosition(position: SmartPosition, yamlFile: DataHandle): 
   return <EnhancedPosition>position;
 }
 
-export function Compile(mappings: Array<Mapping>, target: SourceMapGenerator, yamlFiles: Array<DataHandle> = []): void {
+export async function Compile(mappings: Array<Mapping>, target: SourceMapGenerator, yamlFiles: Array<DataHandle> = []): Promise<void> {
   // build lookup
   const yamlFileLookup: { [key: string]: DataHandle } = {};
   for (const yamlFile of yamlFiles) {
@@ -86,8 +87,8 @@ export function Compile(mappings: Array<Mapping>, target: SourceMapGenerator, ya
   };
 
   for (const mapping of mappings) {
-    const compiledGenerated = compilePos(mapping.generated, generatedFile);
-    const compiledOriginal = compilePos(mapping.original, mapping.source);
+    const compiledGenerated = await compilePos(mapping.generated, generatedFile);
+    const compiledOriginal = await compilePos(mapping.original, mapping.source);
     target.addMapping({
       generated: compiledGenerated,
       original: compiledOriginal,

@@ -1,6 +1,6 @@
 {
   "name": "@microsoft.azure/deduplication",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Deduplication of elements in OpenAPI 3 documents",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -50,6 +50,7 @@
   "dependencies": {
     "@microsoft.azure/datastore": "^2.1.0",
     "@microsoft.azure/linq": "^2.1.0",
+    "@microsoft.azure/tasks": "^2.1.0",
     "@microsoft.azure/object-comparison": "^2.1.0",
     "@microsoft.azure/openapi": "^2.1.0",
     "@microsoft.azure/codegen": "^1.0.0",

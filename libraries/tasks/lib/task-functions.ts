@@ -16,6 +16,13 @@ export function Delay(delayMS: number): Promise<void> {
   return new Promise<void>(res => setTimeout(res, delayMS));
 }
 
+export function YieldCPU(): Promise<void> | undefined {
+  if ((<any>process)._getActiveHandles().length > 2) {
+    return new Promise(res => setImmediate(res));
+  }
+  return undefined;
+}
+
 /**
  * Asynchronously waits for the predicate condition to turn false, with a delay between checks 
  * @param predicate - a fn that returns a boolean

@@ -11,9 +11,9 @@ import { EncodeEnhancedPositionInName, TryDecodeEnhancedPositionFromName } from 
 
 
 export class BlameTree {
-  public static Create(dataStore: DataStore, position: MappedPosition): BlameTree {
+  public static async Create(dataStore: DataStore, position: MappedPosition): Promise<BlameTree> {
     const data = dataStore.ReadStrictSync(position.source);
-    const blames = data.Blame(position);
+    const blames = await data.Blame(position);
 
     // propagate smart position
     const enhanced = TryDecodeEnhancedPositionFromName(position.name);
@@ -23,7 +23,12 @@ export class BlameTree {
       }
     }
 
-    return new BlameTree(position, blames.map(pos => BlameTree.Create(dataStore, pos)));
+    const s = new Array<BlameTree>();
+    for (const pos of blames) {
+      s.push(await BlameTree.Create(dataStore, pos))
+    }
+
+    return new BlameTree(position, s);
   }
 
   private constructor(

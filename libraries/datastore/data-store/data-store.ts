@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { OperationCanceledException } from '@microsoft.azure/tasks';
+import { OperationCanceledException, Delay, LazyPromise } from '@microsoft.azure/tasks';
 import { EnsureIsFolderUri, ReadUri, ResolveUri, WriteString, ParentFolderUri } from '@microsoft.azure/uri';
 import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
@@ -13,6 +13,10 @@ import { LineIndices } from '../parsing/text-utility';
 import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode } from '../yaml';
 import { BlameTree } from '../source-map/blaming';
 import { Compile, CompilePosition, Mapping, SmartPosition } from '../source-map/source-map';
+import { promises as fs } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
 
@@ -21,18 +25,29 @@ const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
  ********************************************/
 
 export interface Metadata {
-  artifactType: string;
-  inputSourceMap: Lazy<RawSourceMap>;
-  sourceMap: Lazy<RawSourceMap>;
-  sourceMapEachMappingByLine: Lazy<Array<Array<MappingItem>>>;
-  yamlAst: Lazy<YAMLNode>;
-  lineIndices: Lazy<Array<number>>;
+
+
+  /* disabling source-map-support */
+  // inputSourceMap: LazyPromise<RawSourceMap>;
+  // lineIndices: Lazy<Array<number>>;
+
+  // sourceMap: LazyPromise<RawSourceMap>;
+  // sourceMapEachMappingByLine: LazyPromise<Array<Array<MappingItem>>>;
+
+
 }
 
 export interface Data {
-  data: string;
-  metadata: Metadata;
+  name: string
+  artifactType: string;
+  // metadata: Metadata;
   identity: Array<string>;
+
+  writeToDisk?: Promise<void>;
+  cached?: string;
+  cachedAst?: YAMLNode;
+  cachedObject?: any;
+  accessed?: boolean;
 }
 
 interface Store { [uri: string]: Data; }
@@ -56,6 +71,7 @@ export abstract class DataSource {
     return result;
   }
 
+  /*
   public async Dump(targetDirUri: string): Promise<void> {
     targetDirUri = EnsureIsFolderUri(targetDirUri);
     const keys = await this.Enum();
@@ -71,6 +87,7 @@ export abstract class DataSource {
       await WriteString(targetFileUri + '.input.map', JSON.stringify(metadata.inputSourceMap.Value, null, 2));
     }
   }
+  */
 }
 
 export class QuickDataSource extends DataSource {
@@ -145,8 +162,16 @@ export class DataStore {
   public static readonly BaseUri = 'mem://';
   public readonly BaseUri = DataStore.BaseUri;
   private store: Store = {};
+  private cacheFolder?: string;
 
   public constructor(private cancellationToken: CancellationToken = CancellationToken.None) {
+  }
+
+  private async getCacheFolder() {
+    if (!this.cacheFolder) {
+      this.cacheFolder = await fs.mkdtemp(join(tmpdir(), 'autorest-'));
+    }
+    return this.cacheFolder;
   }
 
   private ThrowIfCancelled(): void {
@@ -165,32 +190,42 @@ export class DataStore {
 
   private uid = 0;
 
-  private async WriteDataInternal(uri: string, data: string, metadata: Metadata, identity: Array<string>): Promise<DataHandle> {
+  private async WriteDataInternal(uri: string, data: string, artifactType: string, identity: Array<string>): Promise<DataHandle> {
     this.ThrowIfCancelled();
     if (this.store[uri]) {
       throw new Error(`can only write '${uri}' once`);
     }
+
+    // make a sanitized name
+    const name = join(await this.getCacheFolder(), uri.replace(/[^\w|^d|^\.^\(^\)]+/g, '-'));
+
     this.store[uri] = {
-      data,
-      metadata,
+      name,
+      cached: data,
+      artifactType,
       identity
     };
 
     return this.Read(uri);
   }
 
-  public async WriteData(description: string, data: string, artifact: string, identity: Array<string>, sourceMapFactory?: (self: DataHandle) => RawSourceMap): Promise<DataHandle> {
+  public async WriteData(description: string, data: string, artifact: string, identity: Array<string>, sourceMapFactory?: (self: DataHandle) => Promise<RawSourceMap>): Promise<DataHandle> {
     const uri = this.createUri(description);
+    return await this.WriteDataInternal(uri, data, artifact, identity);
 
     // metadata
-    const metadata: Metadata = <any>{};
-    const result = await this.WriteDataInternal(uri, data, metadata, identity);
-    metadata.artifactType = artifact;
-    metadata.sourceMap = new Lazy(() => {
+    // const metadata: Metadata = <any>{};
+
+    // const result = await this.WriteDataInternal(uri, data, artifact, identity);
+
+    // metadata.artifactType = artifact;
+
+    /*  DISABLING SOURCE-MAP-SUPPORT 
+    metadata.sourceMap = new LazyPromise(async () => {
       if (!sourceMapFactory) {
         return new SourceMapGenerator().toJSON();
       }
-      const sourceMap = sourceMapFactory(result);
+      const sourceMap = await sourceMapFactory(result);
 
       // validate
       const inputFiles = sourceMap.sources.concat(sourceMap.file);
@@ -202,9 +237,14 @@ export class DataStore {
 
       return sourceMap;
     });
-    metadata.sourceMapEachMappingByLine = new Lazy<Array<Array<MappingItem>>>(() => {
+    */
+
+
+    /*  DISABLING SOURCE-MAP-SUPPORT 
+    metadata.sourceMapEachMappingByLine = new LazyPromise<Array<Array<MappingItem>>>(async () => {
       const result: Array<Array<MappingItem>> = [];
-      const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
+
+      const sourceMapConsumer = new SourceMapConsumer(await metadata.sourceMap);
 
       // does NOT support multiple sources :(
       // `singleResult` has null-properties if there is no original
@@ -219,10 +259,12 @@ export class DataStore {
 
       return result;
     });
-    metadata.inputSourceMap = new Lazy(() => this.CreateInputSourceMapFor(uri));
-    metadata.yamlAst = new Lazy<YAMLNode>(() => parseAst(data));
-    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
-    return result;
+
+    */
+    // metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
+    // metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
+
+    //return result;
   }
 
   private createUri(description: string): string {
@@ -257,10 +299,10 @@ export class DataStore {
     return new DataHandle(uri, data);
   }
 
-  public Blame(absoluteUri: string, position: SmartPosition): BlameTree {
+  public async Blame(absoluteUri: string, position: SmartPosition): Promise<BlameTree> {
     const data = this.ReadStrictSync(absoluteUri);
-    const resolvedPosition = CompilePosition(position, data);
-    return BlameTree.Create(this, {
+    const resolvedPosition = await CompilePosition(position, data);
+    return await BlameTree.Create(this, {
       source: absoluteUri,
       column: resolvedPosition.column,
       line: resolvedPosition.line,
@@ -268,19 +310,20 @@ export class DataStore {
     });
   }
 
-  private CreateInputSourceMapFor(absoluteUri: string): RawSourceMap {
+  /* DISABLING SOURCE MAP SUPPORT 
+  private async CreateInputSourceMapFor(absoluteUri: string): Promise<RawSourceMap> {
     const data = this.ReadStrictSync(absoluteUri);
 
     // retrieve all target positions
     const targetPositions: Array<SmartPosition> = [];
     const metadata = data.metadata;
-    const sourceMapConsumer = new SourceMapConsumer(metadata.sourceMap.Value);
+    const sourceMapConsumer = new SourceMapConsumer(await metadata.sourceMap);
     sourceMapConsumer.eachMapping(m => targetPositions.push(<Position>{ column: m.generatedColumn, line: m.generatedLine }));
 
     // collect blame
     const mappings: Array<Mapping> = [];
     for (const targetPosition of targetPositions) {
-      const blameTree = this.Blame(absoluteUri, targetPosition);
+      const blameTree = await this.Blame(absoluteUri, targetPosition);
       const inputPositions = blameTree.BlameLeafs();
       for (const inputPosition of inputPositions) {
         mappings.push({
@@ -295,6 +338,7 @@ export class DataStore {
     Compile(mappings, sourceMapGenerator);
     return sourceMapGenerator.toJSON();
   }
+  */
 }
 
 /********************************************
@@ -305,18 +349,18 @@ export class DataStore {
 
 export class DataSink {
   constructor(
-    private write: (description: string, rawData: string, artifact: string | undefined, identity: Array<string>, metadataFactory: (readHandle: DataHandle) => RawSourceMap) => Promise<DataHandle>,
+    private write: (description: string, rawData: string, artifact: string | undefined, identity: Array<string>, metadataFactory: (readHandle: DataHandle) => Promise<RawSourceMap>) => Promise<DataHandle>,
     private forward: (description: string, input: DataHandle) => Promise<DataHandle>) {
   }
 
-  public async WriteDataWithSourceMap(description: string, data: string, artifact: string | undefined, identity: Array<string>, sourceMapFactory: (readHandle: DataHandle) => RawSourceMap): Promise<DataHandle> {
+  public async WriteDataWithSourceMap(description: string, data: string, artifact: string | undefined, identity: Array<string>, sourceMapFactory: (readHandle: DataHandle) => Promise<RawSourceMap>): Promise<DataHandle> {
     return this.write(description, data, artifact, identity, sourceMapFactory);
   }
 
   public async WriteData(description: string, data: string, identity: Array<string>, artifact?: string, mappings: Array<Mapping> = [], mappingSources: Array<DataHandle> = []): Promise<DataHandle> {
-    return this.WriteDataWithSourceMap(description, data, artifact, identity, readHandle => {
+    return this.WriteDataWithSourceMap(description, data, artifact, identity, async readHandle => {
       const sourceMapGenerator = new SourceMapGenerator({ file: readHandle.key });
-      Compile(mappings, sourceMapGenerator, mappingSources.concat(readHandle));
+      await Compile(mappings, sourceMapGenerator, mappingSources.concat(readHandle));
       return sourceMapGenerator.toJSON();
     });
   }
@@ -331,7 +375,37 @@ export class DataSink {
 }
 
 export class DataHandle {
-  constructor(public readonly key: string, private read: Data) {
+  constructor(public readonly key: string, private item: Data) {
+    // start the clock once this has been created.
+    // this ensures that the data cache will be flushed if not 
+    // used in a reasonable amount of time
+    this.onTimer();
+  }
+
+  private async onTimer() {
+    await Delay(3000);
+
+    if (this.item.accessed) {
+      // it's been cached. start the timer!
+      this.onTimer();
+
+      // clear the accessed flag before we go.
+      this.item.accessed = false;
+      return;
+    }
+    // wasn't actually used since the delay. let's dump it.
+    // console.log(`flushing ${this.item.name}`);
+
+    // wait to make sure it's finished writing to disk tho'
+    // await this.item.writingToDisk;
+    if (!this.item.writeToDisk) {
+      this.item.writeToDisk = fs.writeFile(this.item.name, this.item.cached);
+    }
+
+    // clear the caches.
+    this.item.cached = undefined;
+    this.item.cachedObject = undefined;
+    this.item.cachedAst = undefined;
   }
 
   public get originalDirectory() {
@@ -344,45 +418,73 @@ export class DataHandle {
   }
 
   public get identity() {
-    return this.read.identity;
+    return this.item.identity;
   }
 
-  public ReadData(): string {
-    return this.read.data;
+  public async ReadData(nocache: boolean = false): Promise<string> {
+    if (!nocache) {
+      // we're going to use the data, so let's not let it expire.
+      this.item.accessed = true;
+    }
+    // if it's not cached, load it from disk.
+    if (this.item.cached === undefined) {
+      // make sure the write-to-disk is finished.
+      await this.item.writeToDisk;
+
+      if (nocache) {
+        return await fs.readFile(this.item.name, 'utf8');
+      } else {
+        this.item.cached = await fs.readFile(this.item.name, 'utf8');
+
+        // start the timer again.
+        this.onTimer();
+      }
+    }
+
+    return this.item.cached;
   }
 
-  public get metadata(): Metadata {
-    return this.read.metadata;
+  public async ReadObject<T>(): Promise<T> {
+    // we're going to use the data, so let's not let it expire.
+    this.item.accessed = true;
+
+    // return the cached object, or get it, then return it.
+    return this.item.cachedObject || (this.item.cachedObject = ParseNode<T>(await this.ReadYamlAst()));
   }
 
-  public ReadObject<T>(): T {
-    return ParseNode<T>(this.ReadYamlAst());
+  public async ReadYamlAst(): Promise<YAMLNode> {
+    // we're going to use the data, so let's not let it expire.
+    this.item.accessed = true;
+    // return the cachedAst or get it, then return it.
+    return this.item.cachedAst || (this.item.cachedAst = parseAst(await this.ReadData()));
   }
-
-  public ReadYamlAst(): YAMLNode {
-    return this.metadata.yamlAst.Value;
-  }
-
+  /*
+    public get metadata(): Metadata {
+      return this.item.metadata;
+    }
+  */
   public get artifactType(): string {
-    return this.metadata.artifactType;
+    return this.item.artifactType;
   }
 
   public get Description(): string {
     return decodeURIComponent(this.key.split('?').reverse()[0]);
   }
 
-  public IsObject(): boolean {
+  public async IsObject(): Promise<boolean> {
     try {
-      this.ReadObject();
+      await this.ReadObject();
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  public Blame(position: Position): Array<MappedPosition> {
+  public async Blame(position: Position): Promise<Array<MappedPosition>> {
+    return [];
+    /* DISABLING SOURCE MAP SUPPORT 
     const metadata = this.metadata;
-    const sameLineResults = (metadata.sourceMapEachMappingByLine.Value[position.line] || [])
+    const sameLineResults = ((await metadata.sourceMapEachMappingByLine)[position.line] || [])
       .filter(mapping => mapping.generatedColumn <= position.column);
     const maxColumn = sameLineResults.reduce((c, m) => Math.max(c, m.generatedColumn), 0);
     const columnDelta = position.column - maxColumn;
@@ -394,5 +496,6 @@ export class DataHandle {
         source: m.source
       };
     });
+    */
   }
 }

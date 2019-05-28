@@ -13,7 +13,7 @@ type ObjectMembers<T> = Pick<T, Objects<T>>;
 type Real<T> = T extends null | undefined | never ? never : T;
 
 export interface Source {
-  ReadObject<T>(): T;
+  ReadObject<T>(): Promise<T>;
   key: string;
 }
 
@@ -109,7 +109,7 @@ export class Transformer<TInput extends object = AnyObject, TOutput extends obje
     if (!this.final) {
       await this.init();
       for (this.currentInput of values(this.inputs)) {
-        this.current = this.currentInput.ReadObject<TInput>();
+        this.current = await this.currentInput.ReadObject<TInput>();
         await this.process(this.generated, visit(this.current));
       }
       await this.finish();
