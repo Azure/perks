@@ -48,7 +48,7 @@
     "@microsoft.azure/async-io": "^2.1.0"
   },
   "dependencies": {
-    "@microsoft.azure/datastore": "^2.1.0",
+    "@microsoft.azure/datastore": "^3.0.0",
     "@microsoft.azure/linq": "^2.1.0",
     "@microsoft.azure/tasks": "^2.1.0",
     "@microsoft.azure/object-comparison": "^2.1.0",
