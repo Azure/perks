@@ -80,7 +80,7 @@ export class TerminalCaseStatement extends CaseStatement {
   }
 
   public get implementation(): string {
-    if (!this.statementsImplementation) {
+    if (!(this.statementsImplementation.trim())) {
       return `
 case ${this.value}:`.trim();
     }
