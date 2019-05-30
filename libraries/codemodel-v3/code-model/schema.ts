@@ -56,6 +56,16 @@ export interface VirtualProperty {
   alias: Array<string>;
 
   description: string;
+
+  format?: PropertyFormat;
+}
+
+
+interface PropertyFormat {
+  suppressFormat?: boolean;
+  index?: number;
+  width?: number;
+  label?: string;
 }
 
 export interface VirtualProperties {
@@ -75,6 +85,7 @@ export interface SchemaDetails extends ImplementationDetails {
   /** if this is a child of a polymorphic class, this will have the value of the descriminator.  */
   discriminatorValue?: string;
 
+  suppressFormat?: boolean;
 }
 
 export class Schema extends Extensions implements Schema {
