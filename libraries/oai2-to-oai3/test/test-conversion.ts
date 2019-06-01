@@ -31,8 +31,8 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
@@ -41,7 +41,7 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -65,8 +65,8 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
@@ -75,7 +75,7 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -99,8 +99,8 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
@@ -109,7 +109,7 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -133,8 +133,8 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
@@ -143,7 +143,7 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -167,14 +167,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -198,14 +198,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -229,14 +229,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -260,14 +260,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -291,14 +291,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -322,14 +322,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -354,14 +354,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -386,14 +386,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -418,14 +418,14 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
@@ -449,18 +449,16 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
-
-
   @test  async "lro"() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
@@ -481,14 +479,45 @@ import { Oai2ToOai3 } from '../main';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = swaggerDataHandle.ReadObject();
-      const original = originalDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
       convert.convert();
 
-      assert.deepEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+    }
+  }
+
+  @test  async "exec-service"() {
+    const swaggerUri = 'mem://oai2.json';
+    const oai3Uri = 'mem://oai3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/exec-service.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/exec-service.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
     }
   }
 
