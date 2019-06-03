@@ -672,6 +672,11 @@ export class Oai2ToOai3 {
         [...new Set([...operationValue.produces])] :
       globalProduces;
 
+    // default
+    if (produces.length === 0) {
+      produces.push('*/*');
+    }
+
     const consumes = (operationValue.consumes) ? (operationValue.consumes.indexOf('application/octet-stream') !== -1) ? operationValue.consumes
       : [...new Set([...operationValue.consumes])]
       : globalConsumes;
