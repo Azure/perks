@@ -253,7 +253,9 @@ export function* convert(num: number): Iterable<string> {
 }
 
 export function isEqual(s1: string, s2: string): boolean {
-  return !!s1 && !s1.localeCompare(s2, undefined, { sensitivity: 'base' });
+  // when s2 is undefined and s1 is the string 'undefined', it returns 0, making this true.
+  // To prevent that, first we need to check if s2 is undefined.
+  return s2 !== undefined && !!s1 && !s1.localeCompare(s2, undefined, { sensitivity: 'base' });
 }
 
 export function removeSequentialDuplicates(identifier: Iterable<string>) {
@@ -266,6 +268,7 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
       ids.splice(i, 2);
     }
   }
+
   return ids;
 }
 

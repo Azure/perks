@@ -8,10 +8,10 @@ import { serialize, Dictionary } from '@microsoft.azure/codegen';
 import { Host } from '@microsoft.azure/autorest-extension-base';
 import { ModelState } from './model-state';
 
-export async function processCodeModel(processExtension: (state: ModelState<Model>) => Promise<Model>, service: Host) {
+export async function processCodeModel(processExtension: (state: ModelState<Model>) => Promise<Model>, service: Host, callerName?: string) {
   // Get the list of files
   const state = await new ModelState<Model>(service).init();
 
   // output the model back to the pipeline
-  await service.WriteFile('code-model-v3.yaml', serialize(await processExtension(state)), undefined, 'code-model-v3');
+  await service.WriteFile(`code-model-v3${callerName ? `-${callerName}` : ''}.yaml`, serialize(await processExtension(state)), undefined, 'code-model-v3');
 }
