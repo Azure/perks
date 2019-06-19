@@ -155,3 +155,23 @@ ${this.new}${this.access} ${this.static} ${this.virtual} ${this.sealed} ${this.o
     return `${this.declaration};`.slim();
   }
 }
+
+export class ImplicitCastOperator extends Method {
+  constructor(targetType: TypeDeclaration, sourceType: TypeDeclaration, protected expression: ExpressionOrLiteral, objectIntializer?: Partial<ImplicitCastOperator>) {
+    super(`implicit operator ${targetType.declaration}`, targetType, { parameters: [new Parameter('source', sourceType)], static: Modifier.Static, })
+  }
+
+  public get declaration(): string {
+    const parameterDeclaration = this.parameters.joinWith(p => p.declaration, CommaChar);
+    return `
+${this.summaryDocumentation}
+${this.parameterDocumentation}
+${this.returnsDocumentation}
+${this.new}${this.access} static ${this.override} ${this.abstract} implicit operator ${this.returnType.declaration}(${parameterDeclaration}) => ${valueOf(this.expression)}
+`.slim();
+  }
+
+  public get implementation(): string {
+    return `${this.declaration};`.slim();
+  }
+}
