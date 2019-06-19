@@ -91,7 +91,7 @@ export class EnglishPluralizationService {
     'lettuce', 'beef', 'pork', 'venison', 'mutton', 'cattle', 'offspring',
     'molasses', 'shambles', 'shingles', 'https', 'sas', 'statuses', 'as', 'statistics',
     'alias', 'dns', 'ms', 'os', 'vmss', 'acls', 'rights', 'credentials', 'ddos', 'media',
-    'gbps', 'mbps', 'kbps'
+    'gbps', 'mbps', 'kbps', 'bps'
   ];
 
   private irregularVerbList: { [key: string]: string } = { 'am': 'are', 'are': 'are', 'is': 'are', 'was': 'were', 'were': 'were', 'has': 'have', 'have': 'have' };
