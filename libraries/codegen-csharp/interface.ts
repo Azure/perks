@@ -20,7 +20,7 @@ export class Interface extends Type {
 
   public get definition(): string {
     const colon = this.interfaces.length > 0 ? ' : ' : '';
-    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(', ');
+    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(',\n    ');
     const description = comment(this.description, docCommentPrefix);
     const methods = this.methods.sort(sortByName).map(m => m.interfaceDeclaration).join(EOL);
     const properties = this.properties.sort(sortByName).map(m => m.declaration).join(EOL);
@@ -28,7 +28,9 @@ export class Interface extends Type {
 
     return `
 ${description}
-${this.attributeDeclaration}${this.accessModifier} ${partial}interface ${this.name}${colon}${implementsInterfaces} {
+${this.attributeDeclaration}${this.accessModifier} ${partial}interface ${this.name}${colon}
+    ${implementsInterfaces} 
+{
 ${indent(properties, 1)}
 
 ${indent(methods, 1)}
