@@ -788,7 +788,10 @@ export class Oai2ToOai3 {
       }
 
       if (requestBodyTracker.xmsname) {
-        targetOperation.requestBody['x-ms-client-name'] = { value: requestBodyTracker.xmsname, pointer };
+        if (targetOperation.requestBody['x-ms-client-name'] === undefined) {
+          targetOperation.requestBody['x-ms-client-name'] = { value: requestBodyTracker.xmsname, pointer };
+        }
+
         targetOperation.requestBody['x-ms-requestBody-name'] = { value: requestBodyTracker.xmsname, pointer };
       } else if (requestBodyTracker.name) {
         targetOperation.requestBody['x-ms-requestBody-name'] = { value: requestBodyTracker.name, pointer };
@@ -830,10 +833,6 @@ export class Oai2ToOai3 {
       if (parameterValue.allowEmptyValue !== undefined && targetOperation.requestBody.allowEmptyValue === undefined) {
         targetOperation.requestBody.allowEmptyValue = { value: parameterValue.allowEmptyValue, pointer };
       }
-
-      // if (parameterValue.required === true && targetOperation.requestBody.required === undefined) {
-      //   targetOperation.requestBody.required = { value: parameterValue.required, pointer };
-      // }
 
       if (parameterValue.in === 'formData') {
 

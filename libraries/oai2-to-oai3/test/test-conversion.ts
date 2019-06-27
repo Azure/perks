@@ -521,6 +521,36 @@ import { Oai2ToOai3 } from '../main';
     }
   }
 
+  @test  async "LUIS runtime"() {
+    const swaggerUri = 'mem://oai2.json';
+    const oai3Uri = 'mem://oai3.json';
+
+    const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/luis.json`);
+    const oai3 = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai3/luis.json`);
+
+    const map = new Map<string, string>([[swaggerUri, swagger], [oai3Uri, oai3]]);
+    const mfs = new datastore.MemoryFileSystem(map);
+
+    const cts: datastore.CancellationTokenSource = { cancel() { }, dispose() { }, token: { isCancellationRequested: false, onCancellationRequested: <any>null } };
+    const ds = new datastore.DataStore(cts.token);
+    const scope = ds.GetReadThroughScope(mfs);
+    const swaggerDataHandle = await scope.Read(swaggerUri);
+    const originalDataHandle = await scope.Read(oai3Uri)
+
+    assert(swaggerDataHandle != null);
+    assert(originalDataHandle != null);
+
+    if (swaggerDataHandle && originalDataHandle) {
+      const swag = await swaggerDataHandle.ReadObject();
+      const original = await originalDataHandle.ReadObject();
+      const convert = new Oai2ToOai3(swaggerUri, swag);
+
+      // run the conversion
+      convert.convert();
+
+      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+    }
+  }
 
   /* @test */ async "test conversion with sourcemap"() {
     const absoluteUri = 'swagger.yaml';
