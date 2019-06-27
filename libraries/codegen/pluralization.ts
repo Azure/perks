@@ -1,3 +1,5 @@
+import { pascalCase, deconstruct } from "./text-manipulation";
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -88,7 +90,8 @@ export class EnglishPluralizationService {
     'hay', '----', 'tobacco', 'cabbage', 'okra', 'broccoli', 'asparagus',
     'lettuce', 'beef', 'pork', 'venison', 'mutton', 'cattle', 'offspring',
     'molasses', 'shambles', 'shingles', 'https', 'sas', 'statuses', 'as', 'statistics',
-    'alias', 'dns', 'ms', 'os', 'vmss', 'acls', 'rights', 'credentials'
+    'alias', 'dns', 'ms', 'os', 'vmss', 'acls', 'rights', 'credentials', 'ddos', 'media', 'gbps',
+    'kbps', 'mbps', 'bps'
   ];
 
   private irregularVerbList: { [key: string]: string } = { 'am': 'are', 'are': 'are', 'is': 'are', 'was': 'were', 'were': 'were', 'has': 'have', 'have': 'have' };
@@ -480,7 +483,18 @@ export class EnglishPluralizationService {
   }
 
   public singularize(word: string): string {
-    return this.capitalize(word, w => this.internalSingularize(w));
+    if (!word) {
+      return word;
+    }
+
+    // split it up.
+    const de = deconstruct(word);
+
+    // singularize the last word only
+    de[de.length - 1] = this.capitalize(de.last, w => this.internalSingularize(w));
+
+    // return the pascal cased whole thing.
+    return pascalCase(de);
   }
 
   private internalSingularize(word: string): string {

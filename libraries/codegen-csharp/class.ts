@@ -55,14 +55,15 @@ export class Class extends Type {
     const comma = (this.parent && this.interfaces.length > 0) ? ', ' : '';
 
     const extendsClass = this.parent ? this.parent.fullName : '';
-    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(', ');
+    const implementsInterfaces = this.interfaces.map(v => v.declaration).join(',\n    ');
 
     const partial = this.partial ? 'partial ' : '';
     const stat = this.isStatic ? 'static ' : '';
 
     return `
 ${this.headerComment}
-${this.attributeDeclaration}${this.accessModifier} ${stat}${partial}${this.classOrStruct} ${this.name}${colon}${extendsClass}${comma}${implementsInterfaces}
+${this.attributeDeclaration}${this.accessModifier} ${stat}${partial}${this.classOrStruct} ${this.name}${colon}${extendsClass}${comma}
+    ${implementsInterfaces}
 `.trim();
   }
 

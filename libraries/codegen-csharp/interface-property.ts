@@ -23,6 +23,6 @@ export class InterfaceProperty extends Property {
     const set = this.setAccess === Access.Public ? 'set;' : '';
 
     return `${docComment(summary(this.description))}
-    ${this.type.declaration} ${this.name} { ${get} ${set} }`;
+${this.attributeDeclaration}${this.type.declaration} ${this.name} { ${get} ${set} }`;
   }
 }

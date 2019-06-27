@@ -130,6 +130,16 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
   return [...values([...props.owned, ...props.inherited, ...props.inlined]).linq.where(each => !each.private)]
 }
 
+export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
+  const props = virtualProperties || {
+    owned: [],
+    inherited: [],
+    inlined: []
+  };
+
+  return [...values([...props.owned, ...props.inherited, ...props.inlined])];
+}
+
 export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualProperties | undefined, propertyName: string): VirtualProperty | undefined {
   const props = virtualProperties || {
     owned: [],

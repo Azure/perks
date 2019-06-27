@@ -136,7 +136,7 @@ class ReadThroughDataSource extends DataSource {
           if (data) {
             const parent = ParentFolderUri(uri) || '';
             // hack to let $(this-folder) resolve to the location...
-            data = data.replace(/\$\(this-folder\)/g, parent);
+            data = data.replace(/\$\(this-folder\)\/*/g, parent);
           }
         } finally {
           if (!data) {
