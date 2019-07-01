@@ -20,6 +20,12 @@ export interface CommandOperationDetails extends ProgramaticOperationDetails {
   virtualParameters?: VirtualParameters;
 }
 
+export interface CompleterInfo {
+  script: string;
+  name: string;
+  description: string;
+}
+
 export interface CommandOperation extends ProgrammaticOperation {
   alias: Array<string>;
   verb: string;
@@ -37,7 +43,8 @@ export interface VirtualParameter {
   schema: Schema;
   nameOptions: Array<string>;
   origin: VirtualProperty | IParameter;
-  alias: Array<string>
+  alias: Array<string>,
+  completerInfo?: CompleterInfo;
 }
 
 export class CommandOperation extends Extensions implements CommandOperation {
