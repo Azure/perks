@@ -10,6 +10,7 @@ import { uid } from './uid';
 
 export interface PropertyDetails extends ImplementationDetails {
   required: boolean;
+  readOnly: boolean;
 }
 
 export interface EnumValue {
