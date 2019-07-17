@@ -58,6 +58,8 @@ export interface VirtualProperty {
   description: string;
 
   format?: PropertyFormat;
+
+  required: boolean;
 }
 
 
