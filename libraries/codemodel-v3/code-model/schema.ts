@@ -172,6 +172,7 @@ export class Property extends Extensions implements Property {
     this.serializedName = name;
     this.details = {
       default: {
+        readOnly: false,
         uid: `property:${uid()}`,
         description: 'MISSING DESCRIPTION 03',
         name,
