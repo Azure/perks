@@ -13,6 +13,6 @@ import * as aio from "@microsoft.azure/async-io";
 
     // TODO: test mappings.
     const deduplicator = new Deduplicator(input);
-    assert.deepStrictEqual(deduplicator.output, expectedOutput);
+    assert.deepStrictEqual(await deduplicator.getOutput(), expectedOutput);
   }
 }

@@ -8,6 +8,7 @@ import { Dictionary, items, clone } from '@microsoft.azure/linq';
 import { areSimilar } from '@microsoft.azure/object-comparison';
 import * as compareVersions from 'compare-versions';
 import { toSemver, maximum } from '@microsoft.azure/codegen';
+import { YieldCPU } from '@microsoft.azure/tasks';
 
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
@@ -70,7 +71,7 @@ export class Deduplicator {
     this.target = clone(originalFile);
   }
 
-  private init() {
+  private async init() {
     // set initial refs table
     // NOTE: The deduplicator assumes that the document is merged-document from multiple tree-shaken files,
     //        and for that reason the only references in the document are local component references.
@@ -82,7 +83,7 @@ export class Deduplicator {
 
     // 1. deduplicate components
     if (this.target.components) {
-      this.deduplicateComponents();
+      await this.deduplicateComponents();
     }
 
     // 2. deduplicate remaining fields
@@ -208,15 +209,16 @@ export class Deduplicator {
     }
   }
 
-  private deduplicateComponents() {
+  private async deduplicateComponents() {
     for (const { key: type, children: componentsMember } of visit(this.target.components)) {
       for (const { key: componentUid } of componentsMember) {
-        this.deduplicateComponent(componentUid, type);
+        await YieldCPU();
+        await this.deduplicateComponent(componentUid, type);
       }
     }
   }
 
-  private deduplicateComponent(componentUid: string, type: string) {
+  private async deduplicateComponent(componentUid: string, type: string) {
     switch (type) {
       case 'schemas':
       case 'responses':
@@ -229,7 +231,8 @@ export class Deduplicator {
       case 'securitySchemes':
         if (!this.deduplicatedComponents[type].has(componentUid)) {
           if (!this.crawledComponents[type].has(componentUid)) {
-            this.crawlComponent(componentUid, type);
+            await YieldCPU();
+            await this.crawlComponent(componentUid, type);
           }
 
           // Just try to deduplicate if it was not deduplicated while crawling another component.
@@ -303,11 +306,11 @@ export class Deduplicator {
     }
   }
 
-  private crawlComponent(uid: string, type: componentType): void {
+  private async crawlComponent(uid: string, type: componentType) {
     if (!this.visitedComponents[type].has(uid)) {
       if (this.target.components[type][uid]) {
         this.visitedComponents[type].add(uid);
-        this.crawlObject(this.target.components[type][uid]);
+        await this.crawlObject(this.target.components[type][uid]);
       } else {
         throw new Error(`Trying to crawl undefined component with uid '${uid}' and type '${type}'!`);
       }
@@ -316,15 +319,15 @@ export class Deduplicator {
     this.crawledComponents[type].add(uid);
   }
 
-  private crawlObject(obj: any): void {
+  private async crawlObject(obj: any) {
     for (const { key, value } of visit(obj)) {
       if (key === '$ref') {
         const refParts = value.split('/');
         const componentUid = refParts.pop();
         const type = refParts.pop();
-        this.deduplicateComponent(componentUid, type);
+        await this.deduplicateComponent(componentUid, type);
       } else if (value && typeof (value) === 'object') {
-        this.crawlObject(value);
+        await this.crawlObject(value);
       }
     }
   }
@@ -358,17 +361,17 @@ export class Deduplicator {
     }
   }
 
-  public get output() {
+  public async getOutput() {
     if (!this.hasRun) {
-      this.init();
+      await this.init();
       this.hasRun = true;
     }
     return this.target;
   }
 
-  public get sourceMappings() {
+  public async getSourceMappings() {
     if (!this.hasRun) {
-      this.init();
+      await this.init();
       this.hasRun = true;
     }
     return this.mappings;

@@ -17,7 +17,7 @@ export interface Source {
   key: string;
 }
 
-export class Transformer<TInput extends object = AnyObject, TOutput extends object= AnyObject>  {
+export class Transformer<TInput extends object = AnyObject, TOutput extends object = AnyObject>  {
   protected generated: TOutput;
   protected mappings = new Array<Mapping>();
   protected final?: TOutput;
