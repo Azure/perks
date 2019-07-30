@@ -67,7 +67,7 @@ export class AutoRestExtension {
         }
         await handler({
           async ProtectFiles(path: string): Promise<void> {
-            await channel.sendNotification(IAutoRestPluginInitiator_Types.ProtectFiles, sessionId, path);
+            channel.sendNotification(IAutoRestPluginInitiator_Types.ProtectFiles, sessionId, path);
           },
           UpdateConfigurationFile(filename: string, content: string): void {
             channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, { Channel: Channel.Configuration, Key: [filename], Text: content });

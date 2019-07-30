@@ -11,6 +11,8 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   protected documentName!: string;
   protected currentPath: JsonPath = new Array<string>();
   private context!: any;
+  private _debug: boolean = false;
+  private _verbose: boolean = false;
 
   public constructor(protected service: Host, objectInitializer?: Partial<ModelState<T>>) {
     super();
@@ -22,6 +24,8 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     this.model = m.model;
     this.documentName = m.filename;
     this.initContext(project);
+    this._debug = await this.getValue('debug', false);
+    this._verbose = await this.getValue('verbose', false);
     return this;
   }
 
@@ -43,7 +47,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
 
   async getValue<V>(key: string, defaultValue?: V): Promise<V> {
     // check if it's in the model first
-    let value = (<any>this.model.details.default)[key];
+    let value = this.model && this.model.details && this.model.details.default ? (<any>this.model.details.default)[key] : undefined;
 
     // fall back to the configuration
     if (value == null || value === undefined) {
@@ -88,6 +92,12 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   }
 
   message(message: Message): void {
+    if (message.Channel === Channel.Debug && this._debug === false) {
+      return;
+    }
+    if (message.Channel === Channel.Verbose && this._verbose === false) {
+      return;
+    }
     return this.service.Message(message);
   }
 
