@@ -13,20 +13,20 @@ export interface Statement {
 }
 
 export type StatementOrLiteral = Statement | string;
-export type OneOrMoreStatements = StatementOrLiteral | fIterable<StatementOrLiteral>;
-export type OneOrMoreStatements2 = OneOrMoreStatements | fIterable<OneOrMoreStatements>;
-export type OneOrMoreStatements3 = OneOrMoreStatements2 | fIterable<OneOrMoreStatements2>;
-export type OneOrMoreStatements4 = OneOrMoreStatements3 | fIterable<OneOrMoreStatements3>;
-export type OneOrMoreStatements5 = OneOrMoreStatements4 | fIterable<OneOrMoreStatements4>;
+export type OneOrMoreStatements = StatementOrLiteral | fIterable<StatementOrLiteral | undefined>;
+export type OneOrMoreStatements2 = OneOrMoreStatements | fIterable<OneOrMoreStatements | undefined>;
+export type OneOrMoreStatements3 = OneOrMoreStatements2 | fIterable<OneOrMoreStatements2 | undefined>;
+export type OneOrMoreStatements4 = OneOrMoreStatements3 | fIterable<OneOrMoreStatements3 | undefined>;
+export type OneOrMoreStatements5 = OneOrMoreStatements4 | fIterable<OneOrMoreStatements4 | undefined>;
 
-export type StatementPossibilities = OneOrMoreStatements5 | Statements;
+export type StatementPossibilities = OneOrMoreStatements5 | Statements | undefined;
 
 export function toStatement(statement: StatementOrLiteral): Statement {
   return typeof statement === 'string' ? new LiteralStatement(statement) : statement;
 }
 
 export function isStatement(object: StatementPossibilities): object is Statement {
-  return (<any>object).implementation ? true : false;
+  return object && (<any>object).implementation ? true : false;
 }
 
 
@@ -62,49 +62,53 @@ export class Statements extends Initializer implements Statement {
   }
 
   public insert(statements: StatementPossibilities): Statements {
-    if (typeof (statements) === 'string') {
-      this.statements.splice(0, 0, new LiteralStatement(statements));
-      return this;
-    }
-    if (statements instanceof Statements) {
-      this.statements.splice(0, 0, statements);
-      return this;
-    }
-    if (isStatement(statements)) {
-      this.statements.splice(0, 0, statements);
-      return this;
-    }
-    if (typeof (statements) === 'function') {
-      return this.insert(statements());
-    }
-    for (const each of statements) {
-      this.insert(each);
+    if (statements) {
+      if (typeof (statements) === 'string') {
+        this.statements.splice(0, 0, new LiteralStatement(statements));
+        return this;
+      }
+      if (statements instanceof Statements) {
+        this.statements.splice(0, 0, statements);
+        return this;
+      }
+      if (isStatement(statements)) {
+        this.statements.splice(0, 0, statements);
+        return this;
+      }
+      if (typeof (statements) === 'function') {
+        return this.insert(statements());
+      }
+      for (const each of statements) {
+        this.insert(each);
+      }
     }
     return this;
   }
 
   public add(statements: StatementPossibilities): Statements {
-    if (this.scope.last !== this) {
-      this.scope.last.add(statements);
-      return this;
-    }
-    if (typeof (statements) === 'string') {
-      this.statements.push(new LiteralStatement(statements));
-      return this;
-    }
-    if (statements instanceof Statements) {
-      this.statements.push(statements);
-      return this;
-    }
-    if (isStatement(statements)) {
-      this.statements.push(statements);
-      return this;
-    }
-    if (typeof (statements) === 'function') {
-      return this.add(statements());
-    }
-    for (const each of statements) {
-      this.add(each);
+    if (statements) {
+      if (this.scope.last !== this) {
+        this.scope.last.add(statements);
+        return this;
+      }
+      if (typeof (statements) === 'string') {
+        this.statements.push(new LiteralStatement(statements));
+        return this;
+      }
+      if (statements instanceof Statements) {
+        this.statements.push(statements);
+        return this;
+      }
+      if (isStatement(statements)) {
+        this.statements.push(statements);
+        return this;
+      }
+      if (typeof (statements) === 'function') {
+        return this.add(statements());
+      }
+      for (const each of statements) {
+        this.add(each);
+      }
     }
     return this;
   }
