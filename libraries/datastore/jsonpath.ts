@@ -63,6 +63,25 @@ export function nodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, val
   }
 }
 
+export function selectNodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, value: any, parent: any }> {
+  // jsonpath only accepts objects
+  if (obj instanceof Object) {
+    const result = new Array<{ path: JsonPath, value: any, parent: any }>();
+    const keys = new Set<string>();
+
+    for (const node of jsonpath.nodes(obj, jsonQuery)) {
+      const p = jsonpath.stringify(node.path);
+      if (!keys.has(p)) {
+        keys.add(p);
+        result.push({ path: node.path.slice(1), value: node.value, parent: jsonpath.parent(obj, p) });
+      }
+    }
+    return result;
+  } else {
+    return [];
+  }
+}
+
 export function IsPrefix(prefix: JsonPath, path: JsonPath): boolean {
   if (prefix.length > path.length) {
     return false;

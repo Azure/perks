@@ -3,19 +3,18 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { OperationCanceledException, Delay, LazyPromise } from '@microsoft.azure/tasks';
-import { EnsureIsFolderUri, ReadUri, ResolveUri, WriteString, ParentFolderUri } from '@microsoft.azure/uri';
-import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
+import { OperationCanceledException, Delay } from '@microsoft.azure/tasks';
+import { ReadUri, ResolveUri, ParentFolderUri } from '@microsoft.azure/uri';
+import { MappedPosition, Position, RawSourceMap, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
-import { Lazy } from '../lazy';
-import { LineIndices } from '../parsing/text-utility';
-import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode } from '../yaml';
+import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode, parseYaml } from '../yaml';
 import { BlameTree } from '../source-map/blaming';
 import { Compile, CompilePosition, Mapping, SmartPosition } from '../source-map/source-map';
 import { promises as fs } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
+import { items } from '@microsoft.azure/linq';
 
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
@@ -58,10 +57,37 @@ interface Store { [uri: string]: Data; }
  * - ensures WRITE ONCE model
  ********************************************/
 
+export interface PipeState {
+  skipping?: boolean;
+  excludeFromCache?: boolean;
+}
+
+export function mergePipeStates(result: PipeState, ...pipeStates: Array<PipeState>) {
+  for (const each of pipeStates) {
+    result.skipping === undefined ? each.skipping : result.skipping && each.skipping;
+    result.excludeFromCache === undefined ? each.excludeFromCache : result.excludeFromCache || each.excludeFromCache;
+  }
+  return result;
+}
+
 export abstract class DataSource {
-  public skip: boolean | undefined;
+  public pipeState: PipeState;
   public abstract Enum(): Promise<Array<string>>;
   public abstract Read(uri: string): Promise<DataHandle | null>;
+
+  constructor() {
+    this.pipeState = {};
+  }
+
+  get skip(): boolean {
+    return !!this.pipeState.skipping;
+  }
+  get cachable(): boolean {
+    return !this.pipeState.excludeFromCache;
+  }
+  set cachable(value: boolean) {
+    this.pipeState.excludeFromCache = !value;
+  }
 
   public async ReadStrict(uri: string): Promise<DataHandle> {
     const result = await this.Read(uri);
@@ -70,38 +96,20 @@ export abstract class DataSource {
     }
     return result;
   }
-
-  /*
-  public async Dump(targetDirUri: string): Promise<void> {
-    targetDirUri = EnsureIsFolderUri(targetDirUri);
-    const keys = await this.Enum();
-    for (const key of keys) {
-      const dataHandle = await this.ReadStrict(key);
-      const data = dataHandle.ReadData();
-      const metadata = dataHandle.metadata;
-      const targetFileUri = ResolveUri(
-        targetDirUri,
-        key.replace(':', '')); // make key (URI) a descriptive relative path
-      await WriteString(targetFileUri, data);
-      await WriteString(targetFileUri + '.map', JSON.stringify(metadata.sourceMap.Value, null, 2));
-      await WriteString(targetFileUri + '.input.map', JSON.stringify(metadata.inputSourceMap.Value, null, 2));
-    }
-  }
-  */
 }
 
 export class QuickDataSource extends DataSource {
-  public constructor(private handles: Array<DataHandle>, skip?: boolean) {
+  public constructor(private handles: Array<DataHandle>, pipeState?: PipeState) {
     super();
-    this.skip = skip;
+    this.pipeState = pipeState || {};
   }
 
   public async Enum(): Promise<Array<string>> {
-    return this.skip ? new Array<string>() : this.handles.map(x => x.key);
+    return this.pipeState.skipping ? new Array<string>() : this.handles.map(x => x.key);
   }
 
   public async Read(key: string): Promise<DataHandle | null> {
-    if (this.skip) {
+    if (this.pipeState.skipping) {
       return null;
     }
     const data = this.handles.filter(x => x.key === key)[0];
@@ -115,6 +123,12 @@ class ReadThroughDataSource extends DataSource {
 
   constructor(private store: DataStore, private fs: IFileSystem) {
     super();
+  }
+
+
+  get cachable(): boolean {
+    // filesystem based data source can't cache
+    return false;
   }
 
   public async Read(uri: string): Promise<DataHandle | null> {
@@ -382,6 +396,17 @@ export class DataHandle {
     this.onTimer();
   }
 
+  public async serialize() {
+    this.item.name
+    return JSON.stringify({
+      key: this.Description,
+      artifactType: this.item.artifactType,
+      identity: this.item.identity,
+      name: this.item.name,
+      content: await this.ReadData(true)
+    });
+  }
+
   private async onTimer() {
     await Delay(3000);
 
@@ -442,6 +467,13 @@ export class DataHandle {
     }
 
     return this.item.cached;
+  }
+
+  public async ReadObjectFast<T>(): Promise<T> {
+    // we're going to use the data, so let's not let it expire.
+    this.item.accessed = true;
+
+    return this.item.cachedObject || (this.item.cachedObject = parseYaml(await this.ReadData()));
   }
 
   public async ReadObject<T>(): Promise<T> {

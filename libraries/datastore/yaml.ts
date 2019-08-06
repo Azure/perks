@@ -5,7 +5,7 @@
 
 // TODO: the following is only required because safeDump of "yaml-ast-parser" has this bug: https://github.com/mulesoft-labs/yaml-ast-parser/issues/30
 // PLEASE: remove the entire dependency to js-yaml once that is fixed!
-const { safeDump } = require('js-yaml');
+const { safeDump, safeLoad } = require('js-yaml');
 
 import * as yamlAst from 'yaml-ast-parser';
 import { NewEmptyObject } from './parsing/stable-object';
@@ -27,6 +27,8 @@ export const CreateYAMLAnchorRef: (key: string) => YAMLMap = yamlAst.newAnchorRe
 export const CreateYAMLMap: () => YAMLMap = yamlAst.newMap;
 export const CreateYAMLMapping: (key: YAMLScalar, value: YAMLNode) => YAMLMapping = yamlAst.newMapping;
 export const CreateYAMLScalar: (value: string) => YAMLScalar = yamlAst.newScalar;
+
+export const parseYaml = safeLoad;
 
 export interface YAMLNodeWithPath {
   path: JsonPath;
