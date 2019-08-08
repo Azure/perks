@@ -90,5 +90,5 @@ export function Not(conditional: Expression): Expression {
 }
 
 export function IsAssignableFrom(targetType: TypeDeclaration, instanceType: ExpressionOrLiteral) {
-  return toExpression(`typeof(${targetType.declaration}).IsAssignableFrom( ${valueOf(instanceType)})`);
+  return toExpression(`typeof(${targetType.declaration}).IsAssignableFrom(${valueOf(instanceType)})`);
 }
