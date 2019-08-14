@@ -3,6 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { exists, rmdir, readdir, mkdir, writeFile } from "@microsoft.azure/async-io";
+import { resolve as uri_resolve, parse as uri_parse } from 'url'
+
+export function simplifyUri(uri: string) {
+  return uri_resolve(`${uri_parse(uri).protocol}://`, uri);
+}
 
 export function IsUri(uri: string): boolean {
   return /^([a-z0-9+.-]+):(?:\/\/(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(\/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(\/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/i.test(uri);
@@ -98,6 +103,7 @@ function isUriAbsolute(url: string): boolean {
  * - "/input/swagger.yaml" -> "file:///input/swagger.yaml"
  */
 export function CreateFileOrFolderUri(absolutePath: string): string {
+
   if (!isAbsolute(absolutePath)) {
     throw new Error(`Can only create file URIs from absolute paths. Got '${absolutePath}'`);
   }
@@ -133,6 +139,8 @@ export function GetFilenameWithoutExtension(uri: string): string {
 }
 
 export function ToRawDataUrl(uri: string): string {
+  uri = simplifyUri(uri);
+
   // special URI handlers (the 'if's shouldn't be necessary but provide some additional isolation in case there is anything wrong with one of the regexes)
   // - GitHub repo
   if (uri.startsWith("https://github.com")) {
@@ -183,7 +191,8 @@ export function ResolveUri(baseUri: string, pathOrUri: string): string {
       result.protocol() === "https" && result.hostname() === "raw.githubusercontent.com") {
       result.query(base.query());
     }
-    return result.toString()
+
+    return simplifyUri(result.toString());
   } catch (e) {
     throw new Error(`Failed resolving '${pathOrUri}' against '${baseUri}'.`);
   }
@@ -212,6 +221,7 @@ export function MakeRelativeUri(baseUri: string, absoluteUri: string): string {
  ***********************/
 
 import { lstatSync, unlinkSync, rmdirSync } from "fs";
+import { url } from "inspector";
 
 function isAccessibleFile(localPath: string) {
   try {
