@@ -61,6 +61,8 @@ export interface VirtualProperty {
   format?: PropertyFormat;
 
   required: boolean;
+
+  sharedWith?: Array<VirtualProperty>
 }
 
 
