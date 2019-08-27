@@ -35,6 +35,9 @@
     "@types/node": "10.12.19",
     "mocha": "5.2.0",
     "mocha-typescript": "1.1.17",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "eslint": "^6.1.0",
     "typescript": "~3.5.3"
   },
   "dependencies": {

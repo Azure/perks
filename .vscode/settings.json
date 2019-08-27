@@ -44,5 +44,32 @@
   "files.associations": {
     "rush.json": "jsonc"
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "eslint.workingDirectories": [
+    "./libraries/async-io",
+    "./libraries/autorest-extension-base",
+    "./libraries/codegen",
+    "./libraries/codegen-csharp",
+    "./libraries/codemodel-v3",
+    "./libraries/datastore",
+    "./libraries/deduplication",
+    "./libraries/eventing",
+    "./libraries/extension",
+    "./libraries/linq",
+    "./libraries/oai2-to-oai3",
+    "./libraries/object-comparison",
+    "./libraries/openapi",
+    "./libraries/tasks",
+    "./libraries/uri"
+  ],
+  "eslint.validate": [
+    "javascript",
+    {
+      "language": "typescript",
+      "autoFix": false
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": false
+    }
+  ],
 }

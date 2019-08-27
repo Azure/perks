@@ -141,7 +141,7 @@ export async function rmdir(dirPath: string, exceptions?: Set<string>) {
           if (exceptions.has(p.toLowerCase())) {
             continue;
           }
-          
+
           if (await isDirectory(p)) {
             // folders are recursively rmdir'd
             awaiter.Await(rmdir(p, exceptions));

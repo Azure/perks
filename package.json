@@ -1,9 +1,10 @@
 {
+  "version": "0.0.0",
   "private": true,
   "name": "perks",
-  "devDependencies": {
-    "@microsoft/rush": "5.11.4",
-    "pwsh": "0.2.0",
-    "typescript": "~3.5.3"
+  "description": "> See readme.md for build instructions",
+  "scripts": {
+    "prepare": "(pwsh -v || npm --silent run show-error) && pwsh -noprofile ./.scripts/verify-install.ps1",
+    "show-error": "echo ====== &echo ====== & echo ====== & echo REQUIRED: Install PowerShell-core 6.1 or greater (see readme.md) & echo ====== & echo ====== & echo ====== & exit 1"
   }
 }
