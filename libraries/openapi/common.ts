@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Dictionary, ToDictionary } from '@microsoft.azure/linq';
+import { Dictionary, ToDictionary } from '@azure/linq';
 
 export function includeXDash<T>(dictionary: Dictionary<T>) {
   return Object.keys(dictionary).filter((v, i, a) => v.startsWith('x-'));

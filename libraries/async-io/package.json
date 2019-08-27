@@ -1,5 +1,5 @@
 {
-  "name": "@microsoft.azure/async-io",
+  "name": "@azure/async-io",
   "version": "2.1.0",
   "description": "Asynchronous IO (for Azure Open Source Projects)",
   "main": "./dist/main.js",
@@ -47,7 +47,7 @@
     "typescript": "^3.1.3"
   },
   "dependencies": {
-    "@microsoft.azure/tasks": "^2.1.0",
+    "@azure/tasks": "^2.1.0",
     "proper-lockfile": "^2.0.1"
   }
 }

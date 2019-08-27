@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@microsoft.azure/autorest-extension-base';
-import { safeEval, deserialize, Initializer, Dictionary, intersect } from '@microsoft.azure/codegen';
+import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@azure/autorest-extension-base';
+import { safeEval, deserialize, Initializer, Dictionary, intersect } from '@azure/codegen';
 
 export class ModelState<T extends Dictionary<any>> extends Initializer {
   public model!: T;

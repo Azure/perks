@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { OperationCanceledException, Delay } from '@microsoft.azure/tasks';
-import { ReadUri, ResolveUri, ParentFolderUri } from '@microsoft.azure/uri';
+import { OperationCanceledException, Delay } from '@azure/tasks';
+import { ReadUri, ResolveUri, ParentFolderUri } from '@azure/uri';
 import { MappedPosition, Position, RawSourceMap, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
@@ -14,7 +14,7 @@ import { Compile, CompilePosition, Mapping, SmartPosition } from '../source-map/
 import { promises as fs } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { items } from '@microsoft.azure/linq';
+import { items } from '@azure/linq';
 
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';

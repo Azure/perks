@@ -8,7 +8,7 @@ import { Extensions } from './extensions';
 import { HttpOperation } from './http-operation';
 import { ProgramaticOperationDetails, ProgrammaticOperation } from './programatic-operation';
 import { Schema, VirtualProperty } from './schema';
-import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { DeepPartial, Dictionary } from '@azure/codegen';
 import { uid } from './uid';
 
 export interface VirtualParameters {

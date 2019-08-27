@@ -1,4 +1,4 @@
-import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@microsoft.azure/datastore';
+import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@azure/datastore';
 import { Mapping } from 'source-map';
 import { statusCodes } from './status-codes';
 

@@ -9,7 +9,7 @@ import { JsonPath, stringify } from '../jsonpath';
 import { IndexToPosition } from '../parsing/text-utility';
 import * as yaml from '../parsing/yaml';
 import { Descendants, ToAst } from '../yaml';
-import { values } from '@microsoft.azure/linq';
+import { values } from '@azure/linq';
 
 // information to attach to line/column based to get a richer experience
 export interface PositionEnhancements {

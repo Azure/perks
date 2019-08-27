@@ -1,4 +1,4 @@
-import { keys } from '@microsoft.azure/linq';
+import { keys } from '@azure/linq';
 import * as assert from 'assert';
 import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
 import * as pointer from '../main';

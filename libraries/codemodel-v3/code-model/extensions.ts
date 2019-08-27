@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Initializer, Dictionary } from '@microsoft.azure/codegen';
+import { Initializer, Dictionary } from '@azure/codegen';
 
 export class Extensions extends Initializer implements Extensions {
   extensions = new Dictionary<any>();

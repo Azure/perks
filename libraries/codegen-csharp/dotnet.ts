@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Dictionary, intersect } from '@microsoft.azure/codegen';
+import { Dictionary, intersect } from '@azure/codegen';
 
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from './expression';
 import { Namespace } from './namespace';

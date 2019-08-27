@@ -1,5 +1,5 @@
 'use strict';
-import { Dictionary, items, keys, values, any } from "@microsoft.azure/linq";
+import { Dictionary, items, keys, values, any } from "@azure/linq";
 
 export type JsonPointer = string;
 export type JsonPointerTokens = Array<string>;

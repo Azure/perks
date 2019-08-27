@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { visit } from '@microsoft.azure/datastore';
-import { Dictionary, items, clone } from '@microsoft.azure/linq';
-import { areSimilar } from '@microsoft.azure/object-comparison';
+import { visit } from '@azure/datastore';
+import { Dictionary, items, clone } from '@azure/linq';
+import { areSimilar } from '@azure/object-comparison';
 import * as compareVersions from 'compare-versions';
-import { toSemver, maximum } from '@microsoft.azure/codegen';
-import { YieldCPU } from '@microsoft.azure/tasks';
+import { toSemver, maximum } from '@azure/codegen';
+import { YieldCPU } from '@azure/tasks';
 
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';

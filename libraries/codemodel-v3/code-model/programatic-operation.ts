@@ -6,7 +6,7 @@
 import { ImplementationDetails, IOperation, IParameter, LanguageDetails } from './components';
 import { Extensions } from './extensions';
 import { Schema } from './schema';
-import { Dictionary } from '@microsoft.azure/codegen';
+import { Dictionary } from '@azure/codegen';
 import { uid } from './uid';
 
 export interface ProgrammaticOperation extends IOperation<IParameter> {

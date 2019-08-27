@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/OAI2-to-OAI3
+# Project: @azure/OAI2-to-OAI3
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

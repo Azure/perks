@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/tasks
+# Project: @azure/tasks
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

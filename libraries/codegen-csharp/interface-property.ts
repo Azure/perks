@@ -6,7 +6,7 @@
 import { Access } from './access-modifier';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
-import { docComment } from '@microsoft.azure/codegen';
+import { docComment } from '@azure/codegen';
 import { summary } from './doc-comments';
 
 export class InterfaceProperty extends Property {

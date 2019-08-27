@@ -7,7 +7,7 @@ import { Components, Example, ExternalDocumentation, ImplementationDetails, Impl
 import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { SecurityScheme } from './security-scheme';
-import { DeepPartial, Dictionary } from '@microsoft.azure/codegen';
+import { DeepPartial, Dictionary } from '@azure/codegen';
 import { uid } from './uid';
 
 export interface HttpOperationDetails extends ImplementationDetails {

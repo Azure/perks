@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/deduplication
+# Project: @azure/deduplication
 
 This package contains common code for the developer tools for generating Azure SDKs. Specifically, this package provides
 functionality to deduplicate elements in OpenAPI 3 documents.

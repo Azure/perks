@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { CommaChar } from '@microsoft.azure/codegen';
+import { CommaChar } from '@azure/codegen';
 import { Class } from './class';
 import { Expression, toExpression, valueOf, isAnExpression } from './expression';
 import { Method } from './method';

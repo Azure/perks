@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/async-ic
+# Project: @azure/async-ic
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

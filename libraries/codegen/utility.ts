@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { values, Dictionary, items } from './linq';
-import * as aio from '@microsoft.azure/async-io';
+import * as aio from '@azure/async-io';
 import { join } from 'path';
 
 function getAllPropertyNames(obj: any) {

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@microsoft.azure/codegen';
+import { indent } from '@azure/codegen';
 import { StatementPossibilities, Statements } from './statement';
 
 export function Finally(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>): FinallyStatement {

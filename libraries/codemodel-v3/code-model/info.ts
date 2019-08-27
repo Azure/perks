@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Extensions } from './extensions';
-import { Dictionary } from '@microsoft.azure/codegen';
+import { Dictionary } from '@azure/codegen';
 
 export class Contact extends Extensions implements Contact {
   extensions = new Dictionary<any>();

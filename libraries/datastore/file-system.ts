@@ -2,9 +2,9 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { EnumerateFiles, ResolveUri, ReadUri, WriteString } from '@microsoft.azure/uri';
+import { EnumerateFiles, ResolveUri, ReadUri, WriteString } from '@azure/uri';
 // import { From } from "linq-es2015";
-import { items, keys } from "@microsoft.azure/linq";
+import { items, keys } from "@azure/linq";
 
 import * as Constants from './constants';
 

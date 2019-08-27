@@ -1,10 +1,10 @@
 import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
 import * as os from 'os'
-import * as asyncio from '@microsoft.azure/async-io'
+import * as asyncio from '@azure/async-io'
 import * as util from 'util';
 
 import * as fs from 'fs'
-import * as tasks from '@microsoft.azure/tasks';
+import * as tasks from '@azure/tasks';
 import * as assert from "assert";
 
 import { ExtensionManager, UnresolvedPackageException, InvalidPackageIdentityException } from "../main"

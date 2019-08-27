@@ -1,4 +1,4 @@
-# Project: @microsoft.azure/extension
+# Project: @azure/extension
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

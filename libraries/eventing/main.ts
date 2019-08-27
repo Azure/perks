@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Exception } from '@microsoft.azure/tasks';
+import { Exception } from '@azure/tasks';
 import * as events from 'events';
 
 export class UnintializedPromiseException extends Exception {
