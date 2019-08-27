@@ -46,6 +46,28 @@ ${indent(super.implementation)}
   }
 }
 
+
+export function DoWhile(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
+  return new DoWhileStatement(conditional, statements, objectInitializer);
+}
+
+export class DoWhileStatement extends Statements {
+  conditional: Expression;
+  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
+    super(statements);
+    this.conditional = toExpression(conditional);
+    this.apply(objectInitializer);
+  }
+  public get implementation(): string {
+    return `
+do 
+{
+${indent(super.implementation)}
+} while (${this.conditional.value})`.trim();
+  }
+}
+
+
 export class ElseIfStatement extends Statements {
   conditional: Expression;
   constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
