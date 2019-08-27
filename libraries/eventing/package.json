@@ -43,7 +43,7 @@
     "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0",
-    "typescript": "^3.1.3"
+    "typescript": "~3.5.3"
   },
   "dependencies": {
     "@azure/tasks": "^2.1.0"
