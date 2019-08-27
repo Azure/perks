@@ -211,7 +211,7 @@ export class DataStore {
     }
 
     // make a sanitized name
-    const name = join(await this.getCacheFolder(), uri.replace(/[^\w|^d|^\.^\(^\)]+/g, '-'));
+    const name = join(await this.getCacheFolder(), uri.replace(/[^\w.()]+/g, '-'));
 
     this.store[uri] = {
       name,
