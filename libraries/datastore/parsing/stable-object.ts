@@ -5,7 +5,7 @@
 
 /** Creates an object that preserves order of items placed in it. */
 export function NewEmptyObject(): any {
-  let keys: PropertyKey[] = [];
+  let keys: Array<PropertyKey> = [];
   return new Proxy<any>({}, {
     get(target, key) {
       return target[key];

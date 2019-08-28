@@ -31,7 +31,6 @@ export interface Mapping {
 }
 
 
-
 // for carrying over rich information into the realm of line/col based source maps
 // convention: <original name (contains no `nameWithPathSeparator`)>\n(<path>)
 const enhancedPositionSeparator = '\n\n(';
@@ -120,5 +119,4 @@ export function CreateAssignmentMapping(assignedObject: any, sourceKey: string, 
   }
   return result;
 }
-
 

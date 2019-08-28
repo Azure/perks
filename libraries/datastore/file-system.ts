@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { EnumerateFiles, ResolveUri, ReadUri, WriteString } from '@azure/uri';
 // import { From } from "linq-es2015";
-import { items, keys } from "@azure/linq";
+import { items, keys } from '@azure/linq';
 
 import * as Constants from './constants';
 

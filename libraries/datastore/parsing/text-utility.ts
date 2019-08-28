@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { DataHandle } from "../data-store/data-store";
-import { Position as sourceMapPosition } from "source-map";
+import { DataHandle } from '../data-store/data-store';
+import { Position as sourceMapPosition } from 'source-map';
 
 const regexNewLine = /\r?\n/g;
 
-export function LineIndices(text: string): number[] {
+export function LineIndices(text: string): Array<number> {
   let indices = [0];
 
   let match: RegExpExecArray | null;
@@ -19,14 +19,14 @@ export function LineIndices(text: string): number[] {
   return indices;
 }
 
-export function Lines(text: string): string[] {
+export function Lines(text: string): Array<string> {
   return text.split(regexNewLine);
 }
 
 const top = { column: 1, line: 1 };
 
 export function IndexToPosition(text: DataHandle | string, index: number): sourceMapPosition {
-  return top
+  return top;
   /*  DISABLING SOURCE-MAP-SUPPORT 
   const startIndices = typeof text === "string" ? LineIndices(text) : text.metadata.lineIndices.Value;
   

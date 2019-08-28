@@ -66,7 +66,7 @@ function ResolvePathPart(yamlAstRoot: YAMLNode, yamlAstCurrent: YAMLNode, jsonPa
       return ResolvePathPart(yamlAstRoot, newCurrent, jsonPathPart, deferResolvingMappings);
     }
     case Kind.INCLUDE_REF:
-      throw new Error(`INCLUDE_REF not implemented`);
+      throw new Error('INCLUDE_REF not implemented');
   }
   throw new Error(`unexpected YAML AST node kind '${yamlAstCurrent.kind}'`);
 }

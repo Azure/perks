@@ -25,7 +25,7 @@ export function createGraphProxy<T extends object>(originalFileName: string, tar
 
   const rewrite = (key: string, value: any) => {
     instance[key] = value;
-  }
+  };
 
   return new Proxy<ProxyObject<T>>(instance, {
     get(target: ProxyObject<T>, key: string | number | symbol): any {

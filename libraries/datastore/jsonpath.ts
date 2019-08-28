@@ -50,7 +50,7 @@ export function paths<T>(obj: T, jsonQuery: string): Array<JsonPath> {
   return nodes(obj, jsonQuery).map(x => x.path);
 }
 
-export function nodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, value: any }> {
+export function nodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath; value: any }> {
   // jsonpath only accepts objects
   if (obj instanceof Object) {
     let result = jsonpath.nodes(obj, jsonQuery).map(x => ({ path: x.path.slice(1), value: x.value }));
@@ -63,10 +63,10 @@ export function nodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, val
   }
 }
 
-export function selectNodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath, value: any, parent: any }> {
+export function selectNodes<T>(obj: T, jsonQuery: string): Array<{ path: JsonPath; value: any; parent: any }> {
   // jsonpath only accepts objects
   if (obj instanceof Object) {
-    const result = new Array<{ path: JsonPath, value: any, parent: any }>();
+    const result = new Array<{ path: JsonPath; value: any; parent: any }>();
     const keys = new Set<string>();
 
     for (const node of jsonpath.nodes(obj, jsonQuery)) {

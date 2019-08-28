@@ -37,7 +37,7 @@ export interface Metadata {
 }
 
 export interface Data {
-  name: string
+  name: string;
   artifactType: string;
   // metadata: Metadata;
   identity: Array<string>;
@@ -49,7 +49,7 @@ export interface Data {
   accessed?: boolean;
 }
 
-interface Store { [uri: string]: Data; }
+interface Store { [uri: string]: Data }
 
 /********************************************
  * Central data controller
@@ -397,7 +397,7 @@ export class DataHandle {
   }
 
   public async serialize() {
-    this.item.name
+    this.item.name;
     return JSON.stringify({
       key: this.Description,
       artifactType: this.item.artifactType,

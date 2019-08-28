@@ -25,7 +25,7 @@ export class BlameTree {
 
     const s = new Array<BlameTree>();
     for (const pos of blames) {
-      s.push(await BlameTree.Create(dataStore, pos))
+      s.push(await BlameTree.Create(dataStore, pos));
     }
 
     return new BlameTree(position, s);

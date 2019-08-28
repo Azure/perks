@@ -15,7 +15,7 @@ import { JsonPath } from './jsonpath';
  * reexport required elements
  */
 export { newScalar } from 'yaml-ast-parser';
-export const Kind: { SCALAR: number, MAPPING: number, MAP: number, SEQ: number, ANCHOR_REF: number, INCLUDE_REF: number } = yamlAst.Kind;
+export const Kind: { SCALAR: number; MAPPING: number; MAP: number; SEQ: number; ANCHOR_REF: number; INCLUDE_REF: number } = yamlAst.Kind;
 export type YAMLNode = yamlAst.YAMLNode;
 export type YAMLScalar = yamlAst.YAMLScalar;
 export type YAMLMapping = yamlAst.YAMLMapping;
@@ -257,7 +257,7 @@ export function FastStringify<T>(obj: T): string {
   return Stringify(obj);
 }
 
-export function StrictJsonSyntaxCheck(json: string): { message: string, index: number } | null {
+export function StrictJsonSyntaxCheck(json: string): { message: string; index: number } | null {
   try {
     // quick check on data.
     JSON.parse(json);
