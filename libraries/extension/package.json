@@ -61,6 +61,7 @@
     "@azure/tasks": "~3.0.0",
     "npm-package-arg": "6.1.0",
     "semver": "^5.5.1",
-    "pacote": "9.2.3"
+    "pacote": "9.2.3",
+    "safe-buffer": "5.2.0"
   }
 }

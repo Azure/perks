@@ -8,12 +8,12 @@
       "type": "node",
       "request": "launch",
       "name": "run tests",
-      "program": "${workspaceRoot}/libraries/oai2-to-oai3/node_modules/mocha/bin/_mocha",
+      "program": "${workspaceRoot}/libraries/extension/node_modules/mocha/bin/_mocha",
       "args": [
         "dist/test",
         "--timeout=2000000"
       ],
-      "cwd": "${workspaceRoot}/libraries/oai2-to-oai3",
+      "cwd": "${workspaceRoot}/libraries/extension",
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ]

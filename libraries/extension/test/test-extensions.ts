@@ -6,6 +6,9 @@ import { suite, test } from 'mocha-typescript';
 import * as os from 'os';
 import { ExtensionManager, InvalidPackageIdentityException, UnresolvedPackageException } from '../main';
 
+require('source-map-support').install();
+
+
 @suite class TestExtensions {
 
   static after() {
@@ -39,7 +42,6 @@ import { ExtensionManager, InvalidPackageIdentityException, UnresolvedPackageExc
   @test async 'Test Reset'() {
     console.log('Resetting');
     await this.extensionManager.reset();
-
     {
       console.log('Installing Once');
       // install it once
