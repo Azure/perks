@@ -3,9 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EventEmitter } from "events"
-import { ManualPromise } from "./manual-promise"
-import { promisify } from "./node-promisify"
+import { EventEmitter } from 'events';
+import { ManualPromise } from './manual-promise';
+import { promisify } from './node-promisify';
 
 /**
  * Creates a promise that resolves after a delay
@@ -76,13 +76,13 @@ export function When<T>(emitter: EventEmitter, successEvent?: string, errorEvent
 
 export function Async<T>(fn: () => T, msec: number = 1): Promise<T> {
   return new Promise((r, j) => setTimeout(() => {
-    try { r(fn()) } catch (E) { j(E) }
+    try { r(fn()); } catch (E) { j(E); }
   }, msec));
 }
 
 export async function Timeout<T>(p: Promise<T>, msec: number): Promise<T> {
   let enabled = false;
-  const value = await Promise.race([p, Async(() => { if (enabled) throw new Error("timed out") }, msec)]);
+  const value = await Promise.race([p, Async(() => { if (enabled) throw new Error('timed out'); }, msec)]);
   enabled = false;
   return value as T;
 }

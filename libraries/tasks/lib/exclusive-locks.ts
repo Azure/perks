@@ -4,17 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Server, ListenOptions } from 'net';
-import { ManualPromise } from "./manual-promise"
-import { Delay, When } from "./task-functions"
-import { ExclusiveLockUnavailableException, SharedLockUnavailableException } from "./exception"
-import { promisify } from "./node-promisify";
-import { tmpdir } from "os"
-import { unlink as fs_unlink, readFile as fs_readFile, writeFile as fs_writeFile } from 'fs';
+import { ManualPromise } from './manual-promise';
+import { Delay, When } from './task-functions';
+import { ExclusiveLockUnavailableException, SharedLockUnavailableException } from './exception';
+import { promisify } from './node-promisify';
+import { tmpdir } from 'os';
+import { unlink as fsUnlink, readFile as fsReadFile, writeFile as fsWriteFile } from 'fs';
 import { createHash } from 'crypto';
 
-const unlink = promisify(fs_unlink);
-const readFile = promisify(fs_readFile);
-const writeFile = promisify(fs_writeFile);
+const unlink = promisify(fsUnlink);
+const readFile = promisify(fsReadFile);
+const writeFile = promisify(fsWriteFile);
+
+/* eslint-disable */
 
 function sanitize(input: string, replacement: string = '_') {
   const illegalCharacters = /[\/\?<>\\:\*\|":]/g;
@@ -34,7 +36,7 @@ function distill(content: any) {
   const hash = createHash('sha256').update(JSON.stringify(content)).digest();
   const port = hash.readUInt16BE(2) | 4096; // 4096+
   let host = `${(hash.readUInt16BE(4) | 0x10) + 0x7f000000}`;
-  if (process.platform === "darwin") {
+  if (process.platform === 'darwin') {
     host = `${0x7f000001}`;
   }
   return { port, host };
@@ -68,7 +70,7 @@ export class Mutex implements IExclusive {
    * @param name - the resource name to create a Mutex for. Multiple instances (across processes) using the same name are operating on the same lock.
    */
   public constructor(private name: string) {
-    if (process.platform === "win32") {
+    if (process.platform === 'win32') {
       this.pipe = `\\\\.\\pipe\\${sanitize(name)}`;
       this.options = { path: this.pipe, exclusive: true };
     } else {
@@ -120,7 +122,7 @@ export class Mutex implements IExclusive {
         await Delay(delayMS);
       }
       // check if we're past the allowable time.
-    } while (fail > Date.now())
+    } while (fail > Date.now());
 
     // we were unable to get the lock before the timeout. 
     throw new ExclusiveLockUnavailableException(this.name, timeoutMS);
@@ -138,7 +140,7 @@ export class CriticalSection implements IExclusive {
    * 
    * @param name - a cosmetic name for the 'resource'. Note: multiple CriticalSection instances with the same do not offer exclusivity, it's tied to the object instance.
    */
-  public constructor(private name: string = "unnamed") {
+  public constructor(private name: string = 'unnamed') {
   }
 
   /**
@@ -159,7 +161,7 @@ export class CriticalSection implements IExclusive {
         // the previous promise holder can resolve, someone else can take it's place 
         // before we get a chance to act.
         await Promise.race([this.promise, Delay(fail - Date.now())]);
-      } while (this.promise && fail > Date.now())
+      } while (this.promise && fail > Date.now());
     }
     // check to see if the promise is still around, which indicates
     // that we must have timed out.
@@ -175,7 +177,7 @@ export class CriticalSection implements IExclusive {
     return async () => {
       // ensure that releasing twice isn't harmful.
       if (!myPromise.isCompleted) {
-        this.promise = undefined
+        this.promise = undefined;
         myPromise.resolve();
       }
     };
@@ -225,7 +227,7 @@ export class SharedLock {
     } else {
       try {
         // no names in list, file should be deleted
-        await unlink(this.file)
+        await unlink(this.file);
       } catch {
         // shh! 
       }
@@ -245,7 +247,7 @@ export class SharedLock {
       await completed;
 
       // the pipe opened! It's not locked
-      await server.close()
+      await server.close();
 
       return false;
     } catch {
@@ -295,7 +297,7 @@ export class SharedLock {
         } catch {
           // if it fails no, worry, someone else can clean it up.
         }
-      }
+      };
     } catch (e) {
       throw new SharedLockUnavailableException(this.name, timeoutMS);
     } finally {
@@ -349,7 +351,7 @@ export class SharedLock {
         return async () => {
           await exclusiveRelease();
           await busyRelease();
-        }
+        };
       }
     } catch {
 

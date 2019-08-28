@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 export * from './freeze';
-export * from './visitor'
+export * from './visitor';
 
 export interface Index<T> {
   [key: number]: T;
@@ -23,6 +23,43 @@ export function ToDictionary<T>(keys: Array<string>, each: (index: string) => T)
 }
 
 export type IndexOf<T> = T extends Map<T, infer V> ? T : T extends Array<infer V> ? number : string;
+
+
+export interface Linqable<T> extends Iterable<T> {
+  linq: {
+    any(predicate: (each: T) => boolean): boolean;
+    all(predicate: (each: T) => boolean): boolean;
+    bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
+    distinct(selector?: (each: T) => any): Linqable<T>;
+    first(predicate?: (each: T) => boolean): T | undefined;
+    selectNonNullable<V>(selector: (each: T) => V): Linqable<NonNullable<V>>;
+    select<V>(selector: (each: T) => V): Linqable<V>;
+    selectMany<V>(selector: (each: T) => Iterable<V>): Linqable<V>;
+    where(predicate: (each: T) => boolean): Linqable<T>;
+    toArray(): Array<T>;
+  };
+}
+
+function linqify<T>(iterable: Iterable<T>): Linqable<T> {
+  return Object.defineProperty(iterable, 'linq', {
+    get: () => {
+      /* eslint-disable */
+      return {
+        all: all.bind(iterable),
+        any: any.bind(iterable),
+        bifurcate: bifurcate.bind(iterable),
+        distinct: distinct.bind(iterable),
+        first: first.bind(iterable),
+        select: select.bind(iterable),
+        selectMany: selectMany.bind(iterable),
+        selectNonNullable: selectNonNullable.bind(iterable),
+        toArray: toArray.bind(iterable),
+        where: where.bind(iterable),
+      };
+    }
+  });
+}
+
 
 /** returns an Linqable<> for keys in the collection */
 export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>)): Linqable<IndexOf<TSrc>> {
@@ -198,38 +235,4 @@ function distinct<T>(this: Iterable<T>, selector?: (each: T) => any): Linqable<T
       }
     }
   }.bind(this)());
-}
-
-export interface Linqable<T> extends Iterable<T> {
-  linq: {
-    any(predicate: (each: T) => boolean): boolean;
-    all(predicate: (each: T) => boolean): boolean;
-    bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
-    distinct(selector?: (each: T) => any): Linqable<T>;
-    first(predicate?: (each: T) => boolean): T | undefined;
-    selectNonNullable<V>(selector: (each: T) => V): Linqable<NonNullable<V>>;
-    select<V>(selector: (each: T) => V): Linqable<V>;
-    selectMany<V>(selector: (each: T) => Iterable<V>): Linqable<V>;
-    where(predicate: (each: T) => boolean): Linqable<T>;
-    toArray(): Array<T>;
-  };
-}
-
-function linqify<T>(iterable: Iterable<T>): Linqable<T> {
-  return Object.defineProperty(iterable, 'linq', {
-    get: () => {
-      return {
-        all: all.bind(iterable),
-        any: any.bind(iterable),
-        bifurcate: bifurcate.bind(iterable),
-        distinct: distinct.bind(iterable),
-        first: first.bind(iterable),
-        select: select.bind(iterable),
-        selectMany: selectMany.bind(iterable),
-        selectNonNullable: selectNonNullable.bind(iterable),
-        toArray: toArray.bind(iterable),
-        where: where.bind(iterable),
-      };
-    }
-  });
 }

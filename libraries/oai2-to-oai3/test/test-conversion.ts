@@ -1,8 +1,8 @@
-import { suite, test, slow, timeout, skip, only } from "mocha-typescript";
-import * as assert from "assert";
-import * as aio from "@azure/async-io"
+import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import * as assert from 'assert';
+import * as aio from '@azure/async-io';
 import * as datastore from '@azure/datastore';
-import { stringify, CancellationToken, FastStringify } from "@azure/datastore";
+import { stringify, CancellationToken, FastStringify } from '@azure/datastore';
 import { SourceMapGenerator } from 'source-map';
 
 require('source-map-support').install();
@@ -11,7 +11,7 @@ import { Oai2ToOai3 } from '../main';
 
 @suite class MyTests {
 
-  @test  async "test conversion - simple"() {
+  @test  async 'test conversion - simple'() {
     const swaggerUri = 'mem://swagger.yaml';
     const oai3Uri = 'mem://oai3.yaml';
 
@@ -25,7 +25,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -41,11 +41,11 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "test conversion - tiny"() {
+  @test  async 'test conversion - tiny'() {
     const swaggerUri = 'mem://tiny-swagger.yaml';
     const oai3Uri = 'mem://tiny-oai3.yaml';
 
@@ -59,7 +59,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -75,11 +75,11 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "test conversion - ApiManagementClient"() {
+  @test  async 'test conversion - ApiManagementClient'() {
     const swaggerUri = 'mem://ApiManagementClient-swagger.json';
     const oai3Uri = 'mem://ApiManagementClient-oai3.json';
 
@@ -93,7 +93,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -109,11 +109,11 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "request body - copying extensions"() {
+  @test  async 'request body - copying extensions'() {
     const swaggerUri = 'mem://request-body-swagger.yaml';
     const oai3Uri = 'mem://request-body-openapi.yaml';
 
@@ -127,7 +127,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -143,11 +143,11 @@ import { Oai2ToOai3 } from '../main';
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "headers"() {
+  @test  async 'headers'() {
     const swaggerUri = 'mem://header2.json';
     const oai3Uri = 'mem://header3.json';
 
@@ -161,7 +161,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -174,11 +174,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "additionalProperties"() {
+  @test  async 'additionalProperties'() {
     const swaggerUri = 'mem://additionalProperties2.json';
     const oai3Uri = 'mem://additionalProperties3.json';
 
@@ -192,7 +192,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -205,11 +205,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "xml-service"() {
+  @test  async 'xml-service'() {
     const swaggerUri = 'mem://xml-service2.json';
     const oai3Uri = 'mem://xml-service3.json';
 
@@ -223,7 +223,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -236,11 +236,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "xms-error-responses"() {
+  @test  async 'xms-error-responses'() {
     const swaggerUri = 'mem://xms-error-responses2.json';
     const oai3Uri = 'mem://xms-error-responses3.json';
 
@@ -254,7 +254,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -267,11 +267,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "validation"() {
+  @test  async 'validation'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -285,7 +285,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -298,11 +298,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "storage"() {
+  @test  async 'storage'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -316,7 +316,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -329,12 +329,12 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
 
-  @test  async "url"() {
+  @test  async 'url'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -348,7 +348,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -361,12 +361,12 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
 
-  @test  async "url-multi-collectionFormat"() {
+  @test  async 'url-multi-collectionFormat'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -380,7 +380,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -393,12 +393,12 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
 
-  @test  async "complex-model"() {
+  @test  async 'complex-model'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -412,7 +412,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -425,11 +425,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "extensible-enums-swagger"() {
+  @test  async 'extensible-enums-swagger'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -443,7 +443,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -456,10 +456,10 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
-  @test  async "lro"() {
+  @test  async 'lro'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -473,7 +473,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -486,11 +486,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "exec-service"() {
+  @test  async 'exec-service'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -504,7 +504,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -517,11 +517,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  @test  async "LUIS runtime"() {
+  @test  async 'LUIS runtime'() {
     const swaggerUri = 'mem://oai2.json';
     const oai3Uri = 'mem://oai3.json';
 
@@ -535,7 +535,7 @@ import { Oai2ToOai3 } from '../main';
     const ds = new datastore.DataStore(cts.token);
     const scope = ds.GetReadThroughScope(mfs);
     const swaggerDataHandle = await scope.Read(swaggerUri);
-    const originalDataHandle = await scope.Read(oai3Uri)
+    const originalDataHandle = await scope.Read(oai3Uri);
 
     assert(swaggerDataHandle != null);
     assert(originalDataHandle != null);
@@ -548,11 +548,11 @@ import { Oai2ToOai3 } from '../main';
       // run the conversion
       convert.convert();
 
-      assert.deepStrictEqual(convert.generated, original, "Should be the same");
+      assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
   }
 
-  /* @test */ async "test conversion with sourcemap"() {
+  /* @test */ async 'test conversion with sourcemap'() {
     const absoluteUri = 'swagger.yaml';
 
     const swagger = await aio.readFile(`${__dirname}/../../test/resources/conversion/oai2/swagger.yaml`);
@@ -589,8 +589,8 @@ import { Oai2ToOai3 } from '../main';
       const data = await sink.WriteData('output-file', text, [absoluteUri], 'yaml-file', convert.mappings, [swaggerdata]);
 
       // console.log(JSON.stringify(await data.metadata.sourceMap));
-      await aio.writeFile("c:/tmp/swagger.yaml", swagger);
-      await aio.writeFile("c:/tmp/output.yaml", text);
+      await aio.writeFile('c:/tmp/swagger.yaml', swagger);
+      await aio.writeFile('c:/tmp/output.yaml', text);
       // await aio.writeFile("c:/tmp/output.yaml.map", JSON.stringify(await data.metadata.sourceMap));
     }
   }

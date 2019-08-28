@@ -29,7 +29,7 @@ export class ManualPromise<T> implements Promise<T> {
     return this.p.finally(onfinally);
   }
 
-  readonly [Symbol.toStringTag]: "Promise";
+  readonly [Symbol.toStringTag]: 'Promise';
   private p: Promise<T>;
 
   /**
@@ -42,33 +42,33 @@ export class ManualPromise<T> implements Promise<T> {
    */
   public reject: (e: any) => void = (e) => { };
 
-  private state: "pending" | "resolved" | "rejected" = "pending";
+  private state: 'pending' | 'resolved' | 'rejected' = 'pending';
 
   /**
    * Returns true of the Promise has been Resolved or Rejected
    */
   public get isCompleted(): boolean {
-    return this.state !== "pending";
+    return this.state !== 'pending';
   }
 
   /**
    * Returns true if the Promise has been Resolved.
    */
   public get isResolved(): boolean {
-    return this.state === "resolved";
+    return this.state === 'resolved';
   }
 
   /**
    * Returns true if the Promise has been Rejected.
    */
   public get isRejected(): boolean {
-    return this.state === "rejected";
+    return this.state === 'rejected';
   }
 
   public constructor() {
     this.p = new Promise<T>((r, j) => {
-      this.resolve = (v: T | PromiseLike<T> | undefined) => { this.state = "resolved"; r(v); };
-      this.reject = (e: any) => { this.state = "rejected"; j(e); };
+      this.resolve = (v: T | PromiseLike<T> | undefined) => { this.state = 'resolved'; r(v); };
+      this.reject = (e: any) => { this.state = 'rejected'; j(e); };
     });
   }
 }

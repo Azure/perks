@@ -3,11 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { OutstandingTaskAlreadyCompletedException, AggregateException } from "./exception";
+import { OutstandingTaskAlreadyCompletedException, AggregateException } from './exception';
 
 export class OutstandingTaskAwaiter {
   private locked: boolean = false;
-  private outstandingTasks: Promise<any>[] = [];
+  private outstandingTasks: Array<Promise<any>> = [];
   private errors: Array<any> = [];
 
   public async Wait(): Promise<void> {
@@ -27,7 +27,7 @@ export class OutstandingTaskAwaiter {
     }
     this.outstandingTasks.push(task.catch((e) => {
       // console.error("Yes. errors in the await.")
-      this.errors.push(e)
+      this.errors.push(e);
     }));
 
     return task;

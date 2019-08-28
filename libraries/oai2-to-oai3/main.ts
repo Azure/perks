@@ -17,8 +17,8 @@ export class Oai2ToOai3 {
     if (this.original['x-ms-parameterized-host']) {
       let xMsPHost: any = this.original['x-ms-parameterized-host'];
       let server: any = {};
-      const scheme = xMsPHost.useSchemePrefix === false ? "" : ((this.original.schemes || ["http"]).map(s => s + "://")[0] || "");
-      server.url = scheme + xMsPHost.hostTemplate + (this.original.basePath || "");
+      const scheme = xMsPHost.useSchemePrefix === false ? '' : ((this.original.schemes || ['http']).map(s => s + '://')[0] || '');
+      server.url = scheme + xMsPHost.hostTemplate + (this.original.basePath || '');
       if (xMsPHost.positionInOperation) {
         server['x-ms-parameterized-host'] = { positionInOperation: xMsPHost.positionInOperation };
       }
@@ -79,7 +79,10 @@ export class Oai2ToOai3 {
       for (const { value: s, pointer } of visit(this.original.schemes)) {
         let server: any = {};
         server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
+
+        /* eslint-disable */
         extractServerParameters(server);
+
         this.generated.servers.__push__({ value: server, pointer });
       }
     } else if (this.original.basePath) {
@@ -125,13 +128,14 @@ export class Oai2ToOai3 {
           this.visitInfo(children);
           break;
         case 'x-ms-paths':
-        case 'paths':
+        case 'paths': {
           // convert x-ms-paths to paths by just passing paths as the key.
           const newKey = 'paths';
           if (!this.generated[newKey]) {
             this.generated[newKey] = this.newObject(pointer);
           }
           this.visitPaths(this.generated[newKey], children, globalConsumes, globalProduces);
+        }
           break;
         case 'host':
         case 'basePath':
@@ -225,7 +229,7 @@ export class Oai2ToOai3 {
         'x-ms-client-flatten',
         'x-ms-client-request-id',
         'x-ms-header-collection-prefix'
-      ]
+      ];
 
       for (const key of parameterUnchangedProperties) {
         if (parameterValue[key] !== undefined) {
@@ -373,40 +377,42 @@ export class Oai2ToOai3 {
           }
           break;
         case 'oauth2':
-          if (v.description !== undefined) {
-            securityScheme.description = { value: v.description, pointer: jsonPointer };
+          {
+            if (v.description !== undefined) {
+              securityScheme.description = { value: v.description, pointer: jsonPointer };
+            }
+
+            securityScheme.type = { value: v.type, pointer: jsonPointer };
+            securityScheme.flows = this.newObject(jsonPointer);
+            let flowName = v.flow;
+
+            // convert flow names to OpenAPI 3 flow names
+            if (v.flow === 'application') {
+              flowName = 'clientCredentials';
+            }
+
+            if (v.flow === 'accessCode') {
+              flowName = 'authorizationCode';
+            }
+
+            securityScheme.flows[flowName] = this.newObject(jsonPointer);
+            let authorizationUrl;
+            let tokenUrl;
+            let scopes;
+
+            if (v.authorizationUrl) {
+              authorizationUrl = v.authorizationUrl.split('?')[0].trim() || '/';
+              securityScheme.flows[flowName].authorizationUrl = { value: authorizationUrl, pointer: jsonPointer };
+            }
+
+            if (v.tokenUrl) {
+              tokenUrl = v.tokenUrl.split('?')[0].trim() || '/';
+              securityScheme.flows[flowName].tokenUrl = { value: tokenUrl, pointer: jsonPointer };
+            }
+
+            scopes = v.scopes || {};
+            securityScheme.flows[flowName].scopes = { value: scopes, pointer: jsonPointer };
           }
-
-          securityScheme.type = { value: v.type, pointer: jsonPointer };
-          securityScheme.flows = this.newObject(jsonPointer);
-          let flowName = v.flow;
-
-          // convert flow names to OpenAPI 3 flow names
-          if (v.flow === 'application') {
-            flowName = 'clientCredentials';
-          }
-
-          if (v.flow === 'accessCode') {
-            flowName = 'authorizationCode';
-          }
-
-          securityScheme.flows[flowName] = this.newObject(jsonPointer);
-          let authorizationUrl;
-          let tokenUrl;
-          let scopes;
-
-          if (v.authorizationUrl) {
-            authorizationUrl = v.authorizationUrl.split('?')[0].trim() || '/';
-            securityScheme.flows[flowName].authorizationUrl = { value: authorizationUrl, pointer: jsonPointer };
-          }
-
-          if (v.tokenUrl) {
-            tokenUrl = v.tokenUrl.split('?')[0].trim() || '/';
-            securityScheme.flows[flowName].tokenUrl = { value: tokenUrl, pointer: jsonPointer };
-          }
-
-          scopes = v.scopes || {};
-          securityScheme.flows[flowName].scopes = { value: scopes, pointer: jsonPointer };
           break;
       }
     }
@@ -540,7 +546,7 @@ export class Oai2ToOai3 {
         // See: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject
         target[key] = { value: {}, pointer };
       } else if (target[key].length === 1) {
-        target[key] = { value: value[0], pointer, recurse: true }
+        target[key] = { value: value[0], pointer, recurse: true };
       } else {
         target[key] = { value: { anyOf: target[key] }, pointer };
       }
@@ -598,7 +604,7 @@ export class Oai2ToOai3 {
   }
 
   visitExternalDocs(target: any, key: string, value: any, pointer: string) {
-    target[key] = { value, pointer, recurse: true }
+    target[key] = { value, pointer, recurse: true };
   }
 
   newArray(pointer: JsonPointer) {
@@ -1036,7 +1042,7 @@ export class Oai2ToOai3 {
       if (responseTarget.content[mimetype].examples === undefined) {
         responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
         responseTarget.content[mimetype].examples.response = this.newObject(jsonPointer);
-        responseTarget.content[mimetype].examples.response.value = { value: responseValue.examples[mimetype], pointer: jsonPointer }
+        responseTarget.content[mimetype].examples.response.value = { value: responseValue.examples[mimetype], pointer: jsonPointer };
       }
     }
 

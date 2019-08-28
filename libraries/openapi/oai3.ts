@@ -34,6 +34,19 @@ export interface SchemaDetails extends Details {
 export interface HttpOperationDetails extends Details {
 }
 
+
+/**
+ * @description The location of the parameter.
+ *
+ * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#user-content-parameterIn
+ */
+export enum ParameterLocation {
+  Query = 'query',
+  Header = 'header',
+  Cookie = 'cookie',
+  Path = 'path',
+}
+
 export function hasContent<T extends Partial<HasContent>>(parameter: T): parameter is HasContent & T {
   return ((<HasContent>parameter).content) ? true : false;
 }
@@ -61,21 +74,6 @@ export function isQueryParameter(parameter: Parameter): parameter is InQuery & P
 
 /** Properties have additional data when referencing them */
 export type PropertyReference<T> = PropertyDetails & (Reference<T>);
-
-// ===================================================================================================================
-// code below this point should be identical between oai3.ts and code-model.ts
-
-/**
- * @description The location of the parameter.
- *
- * @see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md#user-content-parameterIn
- */
-export enum ParameterLocation {
-  Query = 'query',
-  Header = 'header',
-  Cookie = 'cookie',
-  Path = 'path',
-}
 
 /**
  * @description common ways of serializing simple parameters

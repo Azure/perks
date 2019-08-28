@@ -1,4 +1,4 @@
-import { promisify as util_promisify } from 'util';
+import { promisify as utilPromisify } from 'util';
 import { TypeException } from './exception';
 import { ManualPromise } from './manual-promise';
 
@@ -10,7 +10,7 @@ declare global {
     getOwnPropertyDescriptors(o: any): PropertyDescriptorMap;
   }
 }
-
+/* eslint-disable */
 /**
  * Add polyfill for Object.getOwnPropertyDescriptors
  *
@@ -108,4 +108,4 @@ function _promisify(original: any) {
 /**
  * Promisify implementation, will use built-in version in node if available, falls back to local implementation borrowed from node8.
  */
-export const promisify = util_promisify || _promisify;
+export const promisify = utilPromisify || _promisify;

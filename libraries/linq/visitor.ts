@@ -1,17 +1,12 @@
-
 interface AnyObject {
   [key: string]: any;
   [key: number]: any;
 }
 
 export interface Leaf {
-  index: string | number,
-  parent: AnyObject,
-  instance: any,
-}
-
-export function visitor(instance: AnyObject): Iterable<Leaf> {
-  return _visitor(instance, new WeakSet<object>());
+  index: string | number;
+  parent: AnyObject;
+  instance: any;
 }
 
 function* _visitor(instance: AnyObject, visited: WeakSet<object>): Iterable<Leaf> {
@@ -65,4 +60,8 @@ function* _visitor(instance: AnyObject, visited: WeakSet<object>): Iterable<Leaf
       instance: value
     };
   }
+}
+
+export function visitor(instance: AnyObject): Iterable<Leaf> {
+  return _visitor(instance, new WeakSet<object>());
 }

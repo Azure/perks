@@ -13,6 +13,24 @@ import { YieldCPU } from '@azure/tasks';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
+
+function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): { [key: string]: string } {
+  const result: { [key: string]: string } = {};
+  for (const { value, key } of items(dict1)) {
+    result[key] = value;
+  }
+
+  for (const item of items(dict2)) {
+    if (result[item.key] !== undefined && result[item.key] !== item.value) {
+      throw Error(`Deduplicator: There's a conflict trying to deduplicate these two path objects with path ${path}, and with original locations ${originalLocations}. Both come from the same profile ${item.key}, but they have different api-versions: ${result[item.key]} and ${item.value}`);
+    }
+
+    result[item.key] = item.value;
+  }
+
+  return result;
+}
+
 export class Deduplicator {
   private hasRun = false;
 
@@ -376,21 +394,4 @@ export class Deduplicator {
     }
     return this.mappings;
   }
-}
-
-function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): { [key: string]: string } {
-  const result: { [key: string]: string } = {};
-  for (const { value, key } of items(dict1)) {
-    result[key] = value;
-  }
-
-  for (const item of items(dict2)) {
-    if (result[item.key] !== undefined && result[item.key] !== item.value) {
-      throw Error(`Deduplicator: There's a conflict trying to deduplicate these two path objects with path ${path}, and with original locations ${originalLocations}. Both come from the same profile ${item.key}, but they have different api-versions: ${result[item.key]} and ${item.value}`);
-    }
-
-    result[item.key] = item.value;
-  }
-
-  return result;
 }

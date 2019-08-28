@@ -71,7 +71,6 @@ export function dereference<T>(document: any, item: Refable<T>, stack = new Arra
 }
 
 
-
 export function getExtensionProperties(dictionary: Dictionary<any>): Dictionary<any> {
   return ToDictionary(includeXDash(dictionary), each => dictionary[each]);
 }

@@ -3,6 +3,19 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+function isPrimitive(object: any) {
+  switch (typeof object) {
+    case 'undefined':
+    case 'boolean':
+    case 'number':
+    case 'string':
+    case 'symbol':
+      return true;
+    default:
+      return false;
+  }
+}
+
 export function areSimilar(a: any, b: any, ...exceptionList: Array<string>): boolean {
   // 100% similar things, including primitives
   if (a === b) {
@@ -69,15 +82,3 @@ export function areSimilar(a: any, b: any, ...exceptionList: Array<string>): boo
 
 }
 
-function isPrimitive(object: any) {
-  switch (typeof object) {
-    case 'undefined':
-    case 'boolean':
-    case 'number':
-    case 'string':
-    case 'symbol':
-      return true;
-    default:
-      return false;
-  }
-}

@@ -1,4 +1,3 @@
-
 interface AnyObject {
   [key: string]: any;
   [key: number]: any;
@@ -22,9 +21,6 @@ export function deepFreeze(instance: object) {
   return Object.freeze(obj);
 }
 
-export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = [], refCopyPropertyNames: Array<string> = []): any {
-  return _clone(instance, shouldFreeze, hash, new Set(skip), new Set(refCopyPropertyNames));
-}
 function _clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Set<string>, refCopyPropertyNames: Set<string>): any {
   const freeze = shouldFreeze ? Object.freeze : (i: any) => i;
   const obj = <AnyObject>instance;
@@ -51,7 +47,7 @@ function _clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip:
   }
 
   if (Array.isArray(obj)) {
-    let array = new Array();
+    let array = [];
     for (const value of obj) {
       array.push(_clone(value, shouldFreeze, hash, skip, refCopyPropertyNames));
     }
@@ -95,4 +91,9 @@ function _clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip:
   result = freeze(result);
 
   return result;
+}
+
+
+export function clone(instance: any, shouldFreeze = false, hash = new WeakMap(), skip: Array<string> = [], refCopyPropertyNames: Array<string> = []): any {
+  return _clone(instance, shouldFreeze, hash, new Set(skip), new Set(refCopyPropertyNames));
 }
