@@ -1,6 +1,6 @@
 {
   "name": "@azure/tasks",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Async tasks for Azure Open Source Projects",
   "engines": {
     "node": ">=7.10.0"
@@ -45,9 +45,9 @@
     "mocha": "5.2.0",
     "mocha-typescript": "1.1.17",
     "typescript": "~3.5.3",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "~2.0.0",
+    "@typescript-eslint/parser": "~2.0.0",
+    "eslint": "~6.2.2",
     "source-map-support": "0.5.9"
   },
   "dependencies": {}

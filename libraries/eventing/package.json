@@ -1,6 +1,6 @@
 {
   "name": "@azure/eventing",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Typescript-based eventing framework (for Azure Open Source Projects)",
   "engines": {
     "node": ">=7.10.0"
@@ -44,12 +44,12 @@
     "@types/node": "10.12.19",
     "@types/mocha": "5.2.5",
     "mocha": "5.2.0",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "~2.0.0",
+    "@typescript-eslint/parser": "~2.0.0",
+    "eslint": "~6.2.2",
     "typescript": "~3.5.3"
   },
   "dependencies": {
-    "@azure/tasks": "^2.1.0"
+    "@azure/tasks": "~3.0.0"
   }
 }

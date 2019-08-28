@@ -1,6 +1,6 @@
 {
   "name": "@azure/oai2-to-oai3",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "OpenAPI2 to OpenAPI3 conversion library that maintains souremaps for use with AutoRest",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -47,16 +47,16 @@
     "@types/js-yaml": "3.12.1",
     "mocha": "5.2.0",
     "typescript": "~3.5.3",
-    "@azure/async-io": "^2.1.0",
+    "@azure/async-io": "~3.0.0",
     "source-map-support": "0.5.9",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "~2.0.0",
+    "@typescript-eslint/parser": "~2.0.0",
+    "eslint": "~6.2.2",
     "@types/source-map": "0.5.0"
   },
   "dependencies": {
-    "@azure/datastore": "^3.0.0",
-    "@azure/openapi": "^2.1.0",
+    "@azure/datastore": "~4.0.0",
+    "@azure/openapi": "~3.0.0",
     "source-map": "0.5.6"
   }
 }

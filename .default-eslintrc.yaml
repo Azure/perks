@@ -25,9 +25,13 @@ rules:
   "@typescript-eslint/no-parameter-properties": 'off'
   "@typescript-eslint/no-angle-bracket-type-assertion" : 'off'
   "require-atomic-updates" : 'off'
+  '@typescript-eslint/consistent-type-assertions' : 
+    - error
+    - assertionStyle: 'angle-bracket'
+    
   "@typescript-eslint/array-type":
-  - 1
-  - generic
+  - error
+  - default: generic
   indent:
   - warn
   - 2

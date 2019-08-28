@@ -1,6 +1,6 @@
 {
   "name": "@azure/async-io",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Asynchronous IO (for Azure Open Source Projects)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -46,12 +46,12 @@
     "@types/node": "10.12.19",
     "mocha": "5.2.0",
     "typescript": "~3.5.3",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^6.1.0"
+    "@typescript-eslint/eslint-plugin": "~2.0.0",
+    "@typescript-eslint/parser": "~2.0.0",
+    "eslint": "~6.2.2"
   },
   "dependencies": {
-    "@azure/tasks": "^2.1.0",
-    "proper-lockfile": "^2.0.1"
+    "@azure/tasks": "~3.0.0",
+    "proper-lockfile": "~2.0.1"
   }
 }

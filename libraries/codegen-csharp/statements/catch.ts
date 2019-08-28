@@ -8,7 +8,6 @@ import { Expression } from '../expression';
 import { Parameter } from '../parameter';
 import { StatementPossibilities, Statements } from './statement';
 
-
 export class CatchStatement extends Statements {
   public when?: Expression;
 

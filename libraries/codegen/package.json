@@ -1,6 +1,6 @@
 {
   "name": "@azure/codegen",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Autorest Code generator common and base classes",
   "directories": {
     "doc": "docs"
@@ -37,14 +37,14 @@
     "mocha": "5.2.0",
     "mocha-typescript": "1.1.17",
     "typescript": "~3.5.3",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
-    "eslint": "^6.1.0",
+    "@typescript-eslint/eslint-plugin": "~2.0.0",
+    "@typescript-eslint/parser": "~2.0.0",
+    "eslint": "~6.2.2",
     "@types/semver": "5.5.0"
   },
   "dependencies": {
-    "@azure/async-io": "^2.1.0",
-    "@azure/linq": "^2.1.0",
+    "@azure/async-io": "~3.0.0",
+    "@azure/linq": "~3.0.0",
     "js-yaml": "3.13.1",
     "semver": "^5.5.1",
     "safe-eval": "^0.3.0"

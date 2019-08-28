@@ -7,7 +7,7 @@ import { Readable } from 'stream';
 import { Mapping, Message, RawSourceMap, Channel } from './types';
 import { basename, dirname } from 'path';
 
-namespace IAutoRestPluginTarget_Types {
+namespace IAutoRestPluginTargetTypes {
   export const GetPluginNames = new RequestType0<Array<string>, Error, void>('GetPluginNames');
   export const Process = new RequestType2<string, string, boolean, Error, void>('Process');
 }
@@ -16,7 +16,7 @@ interface IAutoRestPluginTarget {
   Process(pluginName: string, sessionId: string): Promise<boolean>;
 }
 
-namespace IAutoRestPluginInitiator_Types {
+namespace IAutoRestPluginInitiatorTypes {
   export const ReadFile = new RequestType2<string, string, string, Error, void>('ReadFile');
   export const GetValue = new RequestType2<string, string, any, Error, void>('GetValue');
   export const ListInputs = new RequestType2<string, string | undefined, Array<string>, Error, void>('ListInputs');
@@ -58,8 +58,8 @@ export class AutoRestExtension {
       }
     );
 
-    channel.onRequest(IAutoRestPluginTarget_Types.GetPluginNames, async () => Object.keys(this.plugins));
-    channel.onRequest(IAutoRestPluginTarget_Types.Process, async (pluginName: string, sessionId: string) => {
+    channel.onRequest(IAutoRestPluginTargetTypes.GetPluginNames, async () => Object.keys(this.plugins));
+    channel.onRequest(IAutoRestPluginTargetTypes.Process, async (pluginName: string, sessionId: string) => {
       try {
         const handler = this.plugins[pluginName];
         if (!handler) {
@@ -67,13 +67,13 @@ export class AutoRestExtension {
         }
         await handler({
           async ProtectFiles(path: string): Promise<void> {
-            channel.sendNotification(IAutoRestPluginInitiator_Types.ProtectFiles, sessionId, path);
+            channel.sendNotification(IAutoRestPluginInitiatorTypes.ProtectFiles, sessionId, path);
           },
           UpdateConfigurationFile(filename: string, content: string): void {
-            channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, { Channel: Channel.Configuration, Key: [filename], Text: content });
+            channel.sendNotification(IAutoRestPluginInitiatorTypes.Message, sessionId, { Channel: Channel.Configuration, Key: [filename], Text: content });
           },
           async GetConfigurationFile(filename: string): Promise<string> {
-            const configurations = await channel.sendRequest(IAutoRestPluginInitiator_Types.GetValue, sessionId, 'configurationFiles');
+            const configurations = await channel.sendRequest(IAutoRestPluginInitiatorTypes.GetValue, sessionId, 'configurationFiles');
 
             const filenames = Object.getOwnPropertyNames(configurations);
             if (filenames.length > 0) {
@@ -87,17 +87,17 @@ export class AutoRestExtension {
             return '';
           },
           async ReadFile(filename: string): Promise<string> {
-            return await channel.sendRequest(IAutoRestPluginInitiator_Types.ReadFile, sessionId, filename);
+            return await channel.sendRequest(IAutoRestPluginInitiatorTypes.ReadFile, sessionId, filename);
           },
           async GetValue(key: string): Promise<any> {
-            return await channel.sendRequest(IAutoRestPluginInitiator_Types.GetValue, sessionId, key);
+            return await channel.sendRequest(IAutoRestPluginInitiatorTypes.GetValue, sessionId, key);
           },
           async ListInputs(artifactType?: string): Promise<Array<string>> {
-            return await channel.sendRequest(IAutoRestPluginInitiator_Types.ListInputs, sessionId, artifactType);
+            return await channel.sendRequest(IAutoRestPluginInitiatorTypes.ListInputs, sessionId, artifactType);
           },
           WriteFile(filename: string, content: string, sourceMap?: Array<Mapping> | RawSourceMap, artifactType?: string): void {
             if (artifactType) {
-              channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, {
+              channel.sendNotification(IAutoRestPluginInitiatorTypes.Message, sessionId, {
                 Channel: Channel.File,
                 Details: {
                   content: content,
@@ -109,19 +109,19 @@ export class AutoRestExtension {
                 Key: [artifactType, filename]
               });
             } else {
-              channel.sendNotification(IAutoRestPluginInitiator_Types.WriteFile, sessionId, filename, content, sourceMap);
+              channel.sendNotification(IAutoRestPluginInitiatorTypes.WriteFile, sessionId, filename, content, sourceMap);
             }
           },
 
           Message(message: Message): void {
-            channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, message);
+            channel.sendNotification(IAutoRestPluginInitiatorTypes.Message, sessionId, message);
           }
         });
         return true;
       } catch (e) {
         console.error(`PLUGIN FAILURE: ${e.message}, ${e.stack}, ${JSON.stringify(e, null, 2)}`);
-        channel.sendNotification(IAutoRestPluginInitiator_Types.Message, sessionId, <Message>{
-          Channel: 'fatal' as any,
+        channel.sendNotification(IAutoRestPluginInitiatorTypes.Message, sessionId, <Message>{
+          Channel: <any>'fatal',
           Text: '' + e,
           Details: e
         });
