@@ -7,9 +7,10 @@ import { Delay, Exception, promisify } from '@azure/tasks';
 import * as fs from 'fs';
 import { isFile } from './file-io';
 
+/* eslint-disable  */ // special case 
 const { lock, check, } = require('proper-lockfile');
 
-const fs_open: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
+const openInternal: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
 
 export class UnableToReadLockException extends Exception {
   constructor(path: string, public exitCode: number = 1) {
@@ -77,16 +78,18 @@ export class Lock {
     // try to open the file for read
     try {
       if (await isFile(p)) {
-        const fd = await fs_open(p, 'r');
+        const fd = await openInternal(p, 'r');
         return async () => {
           fs.close(fd, (err) => { });
           try {
             fs.unlinkSync(p);
-          } catch (E) {
+          } catch {
+            // ignore errors
           }
         };
       }
-    } catch (e) {
+    } catch {
+      // ignore errors
     }
     if (options.retries) {
       await Delay(options.delay);

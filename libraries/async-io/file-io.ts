@@ -50,15 +50,25 @@ export const exists: (path: string | Buffer) => Promise<boolean> = path => new P
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
-// export const writeFile: (filename: string, content: string | Buffer) => Promise<void> = (filename, content) => Promise.resolve(fs.writeFileSync(filename, content)); // for some reason writeFile only produced empty files
 export const writeFile: (filename: string, content: string | Buffer) => Promise<void> = promisify(fs.writeFile);
 export const lstat: (path: string | Buffer) => Promise<fs.Stats> = promisify(fs.lstat);
 
-const fs_rmdir: (path: string | Buffer) => Promise<void> = promisify(fs.rmdir);
-const unlink: (path: string | Buffer) => Promise<void> = promisify(fs.unlink);
-const fs_mkdir: (path: string | Buffer) => Promise<void> = promisify(fs.mkdir);
-const fs_open: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
-const fs_close: (fs: number) => Promise<void> = promisify(fs.close);
+const rmdirInternal: (path: string | Buffer) => Promise<void> = promisify(fs.rmdir);
+const unlinkInternal: (path: string | Buffer) => Promise<void> = promisify(fs.unlink);
+const mkdirInternal: (path: string | Buffer) => Promise<void> = promisify(fs.mkdir);
+const openInternal: (path: string | Buffer, flags: string | number) => Promise<number> = promisify(fs.open);
+const closeInternal: (fs: number) => Promise<void> = promisify(fs.close);
+
+export async function isDirectory(dirPath: string): Promise<boolean> {
+  try {
+    if (await exists(dirPath)) {
+      return (await lstat(dirPath)).isDirectory();
+    }
+  } catch (e) {
+    // don't throw!
+  }
+  return false;
+}
 
 export async function mkdir(dirPath: string) {
   if (!await isDirectory(dirPath)) {
@@ -70,7 +80,7 @@ export async function mkdir(dirPath: string) {
       }
     }
     try {
-      await fs_mkdir(p);
+      await mkdirInternal(p);
     } catch (e) {
       if (!await isDirectory(p)) {
         throw new UnableToMakeDirectoryException(p);
@@ -79,25 +89,14 @@ export async function mkdir(dirPath: string) {
   }
 }
 
-const fs_readFile: (filename: string, encoding: string, ) => Promise<string> = promisify(fs.readFile);
+const readFileInternal: (filename: string, encoding: string, ) => Promise<string> = promisify(fs.readFile);
 
 export async function readFile(filename: string): Promise<string> {
-  return fs_readFile(filename, 'utf-8');
+  return readFileInternal(filename, 'utf-8');
 }
 
 export async function readBinaryFile(filename: string): Promise<string> {
-  return fs_readFile(filename, 'base64');
-}
-
-export async function isDirectory(dirPath: string): Promise<boolean> {
-  try {
-    if (await exists(dirPath)) {
-      return (await lstat(dirPath)).isDirectory();
-    }
-  } catch (e) {
-    // don't throw!
-  }
-  return false;
+  return readFileInternal(filename, 'base64');
 }
 
 export async function isFile(filePath: string): Promise<boolean> {
@@ -118,7 +117,6 @@ export async function rmdir(dirPath: string, exceptions?: Set<string>) {
     return;
   }
   exceptions = exceptions || new Set();
-
 
   // if it's not a directory, that's bad.
   if (!await isDirectory(dirPath)) {
@@ -147,7 +145,7 @@ export async function rmdir(dirPath: string, exceptions?: Set<string>) {
             awaiter.Await(rmdir(p, exceptions));
           } else {
             // files and symlinks are unlink'd
-            awaiter.Await(unlink(p).catch(() => { }));
+            awaiter.Await(unlinkInternal(p).catch(() => { }));
           }
         } catch (e) {
           // uh... can't.. ok.
@@ -161,7 +159,7 @@ export async function rmdir(dirPath: string, exceptions?: Set<string>) {
   }
   try {
     // if this fails for some reason, check if it's important.
-    await fs_rmdir(dirPath);
+    await rmdirInternal(dirPath);
   } catch (e) {
     // is it gone? that's all we really care about.
     if (await isDirectory(dirPath)) {
@@ -184,7 +182,7 @@ export async function rmFile(filePath: string) {
 
   try {
     // files and symlinks are unlink'd
-    await unlink(filePath);
+    await unlinkInternal(filePath);
   } catch (e) {
     // is it gone? that's all we really care about.
     if (await exists(filePath)) {

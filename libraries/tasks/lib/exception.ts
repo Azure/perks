@@ -18,28 +18,28 @@ export class TypeException extends Exception {
 }
 
 export class OperationCanceledException extends Exception {
-  constructor(message: string = "Cancelation Requested", public exitCode: number = 1) {
+  constructor(message: string = 'Cancelation Requested', public exitCode: number = 1) {
     super(message, exitCode);
     Object.setPrototypeOf(this, OperationCanceledException.prototype);
   }
 }
 export class OutstandingTaskAlreadyCompletedException extends Exception {
   constructor() {
-    super("The OutstandingTaskAwaiter is already completed, may not Enter() again.", 1);
+    super('The OutstandingTaskAwaiter is already completed, may not Enter() again.', 1);
     Object.setPrototypeOf(this, OutstandingTaskAlreadyCompletedException.prototype);
   }
 }
 
 export class OperationAbortedException extends Exception {
   constructor() {
-    super("Error occurred. Exiting.", 1);
+    super('Error occurred. Exiting.', 1);
     Object.setPrototypeOf(this, OperationAbortedException.prototype);
   }
 }
 
 export class AggregateException extends Exception {
   constructor(public errors: Array<any>) {
-    super("Multiple Exceptions caught.", 1);
+    super('Multiple Exceptions caught.', 1);
     Object.setPrototypeOf(this, AggregateException.prototype);
   }
 }
