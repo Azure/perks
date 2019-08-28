@@ -8,7 +8,7 @@ import { Extensions } from './extensions';
 import { HttpComponents } from './http-operation';
 import { Info } from './info';
 import { Schema } from './schema';
-import { Dictionary } from '@azure/codegen';
+import { Dictionary } from '@azure/linq';
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails, SecurityRequirement, Server, Tag } from './components';
 import { uid } from './uid';
 

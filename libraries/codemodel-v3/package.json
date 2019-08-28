@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@azure/autorest-extension-base": "^2.0.0",
-    "@azure/codegen": "^1.0.0"
+    "@azure/codegen": "^1.0.0",
+    "@azure/linq": "^2.1.0"
   }
 }

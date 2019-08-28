@@ -37,7 +37,7 @@ rules:
   no-undef: 'off'
   no-unused-vars: 'off'
   linebreak-style:
-  - 'off'
+  - 'error'
   - unix
   quotes:
   - error

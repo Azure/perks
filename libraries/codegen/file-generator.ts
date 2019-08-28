@@ -70,7 +70,7 @@ export class Text extends Initializer implements IText {
   }
 
   get text(): string {
-    let output: string = '';
+    let output = '';
     for (const each of this.content) {
       if (typeof (each) === 'string') {
         output = output + EOL + each;

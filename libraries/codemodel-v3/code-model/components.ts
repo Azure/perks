@@ -5,8 +5,9 @@
 
 import { Extensions } from './extensions';
 import { Schema } from './schema';
-import { DeepPartial, Dictionary } from '@azure/codegen';
+import { DeepPartial } from '@azure/codegen';
 import { uid } from "./uid";
+import { Dictionary } from '@azure/linq';
 
 export interface IOperationBase {
 

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Model } from './code-model/code-model';
-import { serialize, Dictionary } from '@azure/codegen';
+import { serialize } from '@azure/codegen';
 import { Host } from '@azure/autorest-extension-base';
 import { ModelState } from './model-state';
 

@@ -5,7 +5,8 @@
 
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails } from './components';
 import { Extensions } from './extensions';
-import { DeepPartial, Dictionary, values } from '@azure/codegen';
+import { DeepPartial, } from '@azure/codegen';
+import { Dictionary, values } from '@azure/linq';
 import { uid } from './uid';
 
 export interface PropertyDetails extends ImplementationDetails {

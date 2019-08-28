@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { values, Dictionary, items } from './linq';
+import { values, Dictionary, items } from '@azure/linq';
 import * as aio from '@azure/async-io';
 import { join } from 'path';
 
@@ -80,5 +80,5 @@ function quartet() {
 }
 
 export function guid() {
-  return (quartet() + quartet() + "-" + quartet() + "-4" + quartet().substr(0, 3) + "-" + quartet() + "-" + quartet() + quartet() + quartet()).toLowerCase();
+  return (quartet() + quartet() + '-' + quartet() + '-4' + quartet().substr(0, 3) + '-' + quartet() + '-' + quartet() + quartet() + quartet()).toLowerCase();
 }

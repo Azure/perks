@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Text, TextPossibilities } from './file-generator';
-import { Dictionary, values } from './linq';
+import { Dictionary, values } from '@azure/linq';
 import { type } from 'os';
 import { on } from 'cluster';
 
@@ -188,8 +188,8 @@ export function fixLeadingNumber(identifier: Array<string>): Array<string> {
 
 export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
   if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase())) {
-    const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i')
-    let newIdentifier = identifier.replace(regex, `$2`);
+    const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i');
+    let newIdentifier = identifier.replace(regex, '$2');
     if (newIdentifier.length < 2) {
       // if it results in an empty string or a single letter string
       // then, it is not really a word.
@@ -203,7 +203,7 @@ export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: str
   return identifier;
 }
 
-export function isCapitalized(identifier: string): Boolean {
+export function isCapitalized(identifier: string): boolean {
   return /^[A-Z]/.test(identifier);
 }
 
@@ -240,7 +240,7 @@ export function* convert(num: number): Iterable<string> {
   }
   if (num > 99) {
     yield ones[Math.floor(num / 100)];
-    yield `hundred`;
+    yield 'hundred';
     num %= 100;
   }
   if (num > 19) {
@@ -322,7 +322,7 @@ export function* getRegions(source: string, prefix: string = '#', postfix: strin
         start: '',
         content: match[1].replace(/«/g, '\n'),
         end: ''
-      }
+      };
     }
 
     // this region
@@ -331,7 +331,7 @@ export function* getRegions(source: string, prefix: string = '#', postfix: strin
       start: match[2],
       content: match[4].replace(/«/g, '\n'),
       end: match[5]
-    }
+    };
     finalPosition = rx.lastIndex;
   }
 
@@ -342,7 +342,7 @@ export function* getRegions(source: string, prefix: string = '#', postfix: strin
       start: '',
       content: source.substring(finalPosition).replace(/«/g, '\n'),
       end: '',
-    }
+    };
   }
 }
 

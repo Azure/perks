@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { keys } from './linq';
+import { keys } from '@azure/linq';
 
 export type DeepPartial<T> = {
   [P in keyof T]?:
@@ -31,6 +31,8 @@ export class Initializer {
             this.applyTo(source[i], target[i]);
             continue;
           }
+
+        // fall thru
 
         default:
           // everything else just replace.

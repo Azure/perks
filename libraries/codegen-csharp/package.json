@@ -42,6 +42,7 @@
     "typescript": "~3.5.3"
   },
   "dependencies": {
-    "@azure/codegen": "^1.0.0"
+    "@azure/codegen": "^1.0.0",
+    "@azure/linq": "^2.1.0"
   }
 }

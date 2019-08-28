@@ -4,7 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@azure/autorest-extension-base';
-import { safeEval, deserialize, Initializer, Dictionary, intersect } from '@azure/codegen';
+import { safeEval, deserialize, Initializer } from '@azure/codegen';
+import { Dictionary } from '@azure/linq';
 
 export class ModelState<T extends Dictionary<any>> extends Initializer {
   public model!: T;

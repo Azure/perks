@@ -1,4 +1,4 @@
-import { pascalCase, deconstruct } from "./text-manipulation";
+import { pascalCase, deconstruct } from './text-manipulation';
 
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.

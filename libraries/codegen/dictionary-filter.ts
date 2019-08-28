@@ -2,19 +2,11 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-
-import { Initializer } from '@azure/codegen';
 import { Dictionary } from '@azure/linq';
 
-export class Extensions extends Initializer implements Extensions {
-  extensions = new Dictionary<any>();
-
-  constructor() {
-    super();
-  }
+export function includeXDash<T>(dictionary: Dictionary<T>) {
+  return Object.keys(dictionary).filter((v, i, a) => v.startsWith('x-'));
 }
-
-export interface Extensions {
-  /** additional metadata extensions */
-  extensions: Dictionary<any>;
+export function excludeXDash<T>(dictionary: Dictionary<T>) {
+  return Object.keys(dictionary).filter((v, i, a) => !v.startsWith('x-'));
 }

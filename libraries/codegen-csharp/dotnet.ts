@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Dictionary, intersect } from '@azure/codegen';
+import { intersect } from '@azure/codegen';
 
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from './expression';
 import { Namespace } from './namespace';
@@ -11,7 +11,7 @@ import { Parameter } from './parameter';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 import { Local, Variable } from './variable';
-import { Class } from './class';
+import { Dictionary } from '@azure/linq';
 import { IInterface } from './type-container';
 
 export class ClassType implements TypeDeclaration {
