@@ -1,4 +1,3 @@
-
 declare type CollectionFormat =
   'none' |
   'csv' |
@@ -112,8 +111,8 @@ declare interface WithExtensions {
 }
 
 declare interface CodeModel extends WithExtensions {
-  hostParametersFront?: Parameter[];
-  hostParametersBack?: Parameter[];
+  hostParametersFront?: Array<Parameter>;
+  hostParametersBack?: Array<Parameter>;
   name: string;
   namespace: string;
   modelsName: string;
@@ -121,12 +120,12 @@ declare interface CodeModel extends WithExtensions {
   baseUrl: string;
   documentation?: string;
 
-  properties?: Property[];
-  operations?: MethodGroup[];
-  enumTypes?: EnumType[];
-  modelTypes?: CompositeType[];
-  errorTypes?: CompositeType[];
-  headerTypes?: CompositeType[];
+  properties?: Array<Property>;
+  operations?: Array<MethodGroup>;
+  enumTypes?: Array<EnumType>;
+  modelTypes?: Array<CompositeType>;
+  errorTypes?: Array<CompositeType>;
+  headerTypes?: Array<CompositeType>;
 }
 
 declare interface FixableString {
@@ -147,7 +146,7 @@ declare interface MethodGroup {
   typeName: FixableString;
   nameForProperty: string;
 
-  methods?: Method[];
+  methods?: Array<Method>;
 }
 
 declare interface Method extends WithExtensions {
@@ -157,7 +156,7 @@ declare interface Method extends WithExtensions {
   url: string;
   isAbsoluteUrl: boolean;
   httpMethod: HttpMethod;
-  inputParameterTransformation?: ParameterTransformation[];
+  inputParameterTransformation?: Array<ParameterTransformation>;
   responses: {[statusCode in HttpStatusCode]: Response };
   defaultResponse: Response;
   returnType: Response;
@@ -165,16 +164,16 @@ declare interface Method extends WithExtensions {
   summary?: string;
   externalDocsUrl?: string;
   requestContentType?: string;
-  responseContentTypes?: string[];
+  responseContentTypes?: Array<string>;
   deprecated: boolean;
   hidden: boolean;
 
-  parameters?: Parameter[];
+  parameters?: Array<Parameter>;
 }
 
 declare interface ParameterTransformation {
   outputParameter: Parameter;
-  parameterMappings?: ParameterMapping[];
+  parameterMappings?: Array<ParameterMapping>;
 }
 
 declare interface ParameterMapping {
@@ -198,7 +197,7 @@ declare interface IVariable extends WithExtensions {
 declare interface Property extends IVariable {
   isReadOnly: boolean;
   summary?: string;
-  realPath: string[];
+  realPath: Array<string>;
   xmlProperties?: XmlProperties;
 }
 
@@ -217,7 +216,7 @@ declare interface IModelType {
 }
 
 declare interface EnumType extends IModelType {
-  $type: "EnumType";
+  $type: 'EnumType';
   values: EnumValue;
   modelAsExtensible: boolean;
   modelAsString: boolean;
@@ -227,17 +226,17 @@ declare interface EnumValue {
   description?: string;
   name: string;
   serializedName: string;
-  allowedValues?: string[];
+  allowedValues?: Array<string>;
 }
 
 declare interface PrimaryType extends IModelType {
-  $type: "PrimaryType";
+  $type: 'PrimaryType';
   format?: string;
   knownPrimaryType: KnownPrimaryType;
 }
 
 declare interface CompositeType extends IModelType {
-  $type: "CompositeType";
+  $type: 'CompositeType';
   serializedName: string;
   baseModelType?: CompositeType;
   polymorphicDiscriminator?: string;
@@ -246,17 +245,17 @@ declare interface CompositeType extends IModelType {
   externalDocsUrl?: string;
   containsConstantProperties: boolean;
 
-  properties?: Property[];
+  properties?: Array<Property>;
 }
 
 declare interface DictionaryType extends IModelType {
-  $type: "DictionaryType";
+  $type: 'DictionaryType';
   valueType: ModelType;
   supportsAdditionalProperties: boolean;
 }
 
 declare interface SequenceType extends IModelType {
-  $type: "SequenceType";
+  $type: 'SequenceType';
   elementType: ModelType;
   elementXmlProperties?: XmlProperties;
 }

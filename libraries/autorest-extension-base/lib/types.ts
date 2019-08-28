@@ -4,7 +4,7 @@ export type Position = {
   column: number; // 0-based
 } | { path?: JsonPath };
 
-export type JsonPath = (string | number)[];
+export type JsonPath = Array<string | number>;
 
 export interface SourceLocation {
   document: string;
@@ -22,40 +22,40 @@ export interface Artifact {
  */
 export enum Channel {
   /** Information is considered the mildest of responses; not necesarily actionable. */
-  Information = <any>"information",
+  Information = <any>'information',
 
   /** Warnings are considered important for best practices, but not catastrophic in nature. */
-  Warning = <any>"warning",
+  Warning = <any>'warning',
 
   /** Errors are considered blocking issues that block a successful operation.  */
-  Error = <any>"error",
+  Error = <any>'error',
 
   /** Debug messages are designed for the developer to communicate internal autorest implementation details. */
-  Debug = <any>"debug",
+  Debug = <any>'debug',
 
   /** Verbose messages give the user additional clarity on the process. */
-  Verbose = <any>"verbose",
+  Verbose = <any>'verbose',
 
   /** Catastrophic failure, likely abending the process.  */
-  Fatal = <any>"fatal",
+  Fatal = <any>'fatal',
 
   /** Hint messages offer guidance or support without forcing action. */
-  Hint = <any>"hint",
+  Hint = <any>'hint',
 
   /** File represents a file output from an extension. Details are a Artifact and are required.  */
-  File = <any>"file",
+  File = <any>'file',
 
   /** content represents an update/creation of a configuration file. The final uri will be in the same folder as the primary config file. */
-  Configuration = <any>"configuration",
+  Configuration = <any>'configuration',
 
   /** Protect is a path to not remove during a clear-output-folder.  */
-  Protect = <any>"protect",
+  Protect = <any>'protect',
 
 
 }
 
 export interface Message {
-  Channel: Channel
+  Channel: Channel;
   Key?: Iterable<string>;
   Details?: any;
   Text: string;
@@ -70,9 +70,9 @@ export interface RawSourceMap {
   file?: string;
   sourceRoot?: string;
   version: string;
-  sources: string[];
-  names: string[];
-  sourcesContent?: string[];
+  sources: Array<string>;
+  names: Array<string>;
+  sourcesContent?: Array<string>;
   mappings: string;
 }
 
