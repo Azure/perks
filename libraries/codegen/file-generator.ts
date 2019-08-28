@@ -98,7 +98,7 @@ export class TextWithRegions extends Text {
   private prefix: string;
   private postfix: string;
 
-  constructor(content?: TextPossibilities, objectIntializer?: Partial<TextWithRegions>, prefix: string = '#', postfix: string = '') {
+  constructor(content?: TextPossibilities, objectIntializer?: Partial<TextWithRegions>, prefix = '#', postfix = '') {
     super(content);
     this.apply(objectIntializer);
     this.prefix = prefix;

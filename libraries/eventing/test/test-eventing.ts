@@ -16,7 +16,7 @@ export class MyClass extends EventEmitter {
 @suite class Eventing {
 
   @test async 'Do Events Work'() {
-    let instance = new MyClass();
+    const instance = new MyClass();
     let worksWithSubscribe = 'no';
     let worksLikeNode = 'no';
 
@@ -24,7 +24,7 @@ export class MyClass extends EventEmitter {
       worksLikeNode = s;
     });
 
-    var unsub = instance.Debug.Subscribe((instance, args) => {
+    const unsub = instance.Debug.Subscribe((instance, args) => {
       worksWithSubscribe = args;
     });
 

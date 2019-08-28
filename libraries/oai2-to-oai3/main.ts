@@ -15,19 +15,19 @@ export class Oai2ToOai3 {
   convert() {
     // process servers
     if (this.original['x-ms-parameterized-host']) {
-      let xMsPHost: any = this.original['x-ms-parameterized-host'];
-      let server: any = {};
+      const xMsPHost: any = this.original['x-ms-parameterized-host'];
+      const server: any = {};
       const scheme = xMsPHost.useSchemePrefix === false ? '' : ((this.original.schemes || ['http']).map(s => s + '://')[0] || '');
       server.url = scheme + xMsPHost.hostTemplate + (this.original.basePath || '');
       if (xMsPHost.positionInOperation) {
         server['x-ms-parameterized-host'] = { positionInOperation: xMsPHost.positionInOperation };
       }
       server.variables = {};
-      for (let msp in xMsPHost.parameters) {
+      for (const msp in xMsPHost.parameters) {
         if (!msp.startsWith('x-')) {
 
           let originalParameter: any = {};
-          let param: any = {};
+          const param: any = {};
           if (xMsPHost.parameters[msp].$ref !== undefined) {
             let referencePointer = xMsPHost.parameters[msp].$ref;
             if (referencePointer.startsWith(`${this.originalFilename}#/parameters/`)) {
@@ -77,7 +77,7 @@ export class Oai2ToOai3 {
         this.generated.servers = this.newArray('/host');
       }
       for (const { value: s, pointer } of visit(this.original.schemes)) {
-        let server: any = {};
+        const server: any = {};
         server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
 
         /* eslint-disable */

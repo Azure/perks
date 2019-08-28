@@ -18,7 +18,7 @@ export class TypeException extends Exception {
 }
 
 export class OperationCanceledException extends Exception {
-  constructor(message: string = 'Cancelation Requested', public exitCode: number = 1) {
+  constructor(message = 'Cancelation Requested', public exitCode: number = 1) {
     super(message, exitCode);
     Object.setPrototypeOf(this, OperationCanceledException.prototype);
   }

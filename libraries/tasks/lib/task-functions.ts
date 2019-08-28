@@ -28,7 +28,7 @@ export function YieldCPU(): Promise<void> | undefined {
  * @param predicate - a fn that returns a boolean
  * @param delay - number of milliseconds to async delay between checks.
  */
-export async function While(predicate: () => boolean, delay: number = 50): Promise<void> {
+export async function While(predicate: () => boolean, delay = 50): Promise<void> {
   while (predicate()) {
     await Delay(delay);
   }
@@ -39,7 +39,7 @@ export async function While(predicate: () => boolean, delay: number = 50): Promi
  * @param predicate - a fn that returns a boolean
  * @param delay - number of milliseconds to async delay between checks.
  */
-export async function Until(predicate: () => boolean, delay: number = 50): Promise<void> {
+export async function Until(predicate: () => boolean, delay = 50): Promise<void> {
   while (predicate()) {
     await Delay(delay);
   }
@@ -74,7 +74,7 @@ export function When<T>(emitter: EventEmitter, successEvent?: string, errorEvent
   return result;
 }
 
-export function Async<T>(fn: () => T, msec: number = 1): Promise<T> {
+export function Async<T>(fn: () => T, msec = 1): Promise<T> {
   return new Promise((r, j) => setTimeout(() => {
     try { r(fn()); } catch (E) { j(E); }
   }, msec));

@@ -6,7 +6,7 @@
 import { OutstandingTaskAlreadyCompletedException, AggregateException } from './exception';
 
 export class OutstandingTaskAwaiter {
-  private locked: boolean = false;
+  private locked = false;
   private outstandingTasks: Array<Promise<any>> = [];
   private errors: Array<any> = [];
 

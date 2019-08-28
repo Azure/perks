@@ -7,7 +7,7 @@ import { Exception } from '@azure/tasks';
 import * as events from 'events';
 
 export class UnintializedPromiseException extends Exception {
-  constructor(message: string = 'Promise was not initialized prior to use.', public exitCode: number = 1) {
+  constructor(message = 'Promise was not initialized prior to use.', public exitCode: number = 1) {
     super(message, exitCode);
     Object.setPrototypeOf(this, UnintializedPromiseException.prototype);
   }
@@ -133,7 +133,7 @@ export class Progress extends EventEmitter {
   @EventEmitter.Event public Start!: IEvent<Progress, null>;
   @EventEmitter.Event public Message!: IEvent<Progress, string>;
 
-  private started: boolean = false;
+  private started = false;
 
   public constructor(initialize: Subscribe) {
     super();

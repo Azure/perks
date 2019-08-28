@@ -37,7 +37,7 @@ async function realPathWithExtension(command: string): Promise<string | undefine
   return undefined;
 }
 
-async function getFullPath(command: string, recursive: boolean = false, searchPath?: Array<string>): Promise<string | undefined> {
+async function getFullPath(command: string, recursive = false, searchPath?: Array<string>): Promise<string | undefined> {
   command = command.replace(/"/g, '');
   const ext = path.extname(command);
 

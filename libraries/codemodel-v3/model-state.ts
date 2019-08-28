@@ -12,8 +12,8 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   protected documentName!: string;
   protected currentPath: JsonPath = new Array<string>();
   private context!: any;
-  private _debug: boolean = false;
-  private _verbose: boolean = false;
+  private _debug = false;
+  private _verbose = false;
 
   public constructor(protected service: Host, objectInitializer?: Partial<ModelState<T>>) {
     super();

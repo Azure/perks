@@ -7,7 +7,7 @@ export function deepFreeze(instance: object) {
   const obj = <AnyObject>instance;
 
   // Retrieve the property names defined on object
-  var propNames = Object.getOwnPropertyNames(obj);
+  const propNames = Object.getOwnPropertyNames(obj);
 
   // Freeze properties before freezing self
 

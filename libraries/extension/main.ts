@@ -45,7 +45,7 @@ export class PackageInstallationException extends Exception {
   }
 }
 export class UnsatisfiedEngineException extends Exception {
-  constructor(name: string, version: string, message: string = '') {
+  constructor(name: string, version: string, message = '') {
     super(`Unable to find matching engine '${name}' - '${version} ${message}'`, 1);
     Object.setPrototypeOf(this, UnsatisfiedEngineException.prototype);
   }
@@ -161,7 +161,7 @@ export class Package {
     return this.packageMetadata._spec;
   }
 
-  async install(force: boolean = false): Promise<Extension> {
+  async install(force = false): Promise<Extension> {
     return this.extensionManager.installPackage(this, force);
   }
 
@@ -235,7 +235,7 @@ export class Extension extends Package {
     return this.extensionManager.removeExtension(this);
   }
 
-  async start(enableDebugger: boolean = false): Promise<ChildProcess> {
+  async start(enableDebugger = false): Promise<ChildProcess> {
     return this.extensionManager.start(this, enableDebugger);
   }
 }
@@ -420,7 +420,7 @@ export class ExtensionManager {
     return JSON.parse(versions.stdout).data;
   }
 
-  public async findPackage(name: string, version: string = 'latest'): Promise<Package> {
+  public async findPackage(name: string, version = 'latest'): Promise<Package> {
     // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
     const resolved = resolveName(name, version);
@@ -577,7 +577,7 @@ export class ExtensionManager {
     }
   }
 
-  public async start(extension: Extension, enableDebugger: boolean = false): Promise<ChildProcess> {
+  public async start(extension: Extension, enableDebugger = false): Promise<ChildProcess> {
     const PathVar = getPathVariableName();
     if (!extension.definition.scripts) {
       throw new MissingStartCommandException(extension);
