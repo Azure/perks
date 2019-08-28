@@ -18,8 +18,11 @@ steps:
 - script: |
     npm install -g npm 
     npx @microsoft/rush update 
+    npx @microsoft/rush sync-versions
+    npx @microsoft/rush set-version 
+    npx @microsoft/rush sync-versions
+    npx @microsoft/rush update 
     npx @microsoft/rush rebuild 
-    npx @microsoft/rush test 
     npx @microsoft/rush publish --publish --pack --include-all --tag preview
 
 - pwsh: ./common/scripts/upload.ps1 $(azure-sdk-npm-token)
