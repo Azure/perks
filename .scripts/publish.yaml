@@ -22,6 +22,6 @@ steps:
     npx @microsoft/rush test 
     npx @microsoft/rush publish --publish --pack --include-all --tag preview
 
-- pwsh: ./common/scripts/upload.ps1 $(npm-auth-token)
+- pwsh: ./common/scripts/upload.ps1 $(azure-sdk-npm-token)
     
   displayName: 'Rush install, build and test'
