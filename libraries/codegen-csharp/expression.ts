@@ -109,7 +109,7 @@ export class IsExpressionDeclaration extends LocalVariable implements Expression
 }
 
 export function Lambda(parameters: Array<Parameter>, body: OneOrMoreStatements, objectIntializer?: Partial<LambdaExpression>) {
-
+  throw new Error('not implemented');
 }
 
 export class LambdaExpression extends Statements implements Expression {

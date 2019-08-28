@@ -22,7 +22,7 @@ export function sortByNamePartialFirst(a: Method, b: Method): number {
 
 export class Class extends Type {
   protected classOrStruct: 'class' | 'struct' = 'class';
-  public isStatic: boolean = false;
+  public isStatic = false;
 
   protected fields = new Array<Field>();
 

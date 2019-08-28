@@ -13,7 +13,7 @@ import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 
 export class Type extends Initializer implements TypeDeclaration {
-  public description: string = '';
+  public description = '';
   public methods = new Array<Method>();
   public properties = new Array<Property>();
   public genericParameters = new Array<string>();
@@ -21,7 +21,7 @@ export class Type extends Initializer implements TypeDeclaration {
   public interfaces = new Array<IInterface>();
   public accessModifier = Access.Public;
   public attributes = new Array<Attribute>();
-  public partial: boolean = false;
+  public partial = false;
   private filename: string;
 
   protected get attributeDeclaration(): string {

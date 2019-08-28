@@ -102,7 +102,7 @@ export async function Compile(mappings: Array<Mapping>, target: SourceMapGenerat
  * @description This does make an implicit assumption that the decendents of the 'generated' node are 1:1 with the descendents in the 'source' node.
  * In the event that is not true, elements in the target's source map will not be pointing to the correct elements in the source node.
  */
-export function CreateAssignmentMapping(assignedObject: any, sourceKey: string, sourcePath: JsonPath, targetPath: JsonPath, subject: string, recurse: boolean = true, result = new Array<Mapping>()): Array<Mapping> {
+export function CreateAssignmentMapping(assignedObject: any, sourceKey: string, sourcePath: JsonPath, targetPath: JsonPath, subject: string, recurse = true, result = new Array<Mapping>()): Array<Mapping> {
   for (const descendant of Descendants(ToAst(assignedObject))) {
     const path = descendant.path;
     result.push({

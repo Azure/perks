@@ -5,7 +5,7 @@ import { MemoryFileSystem } from '../main';
 @suite class FileSystemTests {
 
   @test async 'Simple memory filesystem test'() {
-    let f = new MemoryFileSystem(new Map<string, string>([['readme.md', '# this is a test\n see https://aka.ms/autorest'], ['other.md', '#My Doc.']]));
+    const f = new MemoryFileSystem(new Map<string, string>([['readme.md', '# this is a test\n see https://aka.ms/autorest'], ['other.md', '#My Doc.']]));
     let n = 0;
     for (const name of await f.EnumerateFileUris()) {
       n++;

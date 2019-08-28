@@ -446,7 +446,7 @@ export class DataHandle {
     return this.item.identity;
   }
 
-  public async ReadData(nocache: boolean = false): Promise<string> {
+  public async ReadData(nocache = false): Promise<string> {
     if (!nocache) {
       // we're going to use the data, so let's not let it expire.
       this.item.accessed = true;

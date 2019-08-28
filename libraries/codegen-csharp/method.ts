@@ -29,8 +29,8 @@ export class Method extends Statements {
   public extern: Extern = Modifier.None;
   public async: Async = Modifier.None;
   public isPartial = false;
-  public description: string = '';
-  public returnsDescription: string = '';
+  public description = '';
+  public returnsDescription = '';
   public body?: StatementPossibilities | Expression;
 
   constructor(public name: string, protected returnType: TypeDeclaration = Void, objectIntializer?: Partial<Method>) {

@@ -68,6 +68,7 @@ export class EnumType implements TypeDeclaration {
   }
 
   public withMembers<T>(): T & EnumType {
+    /* eslint-disable */
     const $this = this;
     return <T & EnumType><any>new Proxy($this, {
       get(target, prop, receiver) {
@@ -78,6 +79,7 @@ export class EnumType implements TypeDeclaration {
         return $this.member(prop.toString());
       }
     });
+    /* eslint-enable */
   }
 }
 

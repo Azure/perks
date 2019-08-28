@@ -28,7 +28,7 @@ export class Property extends Variable implements Instance {
   public extern: Extern = Modifier.None;
   public attributes = new Array<Attribute>();
   public metadata: Dictionary<any> = {};
-  public description: string = '';
+  public description = '';
 
   public get?: StatementPossibilities | Expression;
   public set?: StatementPossibilities | Expression;
@@ -206,7 +206,7 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
 
 export class LazyProperty extends Property {
   private backingName: string;
-  public instanceAccess: string = 'this';
+  public instanceAccess = 'this';
 
   constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: Partial<LazyProperty>) {
     super(name, type);

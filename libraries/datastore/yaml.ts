@@ -23,7 +23,7 @@ export type YAMLMap = yamlAst.YamlMap;
 export type YAMLSequence = yamlAst.YAMLSequence;
 export type YAMLAnchorReference = yamlAst.YAMLAnchorReference;
 
-export const CreateYAMLAnchorRef: (key: string) => YAMLMap = yamlAst.newAnchorRef as any;
+export const CreateYAMLAnchorRef: (key: string) => YAMLMap = <any>yamlAst.newAnchorRef;
 export const CreateYAMLMap: () => YAMLMap = yamlAst.newMap;
 export const CreateYAMLMapping: (key: YAMLScalar, value: YAMLNode) => YAMLMapping = yamlAst.newMapping;
 export const CreateYAMLScalar: (value: string) => YAMLScalar = yamlAst.newScalar;
@@ -42,7 +42,7 @@ export function ParseToAst(rawYaml: string): YAMLNode {
   return yamlAst.safeLoad(rawYaml);
 }
 
-export function* Descendants(yamlAstNode: YAMLNode, currentPath: JsonPath = [], deferResolvingMappings: boolean = false): Iterable<YAMLNodeWithPath> {
+export function* Descendants(yamlAstNode: YAMLNode, currentPath: JsonPath = [], deferResolvingMappings = false): Iterable<YAMLNodeWithPath> {
   const todos: Array<YAMLNodeWithPath> = [{ path: currentPath, node: yamlAstNode }];
   let todo: YAMLNodeWithPath | undefined;
   while (todo = todos.pop()) {

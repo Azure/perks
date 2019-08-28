@@ -18,7 +18,7 @@ export class Namespace extends Initializer {
   private delegates = new Array<Delegate>();
   private namespaces = new Array<Namespace>();
   private folder: string;
-  public header: string = '';
+  public header = '';
 
   constructor(public name: string, protected parent?: Project | Namespace, objectInitializer?: Partial<Namespace>) {
     super();

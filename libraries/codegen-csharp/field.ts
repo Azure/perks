@@ -26,7 +26,7 @@ export class Field extends Variable {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
-  public description: string = '';
+  public description = '';
 
   constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Field>) {
     super();

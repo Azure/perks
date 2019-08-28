@@ -9,7 +9,7 @@ import { Position as sourceMapPosition } from 'source-map';
 const regexNewLine = /\r?\n/g;
 
 export function LineIndices(text: string): Array<number> {
-  let indices = [0];
+  const indices = [0];
 
   let match: RegExpExecArray | null;
   while ((match = regexNewLine.exec(text)) !== null) {

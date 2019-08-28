@@ -12,10 +12,10 @@ import { Variable } from './variable';
 
 /** represents a method parameter */
 export class Parameter extends Variable {
-  public description: string = '';
+  public description = '';
   public genericParameters = new Array<string>();
   public where?: string;
-  public params: boolean = false;
+  public params = false;
   public modifier: ParameterModifier = ParameterModifier.None;
   public defaultInitializer?: Expression;
   public attributes = new Array<Attribute>();
