@@ -45,21 +45,66 @@
     "rush.json": "jsonc"
   },
   "eslint.workingDirectories": [
-    "./libraries/async-io",
-    "./libraries/autorest-extension-base",
-    "./libraries/codegen",
-    "./libraries/codegen-csharp",
-    "./libraries/codemodel-v3",
-    "./libraries/datastore",
-    "./libraries/deduplication",
-    "./libraries/eventing",
-    "./libraries/extension",
-    "./libraries/linq",
-    "./libraries/oai2-to-oai3",
-    "./libraries/object-comparison",
-    "./libraries/openapi",
-    "./libraries/tasks",
-    "./libraries/uri"
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/async-io",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/autorest-extension-base",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/codegen",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/codegen-csharp",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/codemodel-v3",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/datastore",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/deduplication",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/eventing",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/extension",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/linq",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/oai2-to-oai3",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/object-comparison",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/openapi",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/tasks",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./libraries/uri"
+    }
   ],
   "eslint.validate": [
     "javascript",
