@@ -17,8 +17,8 @@ steps:
 
 - script: |
     npm install -g npm 
-    npx rush update 
-    npx rush rebuild 
-    npx rush test 
+    npx @microsoft/rush update 
+    npx @microsoft/rush rebuild 
+    npx @microsoft/rush test 
     
   displayName: 'Rush install, build and test'
