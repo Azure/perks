@@ -153,6 +153,9 @@ export function ToRawDataUrl(uri: string): string {
   if (uri.startsWith("https://gist.github.com")) {
     uri = uri.replace(/^https?:\/\/gist.github.com\/([^\/]+\/[^\/]+)$/ig, "https://gist.githubusercontent.com/$1/raw/");
   }
+  if (uri.startsWith('null://')) {
+    uri = uri.substr(7);
+  }
 
   return uri;
 }

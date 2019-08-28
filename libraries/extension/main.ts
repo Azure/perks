@@ -14,7 +14,6 @@ import { basename, delimiter, dirname, extname, isAbsolute, join, normalize, res
 import * as semver from 'semver';
 import { readFileSync } from 'fs';
 
-const nodePath = quoteIfNecessary(process.execPath);
 
 function quoteIfNecessary(text: string): string {
   if (text && text.indexOf(' ') > -1 && text.charAt(0) != '"') {
@@ -22,6 +21,8 @@ function quoteIfNecessary(text: string): string {
   }
   return text;
 }
+const nodePath = quoteIfNecessary(process.execPath);
+
 
 export class UnresolvedPackageException extends Exception {
   constructor(packageId: string) {
@@ -275,27 +276,27 @@ async function cli(): Promise<string> {
     }
     // if we can see the cli on disk, that's ok
     const fname = resolve(`${__dirname}/../yarn/cli.js`);
-    if ((await isFile(_cli))) {
+    if ((await isFile(fname))) {
       _cli = fname;
     }
+    else {
+      // otherwise, we might be in a 'static-linked' library and
+      // we should try to load it and put a copy in $tmp somewhere.
+      _cli = join(tmpdir(), 'yarn-cli.js');
 
-    // otherwise, we might be in a 'static-linked' library and
-    // we should try to load it and put a copy in $tmp somewhere.
-    _cli = join(tmpdir(), 'yarn-cli.js');
-
-    // did we copy it already?
-    if ((await isFile(_cli))) {
-      return _cli;
+      // did we copy it already?
+      if ((await isFile(_cli))) {
+        return _cli;
+      }
+      // no, let's copy it now.
+      await writeFile(_cli, <string><any>readFileSync(fname));
     }
-
-    // no, let's copy it now.
-    await writeFile(_cli, <string><any>readFileSync(fname));
   }
   return _cli;
 }
 
 
-function execute(command: string, cmdlineargs: Array<string>, options: MoreOptions): Promise<{ stdout: string, stderr: string, error: Error | null, code: number }> {
+function execute(command: string, cmdlineargs: Array<string>, options: MoreOptions): Promise<{ stdout: string; stderr: string; error: Error | null; code: number }> {
   return new Promise((r, j) => {
     const cp = spawn(command, cmdlineargs, { ...options, stdio: 'pipe' });
     if (options.onCreate) {
@@ -496,7 +497,7 @@ export class ExtensionManager {
     // we need this so that only one extension at a time can start installing
     // in this process (since to use NPM right, we have to do a change dir before runinng it)
     // if we ran NPM out-of-proc, this probably wouldn't be necessary.
-    const ex_release = await ExtensionManager.criticalSection.acquire(maxWait);
+    const extensionRelease = await ExtensionManager.criticalSection.acquire(maxWait);
 
     if (!await exists(this.installationPath)) {
       await mkdir(this.installationPath);
@@ -536,7 +537,7 @@ export class ExtensionManager {
 
       const results = force ? install(extension.location, '--force', pkg.packageMetadata._resolved) : install(extension.location, pkg.packageMetadata._resolved);
 
-      await ex_release();
+      await extensionRelease();
 
       await results;
       progress.NotifyMessage(`Package Install completed ${pkg.name}, ${pkg.version}`);
@@ -564,7 +565,7 @@ export class ExtensionManager {
     } finally {
       progress.Progress.Dispatch(100);
       progress.End.Dispatch(null);
-      await Promise.all([ex_release(), release()]);
+      await Promise.all([extensionRelease(), release()]);
     }
   }
 
