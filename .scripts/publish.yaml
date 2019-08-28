@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- move-to-azure 
+- master 
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -20,5 +20,8 @@ steps:
     npx @microsoft/rush update 
     npx @microsoft/rush rebuild 
     npx @microsoft/rush test 
+    npx @microsoft/rush publish --publish --pack --include-all --tag preview
+
+- pwsh: ./common/scripts/upload.ps1 $(npm-auth-token)
     
   displayName: 'Rush install, build and test'
