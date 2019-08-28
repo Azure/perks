@@ -16,6 +16,7 @@ function getAllPropertyNames(obj: any) {
         props.push(prop);
       }
     });
+    /* eslint-disable */
   } while (obj = Object.getPrototypeOf(obj));
 
   return props;
@@ -49,7 +50,7 @@ export async function copyResources(sourceFolder: string, fileWriter: (filename:
       }
     }
   } catch {
-
+    // ignore failures
   }
   await Promise.all(done);
 }
@@ -70,7 +71,7 @@ export async function copyBinaryResources(sourceFolder: string, fileWriter: (fil
       }
     }
   } catch {
-
+    // ignore failures
   }
   await Promise.all(done);
 }

@@ -37,6 +37,8 @@ Array.prototype.joinWith = function <T>(selector: (t: T) => string, separator?: 
   return (<Array<T>>this).map(selector).filter(v => v ? true : false).join(separator || CommaChar);
 };
 
+/** todo: can we remove this? */
+/* eslint-disable */
 if (!Array.prototype.hasOwnProperty('last')) {
   Object.defineProperty(Array.prototype, 'last', {
     get() {
@@ -61,11 +63,12 @@ String.prototype.slim = function (): string {
   return this.trim().replace(/([^ ])  +/g, '$1 ');
 };
 
-export function joinComma<T>(items: Array<T>, mapFn: (item: T) => string) {
-  return join(items.map(mapFn), CommaChar);
-}
 export function join<T>(items: Array<T>, separator: string) {
   return items.filter(v => v ? true : false).join(separator);
+}
+
+export function joinComma<T>(items: Array<T>, mapFn: (item: T) => string) {
+  return join(items.map(mapFn), CommaChar);
 }
 
 export interface IHasName {
@@ -81,7 +84,7 @@ export function setIndentation(spaces: number) {
 }
 
 export function trimDots(content: string) {
-  return content.replace(/^[\.\s]*(.*?)[\.\s]*$/g, '$1');
+  return content.replace(/^[.\s]*(.*?)[.\s]*$/g, '$1');
 }
 
 export function toMap<T>(source: Array<T>, eachFn: (item: T) => string): Map<string, Array<T>> {
@@ -98,9 +101,17 @@ export function toMap<T>(source: Array<T>, eachFn: (item: T) => string): Map<str
   }
   return result;
 }
-export function docComment(content: string, prefix = docCommentPrefix, factor = 0, maxLength = 120) {
-  return comment(content, prefix, factor, maxLength);
+
+export function fixEOL(content: string) {
+  return content.replace(/\r\n/g, EOL);
 }
+
+export function indent(content: string, factor: number = 1): string {
+  const i = indentation.repeat(factor);
+  content = i + fixEOL(content.trim());
+  return content.split(/\n/g).join(`${EOL}${i}`);
+}
+
 export function comment(content: string, prefix = lineCommentPrefix, factor = 0, maxLength = 120) {
   const result = new Array<string>();
   let line = '';
@@ -134,13 +145,15 @@ export function comment(content: string, prefix = lineCommentPrefix, factor = 0,
   }
   return '';
 }
+
+export function docComment(content: string, prefix = docCommentPrefix, factor = 0, maxLength = 120) {
+  return comment(content, prefix, factor, maxLength);
+}
+
 export function dotCombine(prefix: string, content: string) {
   return trimDots([trimDots(prefix), trimDots(content)].join('.'));
 }
 
-export function fixEOL(content: string) {
-  return content.replace(/\r\n/g, EOL);
-}
 
 export function map<T, U>(dictionary: Dictionary<T>, callbackfn: (key: string, value: T) => U, thisArg?: any): Array<U> {
   return Object.getOwnPropertyNames(dictionary).map((key) => callbackfn(key, dictionary[key]));
@@ -158,11 +171,6 @@ export function __selectMany<T>(multiArray: Array<Array<T>>): Array<T> {
   return result;
 }
 
-export function indent(content: string, factor: number = 1): string {
-  const i = indentation.repeat(factor);
-  content = i + fixEOL(content.trim());
-  return content.split(/\n/g).join(`${EOL}${i}`);
-}
 
 export function pall<T, U>(array: Array<T>, callbackfn: (value: T, index: number, array: Array<T>) => Promise<U>, thisArg?: any): Promise<Array<U>> {
   return Promise.all(array.map(callbackfn));
@@ -179,36 +187,8 @@ export function deconstruct(identifier: string | Array<string>): Array<string> {
     split(/[\W|_]+/).map(each => each.toLowerCase());
 }
 
-export function fixLeadingNumber(identifier: Array<string>): Array<string> {
-  if (identifier.length > 0 && /^\d+/.exec(identifier[0])) {
-    return [...convert(parseInt(identifier[0])), ...identifier.slice(1)];
-  }
-  return identifier;
-}
-
-export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
-  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase())) {
-    const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i');
-    let newIdentifier = identifier.replace(regex, '$2');
-    if (newIdentifier.length < 2) {
-      // if it results in an empty string or a single letter string
-      // then, it is not really a word.
-      return identifier;
-    }
-
-    newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
-    return (skipIdentifiers !== undefined) ? skipIdentifiers.includes(newIdentifier) ? identifier : newIdentifier : newIdentifier;
-  }
-
-  return identifier;
-}
-
 export function isCapitalized(identifier: string): boolean {
   return /^[A-Z]/.test(identifier);
-}
-
-export function getPascalIdentifier(name: string): string {
-  return pascalCase(fixLeadingNumber(deconstruct(name)));
 }
 
 const ones = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
@@ -252,6 +232,31 @@ export function* convert(num: number): Iterable<string> {
   }
 }
 
+export function fixLeadingNumber(identifier: Array<string>): Array<string> {
+  if (identifier.length > 0 && /^\d+/.exec(identifier[0])) {
+    return [...convert(parseInt(identifier[0])), ...identifier.slice(1)];
+  }
+  return identifier;
+}
+
+export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: string, skipIdentifiers?: Array<string>): string {
+  if (identifier.toLowerCase().startsWith(prohibitedPrefix.toLowerCase())) {
+    const regex = new RegExp(`(^${prohibitedPrefix})(.*)`, 'i');
+    let newIdentifier = identifier.replace(regex, '$2');
+    if (newIdentifier.length < 2) {
+      // if it results in an empty string or a single letter string
+      // then, it is not really a word.
+      return identifier;
+    }
+
+    newIdentifier = isCapitalized(identifier) ? newIdentifier.capitalize() : newIdentifier.uncapitalize();
+    return (skipIdentifiers !== undefined) ? skipIdentifiers.includes(newIdentifier) ? identifier : newIdentifier : newIdentifier;
+  }
+
+  return identifier;
+}
+
+
 export function isEqual(s1: string, s2: string): boolean {
   // when s2 is undefined and s1 is the string 'undefined', it returns 0, making this true.
   // To prevent that, first we need to check if s2 is undefined.
@@ -272,6 +277,13 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
   return ids;
 }
 
+export function pascalCase(identifier: string | Array<string>): string {
+  return typeof identifier === 'string' ?
+    pascalCase(fixLeadingNumber(deconstruct(identifier))) :
+    [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
+}
+
+
 export function camelCase(identifier: string | Array<string>): string {
   if (typeof (identifier) === 'string') {
     return camelCase(fixLeadingNumber(deconstruct(identifier)));
@@ -285,10 +297,9 @@ export function camelCase(identifier: string | Array<string>): string {
   return `${identifier[0].uncapitalize()}${pascalCase(identifier.slice(1))}`;
 }
 
-export function pascalCase(identifier: string | Array<string>): string {
-  return typeof identifier === 'string' ?
-    pascalCase(fixLeadingNumber(deconstruct(identifier))) :
-    [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
+
+export function getPascalIdentifier(name: string): string {
+  return pascalCase(fixLeadingNumber(deconstruct(name)));
 }
 
 export function escapeString(text: string | undefined): string {
@@ -314,6 +325,7 @@ export function* getRegions(source: string, prefix: string = '#', postfix: strin
   const rx = new RegExp(`(.*?)«?(\\s*${prefix}\\s*region\\s*(.*?)\\s*${postfix})\\s*«(.*?)«(\\s*${prefix}\\s*endregion\\s*${postfix})\\s*?«`, 'g');
   let match;
   let finalPosition = 0;
+  /* eslint-disable */
   while (match = rx.exec(source)) {
     if (match[1]) {
       // we have text before this region.

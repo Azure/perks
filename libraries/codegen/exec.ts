@@ -79,7 +79,7 @@ async function getFullPath(command: string, recursive: boolean = false, searchPa
             }
           }
         } catch {
-
+          // ignore failures
         }
       }
     }
