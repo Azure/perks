@@ -45,7 +45,7 @@ export interface VirtualParameter {
   schema: Schema;
   nameOptions: Array<string>;
   origin: VirtualProperty | IParameter;
-  alias: Array<string>,
+  alias: Array<string>;
   completerInfo?: CompleterInfo;
 }
 

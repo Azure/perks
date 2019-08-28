@@ -102,7 +102,7 @@ export interface Encoding extends Extensions {
 }
 
 export interface Header extends Extensions {
-  key: string,
+  key: string;
   schema: Schema;
   explode?: boolean;
   examples: Dictionary<Example>;

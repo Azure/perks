@@ -1,6 +1,6 @@
-import { VirtualProperties } from "./code-model/schema";
-import { VirtualParameters, VirtualParameter } from "./code-model/command-operation";
-import { selectName } from "@azure/codegen";
+import { VirtualProperties } from './code-model/schema';
+import { VirtualParameters, VirtualParameter } from './code-model/command-operation';
+import { selectName } from '@azure/codegen';
 
 export function resolvePropertyNames(reservedNames: Iterable<string>, virtualProperties: VirtualProperties) {
   const usedNames = new Set(reservedNames);
@@ -51,7 +51,7 @@ export function resolveParameterNames(reservedNames: Iterable<string>, virtualPa
 }
 
 export function allVirtualProperties(virtualProperties?: VirtualProperties) {
-  return virtualProperties ? [...virtualProperties.owned, ...virtualProperties.inherited, ...virtualProperties.inlined] : []
+  return virtualProperties ? [...virtualProperties.owned, ...virtualProperties.inherited, ...virtualProperties.inlined] : [];
 }
 
 export function allVirtualParameters(virtualParameters?: VirtualParameters) {

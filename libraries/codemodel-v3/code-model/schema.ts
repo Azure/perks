@@ -35,7 +35,7 @@ export interface VirtualProperty {
   property: Property;
 
   /** The things that went into building the name */
-  nameComponents: Array<string>
+  nameComponents: Array<string>;
 
   /** Names To use in priority order */
   nameOptions: Array<string>;
@@ -63,7 +63,7 @@ export interface VirtualProperty {
 
   required: boolean;
 
-  sharedWith?: Array<VirtualProperty>
+  sharedWith?: Array<VirtualProperty>;
 }
 
 
@@ -133,7 +133,7 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined]).linq.where(each => !each.private)]
+  return [...values([...props.owned, ...props.inherited, ...props.inlined]).linq.where(each => !each.private)];
 }
 
 export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {

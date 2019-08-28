@@ -70,7 +70,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     }
 
     if (typeof value === 'string') {
-      value = await this.resolveVariables(value)
+      value = await this.resolveVariables(value);
     }
 
     // ensure that any content variables are resolved at the end.
@@ -81,14 +81,14 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
     (<any>this.model.details.default)[key] = value;
   }
 
-  async listInputs(artifactType?: string | undefined): Promise<string[]> {
+  async listInputs(artifactType?: string | undefined): Promise<Array<string>> {
     return this.service.ListInputs(artifactType);
   }
 
   async protectFiles(path: string): Promise<void> {
     return this.service.ProtectFiles(path);
   }
-  writeFile(filename: string, content: string, sourceMap?: Mapping[] | RawSourceMap | undefined, artifactType?: string | undefined): void {
+  writeFile(filename: string, content: string, sourceMap?: Array<Mapping> | RawSourceMap | undefined, artifactType?: string | undefined): void {
     return this.service.WriteFile(filename, content, sourceMap, artifactType);
   }
 
@@ -145,6 +145,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   async resolveVariables(input: string): Promise<string> {
     let output = input;
     for (const rx of [/\$\((.*?)\)/g, /\$\{(.*?)\}/g]) {
+      /* eslint-disable */
       for (let match; match = rx.exec(input);) {
         const text = match[0];
         const inner = match[1];

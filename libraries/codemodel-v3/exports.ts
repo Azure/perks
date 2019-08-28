@@ -1,4 +1,3 @@
-
 export * from './media-types';
 
 export * from './process-code-model';
@@ -16,7 +15,7 @@ import * as components from './code-model/components';
 import * as http from './code-model/http-operation';
 
 import * as schema from './code-model/schema';
-import * as exportedModels from './code-model/exports'
+import * as exportedModels from './code-model/exports';
 
 export { components };
 export { schema };

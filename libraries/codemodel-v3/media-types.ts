@@ -29,6 +29,22 @@ export enum KnownMediaType {
   Cookie = '-cookie-',
 }
 
+
+export function parseMediaType(mediaType: string) {
+  if (mediaType) {
+    const parsed = /(application|audio|font|example|image|message|model|multipart|text|video|x-(?:[0-9A-Za-z!#$%&'*+.^_`|~-]+))\/([0-9A-Za-z!#$%&'*.^_`|~-]+)\s*(?:\+([0-9A-Za-z!#$%&'*.^_`|~-]+))?\s*(?:;.\s*(\S*))?/g.exec(mediaType);
+    if (parsed) {
+      return {
+        type: parsed[1],
+        subtype: parsed[2],
+        suffix: parsed[3],
+        parameter: parsed[4]
+      };
+    }
+  }
+  return undefined;
+}
+
 export function knownMediaType(mediaType: string) {
   const mt = parseMediaType(mediaType);
   if (mt) {
@@ -59,20 +75,6 @@ export function knownMediaType(mediaType: string) {
   return KnownMediaType.None;
 }
 
-export function parseMediaType(mediaType: string) {
-  if (mediaType) {
-    const parsed = /(application|audio|font|example|image|message|model|multipart|text|video|x-(?:[0-9A-Za-z!#$%&'*+.^_`|~-]+))\/([0-9A-Za-z!#$%&'*.^_`|~-]+)\s*(?:\+([0-9A-Za-z!#$%&'*.^_`|~-]+))?\s*(?:;.\s*(\S*))?/g.exec(mediaType);
-    if (parsed) {
-      return {
-        type: parsed[1],
-        subtype: parsed[2],
-        suffix: parsed[3],
-        parameter: parsed[4]
-      };
-    }
-  }
-  return undefined;
-}
 
 export function normalizeMediaType(contentType: string) {
   if (contentType) {
