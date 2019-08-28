@@ -38,7 +38,7 @@ export class Field extends Variable {
   }
 
   public get declaration(): string {
-    const initializer = this.initialValue ? ` = ${valueOf(this.initialValue)}` : ``;
+    const initializer = this.initialValue ? ` = ${valueOf(this.initialValue)}` : '';
 
     return `${docComment(xmlize('summary', this.description))}
 ${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.readonly} ${this.volitile} ${this.type.declaration} ${this.name}${initializer};`.slim();
@@ -65,7 +65,7 @@ ${this.attributeDeclaration}${this.new}${this.access} ${this.static} ${this.read
     return this;
   }
   public get declarationStatement(): Statement {
-    throw new Error(`Property can not be a declaration statement`);
+    throw new Error('Property can not be a declaration statement');
   }
 }
 

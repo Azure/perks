@@ -7,10 +7,6 @@ import { indent } from '@azure/codegen';
 import { Expression, ExpressionOrLiteral, toExpression } from '../expression';
 import { OneOrMoreStatements, Statements } from './statement';
 
-export function Using(usingExpression: ExpressionOrLiteral, body: OneOrMoreStatements, objectInitializer?: Partial<UsingStatement>): UsingStatement {
-  return new UsingStatement(usingExpression, body, objectInitializer);
-}
-
 export class UsingStatement extends Statements {
   usingExpression: Expression;
   constructor(usingExpression: ExpressionOrLiteral, statements: OneOrMoreStatements, objectInitializer?: Partial<UsingStatement>) {
@@ -25,4 +21,8 @@ using( ${this.usingExpression.value} )
 ${indent(super.implementation)}
 }`.trim();
   }
+}
+
+export function Using(usingExpression: ExpressionOrLiteral, body: OneOrMoreStatements, objectInitializer?: Partial<UsingStatement>): UsingStatement {
+  return new UsingStatement(usingExpression, body, objectInitializer);
 }

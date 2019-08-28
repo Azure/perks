@@ -8,9 +8,6 @@ import { Expression } from '../expression';
 import { Parameter } from '../parameter';
 import { StatementPossibilities, Statements } from './statement';
 
-export function Catch(parameter: Parameter | undefined, body: StatementPossibilities, objectInitializer?: Partial<CatchStatement>): CatchStatement {
-  return new CatchStatement(parameter, body, objectInitializer);
-}
 
 export class CatchStatement extends Statements {
   public when?: Expression;
@@ -20,7 +17,7 @@ export class CatchStatement extends Statements {
     this.apply(objectInitializer);
   }
   public get implementation(): string {
-    const when = this.when ? ` when (${this.when})` : ``;
+    const when = this.when ? ` when (${this.when})` : '';
     const p = this.parameter ? ` (${this.parameter.declaration})` : '';
     return `
 catch${p}${when}
@@ -28,4 +25,9 @@ catch${p}${when}
 ${indent(super.implementation)}
 }`.trim();
   }
+}
+
+
+export function Catch(parameter: Parameter | undefined, body: StatementPossibilities, objectInitializer?: Partial<CatchStatement>): CatchStatement {
+  return new CatchStatement(parameter, body, objectInitializer);
 }

@@ -11,5 +11,5 @@ export interface TypeContainer {
 }
 
 export interface IInterface extends TypeDeclaration {
-  allProperties: Array<Property>
+  allProperties: Array<Property>;
 }

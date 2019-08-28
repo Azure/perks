@@ -7,9 +7,6 @@ import { indent } from '@azure/codegen';
 import { Expression, valueOf, ExpressionOrLiteral } from '../expression';
 import { StatementPossibilities, Statements } from './statement';
 
-export function For(initialization: Expression, condition: ExpressionOrLiteral, loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
-  return new ForStatement(initialization, condition, loop, statements, objectInitializer);
-}
 
 export class ForStatement extends Statements {
   constructor(public initialization: Expression, public condition: ExpressionOrLiteral, public loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
@@ -25,9 +22,6 @@ ${indent(super.implementation)}
   }
 }
 
-export function ForEach(variable: string, enumerable: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
-  return new ForEachStatement(variable, enumerable, statements, objectInitializer);
-}
 
 export class ForEachStatement extends Statements {
   constructor(public variable: string, public enumerable: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
@@ -41,4 +35,13 @@ foreach( var ${this.variable} in ${valueOf(this.enumerable)} )
 ${indent(super.implementation)}
 }`.trim();
   }
+}
+
+export function For(initialization: Expression, condition: ExpressionOrLiteral, loop: Expression, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+  return new ForStatement(initialization, condition, loop, statements, objectInitializer);
+}
+
+
+export function ForEach(variable: string, enumerable: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<ForStatement>) {
+  return new ForEachStatement(variable, enumerable, statements, objectInitializer);
 }

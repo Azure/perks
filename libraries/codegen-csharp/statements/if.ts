@@ -8,9 +8,6 @@ import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, value
 import { StatementPossibilities, Statements } from './statement';
 import { TypeDeclaration } from '../type-declaration';
 
-export function If(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
-  return new IfStatement(conditional, statements, objectInitializer);
-}
 
 export class IfStatement extends Statements {
   constructor(private conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
@@ -26,9 +23,6 @@ ${indent(super.implementation)}
   }
 }
 
-export function While(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
-  return new WhileStatement(conditional, statements, objectInitializer);
-}
 
 export class WhileStatement extends Statements {
   conditional: Expression;
@@ -44,11 +38,6 @@ while (${this.conditional.value})
 ${indent(super.implementation)}
 }`.trim();
   }
-}
-
-
-export function DoWhile(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
-  return new DoWhileStatement(conditional, statements, objectInitializer);
 }
 
 export class DoWhileStatement extends Statements {
@@ -89,10 +78,6 @@ export function ElseIf(conditional: ExpressionOrLiteral, statements: StatementPo
 }
 
 
-export function Else(statements: StatementPossibilities, objectInitializer?: Partial<ElseStatement>) {
-  return new ElseStatement(statements, objectInitializer);
-}
-
 export class ElseStatement extends Statements {
   constructor(statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
     super(statements);
@@ -113,4 +98,20 @@ export function Not(conditional: Expression): Expression {
 
 export function IsAssignableFrom(targetType: TypeDeclaration, instanceType: ExpressionOrLiteral) {
   return toExpression(`typeof(${targetType.declaration}).IsAssignableFrom(${valueOf(instanceType)})`);
+}
+
+export function If(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  return new IfStatement(conditional, statements, objectInitializer);
+}
+
+export function Else(statements: StatementPossibilities, objectInitializer?: Partial<ElseStatement>) {
+  return new ElseStatement(statements, objectInitializer);
+}
+
+export function DoWhile(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
+  return new DoWhileStatement(conditional, statements, objectInitializer);
+}
+
+export function While(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  return new WhileStatement(conditional, statements, objectInitializer);
 }

@@ -6,7 +6,6 @@
 import { Initializer, intersect } from '@azure/codegen';
 
 import { Cast, IsNotNull, IsNull } from './comparisons';
-import { dotnet } from './dotnet';
 import { Expression, ExpressionOrLiteral, toExpression, valueOf } from './expression';
 import { OneOrMoreStatements, Statement, toStatement } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
@@ -52,9 +51,6 @@ export interface Instance {
 
 export type ExpressionStatement = Expression & Statement;
 
-export function Local(name: string, initializer: ExpressionOrLiteral = 'null', type: TypeDeclaration = { declaration: 'var' }): LocalVariable {
-  return new LocalVariable(name, type, { initializer });
-}
 /** represents a locally declared variable */
 export class LocalVariable extends Variable implements Instance, Statement {
   public initializer?: ExpressionOrLiteral;
@@ -90,6 +86,7 @@ export class LocalVariable extends Variable implements Instance, Statement {
       });
   }
   public member(memberName: string) {
+    /* eslint-disable */
     return new MemberVariable(this, memberName);
   }
 }
@@ -99,4 +96,8 @@ export class MemberVariable extends LocalVariable {
     super(`${variable}.${memberName}`, { declaration: 'var' });
     this.apply(objectIntializer);
   }
+}
+
+export function Local(name: string, initializer: ExpressionOrLiteral = 'null', type: TypeDeclaration = { declaration: 'var' }): LocalVariable {
+  return new LocalVariable(name, type, { initializer });
 }

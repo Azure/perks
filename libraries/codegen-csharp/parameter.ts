@@ -61,6 +61,6 @@ export class Parameter extends Variable {
     return this;
   }
   public get declarationStatement(): Statement {
-    throw new Error(`Property can not be a declaration statement`);
+    throw new Error('Property can not be a declaration statement');
   }
 }

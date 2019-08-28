@@ -4,14 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 import { TypeDeclaration } from './type-declaration';
 
-export function Import(namespace: string) {
-  return new ImportDirective(namespace);
-}
-
-export function ImportStatic(namespace: TypeDeclaration) {
-  return new ImportStaticDirective(namespace.declaration);
-}
-
 export class ImportDirective {
   constructor(protected namespaceOrType: string) {
   }
@@ -44,4 +36,13 @@ export class Alias extends ImportDirective implements TypeDeclaration {
   public get declaration(): string {
     return this.aliasName;
   }
+}
+
+
+export function Import(namespace: string) {
+  return new ImportDirective(namespace);
+}
+
+export function ImportStatic(namespace: TypeDeclaration) {
+  return new ImportStaticDirective(namespace.declaration);
 }

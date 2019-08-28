@@ -5,7 +5,6 @@
 
 import { EOL } from '@azure/codegen';
 
-export const summary = (text: string): string => xmlize('summary', text);
 
 export function xmlize(element: string, text: string): string {
   if (text) {
@@ -19,3 +18,5 @@ ${text}
   }
   return text;
 }
+
+export const summary = (text: string): string => xmlize('summary', text);

@@ -62,11 +62,11 @@ export class Type extends Initializer implements TypeDeclaration {
   }
 
   public get declaration(): string {
-    throw new Error(`Not Implemented: property 'declaration' in Type subclass `);
+    throw new Error('Not Implemented: property \'declaration\' in Type subclass ');
   }
 
   public get definition(): string {
-    throw new Error(`Not Implemented: property 'definition' in Type subclass `);
+    throw new Error('Not Implemented: property \'definition\' in Type subclass ');
   }
 
   public validation(propertyName: string): string {

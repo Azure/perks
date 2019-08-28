@@ -53,7 +53,7 @@ export class EnumType implements TypeDeclaration {
   }
 
   public get definition(): string {
-    return ``;
+    return '';
   }
 
   public toString(): string {
@@ -122,7 +122,7 @@ export const System = intersect(system, {
     ToBase64String: (expression: ExpressionOrLiteral) => toExpression(`${System.Convert}.ToBase64String( ${expression})`)
   }),
   Linq: intersect(linq, {
-    Enumerable: intersect(new ClassType(linq, "Enumerable"), {
+    Enumerable: intersect(new ClassType(linq, 'Enumerable'), {
       ToArray: (source: ExpressionOrLiteral) => toExpression(`${System.Linq.Enumerable}.ToArray(${valueOf(source)})`),
       Select: (source: ExpressionOrLiteral, selector: /* delegate */ string) => toExpression(`${System.Linq.Enumerable}.Select(${valueOf(source)}, ${selector})`),
       Where: (source: ExpressionOrLiteral, predicate: /* delegate */ string) => toExpression(`${System.Linq.Enumerable}.Where(${valueOf(source)}, ${predicate})`),
@@ -148,7 +148,7 @@ export const System = intersect(system, {
   StringComparison: new EnumType(system, 'StringComparison'),
   DateTime: new ClassType(system, 'DateTime'),
   DateTimeKind: intersect(new ClassType(system, 'DateTimeKind'), {
-    Utc: new LiteralExpression(`global::System.DateTimeKind.Utc`),
+    Utc: new LiteralExpression('global::System.DateTimeKind.Utc'),
   }),
   EventArgs: new ClassType(system, 'EventArgs'),
   Exception: new ClassType(system, 'Exception'),
@@ -172,7 +172,7 @@ export const System = intersect(system, {
       UTF8: new LiteralExpression(`${encoding.declaration}.UTF8`)
     }),
     RegularExpressions: intersect(rx, {
-      Regex: new ClassType(rx, "Regex")
+      Regex: new ClassType(rx, 'Regex')
     })
   }),
   Net: intersect(net, {
@@ -195,6 +195,7 @@ export const System = intersect(system, {
       StreamContent: new ClassType(http, 'StreamContent'),
       MultipartFormDataContent: new ClassType(http, 'MultipartFormDataContent'),
     }),
+    /* eslint-disable */
     HttpStatusCode: intersect(new ClassType(net, 'HttpStatusCode'), <Dictionary<LiteralExpression> & Index<LiteralExpression>>{
       default: new LiteralExpression(''),
       100: new LiteralExpression('global::System.Net.HttpStatusCode.Continue'),

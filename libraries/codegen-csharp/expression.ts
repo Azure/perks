@@ -12,12 +12,12 @@ import { TypeDeclaration } from './type-declaration';
 import { LocalVariable } from './variable';
 
 export type ExpressionOrLiteral = Expression | string;
-export function toExpression(expression: ExpressionOrLiteral): Expression {
-  return typeof expression === 'string' ? new LiteralExpression(expression) : expression;
-}
+
 export function valueOf(expression: ExpressionOrLiteral): string {
   return typeof expression === 'string' ? expression : expression.value;
 }
+
+
 /** An expression is a combination of operands (variables, literals, method calls) and operators that can be evaluated to a single value  */
 export interface Expression {
   value: string;
@@ -71,10 +71,6 @@ export class LiteralExpression extends BaseExpression {
   }
 }
 
-/** a c# 'is' expression */
-export function Is(expression: ExpressionOrLiteral, isType: TypeDeclaration): Expression {
-  return new IsExpression(expression, isType);
-}
 
 /** a c# 'is' expression */
 export class IsExpression extends BaseExpression {
@@ -86,10 +82,6 @@ export class IsExpression extends BaseExpression {
   }
 }
 
-/** a c# 'is' expression that declares a local variable  */
-export function IsDeclaration(expression: ExpressionOrLiteral, isType: TypeDeclaration, name: string): IsExpressionDeclaration {
-  return new IsExpressionDeclaration(expression, isType, name);
-}
 
 /** a c# 'is' expression that declares a local variable  */
 export class IsExpressionDeclaration extends LocalVariable implements Expression {
@@ -114,7 +106,6 @@ export class IsExpressionDeclaration extends LocalVariable implements Expression
   public toString(): string {
     return this.value;
   }
-
 }
 
 export function Lambda(parameters: Array<Parameter>, body: OneOrMoreStatements, objectIntializer?: Partial<LambdaExpression>) {
@@ -149,4 +140,18 @@ ${indent(super.implementation)}
     return IsNotNull(this);
   }
 
+}
+
+export function toExpression(expression: ExpressionOrLiteral): Expression {
+  return typeof expression === 'string' ? new LiteralExpression(expression) : expression;
+}
+
+/** a c# 'is' expression */
+export function Is(expression: ExpressionOrLiteral, isType: TypeDeclaration): Expression {
+  return new IsExpression(expression, isType);
+}
+
+/** a c# 'is' expression that declares a local variable  */
+export function IsDeclaration(expression: ExpressionOrLiteral, isType: TypeDeclaration, name: string): IsExpressionDeclaration {
+  return new IsExpressionDeclaration(expression, isType, name);
 }

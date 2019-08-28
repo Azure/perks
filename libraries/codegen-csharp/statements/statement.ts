@@ -51,7 +51,7 @@ export class Statements extends Initializer implements Statement {
 
   pop() {
     if (this.scope.last === this) {
-      throw new Error(`Can not pop past base of statement collection.`);
+      throw new Error('Can not pop past base of statement collection.');
     }
     this.scope.pop();
     return this.scope.last;
@@ -120,7 +120,7 @@ export class Statements extends Initializer implements Statement {
 
 
 export function* BlockStatement(statements: StatementPossibilities) {
-  yield `{`;
+  yield '{';
   yield indent(new Statements(statements).implementation);
-  yield `}`;
+  yield '}';
 }

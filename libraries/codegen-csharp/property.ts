@@ -166,7 +166,7 @@ ${indent(g, 2)}
     return this;
   }
   public get declarationStatement(): Statement {
-    throw new Error(`Property can not be a declaration statement`);
+    throw new Error('Property can not be a declaration statement');
   }
   public invokeMethod(methodName: string, ...parameters: Array<Expression>): ExpressionStatement {
     const e = `${this.value}.${methodName}(${parameters.joinWith(valueOf)})`;

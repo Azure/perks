@@ -6,9 +6,6 @@
 import { indent } from '@azure/codegen';
 import { StatementPossibilities, Statements } from './statement';
 
-export function Finally(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>): FinallyStatement {
-  return new FinallyStatement(body, objectInitializer);
-}
 
 export class FinallyStatement extends Statements {
   constructor(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>) {
@@ -23,4 +20,8 @@ finally
 ${indent(super.implementation)}
 }`.trim();
   }
+}
+
+export function Finally(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>): FinallyStatement {
+  return new FinallyStatement(body, objectInitializer);
 }

@@ -6,10 +6,6 @@
 import { ExpressionOrLiteral, valueOf } from '../expression';
 import { Statements } from './statement';
 
-export function Return(expression?: ExpressionOrLiteral, objectInitializer?: Partial<ReturnStatement>) {
-  return new ReturnStatement(expression, objectInitializer);
-}
-
 export class ReturnStatement extends Statements {
   constructor(public expression?: ExpressionOrLiteral, objectInitializer?: Partial<ReturnStatement>) {
     super();
@@ -18,4 +14,8 @@ export class ReturnStatement extends Statements {
   public get implementation(): string {
     return `return ${this.expression ? valueOf(this.expression) : ''};`;
   }
+}
+
+export function Return(expression?: ExpressionOrLiteral, objectInitializer?: Partial<ReturnStatement>) {
+  return new ReturnStatement(expression, objectInitializer);
 }

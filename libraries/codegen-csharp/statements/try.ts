@@ -7,10 +7,6 @@ import { indent } from '@azure/codegen';
 import { Parameter } from '../parameter';
 import { OneOrMoreStatements, StatementPossibilities, Statements } from './statement';
 
-export function Try(body: StatementPossibilities, objectInitializer?: Partial<TryStatement>): TryStatement {
-  return new TryStatement(body, objectInitializer);
-}
-
 export class TryStatement extends Statements {
   constructor(body: StatementPossibilities, objectInitializer?: Partial<TryStatement>) {
     super(body);
@@ -25,11 +21,7 @@ ${indent(super.implementation)}
   }
 }
 
-
-export function _Catch(parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: Partial<TryStatement>): TryStatement {
-  return new _CatchStatement(parameter, body, objectInitializer);
-}
-
+/* eslint-disable */ // is this supposed to be removed? 
 export class _CatchStatement extends Statements {
   constructor(protected parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: Partial<TryStatement>) {
     super(body);
@@ -43,4 +35,12 @@ catch${p}
 ${indent(super.implementation)}
 }`.trim();
   }
+}
+
+export function Try(body: StatementPossibilities, objectInitializer?: Partial<TryStatement>): TryStatement {
+  return new TryStatement(body, objectInitializer);
+}
+
+export function _Catch(parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: Partial<TryStatement>): TryStatement {
+  return new _CatchStatement(parameter, body, objectInitializer);
 }

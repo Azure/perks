@@ -10,6 +10,6 @@ export class Struct extends Class {
   constructor(namespace: Namespace, name: string, public parent?: Struct, objectIntializer?: Partial<Struct>) {
     super(namespace, name);
     this.apply(objectIntializer);
-    this.classOrStruct = "struct";
+    this.classOrStruct = 'struct';
   }
 }

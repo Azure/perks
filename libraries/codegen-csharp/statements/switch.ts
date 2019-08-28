@@ -10,10 +10,6 @@ import { Statement } from './statement';
 
 export type OneOrMoreCases = (() => Iterable<CaseStatement>) | Iterable<CaseStatement> | CaseStatement;
 
-export function Switch(expression: ExpressionOrLiteral, cases: OneOrMoreCases, objectInitializer?: Partial<SwitchStatement>): SwitchStatement {
-  return new SwitchStatement(toExpression(expression), cases, objectInitializer);
-}
-
 export class SwitchStatement extends Initializer implements Statement {
   protected caseStatements = new Array<CaseStatement>();
 
@@ -41,4 +37,8 @@ ${indent(this.caseStatements.map(each => each.implementation).join(EOL))}
       }
     }
   }
+}
+
+export function Switch(expression: ExpressionOrLiteral, cases: OneOrMoreCases, objectInitializer?: Partial<SwitchStatement>): SwitchStatement {
+  return new SwitchStatement(toExpression(expression), cases, objectInitializer);
 }

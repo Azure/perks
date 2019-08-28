@@ -6,6 +6,6 @@
 export class Delegate {
 
   public get implementation(): string {
-    return `xxxx;`;
+    return 'notimplemented;';
   }
 }

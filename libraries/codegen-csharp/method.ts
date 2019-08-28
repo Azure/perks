@@ -14,8 +14,8 @@ import { StatementPossibilities, Statements } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 
 const Void = {
-  declaration: "void"
-}
+  declaration: 'void'
+};
 
 export class Method extends Statements {
   public parameters = new Array<Parameter>();
@@ -158,7 +158,7 @@ ${this.new}${this.access} ${this.static} ${this.virtual} ${this.sealed} ${this.o
 
 export class ImplicitCastOperator extends Method {
   constructor(targetType: TypeDeclaration, sourceType: TypeDeclaration, protected expression: ExpressionOrLiteral, objectIntializer?: Partial<ImplicitCastOperator>) {
-    super(`implicit operator ${targetType.declaration}`, targetType, { parameters: [new Parameter('source', sourceType)], static: Modifier.Static, })
+    super(`implicit operator ${targetType.declaration}`, targetType, { parameters: [new Parameter('source', sourceType)], static: Modifier.Static, });
   }
 
   public get declaration(): string {
