@@ -15,8 +15,7 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- displayName: 'build package files'
-  script: |
+- script: |
     npm install -g npm 
     npx @microsoft/rush update 
     npx @microsoft/rush sync-versions
@@ -26,8 +25,7 @@ steps:
     npx @microsoft/rush rebuild 
     npx @microsoft/rush publish --publish --pack --include-all --tag preview
 
-- displayName: 'upload packages to npm'
-  pwsh: |
+- pwsh: |
     $ErrorActionPreference = 'silentlycontinue'
     set-content -Value "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" -path ./.npmrc 
 
@@ -36,4 +34,4 @@ steps:
       & "$PSScriptRoot/../temp/pnpm-local/node_modules/.bin/pnpm" publish $_ --tag preview --access public 
     }
     
-  
+- displayName: 'build and upload to npm'
