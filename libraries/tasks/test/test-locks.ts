@@ -13,9 +13,12 @@ require('source-map-support').install({ hookRequire: true });
     const cs = new CriticalSection();
 
     const status = new Array<string>();
+    let p!:Promise<() => Promise<void>>;
 
     const first = Async(async () => {
-      const r = await cs.acquire();
+      p = cs.acquire();
+      // const r = await cs.acquire();
+      const r = await p;
       console.log('1. acquired');
       status.push('A');
       await Delay(200);
@@ -25,6 +28,9 @@ require('source-map-support').install({ hookRequire: true });
       console.log('3.released');
       status.push('C');
     });
+
+    // make sure the first critical section is actually awaited.
+    await p;
 
     const second = Async(async () => {
       const r = await cs.acquire();

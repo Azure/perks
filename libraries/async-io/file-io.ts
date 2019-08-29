@@ -46,7 +46,7 @@ export function filePath(path: string | Buffer | Url | URL): string {
   path = path.toString();
   return path.startsWith('file:///') ? fileURLToPath(path) : path;
 }
-export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(filePath(path), (err: NodeJS.ErrnoException, stats: fs.Stats) => err ? r(false) : r(true)));
+export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(filePath(path), (err: NodeJS.ErrnoException | null, stats: fs.Stats) => err ? r(false) : r(true)));
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
