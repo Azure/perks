@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Typescript-based eventing framework (for Azure Open Source Projects)",
   "engines": {
-    "node": ">=7.10.0"
+    "node": ">=10.12.0"
   },
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

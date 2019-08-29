@@ -106,11 +106,12 @@
       "directory": "./libraries/uri"
     }
   ],
+  "eslint.autoFixOnSave": true,
   "eslint.validate": [
     "javascript",
     {
       "language": "typescript",
-      "autoFix": false
+      "autoFix": true,
     },
     {
       "language": "typescriptreact",
