@@ -15,7 +15,8 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
+- displayName: 'build package files'
+  script: |
     npm install -g npm 
     npx @microsoft/rush update 
     npx @microsoft/rush sync-versions
@@ -25,6 +26,14 @@ steps:
     npx @microsoft/rush rebuild 
     npx @microsoft/rush publish --publish --pack --include-all --tag preview
 
-- pwsh: ./common/scripts/upload.ps1 $(azure-sdk-npm-token)
+- displayName: 'upload packages to npm'
+  pwsh: |
+    $ErrorActionPreference = 'silentlycontinue'
+    set-content -Value "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" -path ./.npmrc 
+
+    # publish each package. it's ok if it fails, that means that it's already got that version
+    dir $PSScriptRoot/../temp/artifacts/packages/*.tgz | % { 
+      & "$PSScriptRoot/../temp/pnpm-local/node_modules/.bin/pnpm" publish $_ --tag preview --access public 
+    }
     
-  displayName: 'Rush install, build and test'
+  
