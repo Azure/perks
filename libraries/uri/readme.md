@@ -1,4 +1,4 @@
-# Project: @azure/uri
+# Project: @azure-tools/uri
 This package contains common code for the developer tools for generating Azure SDKs.
 
 Including:

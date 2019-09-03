@@ -9,7 +9,7 @@ import * as components from './components';
 import * as http from './http-operation';
 import * as schema from './schema';
 
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 
 export interface SchemaT<
   TLanguageDetailsForSchema extends components.LanguageDetails<schema.SchemaDetails>,

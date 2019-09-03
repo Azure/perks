@@ -1,9 +1,9 @@
 {
-  "name": "@azure/async-io",
+  "name": "@azure-tools/async-io",
   "entries": [
     {
       "version": "2.0.22",
-      "tag": "@azure/async-io_v2.0.22",
+      "tag": "@azure-tools/async-io_v2.0.22",
       "date": "Wed, 03 Oct 2018 18:01:54 GMT",
       "comments": {
         "patch": [
@@ -13,7 +13,7 @@
         ],
         "dependency": [
           {
-            "comment": "Updating dependency \"@azure/tasks\" from `2.0.27` to `2.0.28`"
+            "comment": "Updating dependency \"@azure-tools/tasks\" from `2.0.27` to `2.0.28`"
           }
         ]
       }

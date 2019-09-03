@@ -17,91 +17,91 @@
   "telemetryEnabled": false,
   "projects": [
     {
-      "packageName": "@azure/tasks",
+      "packageName": "@azure-tools/tasks",
       "projectFolder": "libraries/tasks",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/async-io",
+      "packageName": "@azure-tools/async-io",
       "projectFolder": "libraries/async-io",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/eventing",
+      "packageName": "@azure-tools/eventing",
       "projectFolder": "libraries/eventing",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/extension",
+      "packageName": "@azure-tools/extension",
       "projectFolder": "libraries/extension",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/datastore",
+      "packageName": "@azure-tools/datastore",
       "projectFolder": "libraries/datastore",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/linq",
+      "packageName": "@azure-tools/linq",
       "projectFolder": "libraries/linq",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/openapi",
+      "packageName": "@azure-tools/openapi",
       "projectFolder": "libraries/openapi",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/uri",
+      "packageName": "@azure-tools/uri",
       "projectFolder": "libraries/uri",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/oai2-to-oai3",
+      "packageName": "@azure-tools/oai2-to-oai3",
       "projectFolder": "libraries/oai2-to-oai3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/autorest-extension-base",
+      "packageName": "@azure-tools/autorest-extension-base",
       "projectFolder": "libraries/autorest-extension-base",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/autorest.codemodel-v3",
+      "packageName": "@azure-tools/codemodel-v3",
       "projectFolder": "libraries/codemodel-v3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/codegen",
+      "packageName": "@azure-tools/codegen",
       "projectFolder": "libraries/codegen",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/codegen-csharp",
+      "packageName": "@azure-tools/codegen-csharp",
       "projectFolder": "libraries/codegen-csharp",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/object-comparison",
+      "packageName": "@azure-tools/object-comparison",
       "projectFolder": "libraries/object-comparison",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@azure/deduplication",
+      "packageName": "@azure-tools/deduplication",
       "projectFolder": "libraries/deduplication",
       "reviewCategory": "production",
       "shouldPublish": true

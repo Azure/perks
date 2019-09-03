@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { values } from '@azure/linq';
+import { values } from '@azure-tools/linq';
 import { MappedPosition } from 'source-map';
 import { DataStore } from '../data-store/data-store';
 import { JsonPath } from '../jsonpath';

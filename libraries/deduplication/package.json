@@ -1,5 +1,5 @@
 {
-  "name": "@azure/deduplication",
+  "name": "@azure-tools/deduplication",
   "version": "3.0.0",
   "description": "Deduplication of elements in OpenAPI 3 documents",
   "main": "./dist/main.js",
@@ -50,15 +50,15 @@
     "@typescript-eslint/eslint-plugin": "~2.0.0",
     "@typescript-eslint/parser": "~2.0.0",
     "eslint": "~6.2.2",
-    "@azure/async-io": "~3.0.0"
+    "@azure-tools/async-io": "~3.0.0"
   },
   "dependencies": {
-    "@azure/datastore": "~4.0.0",
-    "@azure/linq": "~3.0.0",
-    "@azure/tasks": "~3.0.0",
-    "@azure/object-comparison": "~3.0.0",
-    "@azure/openapi": "~3.0.0",
-    "@azure/codegen": "~2.0.0",
+    "@azure-tools/datastore": "~4.0.0",
+    "@azure-tools/linq": "~3.0.0",
+    "@azure-tools/tasks": "~3.0.0",
+    "@azure-tools/object-comparison": "~3.0.0",
+    "@azure-tools/openapi": "~3.0.0",
+    "@azure-tools/codegen": "~2.0.0",
     "compare-versions": "^3.4.0"
   }
 }

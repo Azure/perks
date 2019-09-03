@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Text, TextPossibilities } from './file-generator';
-import { Dictionary, values } from '@azure/linq';
+import { Dictionary, values } from '@azure-tools/linq';
 import { type } from 'os';
 import { on } from 'cluster';
 

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@azure/codegen';
+import { indent } from '@azure-tools/codegen';
 import { Expression, ExpressionOrLiteral, toExpression } from '../expression';
 import { OneOrMoreStatements, Statements } from './statement';
 

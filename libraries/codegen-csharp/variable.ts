@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Initializer, intersect } from '@azure/codegen';
+import { Initializer, intersect } from '@azure-tools/codegen';
 
 import { Cast, IsNotNull, IsNull } from './comparisons';
 import { Expression, ExpressionOrLiteral, toExpression, valueOf } from './expression';

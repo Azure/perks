@@ -1,5 +1,5 @@
 {
-  "name": "@azure/library-template",
+  "name": "@azure-tools/library-template",
   "private": true,
   "version": "1.0.0",
   "description": "template project to copy/paste as for a new library in perks",

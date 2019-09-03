@@ -1,8 +1,8 @@
 import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
 import * as assert from 'assert';
 import { Deduplicator } from '../main';
-import * as datastore from '@azure/datastore';
-import * as aio from '@azure/async-io';
+import * as datastore from '@azure-tools/datastore';
+import * as aio from '@azure-tools/async-io';
 
 @suite class DeduplicatorTest {
 

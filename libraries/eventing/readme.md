@@ -1,4 +1,4 @@
-# Project: @azure/eventing
+# Project: @azure-tools/eventing
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

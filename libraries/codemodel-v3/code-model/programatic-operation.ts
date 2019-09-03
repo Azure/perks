@@ -6,7 +6,7 @@
 import { ImplementationDetails, IOperation, IParameter, LanguageDetails } from './components';
 import { Extensions } from './extensions';
 import { Schema } from './schema';
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 import { uid } from './uid';
 
 export interface ProgrammaticOperation extends IOperation<IParameter> {

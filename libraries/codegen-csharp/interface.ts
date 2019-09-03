@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { comment, docCommentPrefix, EOL, indent, sortByName } from '@azure/codegen';
+import { comment, docCommentPrefix, EOL, indent, sortByName } from '@azure-tools/codegen';
 import { Type } from './type';
 import { TypeContainer } from './type-container';
 

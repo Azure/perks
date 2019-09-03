@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { values, Dictionary, items } from '@azure/linq';
-import * as aio from '@azure/async-io';
+import { values, Dictionary, items } from '@azure-tools/linq';
+import * as aio from '@azure-tools/async-io';
 import { join } from 'path';
 
 function getAllPropertyNames(obj: any) {

@@ -1,6 +1,6 @@
 import { VirtualProperties } from './code-model/schema';
 import { VirtualParameters, VirtualParameter } from './code-model/command-operation';
-import { selectName } from '@azure/codegen';
+import { selectName } from '@azure-tools/codegen';
 
 export function resolvePropertyNames(reservedNames: Iterable<string>, virtualProperties: VirtualProperties) {
   const usedNames = new Set(reservedNames);

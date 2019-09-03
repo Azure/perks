@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Initializer } from '@azure/codegen';
-import { Dictionary } from '@azure/linq';
+import { Initializer } from '@azure-tools/codegen';
+import { Dictionary } from '@azure-tools/linq';
 
 export class Extensions extends Initializer implements Extensions {
   extensions = new Dictionary<any>();

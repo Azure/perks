@@ -1,5 +1,5 @@
-import * as asyncio from '@azure/async-io';
-import * as tasks from '@azure/tasks';
+import * as asyncio from '@azure-tools/async-io';
+import * as tasks from '@azure-tools/tasks';
 import * as assert from 'assert';
 import * as fs from 'fs';
 import { suite, test } from 'mocha-typescript';

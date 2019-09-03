@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { keys } from '@azure/linq';
+import { keys } from '@azure-tools/linq';
 
 export type DeepPartial<T> = {
   [P in keyof T]?:

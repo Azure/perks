@@ -1,5 +1,5 @@
 {
-  "name": "@azure/tasks",
+  "name": "@azure-tools/tasks",
   "version": "3.0.0",
   "description": "Async tasks for Azure Open Source Projects",
   "engines": {

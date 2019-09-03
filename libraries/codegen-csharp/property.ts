@@ -3,10 +3,10 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { intersect } from '@azure/codegen';
+import { intersect } from '@azure-tools/codegen';
 
-import { docComment, EOL, indent } from '@azure/codegen';
-import { Dictionary } from '@azure/linq';
+import { docComment, EOL, indent } from '@azure-tools/codegen';
+import { Dictionary } from '@azure-tools/linq';
 import { Abstract, Access, Extern, highestAccess, Modifier, New, Override, Sealed, Static, Virtual } from './access-modifier';
 import { Attribute } from './attribute';
 import { summary } from './doc-comments';

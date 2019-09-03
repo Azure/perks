@@ -1,5 +1,5 @@
 {
-  "name": "@azure/autorest-extension-base",
+  "name": "@azure-tools/autorest-extension-base",
   "version": "3.0.0",
   "description": "Library for creating AutoRest extensions",
   "main": "dist/exports.js",

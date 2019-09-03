@@ -1,5 +1,5 @@
 {
-  "name": "@azure/async-io",
+  "name": "@azure-tools/async-io",
   "version": "3.0.0",
   "description": "Asynchronous IO (for Azure Open Source Projects)",
   "main": "./dist/main.js",
@@ -52,7 +52,7 @@
     "eslint": "~6.2.2"
   },
   "dependencies": {
-    "@azure/tasks": "~3.0.0",
+    "@azure-tools/tasks": "~3.0.0",
     "proper-lockfile": "~2.0.1"
   }
 }

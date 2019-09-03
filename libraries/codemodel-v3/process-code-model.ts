@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Model } from './code-model/code-model';
-import { serialize } from '@azure/codegen';
-import { Host } from '@azure/autorest-extension-base';
+import { serialize } from '@azure-tools/codegen';
+import { Host } from '@azure-tools/autorest-extension-base';
 import { ModelState } from './model-state';
 
 export async function processCodeModel(processExtension: (state: ModelState<Model>) => Promise<Model>, service: Host, callerName?: string) {

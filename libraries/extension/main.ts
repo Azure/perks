@@ -3,9 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@azure/async-io';
-import { Progress, Subscribe } from '@azure/eventing';
-import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@azure/tasks';
+import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@azure-tools/async-io';
+import { Progress, Subscribe } from '@azure-tools/eventing';
+import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@azure-tools/tasks';
 import { ChildProcess, spawn, SpawnOptions } from 'child_process';
 import { resolve as npmResolvePackage } from 'npm-package-arg';
 import { homedir, tmpdir } from 'os';

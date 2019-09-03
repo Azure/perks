@@ -1,5 +1,5 @@
 {
-  "name": "@azure/eventing",
+  "name": "@azure-tools/eventing",
   "version": "3.0.0",
   "description": "Typescript-based eventing framework (for Azure Open Source Projects)",
   "engines": {
@@ -51,6 +51,6 @@
     "typescript": "~3.6.2"
   },
   "dependencies": {
-    "@azure/tasks": "~3.0.0"
+    "@azure-tools/tasks": "~3.0.0"
   }
 }

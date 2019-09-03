@@ -1,5 +1,5 @@
 {
-  "name": "@azure/codegen-csharp",
+  "name": "@azure-tools/codegen-csharp",
   "version": "3.0.0",
   "description": "AutoRest code generator base classes for CSharp#",
   "directories": {
@@ -43,7 +43,7 @@
     "typescript": "~3.6.2"
   },
   "dependencies": {
-    "@azure/codegen": "~2.0.0",
-    "@azure/linq": "~3.0.0"
+    "@azure-tools/codegen": "~2.0.0",
+    "@azure-tools/linq": "~3.0.0"
   }
 }

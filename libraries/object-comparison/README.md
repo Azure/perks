@@ -1,4 +1,4 @@
-# Project: @azure/object-comparison
+# Project: @azure-tools/object-comparison
 
 This package contains common code for the developer tools for generating Azure SDKs.
 

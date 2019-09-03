@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Extensions } from './extensions';
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 
 export class Contact extends Extensions implements Contact {
   extensions = new Dictionary<any>();

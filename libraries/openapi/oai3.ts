@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 import { Optional, Refable as Reference } from './common';
 
 // OAI3 variants for the basic model definitions.

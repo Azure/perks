@@ -8,10 +8,10 @@ import { Extensions } from './extensions';
 import { HttpOperation } from './http-operation';
 import { ProgramaticOperationDetails, ProgrammaticOperation } from './programatic-operation';
 import { Schema, VirtualProperty } from './schema';
-import { DeepPartial } from '@azure/codegen';
+import { DeepPartial } from '@azure-tools/codegen';
 
 import { uid } from './uid';
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 
 export interface VirtualParameters {
   body: Array<VirtualParameter>;

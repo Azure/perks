@@ -1,5 +1,5 @@
 {
-  "name": "@azure/object-comparison",
+  "name": "@azure-tools/object-comparison",
   "version": "3.0.0",
   "description": "Library to compare objects",
   "main": "./dist/main.js",

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Delay, Exception, promisify } from '@azure/tasks';
+import { Delay, Exception, promisify } from '@azure-tools/tasks';
 import * as fs from 'fs';
 import { isFile } from './file-io';
 

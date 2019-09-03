@@ -1,5 +1,5 @@
 {
-  "name": "@azure/openapi",
+  "name": "@azure-tools/openapi",
   "version": "3.0.0",
   "description": "OpenAPI common code for Azure Tools.",
   "main": "./dist/main.js",
@@ -52,6 +52,6 @@
     "typescript": "~3.6.2"
   },
   "dependencies": {
-    "@azure/linq": "~3.0.0"
+    "@azure-tools/linq": "~3.0.0"
   }
 }

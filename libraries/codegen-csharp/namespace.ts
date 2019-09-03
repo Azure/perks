@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Initializer } from '@azure/codegen';
-import { comment, dotCombine, EOL, indent, toMap } from '@azure/codegen';
+import { Initializer } from '@azure-tools/codegen';
+import { comment, dotCombine, EOL, indent, toMap } from '@azure-tools/codegen';
 import { Class } from './class';
 import { Delegate } from './delegate';
 import { ImportDirective } from './import';

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Exception, OutstandingTaskAwaiter, promisify } from '@azure/tasks';
+import { Exception, OutstandingTaskAwaiter, promisify } from '@azure-tools/tasks';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath, Url, URL } from 'url';

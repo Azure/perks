@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EOL } from '@azure/codegen';
+import { EOL } from '@azure-tools/codegen';
 
 
 export function xmlize(element: string, text: string): string {

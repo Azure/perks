@@ -5,7 +5,7 @@
 
 import { Extensions } from './extensions';
 import { ParameterLocation } from './http-operation';
-import { Dictionary } from '@azure/linq';
+import { Dictionary } from '@azure-tools/linq';
 
 export enum Scheme {
   Bearer = 'bearer'

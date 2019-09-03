@@ -1,5 +1,5 @@
 {
-  "name": "@azure/extension",
+  "name": "@azure-tools/extension",
   "version": "3.0.0",
   "description": "Yarn-Based extension aquisition (for Azure Open Source Projects)",
   "engines": {
@@ -56,9 +56,9 @@
     "typescript": "~3.6.2"
   },
   "dependencies": {
-    "@azure/async-io": "~3.0.0",
-    "@azure/eventing": "~3.0.0",
-    "@azure/tasks": "~3.0.0",
+    "@azure-tools/async-io": "~3.0.0",
+    "@azure-tools/eventing": "~3.0.0",
+    "@azure-tools/tasks": "~3.0.0",
     "npm-package-arg": "6.1.0",
     "semver": "^5.5.1",
     "pacote": "9.2.3",

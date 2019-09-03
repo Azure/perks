@@ -1,8 +1,8 @@
 import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
 import * as assert from 'assert';
-import * as aio from '@azure/async-io';
-import * as datastore from '@azure/datastore';
-import { stringify, CancellationToken, FastStringify } from '@azure/datastore';
+import * as aio from '@azure-tools/async-io';
+import * as datastore from '@azure-tools/datastore';
+import { stringify, CancellationToken, FastStringify } from '@azure-tools/datastore';
 import { SourceMapGenerator } from 'source-map';
 
 require('source-map-support').install();
