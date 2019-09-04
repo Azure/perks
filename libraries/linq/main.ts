@@ -29,6 +29,7 @@ export interface Linqable<T> extends Iterable<T> {
     any(predicate?: (each: T) => boolean): boolean;
     all(predicate: (each: T) => boolean): boolean;
     bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
+    concat(more: Iterable<T>): Linqable<T>;
     distinct(selector?: (each: T) => any): Linqable<T>;
     first(predicate?: (each: T) => boolean): T | undefined;
     selectNonNullable<V>(selector: (each: T) => V): Linqable<NonNullable<V>>;
@@ -52,6 +53,7 @@ function linqify<T>(iterable: Iterable<T>): Linqable<T> {
         all: all.bind(iterable),
         any: any.bind(iterable),
         bifurcate: bifurcate.bind(iterable),
+        concat: concat.bind(iterable),
         distinct: distinct.bind(iterable),
         first: first.bind(iterable),
         select: select.bind(iterable),

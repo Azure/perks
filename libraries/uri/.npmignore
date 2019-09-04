@@ -5,8 +5,10 @@ package/
 .npmignore
 tsconfig.json
 *.ts
+changelog.md
 .eslint*
 !*.d.ts
 *.tgz
 .vscode
 .scripts
+*.log
