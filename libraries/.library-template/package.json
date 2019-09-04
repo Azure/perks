@@ -22,11 +22,9 @@
     "prepare": "npm run build",
     "test": "npm run build && mocha dist/test --timeout 50000",
     "testci": "npm run build && mocha dist/test --timeout 50000",
-    "run-pwsh": "pwsh -command \"& {param($script) pwsh -command ((convertfrom-json (get-content -raw ./package.json)).'pwsh-scripts'.$script) }\"",
-    "clean": "npm run run-pwsh clean"
-  },
-  "pwsh-scripts": {
-    "clean": "remove-item -recurse -ea 0 ./dist ; remove-item -ea 0 ./*.log "
+    "clean": "ver > nul 2>&1 nul  && npm run --silent clean-cmd || npm run --silent clean-bash",
+    "clean-cmd": "if exist dist rmdir /s /q dist && exit 0 || exit 0 ",
+    "clean-bash": "rm nul && rm -rf dist && exit 0 || exit 0"
   },
   "keywords": [
     "perks",
