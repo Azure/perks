@@ -5,6 +5,8 @@ import * as datastore from '@azure-tools/datastore';
 import { stringify, CancellationToken, FastStringify } from '@azure-tools/datastore';
 import { SourceMapGenerator } from 'source-map';
 
+/* eslint-disable @typescript-eslint/no-empty-function */
+
 require('source-map-support').install();
 
 import { Oai2ToOai3 } from '../main';
