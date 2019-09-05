@@ -5,7 +5,7 @@
   "pnpmOptions": {},
   "nodeSupportedVersionRange": ">=8.9.4 <11.0.0",
   "ensureConsistentVersions": true,
-  "projectFolderMinDepth": 2,
+  "projectFolderMinDepth": 1,
   "projectFolderMaxDepth": 2,
   "repository": {},
   "eventHooks": {
@@ -18,91 +18,91 @@
   "projects": [
     {
       "packageName": "@azure-tools/tasks",
-      "projectFolder": "libraries/tasks",
+      "projectFolder": "tasks",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/async-io",
-      "projectFolder": "libraries/async-io",
+      "projectFolder": "async-io",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/eventing",
-      "projectFolder": "libraries/eventing",
+      "projectFolder": "eventing",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/extension",
-      "projectFolder": "libraries/extension",
+      "projectFolder": "extension",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/datastore",
-      "projectFolder": "libraries/datastore",
+      "projectFolder": "datastore",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/linq",
-      "projectFolder": "libraries/linq",
+      "projectFolder": "linq",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/openapi",
-      "projectFolder": "libraries/openapi",
+      "projectFolder": "openapi",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/uri",
-      "projectFolder": "libraries/uri",
+      "projectFolder": "uri",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/oai2-to-oai3",
-      "projectFolder": "libraries/oai2-to-oai3",
+      "projectFolder": "oai2-to-oai3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/autorest-extension-base",
-      "projectFolder": "libraries/autorest-extension-base",
+      "projectFolder": "autorest-extension-base",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/codemodel-v3",
-      "projectFolder": "libraries/codemodel-v3",
+      "projectFolder": "codemodel-v3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/codegen",
-      "projectFolder": "libraries/codegen",
+      "projectFolder": "codegen",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/codegen-csharp",
-      "projectFolder": "libraries/codegen-csharp",
+      "projectFolder": "codegen-csharp",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/object-comparison",
-      "projectFolder": "libraries/object-comparison",
+      "projectFolder": "object-comparison",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
       "packageName": "@azure-tools/deduplication",
-      "projectFolder": "libraries/deduplication",
+      "projectFolder": "deduplication",
       "reviewCategory": "production",
       "shouldPublish": true
     }
