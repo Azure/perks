@@ -48,63 +48,63 @@
   "eslint.workingDirectories": [
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/async-io",
+      "directory": "./async-io",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/autorest-extension-base",
+      "directory": "./autorest-extension-base",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/codegen",
+      "directory": "./codegen",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/codegen-csharp",
+      "directory": "./codegen-csharp",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/codemodel-v3",
+      "directory": "./codemodel-v3",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/datastore",
+      "directory": "./datastore",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/deduplication",
+      "directory": "./deduplication",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/eventing",
+      "directory": "./eventing",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/extension",
+      "directory": "./extension",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/linq",
+      "directory": "./linq",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/oai2-to-oai3",
+      "directory": "./oai2-to-oai3",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/object-comparison",
+      "directory": "./object-comparison",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/openapi",
+      "directory": "./openapi",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/tasks",
+      "directory": "./tasks",
     },
     {
       "changeProcessCWD": true,
-      "directory": "./libraries/uri"
+      "directory": "./uri"
     }
   ],
   "eslint.autoFixOnSave": true,

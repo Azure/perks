@@ -8,12 +8,12 @@
       "type": "node",
       "request": "launch",
       "name": "run tests",
-      "program": "${workspaceRoot}/libraries/extension/node_modules/mocha/bin/_mocha",
+      "program": "${workspaceRoot}/extension/node_modules/mocha/bin/_mocha",
       "args": [
         "dist/test",
         "--timeout=2000000"
       ],
-      "cwd": "${workspaceRoot}/libraries/extension",
+      "cwd": "${workspaceRoot}/extension",
       "outFiles": [
         "${workspaceFolder}/**/*.js"
       ]

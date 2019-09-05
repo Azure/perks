@@ -60,6 +60,10 @@ temp
 
 # Rush files
 common/temp/**
+common/temp/**
+**/common/temp/**
+.rush/temp/**
+**/.rush/temp/**
 package-deps.json
 
 **/dist/*
