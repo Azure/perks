@@ -324,6 +324,8 @@ async function yarn(folder: string, cmd: string, ...args: Array<string>) {
     '--no-node-version-check',
     '--no-lockfile',
     '--json',
+    '--registry',
+    process.env.autorest_registry || 'https://registry.npmjs.org',
     cmd,
     ...args
   ], { cwd: folder });
@@ -347,6 +349,7 @@ async function fetchPackageMetadata(spec: string): Promise<any> {
   try {
     return await pacote.manifest(spec, {
       cache: `${tmpdir()}/cache`,
+      registry: process.env.autorest_registry || 'https://registry.npmjs.org',
       'full-metadata': true
     });
   } catch (er) {
