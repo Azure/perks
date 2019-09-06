@@ -419,7 +419,7 @@ export class ExtensionManager {
   }
 
   public async getPackageVersions(name: string): Promise<Array<string>> {
-    const versions = await yarn(process.cwd(), 'view', name, 'versions');
+    const versions = await yarn(process.cwd(), 'info', name, 'versions');
     return JSON.parse(versions.stdout).data;
   }
 
