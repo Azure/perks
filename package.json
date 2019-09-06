@@ -1,5 +1,6 @@
 {
   "version": "0.0.0",
+  "patchOffset": 1000,
   "private": true,
   "name": "perks",
   "description": "> See readme.md for build instructions",

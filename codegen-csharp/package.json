@@ -1,6 +1,7 @@
 {
   "name": "@azure-tools/codegen-csharp",
   "version": "3.0.0",
+  "patchOffset": 1000,
   "description": "AutoRest code generator base classes for CSharp#",
   "directories": {
     "doc": "docs"
@@ -12,8 +13,6 @@
     "watch": "tsc -p . --watch",
     "eslint-fix": "eslint  . --fix --ext .ts",
     "eslint": "eslint  . --ext .ts",
-    "set-version": "node -e \"let pkg = require('./package.json'); require('child_process').exec('git rev-list --parents HEAD --count --full-history .', (o,stdout) => { const v = pkg.version.split('.'); v[v.length-1] = (parseInt(stdout.trim()) -1); const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)})\"",
-    "reset-version": "node -e \"let pkg = require('./package.json'); const v = pkg.version.split('.'); v[v.length-1] = 0; const orig=JSON.stringify(pkg,null,2);  pkg.version = v.join('.'); const delta = JSON.stringify(pkg,null,2 ); if( orig !== delta) require('fs').writeFileSync('./package.json',delta)\"",
     "prepare": "npm run build",
     "test": "echo codegen-csharp: No Tests.",
     "clean": "ver > nul 2>&1 nul && npm run --silent clean-cmd || npm run --silent clean-bash",
