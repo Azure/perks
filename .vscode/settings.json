@@ -2,6 +2,7 @@
 {
   "files.eol": "\n",
   "files.exclude": {
+    "**/common/temp/**": true,
     "node_modules/**": true,
     "**/dist/**": true,
     "**/node_modules/**": true,
@@ -44,5 +45,78 @@
   "files.associations": {
     "rush.json": "jsonc"
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "eslint.workingDirectories": [
+    {
+      "changeProcessCWD": true,
+      "directory": "./async-io",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./autorest-extension-base",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./codegen",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./codegen-csharp",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./codemodel-v3",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./datastore",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./deduplication",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./eventing",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./extension",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./linq",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./oai2-to-oai3",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./object-comparison",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./openapi",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./tasks",
+    },
+    {
+      "changeProcessCWD": true,
+      "directory": "./uri"
+    }
+  ],
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    {
+      "language": "typescript",
+      "autoFix": true,
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": false
+    }
+  ],
 }

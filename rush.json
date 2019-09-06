@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/rush/v5/rush.schema.json",
-  "rushVersion": "5.4.0",
+  "rushVersion": "5.12.0",
   "pnpmVersion": "2.15.1",
   "pnpmOptions": {},
   "nodeSupportedVersionRange": ">=8.9.4 <11.0.0",
   "ensureConsistentVersions": true,
-  "projectFolderMinDepth": 2,
+  "projectFolderMinDepth": 1,
   "projectFolderMaxDepth": 2,
   "repository": {},
   "eventHooks": {
@@ -17,92 +17,92 @@
   "telemetryEnabled": false,
   "projects": [
     {
-      "packageName": "@microsoft.azure/tasks",
-      "projectFolder": "libraries/tasks",
+      "packageName": "@azure-tools/tasks",
+      "projectFolder": "tasks",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/async-io",
-      "projectFolder": "libraries/async-io",
+      "packageName": "@azure-tools/async-io",
+      "projectFolder": "async-io",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/eventing",
-      "projectFolder": "libraries/eventing",
+      "packageName": "@azure-tools/eventing",
+      "projectFolder": "eventing",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/extension",
-      "projectFolder": "libraries/extension",
+      "packageName": "@azure-tools/extension",
+      "projectFolder": "extension",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/datastore",
-      "projectFolder": "libraries/datastore",
+      "packageName": "@azure-tools/datastore",
+      "projectFolder": "datastore",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/linq",
-      "projectFolder": "libraries/linq",
+      "packageName": "@azure-tools/linq",
+      "projectFolder": "linq",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/openapi",
-      "projectFolder": "libraries/openapi",
+      "packageName": "@azure-tools/openapi",
+      "projectFolder": "openapi",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/uri",
-      "projectFolder": "libraries/uri",
+      "packageName": "@azure-tools/uri",
+      "projectFolder": "uri",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/oai2-to-oai3",
-      "projectFolder": "libraries/oai2-to-oai3",
+      "packageName": "@azure-tools/oai2-to-oai3",
+      "projectFolder": "oai2-to-oai3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/autorest-extension-base",
-      "projectFolder": "libraries/autorest-extension-base",
+      "packageName": "@azure-tools/autorest-extension-base",
+      "projectFolder": "autorest-extension-base",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/autorest.codemodel-v3",
-      "projectFolder": "libraries/codemodel-v3",
+      "packageName": "@azure-tools/codemodel-v3",
+      "projectFolder": "codemodel-v3",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/codegen",
-      "projectFolder": "libraries/codegen",
+      "packageName": "@azure-tools/codegen",
+      "projectFolder": "codegen",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/codegen-csharp",
-      "projectFolder": "libraries/codegen-csharp",
+      "packageName": "@azure-tools/codegen-csharp",
+      "projectFolder": "codegen-csharp",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/object-comparison",
-      "projectFolder": "libraries/object-comparison",
+      "packageName": "@azure-tools/object-comparison",
+      "projectFolder": "object-comparison",
       "reviewCategory": "production",
       "shouldPublish": true
     },
     {
-      "packageName": "@microsoft.azure/deduplication",
-      "projectFolder": "libraries/deduplication",
+      "packageName": "@azure-tools/deduplication",
+      "projectFolder": "deduplication",
       "reviewCategory": "production",
       "shouldPublish": true
     }
