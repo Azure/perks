@@ -1,7 +1,7 @@
 {
   "name": "@azure-tools/oai2-to-oai3",
   "version": "4.0.0",
-  "patchOffset": 1000,
+  "patchOffset": 100,
   "description": "OpenAPI2 to OpenAPI3 conversion library that maintains souremaps for use with AutoRest",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

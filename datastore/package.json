@@ -1,7 +1,7 @@
 {
   "name": "@azure-tools/datastore",
   "version": "4.0.0",
-  "patchOffset": 1000,
+  "patchOffset": 100,
   "description": "Virtualized Filesystem with parsing and sourcemaps (AutoRest)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

@@ -1,7 +1,7 @@
 {
   "name": "@azure-tools/eventing",
   "version": "3.0.0",
-  "patchOffset": 1000,
+  "patchOffset": 100,
   "description": "Typescript-based eventing framework (for Azure Open Source Projects)",
   "engines": {
     "node": ">=10.12.0"

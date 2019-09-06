@@ -2,7 +2,7 @@
   "name": "@azure-tools/library-template",
   "private": true,
   "version": "1.0.0",
-  "patchOffset": 1000,
+  "patchOffset": 100,
   "description": "template project to copy/paste as for a new library in perks",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

@@ -1,7 +1,7 @@
 {
   "name": "@azure-tools/tasks",
   "version": "3.0.0",
-  "patchOffset": 1000,
+  "patchOffset": 100,
   "description": "Async tasks for Azure Open Source Projects",
   "engines": {
     "node": ">=10.12.0"
