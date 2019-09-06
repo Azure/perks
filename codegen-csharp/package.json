@@ -32,7 +32,8 @@
   "bugs": {
     "url": "https://github.com/Azure/perks/issues"
   },
-  "homepage": "https://github.com/Azure/perks#readme",
+  "homepage": "https://github.com/Azure/perks/tree/master/codegen-csharp#readme",
+  "readme": "https://github.com/Azure/perks/tree/master/codegen-csharp/readme.md",
   "devDependencies": {
     "@types/js-yaml": "3.12.1",
     "@types/mocha": "5.2.5",

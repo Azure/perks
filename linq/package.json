@@ -36,8 +36,8 @@
   "bugs": {
     "url": "https://github.com/Azure/perks/issues"
   },
-  "homepage": "https://github.com/Azure/perks#readme",
-  "readme": "https://github.com/Azure/perks/readme.md",
+  "homepage": "https://github.com/Azure/perks/tree/master/linq#readme",
+  "readme": "https://github.com/Azure/perks/tree/master/linq/readme.md",
   "devDependencies": {
     "mocha-typescript": "1.1.17",
     "@types/mocha": "5.2.5",

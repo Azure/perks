@@ -35,8 +35,8 @@
   "bugs": {
     "url": "https://github.com/Azure/perks/issues"
   },
-  "homepage": "https://github.com/Azure/perks#readme",
-  "readme": "https://github.com/Azure/perks/readme.md",
+  "homepage": "https://github.com/Azure/perks/tree/master/tasks#readme",
+  "readme": "https://github.com/Azure/perks/tree/master/tasks/readme.md",
   "devDependencies": {
     "@types/node": "12.7.2",
     "@types/mocha": "5.2.5",

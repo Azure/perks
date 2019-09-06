@@ -1,5 +1,4 @@
-# Project: @azure-tools/source-maps
-
+# Project: @azure-tools/linq
 This package contains common code for the developer tools for generating Azure SDKs.
 
 Including:
