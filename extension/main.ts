@@ -420,15 +420,25 @@ export class ExtensionManager {
 
   public async getPackageVersions(name: string): Promise<Array<string>> {
     const versions = await yarn(process.cwd(), 'info', name, 'versions');
-    return JSON.parse(versions.stdout).data;
+    return JSON.parse(versions.stdout).data.sort((b, a) => semver.compare(a, b));
   }
 
   public async findPackage(name: string, version = 'latest'): Promise<Package> {
     // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
     const resolved = resolveName(name, version);
+    let resolvedName = resolved.raw;
+
+    // get all matching package versions for that
+    if (version.startsWith('~') || version.startsWith('^')) {
+      const vers = (await this.getPackageVersions(resolved.raw)).filter(each => semver.satisfies(each, version));
+      if (vers.length > 0) {
+        resolvedName = `${resolved.name}@${vers[0]}`;
+      }
+    }
+
     // get the package metadata
-    const pm = await fetchPackageMetadata(resolved.raw);
+    const pm = await fetchPackageMetadata(resolvedName);
     return new Package(resolved, pm, this);
   }
 
