@@ -178,7 +178,7 @@ export function pall<T, U>(array: Array<T>, callbackfn: (value: T, index: number
 
 export function deconstruct(identifier: string | Array<string>): Array<string> {
   if (Array.isArray(identifier)) {
-    return [...values(identifier).linq.selectMany(deconstruct)];
+    return [...values(identifier).selectMany(deconstruct)];
   }
   return identifier.
     replace(/([a-z]+)([A-Z])/g, '$1 $2').

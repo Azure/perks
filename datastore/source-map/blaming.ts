@@ -53,6 +53,6 @@ export class BlameTree {
       // recurse
       todos.push(...todo.blaming);
     }
-    return values(result).linq.distinct(x => JSON.stringify(x)).linq.toArray();
+    return values(result).distinct(x => JSON.stringify(x)).toArray();
   }
 }

@@ -19,7 +19,7 @@ export class MemoryFileSystem implements IFileSystem {
 
   public constructor(files: Map<string, string>) {
     this.filesByUri = new Map<string, string>(
-      items(files).linq.select(
+      items(files).select(
         each => [
           ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, each.key),
           each.value
@@ -44,7 +44,7 @@ export class MemoryFileSystem implements IFileSystem {
 
   async EnumerateFileUris(folderUri: string = MemoryFileSystem.DefaultVirtualRootUri): Promise<Array<string>> {
     // return await [...From(this.filesByUri.keys()).Where(uri => {
-    return keys(this.filesByUri).linq.where(uri => {
+    return keys(this.filesByUri).where(uri => {
       // in folder?
       if (!uri.startsWith(folderUri)) {
         return false;
@@ -53,7 +53,7 @@ export class MemoryFileSystem implements IFileSystem {
       // not in subfolder?
       // return uri.substr(folderUri.length).indexOf("/") === -1;
       return uri.substr(folderUri.length).indexOf('/') === -1;
-    }).linq.toArray();
+    }).toArray();
     //})];
   }
 

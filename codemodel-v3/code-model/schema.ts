@@ -119,11 +119,11 @@ export class Schema extends Extensions implements Schema {
 
 export function getPolymorphicBases(schema: Schema): Array<Schema> {
   // are any of my parents polymorphic directly, or any of their parents?
-  return [...values(schema.allOf).linq.where(parent => parent.discriminator ? true : false), ...values(schema.allOf).linq.selectMany(getPolymorphicBases)];
+  return [...values(schema.allOf).where(parent => parent.discriminator ? true : false), ...values(schema.allOf).selectMany(getPolymorphicBases)];
 }
 
 export function getAllProperties(schema: Schema): Array<Property> {
-  return [...values(schema.allOf).linq.selectMany(getAllProperties), ...values(schema.properties)];
+  return [...values(schema.allOf).selectMany(getAllProperties), ...values(schema.properties)];
 }
 
 export function getAllPublicVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -133,7 +133,7 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined]).linq.where(each => !each.private)];
+  return [...values([...props.owned, ...props.inherited, ...props.inlined]).where(each => !each.private)];
 }
 
 export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -152,7 +152,7 @@ export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualPro
     inherited: [],
     inlined: []
   };
-  return values([...props.owned, ...props.inherited, ...props.inlined]).linq.first(each => each.property.serializedName === propertyName);
+  return values([...props.owned, ...props.inherited, ...props.inlined]).first(each => each.property.serializedName === propertyName);
 }
 
 

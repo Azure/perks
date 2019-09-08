@@ -2,27 +2,23 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-export * from './freeze';
-export * from './visitor';
+import { IndexOf, Dictionary } from './common';
 
-export interface Index<T> {
-  [key: number]: T;
+export interface Linqed<T> extends Iterable<T> {
+  any(predicate?: (each: T) => boolean): boolean;
+  all(predicate: (each: T) => boolean): boolean;
+  bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
+  concat(more: Iterable<T>): Linqable<T>;
+  distinct(selector?: (each: T) => any): Linqable<T>;
+  first(predicate?: (each: T) => boolean): T | undefined;
+  selectNonNullable<V>(selector: (each: T) => V): Linqable<NonNullable<V>>;
+  select<V>(selector: (each: T) => V): Linqable<V>;
+  selectMany<V>(selector: (each: T) => Iterable<V>): Linqable<V>;
+  where(predicate: (each: T) => boolean): Linqable<T>;
+  forEach(action: (each: T) => void): void;
+  aggregate<A, R>(accumulator: (current: T | A, next: T) => A, seed?: T | A, resultAction?: (result?: T | A) => A | R): T | A | R | undefined;
+  toArray(): Array<T>;
 }
-
-export interface Dictionary<T> {
-  [key: string]: T;
-}
-
-export class Dictionary<T> implements Dictionary<T> {
-}
-
-export function ToDictionary<T>(keys: Array<string>, each: (index: string) => T) {
-  const result = new Dictionary<T>();
-  keys.map((v, i, a) => result[v] = each(v));
-  return result;
-}
-
-export type IndexOf<T> = T extends Map<T, infer V> ? T : T extends Array<infer V> ? number : string;
 
 export interface Linqable<T> extends Iterable<T> {
   linq: {
@@ -41,14 +37,33 @@ export interface Linqable<T> extends Iterable<T> {
     toArray(): Array<T>;
   };
 }
+/* eslint-disable */
+
+function enlinq<T>(iterable: Iterable<T>): Linqed<T> {
+  return {
+    ...iterable,
+    all: <any>all.bind(iterable),
+    any: <any>any.bind(iterable),
+    bifurcate: <any>bifurcate.bind(iterable),
+    concat: <any>concat.bind(iterable),
+    distinct: <any>distinct.bind(iterable),
+    first: <any>first.bind(iterable),
+    select: <any>select.bind(iterable),
+    selectMany: <any>selectMany.bind(iterable),
+    selectNonNullable: <any>selectNonNullable.bind(iterable),
+    toArray: <any>toArray.bind(iterable),
+    where: <any>where.bind(iterable),
+    forEach: <any>forEach.bind(iterable),
+    aggregate: <any>aggregate.bind(iterable),
+  };
+}
 
 function linqify<T>(iterable: Iterable<T>): Linqable<T> {
-  if (!!(<any>iterable)['linq']) {
+  if ((<any>iterable)['linq']) {
     return <Linqable<T>>iterable;
   }
   return Object.defineProperty(iterable, 'linq', {
     get: () => {
-      /* eslint-disable */
       return {
         all: all.bind(iterable),
         any: any.bind(iterable),
@@ -111,8 +126,39 @@ export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)
     }());
   }
 
+
   // null/undefined
   return linqify([]);
+}
+
+
+/** returns an Linqable<> for values in the collection */
+export function evalues<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Linqed<T> {
+  if (source) {
+    // map
+    if (source instanceof Map) {
+      return enlinq(source.values());
+    }
+
+    // any iterable source
+    if (isIterable(source)) {
+      return enlinq(source);
+    }
+
+    // dictionary (object keys)
+    return enlinq(function* () {
+      for (const key of keys(source)) {
+        const value = source[key];
+        if (typeof value !== 'function') {
+          yield value;
+        }
+      }
+    }());
+  }
+
+
+  // null/undefined
+  return enlinq([]);
 }
 
 /** returns an Linqable<{key,value}> for the Collection */

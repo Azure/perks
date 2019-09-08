@@ -1,6 +1,6 @@
 import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
 import * as assert from 'assert';
-import { values, length } from '../main';
+import { values, length, evalues, } from '../old-linq';
 
 @suite class MyTests {
 
