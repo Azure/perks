@@ -68,6 +68,10 @@
     },
     {
       "changeProcessCWD": true,
+      "directory": "./codemodel",
+    },
+    {
+      "changeProcessCWD": true,
       "directory": "./datastore",
     },
     {

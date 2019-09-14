@@ -83,6 +83,12 @@
       "shouldPublish": true
     },
     {
+      "packageName": "@azure-tools/codemodel",
+      "projectFolder": "codemodel",
+      "reviewCategory": "production",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@azure-tools/codegen",
       "projectFolder": "codegen",
       "reviewCategory": "production",

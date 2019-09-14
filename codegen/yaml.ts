@@ -73,5 +73,11 @@ export function deserialize<T>(text: string, filename: string) {
 }
 
 export function serialize<T>(model: T): string {
-  return dump(model, { sortKeys: sortWithPriorty, schema: DEFAULT_SAFE_SCHEMA, skipInvalid: true, lineWidth: 240 });
+  return dump(model, {
+    sortKeys: sortWithPriorty,
+    noArrayIndent: true,
+    schema: DEFAULT_SAFE_SCHEMA,
+    skipInvalid: true,
+    lineWidth: 240
+  });
 }
