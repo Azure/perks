@@ -1,7 +1,10 @@
 import { XmlSerlializationFormat } from './formats/xml';
+import { SerializationFormat } from './schema';
 
-export interface Formats {
-  json: any;
-  xml: XmlSerlializationFormat;
-  protobuf: any;
+/** custom extensible metadata for individual serialization formats */
+export interface SerializationFormats<T extends SerializationFormat = SerializationFormat> {
+  [key: string]: T | undefined | unknown;
+  json?: T;
+  xml?: XmlSerlializationFormat;
+  protobuf?: T;
 }

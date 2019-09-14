@@ -1,8 +1,9 @@
 import { uid } from './uid';
 
 import { Initializer, DeepPartial } from '@azure-tools/codegen';
-import { Value } from './parameter';
+import { Value } from './value';
 
+/** a property is a child value in an object */
 export interface Property extends Value {
   /** if the property is marked read-only (ie, not intended to be sent to the service) */
   readOnly?: boolean;

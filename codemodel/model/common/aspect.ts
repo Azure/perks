@@ -32,14 +32,17 @@ export interface Aspect extends Metadata {
 }
 
 export class Aspect extends Initializer implements Aspect {
-  constructor($key: string, description: string, initializer?: DeepPartial<Aspect>) {
+  constructor(public $key: string, public description: string, initializer?: DeepPartial<Aspect>) {
     super();
+
     this.apply({
       language: {
         default: {
           name: $key,
           description,
         }
+      },
+      protocol: {
       }
     }, initializer);
   }

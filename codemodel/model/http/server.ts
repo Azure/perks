@@ -14,7 +14,6 @@ export interface JustLanguageMetadata<TLanguage extends Language = Language> ext
 
 }
 
-
 /** 
  * An object representing a Server.
  * 

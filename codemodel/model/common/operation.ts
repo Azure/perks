@@ -5,6 +5,7 @@ import { Aspect } from './aspect';
 import { ApiVersion } from './api-version';
 import { Dictionary } from '@azure-tools/linq';
 
+/** represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)  */
 export interface Operation extends Aspect {
 
   /** the inputs to the operation */

@@ -1,5 +1,6 @@
 import { ApiVersions } from './api-version';
 
+/** represents  deprecation information for a given aspect  */
 export interface Deprecation {
 
   /** the reason why this aspect  */

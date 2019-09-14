@@ -18,4 +18,5 @@ export interface ApiVersion {
   range: '-' | '+' | undefined;
 }
 
+/** a collection of api versions */
 export type ApiVersions = Array<ApiVersion>;

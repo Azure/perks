@@ -1,15 +1,14 @@
 import { Language, Protocol, Metadata } from './metadata';
 import { Aspect } from './aspect';
-import { Formats } from './formats';
+import { SerializationFormats } from './formats';
 import { SchemaType, AllSchemaTypes, PrimitiveSchemaTypes, ObjectSchemaTypes } from './schema-type';
 import { Discriminator } from './discriminator';
-import { DeepPartial, Initializer, } from '@azure-tools/codegen';
+import { DeepPartial, } from '@azure-tools/codegen';
 import { Property } from './property';
-
-
 import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
 import { Languages } from './languages';
+import { Value } from './value';
 
 
 /** language metadata specific to schema instances */
@@ -28,7 +27,7 @@ export interface SerializationFormat extends Extensions, Dictionary<any> {
 /** The Schema Object allows the definition of input and output data types. */
 export interface Schema<TSchemaType extends SchemaType = AllSchemaTypes> extends Aspect {
   /** per-language information for Schema uses SchemaMetadata */
-  language: { [key in keyof Languages]: SchemaMetadata; };
+  language: Languages<SchemaMetadata>;
 
   /** the schema type  */
   type: TSchemaType;
@@ -46,7 +45,7 @@ export interface Schema<TSchemaType extends SchemaType = AllSchemaTypes> extends
   defaultValue?: any;
 
   /** per-serialization information for this Schema  */
-  serialization: { [key in keyof Formats]: SerializationFormat; };
+  serialization: SerializationFormats;
 
   /* are these needed I don't think so? */
   // nullable: boolean;
@@ -57,19 +56,19 @@ export interface Schema<TSchemaType extends SchemaType = AllSchemaTypes> extends
 export class Schema<TSchemaType extends SchemaType> extends Aspect implements Schema<TSchemaType> {
   type: TSchemaType;
 
-  constructor(name: string, description: string, type: TSchemaType, initializer?: DeepPartial<Schema>) {
-    super(name, description);
-
+  constructor(schemaName: string, description: string, type: TSchemaType, initializer?: DeepPartial<Schema>) {
+    super(schemaName, description);
     this.type = type;
+
     // this.allOf = (this.allOf || [] ).push( schema );
     this.apply({
       language: {
         default: {
         }
+      },
+      protocol: {
       }
-    });
-
-    this.apply(initializer);
+    }, initializer);
   }
 }
 
@@ -80,11 +79,20 @@ export function isNumberSchema(schema: Schema): schema is NumberSchema {
 
 /** a Schema that represents a Number value */
 export interface NumberSchema extends Schema<SchemaType.Number | SchemaType.Integer> {
-  /* number restrictions */
+
+  /** if present, the number must be an exact multiple of this value */
   multipleOf?: number;
+
+  /** if present, the value must be lower than or equal to this (unless exclusiveMaximum is true)  */
   maximum?: number;
+
+  /** if present, the value must be lower than maximum   */
   exclusiveMaximum?: boolean;
+
+  /** if present, the value must be highter than or equal to this (unless exclusiveMinimum is true)  */
   minimum?: number;
+
+  /** if present, the value must be higher than minimum   */
   exclusiveMinimum?: boolean;
 }
 
@@ -106,8 +114,6 @@ export interface ArraySchema<ElementType extends Schema = Schema<AllSchemaTypes>
   /** elementType of the array */
   elementType: ElementType;
 
-  /* array restrictions */
-
   /** maximum number of elements in the array */
   maxItems?: number;
 
@@ -118,30 +124,68 @@ export interface ArraySchema<ElementType extends Schema = Schema<AllSchemaTypes>
   uniqueItems?: boolean;
 }
 
+/** a schema that represents a type with child properties. */
 export interface ObjectSchema extends Schema<SchemaType.Object> {
+  /** the definition of the polymorphic descriminator for this type */
   discriminator?: Discriminator;
+
+  /** the collection of properties that are in this object */
   properties?: Array<Property>;
 
-  /* object restrictions */
+  /**  maximum number of properties permitted */
   maxProperties?: number;
+
+  /**  minimum number of properties permitted */
   minProperties?: number;
 }
 
+/** an individual choice in a ChoiceSchema */
+export interface ChoiceValue {
+  /** the actual value  */
+  value: string | number | boolean;
+
+  /** the name this value should use  */
+  name: string;
+
+  /** the description for this value */
+  description: string;
+}
+
+/** a schema that represents a choice of several values (ie, an 'enum') */
 export interface ChoiceSchema<ChoiceType extends Schema = Schema<PrimitiveSchemaTypes>> extends Schema<SchemaType.Choice> {
+  /** the primitive type for the choices */
   choiceType: ChoiceType;
 
-  choices: Array<string>;
+  /** the possible choices for in the set */
+  choices: Array<ChoiceValue>;
+
+  /** if the set of choices is irrevocably sealed */
+  sealed?: boolean;
 }
 
+/** a container for the actual constant value */
+export interface ConstantValue {
+  /** the actual constant value to use */
+  value: any;
+}
+
+/** a schema that represents a constant value */
 export interface ConstantSchema<ConstantType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Constant> {
+  /** the schema type of the constant value (ie, StringSchema, NumberSchema, etc) */
   constantSchema: ConstantType;
+
+  /** the actual constant value */
+  value: Value; // QUESTION -- should this just be 'any'
 }
 
+/** a schema that represents a boolean value */
 export interface BooleanSchema extends Schema<SchemaType.Boolean> {
 
 }
 
+/** a schema that represents a key-value collection */
 export interface DictionarySchema<ElementType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Dictionary> {
+  /** the element type of the dictionary. (Keys are always strings) */
   elementType: ElementType;
 }
 
@@ -155,6 +199,7 @@ export interface DictionarySchema<ElementType extends Schema = Schema<AllSchemaT
  * that a value can be two primitive types at the same time.
  */
 export interface AndSchema extends Schema<SchemaType.And> {
+  /** the set of schemas that this schema is composed of. */
   allOf: Array<Schema<ObjectSchemaTypes>>;
 }
 
@@ -168,6 +213,7 @@ export interface AndSchema extends Schema<SchemaType.And> {
  * that a value can be two primitive types at the same time.
 */
 export interface OrSchema extends Schema<SchemaType.Or> {
+  /** the set of schemas that this schema is composed of. Every schema is optional  */
   anyOf: Array<Schema<ObjectSchemaTypes>>;
 }
 
@@ -178,11 +224,16 @@ export interface OrSchema extends Schema<SchemaType.Or> {
  * restriction on the type that it may be. (bool or object or number is ok)
 */
 export interface XorSchema extends Schema<SchemaType.Xor> {
+  /** the set of schemas that this must be one and only one of. */
   oneOf: Array<Schema>;
 }
 
-/** a NOT relationship between schemas */
+/**  a NOT relationship between schemas 
+ * 
+ * @fearthecowboy - I don't think we're going to impmement this. 
+*/
 export interface NotSchema extends Schema<SchemaType.Not> {
+  /** the schema that this may not be. */
   not: Schema;
 }
 

@@ -3,19 +3,16 @@ import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Protocols } from './protocols';
 
-export enum ImplementationLocation {
-  Method = 'Method',
-  Client = 'Client',
-}
-
-export interface Metadata<TLanguage extends Language = Language, TProtocol extends Protocol = Protocol> extends Extensions {
+/** common pattern for Metadata on aspects */
+export interface Metadata extends Extensions {
   /** per-language information for this aspect */
-  language: { [key in keyof Languages]: TLanguage; };
+  language: Languages;
 
   /** per-protocol information for this aspect  */
-  protocol: { [key in keyof Protocols]: TProtocol; };
+  protocol: Protocols;
 }
 
+/** the bare-minimum fields for per-language metadata on a given aspect */
 export interface Language extends Dictionary<any> {
   /** name used in actual implementation */
   name: string;
@@ -24,5 +21,6 @@ export interface Language extends Dictionary<any> {
   description: string;
 }
 
+/** the bare-minimum fields for per-protocol metadata on a given aspect */
 export interface Protocol extends Dictionary<any> {
 }

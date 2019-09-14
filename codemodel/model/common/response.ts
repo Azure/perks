@@ -1,9 +1,8 @@
-import { Language, Protocol } from './metadata';
+import { Metadata } from './metadata';
+import { Schema } from './schema';
 
-// response and request share some common features
-// 'headers'
-
-
-export interface Response {
-
+/** a response from a service.  */
+export interface Response extends Metadata {
+  /** the content returned by the service for a given operaiton */
+  schema: Schema;
 }

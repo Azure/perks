@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Dictionary } from '@azure-tools/linq';
-import { Initializer } from '@azure-tools/codegen';
+import { Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Extensions } from '../common/extensions';
 import { uri } from '../common/uri';
 import { ParameterLocation } from './ParameterLocation';
@@ -80,7 +80,7 @@ export interface APIKeySecurityScheme extends Extensions {
 }
 
 export class APIKeySecurityScheme extends Initializer implements APIKeySecurityScheme {
-  constructor(public name: string, inWhere: ParameterLocation, initializer?: Partial<APIKeySecurityScheme>) {
+  constructor(public name: string, inWhere: ParameterLocation, initializer?: DeepPartial<APIKeySecurityScheme>) {
     super();
     this.in = inWhere;
     this.type = SecurityType.ApiKey;
@@ -91,7 +91,7 @@ export class APIKeySecurityScheme extends Initializer implements APIKeySecurityS
 export class BearerHTTPSecurityScheme extends Initializer implements BearerHTTPSecurityScheme {
   scheme = Scheme.Bearer;
 
-  constructor(initializer?: Partial<BearerHTTPSecurityScheme>) {
+  constructor(initializer?: DeepPartial<BearerHTTPSecurityScheme>) {
     super();
     this.type = SecurityType.Http;
     this.apply(initializer);
@@ -101,14 +101,14 @@ export class BearerHTTPSecurityScheme extends Initializer implements BearerHTTPS
 export class ImplicitOAuthFlow extends Initializer implements ImplicitOAuthFlow {
   scopes = new Dictionary<string>();
 
-  constructor(public authorizationUrl: string, initializer?: Partial<ImplicitOAuthFlow>) {
+  constructor(public authorizationUrl: string, initializer?: DeepPartial<ImplicitOAuthFlow>) {
     super();
     this.apply(initializer);
   }
 }
 
 export class NonBearerHTTPSecurityScheme extends Initializer implements NonBearerHTTPSecurityScheme {
-  constructor(public scheme: string, initializer?: Partial<NonBearerHTTPSecurityScheme>) {
+  constructor(public scheme: string, initializer?: DeepPartial<NonBearerHTTPSecurityScheme>) {
     super();
     this.apply(initializer);
     this.type = SecurityType.Http;
@@ -116,7 +116,7 @@ export class NonBearerHTTPSecurityScheme extends Initializer implements NonBeare
 }
 
 export class OAuth2SecurityScheme extends Initializer implements OAuth2SecurityScheme {
-  constructor(public flows: OAuthFlows, initializer?: Partial<OAuth2SecurityScheme>) {
+  constructor(public flows: OAuthFlows, initializer?: DeepPartial<OAuth2SecurityScheme>) {
     super();
     this.type = SecurityType.OAuth2;
     this.apply(initializer);
@@ -124,7 +124,7 @@ export class OAuth2SecurityScheme extends Initializer implements OAuth2SecurityS
 }
 
 export class OAuthFlows extends Initializer implements OAuthFlows {
-  constructor(initializer?: Partial<OAuthFlows>) {
+  constructor(initializer?: DeepPartial<OAuthFlows>) {
     super();
     this.apply(initializer);
   }
@@ -137,7 +137,7 @@ export interface OpenIdConnectSecurityScheme extends Extensions {
 }
 
 export class OpenIdConnectSecurityScheme extends Initializer implements OpenIdConnectSecurityScheme {
-  constructor(public openIdConnectUrl: string, initializer?: Partial<OpenIdConnectSecurityScheme>) {
+  constructor(public openIdConnectUrl: string, initializer?: DeepPartial<OpenIdConnectSecurityScheme>) {
     super();
     this.type = SecurityType.OpenIDConnect;
     this.apply(initializer);
@@ -153,7 +153,7 @@ export interface PasswordOAuthFlow extends Extensions {
 export class PasswordOAuthFlow extends Initializer implements PasswordOAuthFlow {
   scopes = new Dictionary<string>();
 
-  constructor(public tokenUrl: string, initializer?: Partial<PasswordOAuthFlow>) {
+  constructor(public tokenUrl: string, initializer?: DeepPartial<PasswordOAuthFlow>) {
     super();
     this.apply(initializer);
   }
@@ -161,14 +161,14 @@ export class PasswordOAuthFlow extends Initializer implements PasswordOAuthFlow 
 
 export class AuthorizationCodeOAuthFlow extends Initializer implements AuthorizationCodeOAuthFlow {
   scopes = new Dictionary<string>();
-  constructor(public authorizationUrl: string, tokenUrl: string, initializer?: Partial<AuthorizationCodeOAuthFlow>) {
+  constructor(public authorizationUrl: string, tokenUrl: string, initializer?: DeepPartial<AuthorizationCodeOAuthFlow>) {
     super();
     this.apply(initializer);
   }
 }
 export class ClientCredentialsFlow extends Initializer implements ClientCredentialsFlow {
   scopes = new Dictionary<string>();
-  constructor(public tokenUrl: string, initializer?: Partial<ClientCredentialsFlow>) {
+  constructor(public tokenUrl: string, initializer?: DeepPartial<ClientCredentialsFlow>) {
     super();
     this.apply(initializer);
   }
