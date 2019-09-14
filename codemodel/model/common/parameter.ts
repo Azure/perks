@@ -9,7 +9,7 @@ import { Schema } from './schema';
 
 export type ParameterDetails = Language;
 
-export interface Value<L extends Language = Language, P extends Protocol = Protocol> extends Aspect<L, P> {
+export interface Value extends Aspect {
   /** the schema of this Value */
   schema: Schema;
 
@@ -20,6 +20,6 @@ export interface Value<L extends Language = Language, P extends Protocol = Proto
   nullable?: boolean;
 }
 
-export interface Parameter<L extends Language = Language, P extends Protocol = Protocol> extends Value<L, P> {
+export interface Parameter extends Value {
 
 }

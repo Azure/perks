@@ -4,10 +4,6 @@ import { Language, Protocol } from './metadata';
 // 'headers'
 
 
-export interface Response<L extends Language = Language, P extends Protocol = Protocol> {
-
-}
-
-export interface Exception<L extends Language = Language, P extends Protocol = Protocol> extends Response<L, P> {
+export interface Response {
 
 }

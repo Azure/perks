@@ -5,24 +5,16 @@ import { Aspect } from './aspect';
 import { ApiVersion } from './api-version';
 import { Dictionary } from '@azure-tools/linq';
 
-export interface Operation<
-  LanguageOperationMetadata extends Language = Language,
-  ProtocolOperationMetadata extends Protocol = Protocol,
-
-  LanguageParameterMetadata extends Language = Language,
-  ProtocolParameterMetadata extends Protocol = Protocol,
-
-  LanguageResponseMetadata extends Language = Language,
-  ProtocolResponseMetadata extends Protocol = Protocol> extends Aspect<LanguageOperationMetadata, ProtocolOperationMetadata> {
+export interface Operation extends Aspect {
 
   /** the inputs to the operation */
-  parameters: Array<Parameter<LanguageParameterMetadata, ProtocolParameterMetadata>>;
+  parameters: Array<Parameter>;
 
   /** responses that indicate a successful call */
-  responses: Array<Response<LanguageResponseMetadata, ProtocolResponseMetadata>>;
+  responses: Array<Response>;
 
   /** responses that indicate a failed call */
-  exceptions: Array<Response<LanguageResponseMetadata, ProtocolResponseMetadata>>;
+  exceptions: Array<Response>;
 
   /** the apiVersion to use for a given profile name */
   profile: Dictionary<ApiVersion>;
@@ -30,20 +22,7 @@ export interface Operation<
 }
 
 /** an operation group represents a container around set of operations */
-export interface OperationGroup<
-  LanguageOperationGroupMetadata extends Language = Language,
-  ProtocolOperationGroupMetadata extends Protocol = Protocol,
-
-  LanguageOperationMetadata extends Language = Language,
-  ProtocolOperationMetadata extends Protocol = Protocol,
-
-  LanguageParameterMetadata extends Language = Language,
-  ProtocolParameterMetadata extends Protocol = Protocol,
-
-  LanguageResponseMetadata extends Language = Language,
-  ProtocolResponseMetadata extends Protocol = Protocol
-
-  > extends Metadata<LanguageOperationGroupMetadata, ProtocolOperationGroupMetadata> {
+export interface OperationGroup extends Metadata {
   $key: string;
-  operations: Array<Operation<LanguageOperationMetadata, ProtocolOperationMetadata, LanguageParameterMetadata, ProtocolParameterMetadata, LanguageResponseMetadata, ProtocolResponseMetadata>>;
+  operations: Array<Operation>;
 }

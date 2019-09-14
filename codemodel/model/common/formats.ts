@@ -1,5 +1,7 @@
+import { XmlSerlializationFormat } from './formats/xml';
+
 export interface Formats {
   json: any;
-  xml: any;
+  xml: XmlSerlializationFormat;
   protobuf: any;
 }

@@ -6,7 +6,7 @@
 import { Extensions } from './extensions';
 import { uri } from './uri';
 import { ExternalDocumentation } from './external-documentation';
-import { Initializer } from '@azure-tools/codegen';
+import { Initializer, DeepPartial } from '@azure-tools/codegen';
 
 export type email = string;
 
@@ -35,21 +35,21 @@ export interface License extends Extensions {
 }
 
 export class Contact extends Initializer implements Contact {
-  constructor(initializer?: Partial<Contact>) {
+  constructor(initializer?: DeepPartial<Contact>) {
     super();
     this.apply(initializer);
   }
 }
 
 export class Info extends Initializer implements Info {
-  constructor(public title: string, public version: string, initializer?: Partial<Info>) {
+  constructor(public title: string, public version: string, initializer?: DeepPartial<Info>) {
     super();
     this.apply(initializer);
   }
 }
 
 export class License extends Initializer implements License {
-  constructor(public name: string, initializer?: Partial<License>) {
+  constructor(public name: string, initializer?: DeepPartial<License>) {
     super();
     this.apply(initializer);
   }

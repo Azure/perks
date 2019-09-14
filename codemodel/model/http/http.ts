@@ -1,13 +1,10 @@
 import { SerializationStyle } from './SerializationStyle';
 import { HttpMethod } from './HttpMethod';
 import { ParameterLocation } from './ParameterLocation';
-import { Operation } from '../common/operation';
 import { Protocol, ImplementationLocation, Language } from '../common/metadata';
 import { StatusCode } from './status-code';
 import { Server } from './server';
 import { SecurityRequirement } from './security';
-
-import { CodeModel } from '../common/code-model';
 
 export interface ParameterMetadata extends Protocol {
   in: ParameterLocation;
@@ -31,7 +28,4 @@ export interface ModelMetadata extends Protocol {
   servers: Array<Server>;
   security?: Array<SecurityRequirement>;
 }
-
-export type HttpOperation<L extends Language> = Operation<L, OperationMetadata, L, ParameterMetadata, L, ResponseMetadata>;
-export type HttpCodeModel<L extends Language> = CodeModel<L, ModelMetadata>;
 

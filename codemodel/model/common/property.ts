@@ -1,6 +1,6 @@
 import { uid } from './uid';
 
-import { Initializer } from '@azure-tools/codegen';
+import { Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Value } from './parameter';
 
 export interface Property extends Value {
@@ -15,7 +15,7 @@ export interface Property extends Value {
 
 export class Property extends Initializer implements Property {
 
-  constructor(name: string, initializer?: Partial<Property>) {
+  constructor(name: string, initializer?: DeepPartial<Property>) {
     super();
 
     this.$key = name;

@@ -5,10 +5,11 @@ import { SchemaType, AllSchemaTypes, PrimitiveSchemaTypes, ObjectSchemaTypes } f
 import { Discriminator } from './discriminator';
 import { DeepPartial, Initializer, } from '@azure-tools/codegen';
 import { Property } from './property';
-import { uid } from './uid';
+
 
 import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
+import { Languages } from './languages';
 
 
 /** language metadata specific to schema instances */
@@ -24,23 +25,13 @@ export interface SerializationFormat extends Extensions, Dictionary<any> {
 
 }
 
-export interface XmlSerlializationFormat extends SerializationFormat {
-  name?: string;
-  namespace?: string; // url
-  prefix?: string;
-  attribute: boolean;
-  wrapped: boolean;
-}
-
 /** The Schema Object allows the definition of input and output data types. */
-export interface Schema<
-  T extends SchemaType = AllSchemaTypes,
-  TFormat extends SerializationFormat = SerializationFormat,
-  LanguageSchemaMetadata extends SchemaMetadata = SchemaMetadata,
-  ProtocolSchemaMetadata extends Protocol = Protocol,
-  > extends Aspect<LanguageSchemaMetadata, ProtocolSchemaMetadata> {
+export interface Schema<TSchemaType extends SchemaType = AllSchemaTypes> extends Aspect {
+  /** per-language information for Schema uses SchemaMetadata */
+  language: { [key in keyof Languages]: SchemaMetadata; };
+
   /** the schema type  */
-  type: T;
+  type: TSchemaType;
 
   /** sub-type information */
   format?: string;
@@ -55,7 +46,7 @@ export interface Schema<
   defaultValue?: any;
 
   /** per-serialization information for this Schema  */
-  serialization: { [key in keyof Formats]: TFormat; };
+  serialization: { [key in keyof Formats]: SerializationFormat; };
 
   /* are these needed I don't think so? */
   // nullable: boolean;
@@ -63,19 +54,20 @@ export interface Schema<
   // writeOnly: boolean;
 }
 
-export class Schema<T extends SchemaType,
-  TFormat extends SerializationFormat = SerializationFormat,
-  LanguageSchemaMetadata extends SchemaMetadata = SchemaMetadata,
-  ProtocolSchemaMetadata extends Protocol = Protocol,
-  > extends Aspect<LanguageSchemaMetadata, ProtocolSchemaMetadata> implements Schema<T, TFormat, LanguageSchemaMetadata, ProtocolSchemaMetadata> {
-  type: T;
+export class Schema<TSchemaType extends SchemaType> extends Aspect implements Schema<TSchemaType> {
+  type: TSchemaType;
 
-  constructor(name: string, type: T, initializer?: DeepPartial<Schema>) {
-    super(name, '');
-    this.$key = name;
+  constructor(name: string, description: string, type: TSchemaType, initializer?: DeepPartial<Schema>) {
+    super(name, description);
+
     this.type = type;
     // this.allOf = (this.allOf || [] ).push( schema );
-
+    this.apply({
+      language: {
+        default: {
+        }
+      }
+    });
 
     this.apply(initializer);
   }
