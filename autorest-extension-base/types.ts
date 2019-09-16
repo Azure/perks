@@ -50,8 +50,6 @@ export enum Channel {
 
   /** Protect is a path to not remove during a clear-output-folder.  */
   Protect = <any>'protect',
-
-
 }
 
 export interface Message {

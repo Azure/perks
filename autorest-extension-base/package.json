@@ -32,6 +32,7 @@
     "eslint": "~6.2.2"
   },
   "dependencies": {
-    "vscode-jsonrpc": "^3.5.0"
+    "vscode-jsonrpc": "^3.5.0",
+    "@azure-tools/codegen": "~2.0.0"
   }
 }
