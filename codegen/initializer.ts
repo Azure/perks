@@ -16,31 +16,47 @@ export type DeepPartial<T> = {
   DeepPartial<T[P]>                                             // otherwise, it's a DeepPartial of the type.
 };
 
+function applyTo(source: any, target: any) {
+
+  for (const i of keys(source)) {
+    switch (typeof source[i]) {
+
+      case 'object':
+
+        // merge objects
+        if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
+          applyTo(source[i], target[i]);
+          continue;
+        }
+        // copy toarray 
+        if (Array.isArray(source[i])) {
+          applyTo(source[i], target[i] = []);
+          continue;
+        }
+
+        // otherwise, copy into an empty object
+        applyTo(source[i], target[i] = {});
+        continue;
+
+      default:
+        // everything else just replace.
+        target[i] = source[i];
+        continue;
+    }
+  }
+}
+
 /** inheriting from Initializer adds an apply<T> method to the class, allowing you to accept an object initalizer, and applying it to the class in the constructor. */
 export class Initializer {
-  private applyTo(source: any, target: any) {
-    for (const i of keys(source)) {
-      switch (typeof source[i]) {
-
-        case 'object':
-          // merge objects
-          if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
-            this.applyTo(source[i], target[i]);
-            continue;
-          }
-
-        // eslint-disable-next-line no-fallthrough
-        default:
-          // everything else just replace.
-          target[i] = source[i];
-          continue;
-      }
+  protected apply<T>(...initializer: Array<DeepPartial<T> | undefined>) {
+    for (const each of initializer) {
+      applyTo(each, this);
     }
   }
 
-  protected apply<T>(...initializer: Array<Partial<T> | DeepPartial<T> | undefined>) {
+  protected applyTo<T>($this: T, ...initializer: Array<DeepPartial<T> | undefined>) {
     for (const each of initializer) {
-      this.applyTo(each, this);
+      applyTo(each, $this);
     }
   }
 }
