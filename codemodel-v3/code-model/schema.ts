@@ -133,7 +133,7 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined]).where(each => !each.private)];
+  return values(props.owned, props.inherited, props.inlined).where(each => !each.private).toArray();
 }
 
 export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -143,7 +143,7 @@ export function getAllVirtualProperties(virtualProperties?: VirtualProperties): 
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined])];
+  return values(props.owned, props.inherited, props.inlined).toArray();
 }
 
 export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualProperties | undefined, propertyName: string): VirtualProperty | undefined {
@@ -152,7 +152,7 @@ export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualPro
     inherited: [],
     inlined: []
   };
-  return values([...props.owned, ...props.inherited, ...props.inlined]).first(each => each.property.serializedName === propertyName);
+  return values([...values(props.owned), ...values(props.inherited), ...values(props.inlined)]).first(each => each.property.serializedName === propertyName);
 }
 
 

@@ -167,9 +167,15 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
 
 
   public path(...childPath: JsonPath) {
-    const result = new ModelState<T>(this.service, <any>this);
-    result.currentPath = [...this.currentPath, ...childPath];
-    return result;
+    // this strategy for tracking source path locations
+    // has proved fundementally crappy.
+
+    // will be removing this stuff and transitioning to source-track method.
+
+    //const result = new ModelState<T>(this.service, <any>this);
+    //result.currentPath = [...this.currentPath, ...childPath];
+    // return result;
+    return this;
   }
 
   public checkpoint() {
