@@ -83,6 +83,10 @@ export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(
       return <IterableWithLinq<IndexOf<TSrc>>><unknown>linqify((<Map<K, T>>source).keys());
     }
 
+    if (source instanceof Set) {
+      throw new Error('Unable to iterate keys on a Set');
+    }
+
     return <IterableWithLinq<IndexOf<TSrc>>>linqify((Object.getOwnPropertyNames(source)));
   }
   // undefined/null
@@ -91,11 +95,25 @@ export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(
 function isIterable<T>(source: any): source is Iterable<T> {
   return !!source && !!source[Symbol.iterator];
 }
+
+/** returns an IterableWithLinq<> for values in the collection 
+ * 
+ * @note - null/undefined/empty values are considered 'empty'
+*/
+export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(...sources: Array<(Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined>): IterableWithLinq<T> {
+  return linqify({
+    [Symbol.iterator]: function* () {
+      for (const each of sources) {
+        yield* _values(each);
+      }
+    }
+  })
+}
 /** returns an IterableWithLinq<> for values in the collection */
-export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<T> {
+function _values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined): IterableWithLinq<T> {
   if (source) {
     // map
-    if (source instanceof Map) {
+    if (source instanceof Map || source instanceof Set) {
       return linqify(source.values());
     }
 
@@ -115,13 +133,12 @@ export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)
     }());
   }
 
-
   // null/undefined
   return linqify([]);
 }
 
 /** returns an IterableWithLinq<{key,value}> for the source */
-export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<{ key: IndexOf<TSrc>; value: T }> {
+export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T> | undefined | null)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<{ key: IndexOf<TSrc>; value: T }> {
   if (source) {
     if (Array.isArray(source)) {
       return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (let i = 0; i < source.length; i++) { yield { key: i, value: source[i] }; } }());
@@ -129,6 +146,10 @@ export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>
 
     if (source instanceof Map) {
       return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (const [key, value] of source.entries()) { yield { key, value }; } }());
+    }
+
+    if (source instanceof Set) {
+      throw new Error('Unable to iterate items on a Set');
     }
 
     return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>><unknown>linqify(function* () {
@@ -146,12 +167,12 @@ export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>
   return linqify([]);
 }
 
-export function length<T, K>(source?: Iterable<T> | Dictionary<T> | Array<T> | Map<K, T>): number {
+export function length<T, K>(source?: string | Iterable<T> | Dictionary<T> | Array<T> | Map<K, T> | Set<T>): number {
   if (source) {
-    if (Array.isArray(source)) {
+    if (Array.isArray(source) || typeof (source) === 'string') {
       return source.length;
     }
-    if (source instanceof Map) {
+    if (source instanceof Map || source instanceof Set) {
       return source.size;
     }
     if (isIterable(source)) {
