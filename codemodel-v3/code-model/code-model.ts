@@ -11,6 +11,7 @@ import { Schema } from './schema';
 import { Dictionary } from '@azure-tools/linq';
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails, SecurityRequirement, Server, Tag } from './components';
 import { uid } from './uid';
+import { DeepPartial } from '@azure-tools/codegen';
 
 // ------------------------------------------------------------------------------------------------------------------
 // Constructors for Code Model classes
@@ -42,7 +43,7 @@ export class Model extends Extensions implements Model {
   public http = new HttpComponents();
   public commands = new CommandComponents();
 
-  constructor(title: string, version: string, initializer?: Partial<Model>) {
+  constructor(title: string, version: string, initializer?: DeepPartial<Model>) {
     super();
     this.details = { default: { uid: `model:${uid()}`, name: title, description: '' } };
     this.info = new Info(title, version, initializer ? initializer.info : {});

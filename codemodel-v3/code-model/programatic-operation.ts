@@ -8,6 +8,7 @@ import { Extensions } from './extensions';
 import { Schema } from './schema';
 import { Dictionary } from '@azure-tools/linq';
 import { uid } from './uid';
+import { DeepPartial } from '@azure-tools/codegen';
 
 export interface ProgrammaticOperation extends IOperation<IParameter> {
   responses: Dictionary<Dictionary<Schema>>;
@@ -24,7 +25,7 @@ export class IntrinsicOperation extends Extensions implements IntrinsicOperation
   public responses = new Dictionary<Dictionary<Schema>>();
   public operationType: 'IntrinsicOperation' = 'IntrinsicOperation';
 
-  constructor(name: string, deprecated: boolean, pure: boolean, initializer?: Partial<IntrinsicOperation>) {
+  constructor(name: string, deprecated: boolean, pure: boolean, initializer?: DeepPartial<IntrinsicOperation>) {
     super();
     this.details = {
       default: {

@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@azure-tools/autorest-extension-base';
-import { safeEval, deserialize, Initializer } from '@azure-tools/codegen';
+import { safeEval, deserialize, Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Dictionary } from '@azure-tools/linq';
 
 export class ModelState<T extends Dictionary<any>> extends Initializer {
@@ -15,7 +15,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   private _debug = false;
   private _verbose = false;
 
-  public constructor(protected service: Host, objectInitializer?: Partial<ModelState<T>>) {
+  public constructor(protected service: Host, objectInitializer?: DeepPartial<ModelState<T>>) {
     super();
     this.apply(objectInitializer);
   }
@@ -167,7 +167,7 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
 
 
   public path(...childPath: JsonPath) {
-    const result = new ModelState<T>(this.service, this);
+    const result = new ModelState<T>(this.service, <any>this);
     result.currentPath = [...this.currentPath, ...childPath];
     return result;
   }

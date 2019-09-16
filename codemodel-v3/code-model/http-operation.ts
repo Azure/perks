@@ -21,7 +21,7 @@ export interface HttpOperationDetails extends ImplementationDetails {
 export class Encoding extends Extensions implements Encoding {
   public headers = new Array<Header>();
 
-  constructor(public key: string, initializer?: Partial<Encoding>) {
+  constructor(public key: string, initializer?: DeepPartial<Encoding>) {
     super();
     this.apply(initializer);
   }
@@ -31,7 +31,7 @@ export class Header extends Extensions implements Header {
 
   public content = new Array<MediaType>();
 
-  constructor(initializer?: Partial<Header>) {
+  constructor(initializer?: DeepPartial<Header>) {
     super();
     this.apply(initializer);
   }
@@ -41,7 +41,7 @@ export class MediaType extends Extensions implements MediaType {
   public encoding = new Array<Encoding>();
   public accepts = new Array<string>();
 
-  constructor(public key: string, initializer?: Partial<MediaType>) {
+  constructor(public key: string, initializer?: DeepPartial<MediaType>) {
     super();
     this.apply(initializer);
   }
@@ -49,7 +49,7 @@ export class MediaType extends Extensions implements MediaType {
 
 export class RequestBody extends Extensions implements RequestBody {
 
-  constructor(initializer?: Partial<RequestBody>) {
+  constructor(initializer?: DeepPartial<RequestBody>) {
     super();
     this.apply(initializer);
   }
@@ -61,7 +61,7 @@ export class Response extends Extensions implements Response {
   public links = new Dictionary<Link>();
   public headers = new Array<Header>();
 
-  constructor(public description: string, initializer?: Partial<Response>) {
+  constructor(public description: string, initializer?: DeepPartial<Response>) {
     super();
     this.apply(initializer);
   }
@@ -164,7 +164,7 @@ export interface NewResponse {
 export class NewResponse extends Extensions implements NewResponse {
   public details: LanguageDetails<ResponseDetails>;
 
-  constructor(public responseCode: string, public description: string, public mimeTypes: Array<string>, objectInitializer?: Partial<NewResponse>) {
+  constructor(public responseCode: string, public description: string, public mimeTypes: Array<string>, objectInitializer?: DeepPartial<NewResponse>) {
     super();
     this.details = {
       default: {
@@ -293,7 +293,7 @@ export class HttpComponents extends Components<HttpOperation, HttpOperationParam
   public links = new Dictionary<Link>();
   public callbacks = new Dictionary<Callback>();
 
-  constructor(initializer?: Partial<HttpComponents>) {
+  constructor(initializer?: DeepPartial<HttpComponents>) {
     super();
     this.apply(initializer);
   }
