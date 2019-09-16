@@ -16,7 +16,10 @@ export type DeepPartial<T> = {
   DeepPartial<T[P]>                                             // otherwise, it's a DeepPartial of the type.
 };
 
-function applyTo(source: any, target: any) {
+function applyTo(source: any, target: any, cache = new Set<any>()) {
+  if (cache.has(source)) {
+    throw new Error('Circular refrenced models are not permitted in apply() initializers.');
+  }
 
   for (const i of keys(source)) {
     switch (typeof source[i]) {
@@ -25,19 +28,36 @@ function applyTo(source: any, target: any) {
 
         // merge objects
         if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
-          applyTo(source[i], target[i]);
+          cache.add(source);
+          applyTo(source[i], target[i], cache);
+          cache.delete(source);
           continue;
         }
-        // copy toarray 
-        if (Array.isArray(source[i])) {
-          applyTo(source[i], target[i] = []);
-          continue;
-        }
-
-        // otherwise, copy into an empty object
-        applyTo(source[i], target[i] = {});
+        // otherwise, just use that object.
+        target[i] = source[i];
         continue;
 
+
+      /* bad idea? : 
+
+      this recursively cloned the contents of the intializer
+      but this has the effect of breaking referencs where I wanted 
+      them.
+
+      // copy toarray 
+      if (Array.isArray(source[i])) {
+        cache.add(source);
+        applyTo(source[i], target[i] = [], cache);
+        cache.delete(source);
+        continue;
+      }
+
+      // otherwise, copy into an empty object
+      cache.add(source);
+      applyTo(source[i], target[i] = {}, cache);
+      cache.delete(source);
+      continue;
+    */
       default:
         // everything else just replace.
         target[i] = source[i];

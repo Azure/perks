@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/codegen",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "patchOffset": 100,
   "description": "Autorest Code generator common and base classes",
   "directories": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure/autorest.powershell.git"
+    "url": "git+https://github.com/Azure/perks.git"
   },
   "keywords": [
     "AutoRest",
@@ -30,7 +30,7 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Azure/autorest.powershell/issues"
+    "url": "https://github.com/Azure/perks/issues"
   },
   "homepage": "https://github.com/Azure/perks/tree/master/codegen#readme",
   "readme": "https://github.com/Azure/perks/tree/master/codegen/readme.md",
