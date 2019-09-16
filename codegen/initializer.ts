@@ -16,34 +16,67 @@ export type DeepPartial<T> = {
   DeepPartial<T[P]>                                             // otherwise, it's a DeepPartial of the type.
 };
 
-/** inheriting from Initializer adds an apply<T> method to the class, allowing you to accept an object initalizer, and applying it to the class in the constructor. */
-export class Initializer {
-  private applyTo(source: any, target: any) {
-    for (const i of keys(source)) {
-      switch (typeof source[i]) {
-      // case 'function':
-      // don't copy functions.
-      // continue;
+function applyTo(source: any, target: any, cache = new Set<any>()) {
+  if (cache.has(source)) {
+    throw new Error('Circular refrenced models are not permitted in apply() initializers.');
+  }
 
-        case 'object':
+  for (const i of keys(source)) {
+    switch (typeof source[i]) {
+
+      case 'object':
+
         // merge objects
-          if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
-            this.applyTo(source[i], target[i]);
-            continue;
-          }
-
-          // fall thru
-
-        default:
-        // everything else just replace.
-          target[i] = source[i];
+        if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
+          cache.add(source);
+          applyTo(source[i], target[i], cache);
+          cache.delete(source);
           continue;
+        }
+        // otherwise, just use that object.
+        target[i] = source[i];
+        continue;
+
+
+      /* bad idea? : 
+
+      this recursively cloned the contents of the intializer
+      but this has the effect of breaking referencs where I wanted 
+      them.
+
+      // copy toarray 
+      if (Array.isArray(source[i])) {
+        cache.add(source);
+        applyTo(source[i], target[i] = [], cache);
+        cache.delete(source);
+        continue;
       }
+
+      // otherwise, copy into an empty object
+      cache.add(source);
+      applyTo(source[i], target[i] = {}, cache);
+      cache.delete(source);
+      continue;
+    */
+      default:
+        // everything else just replace.
+        target[i] = source[i];
+        continue;
     }
   }
-  protected apply<T>(initializer?: Partial<T>) {
-    if (initializer) {
-      this.applyTo(initializer, this);
+}
+
+/** inheriting from Initializer adds an apply<T> method to the class, allowing you to accept an object initalizer, and applying it to the class in the constructor. */
+export class Initializer {
+  protected apply<T>(...initializer: Array<DeepPartial<T> | undefined>) {
+    for (const each of initializer) {
+      applyTo(each, this);
+    }
+  }
+
+  protected applyTo<T>($this: T, ...initializer: Array<DeepPartial<T> | undefined>) {
+    for (const each of initializer) {
+      applyTo(each, $this);
     }
   }
 }

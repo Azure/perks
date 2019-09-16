@@ -5,11 +5,12 @@
 
 import { Extensions } from './extensions';
 import { Dictionary } from '@azure-tools/linq';
+import { DeepPartial } from '@azure-tools/codegen';
 
 export class Contact extends Extensions implements Contact {
   extensions = new Dictionary<any>();
 
-  constructor(initializer?: Partial<Contact>) {
+  constructor(initializer?: DeepPartial<Contact>) {
     super();
     this.apply(initializer);
   }
@@ -18,7 +19,7 @@ export class Contact extends Extensions implements Contact {
 export class Info extends Extensions implements Info {
   extensions = new Dictionary<any>();
 
-  constructor(public title: string, public version: string, initializer?: Partial<Info>) {
+  constructor(public title: string, public version: string, initializer?: DeepPartial<Info>) {
     super();
     this.apply(initializer);
   }
@@ -27,7 +28,7 @@ export class Info extends Extensions implements Info {
 export class License extends Extensions implements License {
   extensions = new Dictionary<any>();
 
-  constructor(public name: string, initializer?: Partial<License>) {
+  constructor(public name: string, initializer?: DeepPartial<License>) {
     super();
     this.apply(initializer);
   }

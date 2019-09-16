@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@azure-tools/codegen';
+import { indent, DeepPartial } from '@azure-tools/codegen';
 import { Parameter } from '../parameter';
 import { OneOrMoreStatements, StatementPossibilities, Statements } from './statement';
 
 export class TryStatement extends Statements {
-  constructor(body: StatementPossibilities, objectInitializer?: Partial<TryStatement>) {
+  constructor(body: StatementPossibilities, objectInitializer?: DeepPartial<TryStatement>) {
     super(body);
     this.apply(objectInitializer);
   }
@@ -23,7 +23,7 @@ ${indent(super.implementation)}
 
 /* eslint-disable */ // is this supposed to be removed? 
 export class _CatchStatement extends Statements {
-  constructor(protected parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: Partial<TryStatement>) {
+  constructor(protected parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: DeepPartial<TryStatement>) {
     super(body);
     this.apply(objectInitializer);
   }
@@ -37,10 +37,10 @@ ${indent(super.implementation)}
   }
 }
 
-export function Try(body: StatementPossibilities, objectInitializer?: Partial<TryStatement>): TryStatement {
+export function Try(body: StatementPossibilities, objectInitializer?: DeepPartial<TryStatement>): TryStatement {
   return new TryStatement(body, objectInitializer);
 }
 
-export function _Catch(parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: Partial<TryStatement>): TryStatement {
+export function _Catch(parameter: Parameter | undefined, body: OneOrMoreStatements, objectInitializer?: DeepPartial<TryStatement>): TryStatement {
   return new _CatchStatement(parameter, body, objectInitializer);
 }

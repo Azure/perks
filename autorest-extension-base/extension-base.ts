@@ -119,7 +119,10 @@ export class AutoRestExtension {
         });
         return true;
       } catch (e) {
-        // console.error(`PLUGIN FAILURE: ${e.message}, ${e.stack}, ${JSON.stringify(e, null, 2)}`);
+        if (await channel.sendRequest(IAutoRestPluginInitiatorTypes.GetValue, sessionId, 'debug')) {
+          console.error(`PLUGIN FAILURE: ${e.message}, ${e.stack}, ${JSON.stringify(e, null, 2)}`);
+        }
+
         channel.sendNotification(IAutoRestPluginInitiatorTypes.Message, sessionId, <Message>{
           Channel: <any>'fatal',
           Text: '' + e,

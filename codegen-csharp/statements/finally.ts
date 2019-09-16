@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@azure-tools/codegen';
+import { indent, DeepPartial } from '@azure-tools/codegen';
 import { StatementPossibilities, Statements } from './statement';
 
 
 export class FinallyStatement extends Statements {
-  constructor(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>) {
+  constructor(body: StatementPossibilities, objectInitializer?: DeepPartial<FinallyStatement>) {
     super(body);
     this.apply(objectInitializer);
   }
@@ -22,6 +22,6 @@ ${indent(super.implementation)}
   }
 }
 
-export function Finally(body: StatementPossibilities, objectInitializer?: Partial<FinallyStatement>): FinallyStatement {
+export function Finally(body: StatementPossibilities, objectInitializer?: DeepPartial<FinallyStatement>): FinallyStatement {
   return new FinallyStatement(body, objectInitializer);
 }

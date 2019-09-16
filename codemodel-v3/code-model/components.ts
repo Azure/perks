@@ -65,7 +65,7 @@ export class Components<TOperation extends IOperation<TParameter>, TParameter ex
    */
   public operations = new Dictionary<TOperation>();
 
-  constructor(initializer?: Partial<Components<TOperation, TParameter>>) {
+  constructor(initializer?: DeepPartial<Components<TOperation, TParameter>>) {
     super();
     this.apply(initializer);
   }
@@ -107,7 +107,7 @@ export enum ImplementationLocation {
 export class Example extends Extensions implements Example {
   extensions = new Dictionary<any>();
 
-  constructor(initializer?: Partial<Example>) {
+  constructor(initializer?: DeepPartial<Example>) {
     super();
     this.apply(initializer);
   }
@@ -116,7 +116,7 @@ export class Example extends Extensions implements Example {
 export class ExternalDocumentation extends Extensions implements ExternalDocumentation {
   extensions = new Dictionary<any>();
 
-  constructor(public url: string, initializer?: Partial<ExternalDocumentation>) {
+  constructor(public url: string, initializer?: DeepPartial<ExternalDocumentation>) {
     super();
     this.apply(initializer);
   }
@@ -126,7 +126,7 @@ export class Link extends Extensions implements Link {
   extensions = new Dictionary<any>();
   parameters = new Dictionary<string>();
 
-  constructor(initializer?: Partial<Link>) {
+  constructor(initializer?: DeepPartial<Link>) {
     super();
     this.apply(initializer);
   }
@@ -136,7 +136,7 @@ export class Server extends Extensions implements Server {
   extensions = new Dictionary<any>();
   variables = new Dictionary<ServerVariable>();
 
-  constructor(public url: string, initializer?: Partial<Server>) {
+  constructor(public url: string, initializer?: DeepPartial<Server>) {
     super();
     this.apply(initializer);
   }
@@ -146,7 +146,7 @@ export class ServerVariable extends Extensions implements ServerVariable {
   extensions = new Dictionary<any>();
   enum = new Array<string>();
 
-  constructor(defaultValue: string, initializer?: Partial<ServerVariable>) {
+  constructor(defaultValue: string, initializer?: DeepPartial<ServerVariable>) {
     super();
     this.default = defaultValue;
     this.apply(initializer);
@@ -156,7 +156,7 @@ export class ServerVariable extends Extensions implements ServerVariable {
 export class Tag extends Extensions implements Tag {
   extensions = new Dictionary<any>();
 
-  constructor(public name: string, initializer?: Partial<Tag>) {
+  constructor(public name: string, initializer?: DeepPartial<Tag>) {
     super();
     this.apply(initializer);
   }

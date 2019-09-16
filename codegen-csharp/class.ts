@@ -12,6 +12,7 @@ import { Method } from './method';
 import { TypeContainer } from './type-container';
 import { Property } from './property';
 import { Type } from './type';
+import { length } from '@azure-tools/linq';
 
 export function sortByNamePartialFirst(a: Method, b: Method): number {
   if (a.isPartial !== b.isPartial) {
@@ -51,8 +52,8 @@ export class Class extends Type {
   }
 
   public get signature(): string {
-    const colon = (this.parent || this.interfaces.length > 0) ? ' : ' : '';
-    const comma = (this.parent && this.interfaces.length > 0) ? ', ' : '';
+    const colon = (this.parent || length(this.interfaces) > 0) ? ' : ' : '';
+    const comma = (this.parent && length(this.interfaces) > 0) ? ', ' : '';
 
     const extendsClass = this.parent ? this.parent.fullName : '';
     const implementsInterfaces = this.interfaces.map(v => v.declaration).join(',\n    ');

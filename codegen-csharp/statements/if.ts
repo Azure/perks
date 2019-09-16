@@ -3,14 +3,14 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@azure-tools/codegen';
+import { indent, DeepPartial } from '@azure-tools/codegen';
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from '../expression';
 import { StatementPossibilities, Statements } from './statement';
 import { TypeDeclaration } from '../type-declaration';
 
 
 export class IfStatement extends Statements {
-  constructor(private conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  constructor(private conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
     super(statements);
     this.apply(objectInitializer);
   }
@@ -26,7 +26,7 @@ ${indent(super.implementation)}
 
 export class WhileStatement extends Statements {
   conditional: Expression;
-  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
     super(statements);
     this.conditional = toExpression(conditional);
     this.apply(objectInitializer);
@@ -42,7 +42,7 @@ ${indent(super.implementation)}
 
 export class DoWhileStatement extends Statements {
   conditional: Expression;
-  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
+  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<DoWhileStatement>) {
     super(statements);
     this.conditional = toExpression(conditional);
     this.apply(objectInitializer);
@@ -59,7 +59,7 @@ ${indent(super.implementation)}
 
 export class ElseIfStatement extends Statements {
   conditional: Expression;
-  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  constructor(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
     super(statements);
     this.conditional = toExpression(conditional);
     this.apply(objectInitializer);
@@ -73,13 +73,13 @@ ${indent(super.implementation)}
   }
 }
 
-export function ElseIf(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+export function ElseIf(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
   return new ElseIfStatement(conditional, statements, objectInitializer);
 }
 
 
 export class ElseStatement extends Statements {
-  constructor(statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+  constructor(statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
     super(statements);
     this.apply(objectInitializer);
   }
@@ -100,18 +100,18 @@ export function IsAssignableFrom(targetType: TypeDeclaration, instanceType: Expr
   return toExpression(`typeof(${targetType.declaration}).IsAssignableFrom(${valueOf(instanceType)})`);
 }
 
-export function If(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+export function If(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
   return new IfStatement(conditional, statements, objectInitializer);
 }
 
-export function Else(statements: StatementPossibilities, objectInitializer?: Partial<ElseStatement>) {
+export function Else(statements: StatementPossibilities, objectInitializer?: DeepPartial<ElseStatement>) {
   return new ElseStatement(statements, objectInitializer);
 }
 
-export function DoWhile(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<DoWhileStatement>) {
+export function DoWhile(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<DoWhileStatement>) {
   return new DoWhileStatement(conditional, statements, objectInitializer);
 }
 
-export function While(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: Partial<IfStatement>) {
+export function While(conditional: ExpressionOrLiteral, statements: StatementPossibilities, objectInitializer?: DeepPartial<IfStatement>) {
   return new WhileStatement(conditional, statements, objectInitializer);
 }

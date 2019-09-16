@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { intersect } from '@azure-tools/codegen';
+import { intersect, DeepPartial } from '@azure-tools/codegen';
 
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from './expression';
 import { Namespace } from './namespace';
@@ -11,7 +11,7 @@ import { Parameter } from './parameter';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 import { Local, Variable } from './variable';
-import { Dictionary } from '@azure-tools/linq';
+import { Dictionary, length } from '@azure-tools/linq';
 import { IInterface } from './type-container';
 
 export class ClassType implements TypeDeclaration {
@@ -60,10 +60,10 @@ export class EnumType implements TypeDeclaration {
     return this.declaration;
   }
 
-  public newProperty(name: string, objectInitializer?: Partial<Property>): Property {
+  public newProperty(name: string, objectInitializer?: DeepPartial<Property>): Property {
     return new Property(name, this, objectInitializer);
   }
-  public newParameter(name: string, objectInitializer?: Partial<Parameter>): Parameter {
+  public newParameter(name: string, objectInitializer?: DeepPartial<Parameter>): Parameter {
     return new Parameter(name, this, objectInitializer);
   }
 
@@ -319,7 +319,7 @@ export const System = intersect(system, {
     })
   }),
   Action(...actionParameters: Array<TypeDeclaration>): ClassType {
-    return actionParameters.length === 0 ? action : new ClassType(system, `Action<${actionParameters.filter(each => each.declaration).joinWith(each => each.declaration)}>`);
+    return length(actionParameters) === 0 ? action : new ClassType(system, `Action<${actionParameters.filter(each => each.declaration).joinWith(each => each.declaration)}>`);
   },
 
   Func(...funcParameters: Array<TypeDeclaration>): ClassType {

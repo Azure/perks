@@ -133,7 +133,7 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined]).where(each => !each.private)];
+  return values(props.owned, props.inherited, props.inlined).where(each => !each.private).toArray();
 }
 
 export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -143,7 +143,7 @@ export function getAllVirtualProperties(virtualProperties?: VirtualProperties): 
     inlined: []
   };
 
-  return [...values([...props.owned, ...props.inherited, ...props.inlined])];
+  return values(props.owned, props.inherited, props.inlined).toArray();
 }
 
 export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualProperties | undefined, propertyName: string): VirtualProperty | undefined {
@@ -152,7 +152,7 @@ export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualPro
     inherited: [],
     inlined: []
   };
-  return values([...props.owned, ...props.inherited, ...props.inlined]).first(each => each.property.serializedName === propertyName);
+  return values([...values(props.owned), ...values(props.inherited), ...values(props.inlined)]).first(each => each.property.serializedName === propertyName);
 }
 
 
@@ -170,7 +170,7 @@ export class Property extends Extensions implements Property {
   public details: LanguageDetails<PropertyDetails>;
   public extensions = new Dictionary<any>();
 
-  constructor(name: string, initializer?: Partial<Property>) {
+  constructor(name: string, initializer?: DeepPartial<Property>) {
     super();
     this.serializedName = name;
     this.details = {
@@ -190,7 +190,7 @@ export class Discriminator extends Extensions implements Discriminator {
   public extensions = new Dictionary<any>();
   public mapping = new Dictionary<string>();
 
-  constructor(public propertyName: string, initializer?: Partial<Discriminator>) {
+  constructor(public propertyName: string, initializer?: DeepPartial<Discriminator>) {
     super();
     this.apply(initializer);
   }
@@ -223,7 +223,7 @@ export class XML extends Extensions implements XML {
   public attribute = false;
   public wrapped = false;
 
-  constructor(initializer?: Partial<XML>) {
+  constructor(initializer?: DeepPartial<XML>) {
     super();
     this.apply(initializer);
   }

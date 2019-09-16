@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EOL, indent, Initializer } from '@azure-tools/codegen';
+import { EOL, indent, Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Expression, ExpressionOrLiteral, toExpression } from '../expression';
 import { CaseStatement } from './case';
 import { Statement } from './statement';
@@ -20,7 +20,7 @@ switch ( ${this.expression.value} )
 ${indent(this.caseStatements.map(each => each.implementation).join(EOL))}
 }`;
   }
-  constructor(protected expression: Expression, cases: OneOrMoreCases, objectInitializer?: Partial<SwitchStatement>) {
+  constructor(protected expression: Expression, cases: OneOrMoreCases, objectInitializer?: DeepPartial<SwitchStatement>) {
     super();
     this.apply(objectInitializer);
     this.add(cases);
@@ -39,6 +39,6 @@ ${indent(this.caseStatements.map(each => each.implementation).join(EOL))}
   }
 }
 
-export function Switch(expression: ExpressionOrLiteral, cases: OneOrMoreCases, objectInitializer?: Partial<SwitchStatement>): SwitchStatement {
+export function Switch(expression: ExpressionOrLiteral, cases: OneOrMoreCases, objectInitializer?: DeepPartial<SwitchStatement>): SwitchStatement {
   return new SwitchStatement(toExpression(expression), cases, objectInitializer);
 }

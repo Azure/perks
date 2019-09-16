@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { docComment, EOL } from '@azure-tools/codegen';
+import { docComment, EOL, DeepPartial } from '@azure-tools/codegen';
 import { Access, Modifier, New, ReadOnly, Static, Volitile } from './access-modifier';
 import { Attribute } from './attribute';
 import { xmlize } from './doc-comments';
@@ -11,6 +11,7 @@ import { Expression, ExpressionOrLiteral, valueOf } from './expression';
 import { OneOrMoreStatements, Statement } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { Variable } from './variable';
+import { length } from '@azure-tools/linq';
 
 /** represents a field in a Class */
 export class Field extends Variable {
@@ -23,12 +24,12 @@ export class Field extends Variable {
   public initialValue?: ExpressionOrLiteral;
 
   protected get attributeDeclaration(): string {
-    return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
+    return length(this.attributes) > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
   public description = '';
 
-  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Field>) {
+  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Field>) {
     super();
     this.apply(objectInitializer);
 
