@@ -278,7 +278,7 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
 }
 
 export function pascalCase(identifier: string | Array<string>): string {
-  return typeof identifier === 'string' ?
+  return identifier === undefined ? '' : typeof identifier === 'string' ?
     pascalCase(fixLeadingNumber(deconstruct(identifier))) :
     [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
 }
