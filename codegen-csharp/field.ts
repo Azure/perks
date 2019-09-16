@@ -11,6 +11,7 @@ import { Expression, ExpressionOrLiteral, valueOf } from './expression';
 import { OneOrMoreStatements, Statement } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { Variable } from './variable';
+import { length } from '@azure-tools/linq';
 
 /** represents a field in a Class */
 export class Field extends Variable {
@@ -23,7 +24,7 @@ export class Field extends Variable {
   public initialValue?: ExpressionOrLiteral;
 
   protected get attributeDeclaration(): string {
-    return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
+    return length(this.attributes) > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
   public description = '';

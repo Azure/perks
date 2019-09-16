@@ -5,6 +5,7 @@
 
 import { EOL, Initializer, indent } from '@azure-tools/codegen';
 import { LiteralStatement } from './literal';
+import { length } from '@azure-tools/linq';
 
 export type fIterable<T> = Iterable<T> | (() => Iterable<T>);
 
@@ -58,7 +59,7 @@ export class Statements extends Initializer implements Statement {
   }
 
   public get count(): number {
-    return this.statements.length;
+    return length(this.statements);
   }
 
   public insert(statements: StatementPossibilities): Statements {

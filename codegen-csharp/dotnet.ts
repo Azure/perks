@@ -11,7 +11,7 @@ import { Parameter } from './parameter';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
 import { Local, Variable } from './variable';
-import { Dictionary } from '@azure-tools/linq';
+import { Dictionary, length } from '@azure-tools/linq';
 import { IInterface } from './type-container';
 
 export class ClassType implements TypeDeclaration {
@@ -188,8 +188,8 @@ export const System = intersect(system, {
       Headers: intersect(headers, {
         MediaTypeHeaderValue: intersect(
           new ClassType(headers, 'MediaTypeHeaderValue'), {
-          Parse: (header: string) => toExpression(`${System.Net.Http.Headers.MediaTypeHeaderValue}.Parse("${header}")`)
-        }),
+            Parse: (header: string) => toExpression(`${System.Net.Http.Headers.MediaTypeHeaderValue}.Parse("${header}")`)
+          }),
         HttpHeaders: new ClassType(headers, 'HttpHeaders'),
         HttpResponseHeaders: new ClassType(headers, 'HttpResponseHeaders'),
       }),
@@ -319,7 +319,7 @@ export const System = intersect(system, {
     })
   }),
   Action(...actionParameters: Array<TypeDeclaration>): ClassType {
-    return actionParameters.length === 0 ? action : new ClassType(system, `Action<${actionParameters.filter(each => each.declaration).joinWith(each => each.declaration)}>`);
+    return length(actionParameters) === 0 ? action : new ClassType(system, `Action<${actionParameters.filter(each => each.declaration).joinWith(each => each.declaration)}>`);
   },
 
   Func(...funcParameters: Array<TypeDeclaration>): ClassType {

@@ -4,11 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { EOL } from '@azure-tools/codegen';
+import { length } from '@azure-tools/linq';
 
 
 export function xmlize(element: string, text: string): string {
   if (text) {
-    if (text.length < 80 && text.indexOf(EOL) === -1) {
+    if (length(text) < 80 && text.indexOf(EOL) === -1) {
       return `<${element}>${text.trim()}</${element}>`;
     }
     return `

@@ -11,6 +11,7 @@ import { Method } from './method';
 import { TypeContainer, IInterface } from './type-container';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
+import { length } from '@azure-tools/linq';
 
 export class Type extends Initializer implements TypeDeclaration {
   public description = '';
@@ -25,7 +26,7 @@ export class Type extends Initializer implements TypeDeclaration {
   private filename: string;
 
   protected get attributeDeclaration(): string {
-    return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
+    return length(this.attributes) > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
   constructor(public namespace: TypeContainer, public name: string, objectIntializer?: Partial<Type>) {
@@ -54,7 +55,7 @@ export class Type extends Initializer implements TypeDeclaration {
   }
 
   public get genericDeclaration(): string {
-    return this.genericParameters.length === 0 ? '' : `<${this.genericParameters.join(',')}>`;
+    return length(this.genericParameters) === 0 ? '' : `<${this.genericParameters.join(',')}>`;
   }
 
   public get fullName(): string {

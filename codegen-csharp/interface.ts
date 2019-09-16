@@ -6,6 +6,7 @@
 import { comment, docCommentPrefix, EOL, indent, sortByName } from '@azure-tools/codegen';
 import { Type } from './type';
 import { TypeContainer } from './type-container';
+import { length } from '@azure-tools/linq';
 
 export class Interface extends Type {
   constructor(parent: TypeContainer, name: string, objectIntializer?: Partial<Interface>) {
@@ -19,7 +20,7 @@ export class Interface extends Type {
   }
 
   public get definition(): string {
-    const colon = this.interfaces.length > 0 ? ' : ' : '';
+    const colon = length(this.interfaces) > 0 ? ' : ' : '';
     const implementsInterfaces = this.interfaces.map(v => v.declaration).join(',\n    ');
     const description = comment(this.description, docCommentPrefix);
     const methods = this.methods.sort(sortByName).map(m => m.interfaceDeclaration).join(EOL);

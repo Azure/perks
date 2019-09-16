@@ -6,7 +6,7 @@
 import { intersect, DeepPartial } from '@azure-tools/codegen';
 
 import { docComment, EOL, indent } from '@azure-tools/codegen';
-import { Dictionary } from '@azure-tools/linq';
+import { Dictionary, length } from '@azure-tools/linq';
 import { Abstract, Access, Extern, highestAccess, Modifier, New, Override, Sealed, Static, Virtual } from './access-modifier';
 import { Attribute } from './attribute';
 import { summary } from './doc-comments';
@@ -46,7 +46,7 @@ export class Property extends Variable implements Instance {
   }
 
   protected get attributeDeclaration(): string {
-    return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
+    return length(this.attributes) > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
   constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Property>) {
@@ -172,8 +172,8 @@ ${indent(g, 2)}
     const e = `${this.value}.${methodName}(${parameters.joinWith(valueOf)})`;
     return intersect(
       toExpression(e), {
-      implementation: `${e};`
-    });
+        implementation: `${e};`
+      });
   }
 
 }

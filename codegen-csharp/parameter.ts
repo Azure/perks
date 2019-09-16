@@ -10,6 +10,7 @@ import { OneOrMoreStatements, Statement } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { Variable } from './variable';
 import { DeepPartial } from '@azure-tools/codegen';
+import { length } from '@azure-tools/linq';
 
 /** represents a method parameter */
 export class Parameter extends Variable {
@@ -22,7 +23,7 @@ export class Parameter extends Variable {
   public attributes = new Array<Attribute>();
 
   protected get attributeDeclaration(): string {
-    return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, ' ')} ` : '';
+    return length(this.attributes) > 0 ? `${this.attributes.joinWith(each => `${each.value}`, ' ')} ` : '';
   }
 
   public constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Parameter>) {
