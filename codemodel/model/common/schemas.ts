@@ -1,5 +1,5 @@
 import { PrimitiveSchemaTypes, CompoundSchemaTypes } from './schema-type';
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema } from './schema';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema } from './schema';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
@@ -22,5 +22,42 @@ export interface Schemas {
    * 
    * @note - the important bits in these are the validation restrictions that may be present.
    */
-  primitives?: Array<PrimitiveSchemaTypes | ArraySchema>;
+  primitives?: Array<PrimitiveSchemas>;
+}
+
+export type CompoundSchemas =
+  AndSchema |
+  OrSchema |
+  XorSchema;
+
+/** Schema types that are primitive language values */
+export type PrimitiveSchemas =
+  BooleanSchema |
+  NumberSchema |
+  StringSchema |
+  ArraySchema;
+
+/** schema types that are non-object or complex types */
+export type ValueSchemas =
+  PrimitiveSchemas |
+  ArraySchema |
+  ChoiceSchema;
+
+/** schema types that can be objects */
+export type ObjectSchemas =
+  AndSchema |
+  OrSchema |
+  DictionarySchema |
+  ObjectSchema;
+
+/** all schema types */
+export type AllSchemas =
+  ValueSchemas | ObjectSchemas | ConstantSchema;
+
+export class Schemas {
+
+  addPrimitive<T extends PrimitiveSchemas>(schema: T): T {
+    this.primitives || (this.primitives = new Array<PrimitiveSchemas>()).push(schema);
+    return schema;
+  }
 }

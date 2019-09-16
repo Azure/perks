@@ -61,7 +61,7 @@ export class Contact extends Initializer implements Contact {
 }
 
 export class Info extends Initializer implements Info {
-  constructor(public title: string, public version: string, initializer?: DeepPartial<Info>) {
+  constructor(public title: string, initializer?: DeepPartial<Info>) {
     super();
     this.apply(initializer);
   }

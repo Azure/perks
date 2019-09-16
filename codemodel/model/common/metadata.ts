@@ -2,6 +2,7 @@ import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Protocols } from './protocols';
+import { Initializer, DeepPartial } from '@azure-tools/codegen';
 
 /** common pattern for Metadata on aspects */
 export interface Metadata extends Extensions {
@@ -10,6 +11,23 @@ export interface Metadata extends Extensions {
 
   /** per-protocol information for this aspect  */
   protocol: Protocols;
+}
+
+export class Metadata extends Initializer implements Metadata {
+  constructor(objectInitializer?: DeepPartial<Metadata>) {
+    super();
+    this.language = {
+      default: {
+        name: '',
+        description: ''
+      }
+    };
+
+    this.protocol = {
+
+    };
+    this.apply(objectInitializer);
+  }
 }
 
 /** the bare-minimum fields for per-language metadata on a given aspect */

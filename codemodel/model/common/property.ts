@@ -14,20 +14,13 @@ export interface Property extends Value {
   // add addtional x-ms-mutability-style-stuff 
 }
 
-export class Property extends Initializer implements Property {
+export class Property extends Value implements Property {
 
-  constructor(name: string, initializer?: DeepPartial<Property>) {
-    super();
+  constructor(name: string, description: string, initializer?: DeepPartial<Property>) {
+    super(name, description);
 
-    this.$key = name;
     this.serializedName = name;
-    this.language = {
-      default: {
-        uid: `property:${uid()}`,
-        description: 'MISSING DESCRIPTION 03',
-        name,
-      }
-    };
+    this.language.default.uid = `property:${uid()}`;
     this.apply(initializer);
   }
 }

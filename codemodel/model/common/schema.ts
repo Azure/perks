@@ -109,6 +109,14 @@ export interface StringSchema extends Schema<SchemaType.String> {
   pattern?: string; // regex
 }
 
+export class StringSchema extends Schema<SchemaType.String> implements StringSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<StringSchema>) {
+    super(name, description, SchemaType.String);
+
+    this.apply(objectInitializer);
+  }
+}
+
 /** a Schema that represents and array of values */
 export interface ArraySchema<ElementType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Array> {
   /** elementType of the array */
@@ -122,6 +130,14 @@ export interface ArraySchema<ElementType extends Schema = Schema<AllSchemaTypes>
 
   /** if the elements in the array should be unique */
   uniqueItems?: boolean;
+}
+export class ArraySchema<ElementType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Array> implements ArraySchema<ElementType>{
+  constructor(name: string, description: string, elementType: ElementType, objectInitializer?: DeepPartial<ArraySchema<ElementType>>) {
+    super(name, description, SchemaType.Array);
+    this.elementType = elementType;
+
+    this.apply(objectInitializer);
+  }
 }
 
 /** a schema that represents a type with child properties. */
@@ -138,6 +154,14 @@ export interface ObjectSchema extends Schema<SchemaType.Object> {
   /**  minimum number of properties permitted */
   minProperties?: number;
 }
+
+export class ObjectSchema extends Schema<SchemaType.Object> implements ObjectSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<ObjectSchema>) {
+    super(name, description, SchemaType.Object);
+    this.apply(objectInitializer);
+  }
+}
+
 
 /** an individual choice in a ChoiceSchema */
 export interface ChoiceValue {
@@ -163,6 +187,13 @@ export interface ChoiceSchema<ChoiceType extends Schema = Schema<PrimitiveSchema
   sealed?: boolean;
 }
 
+export class ChoiceSchema<ChoiceType extends Schema = Schema<PrimitiveSchemaTypes>> extends Schema<SchemaType.Choice> implements ChoiceSchema<ChoiceType>{
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<ChoiceSchema<ChoiceType>>) {
+    super(name, description, SchemaType.Choice);
+    this.apply(objectInitializer);
+  }
+}
+
 /** a container for the actual constant value */
 export interface ConstantValue {
   /** the actual constant value to use */
@@ -178,15 +209,38 @@ export interface ConstantSchema<ConstantType extends Schema = Schema<AllSchemaTy
   value: Value; // QUESTION -- should this just be 'any'
 }
 
+export class ConstantSchema<ConstantType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Constant> implements ConstantSchema<ConstantType>{
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<ConstantSchema<ConstantType>>) {
+    super(name, description, SchemaType.Constant);
+    this.apply(objectInitializer);
+  }
+}
+
 /** a schema that represents a boolean value */
 export interface BooleanSchema extends Schema<SchemaType.Boolean> {
 
+}
+
+export class BooleanSchema extends Schema<SchemaType.Boolean> implements BooleanSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<BooleanSchema>) {
+    super(name, description, SchemaType.Boolean);
+    this.apply(objectInitializer);
+  }
 }
 
 /** a schema that represents a key-value collection */
 export interface DictionarySchema<ElementType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Dictionary> {
   /** the element type of the dictionary. (Keys are always strings) */
   elementType: ElementType;
+}
+
+export class DictionarySchema<ElementType extends Schema = Schema<AllSchemaTypes>> extends Schema<SchemaType.Dictionary> implements DictionarySchema<ElementType>{
+  constructor(name: string, description: string, elementType: ElementType, objectInitializer?: DeepPartial<DictionarySchema<ElementType>>) {
+    super(name, description, SchemaType.Dictionary);
+    this.elementType = elementType;
+
+    this.apply(objectInitializer);
+  }
 }
 
 /** an AND relationship between several schemas
@@ -202,6 +256,13 @@ export interface AndSchema extends Schema<SchemaType.And> {
   /** the set of schemas that this schema is composed of. */
   allOf: Array<Schema<ObjectSchemaTypes>>;
 }
+export class AndSchema extends Schema<SchemaType.And> implements AndSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<AndSchema>) {
+    super(name, description, SchemaType.And);
+    this.apply(objectInitializer);
+  }
+}
+
 
 /** an OR relationship between several schemas 
  * 
@@ -216,6 +277,12 @@ export interface OrSchema extends Schema<SchemaType.Or> {
   /** the set of schemas that this schema is composed of. Every schema is optional  */
   anyOf: Array<Schema<ObjectSchemaTypes>>;
 }
+export class OrSchema extends Schema<SchemaType.Or> implements OrSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<OrSchema>) {
+    super(name, description, SchemaType.Or);
+    this.apply(objectInitializer);
+  }
+}
 
 /** an XOR relationship between several schemas 
  * 
@@ -227,6 +294,13 @@ export interface XorSchema extends Schema<SchemaType.Xor> {
   /** the set of schemas that this must be one and only one of. */
   oneOf: Array<Schema>;
 }
+export class XorSchema extends Schema<SchemaType.Xor> implements XorSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<XorSchema>) {
+    super(name, description, SchemaType.Xor);
+    this.apply(objectInitializer);
+  }
+}
+
 
 /**  a NOT relationship between schemas 
  * 

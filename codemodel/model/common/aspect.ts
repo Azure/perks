@@ -31,7 +31,7 @@ export interface Aspect extends Metadata {
   externalDocs?: ExternalDocumentation;
 }
 
-export class Aspect extends Initializer implements Aspect {
+export class Aspect extends Metadata implements Aspect {
   constructor(public $key: string, public description: string, initializer?: DeepPartial<Aspect>) {
     super();
 
