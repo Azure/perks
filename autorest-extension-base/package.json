@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "vscode-jsonrpc": "^3.5.0",
-    "@azure-tools/codegen": "~2.0.0"
+    "@azure-tools/codegen": "~2.1.0"
   }
 }
