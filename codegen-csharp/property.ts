@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { intersect } from '@azure-tools/codegen';
+import { intersect, DeepPartial } from '@azure-tools/codegen';
 
 import { docComment, EOL, indent } from '@azure-tools/codegen';
 import { Dictionary } from '@azure-tools/linq';
@@ -49,7 +49,7 @@ export class Property extends Variable implements Instance {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, EOL)}${EOL}` : '';
   }
 
-  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Property>) {
+  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Property>) {
     super();
     name = name.trim();
     this.apply(objectInitializer);
@@ -172,8 +172,8 @@ ${indent(g, 2)}
     const e = `${this.value}.${methodName}(${parameters.joinWith(valueOf)})`;
     return intersect(
       toExpression(e), {
-        implementation: `${e};`
-      });
+      implementation: `${e};`
+    });
   }
 
 }
@@ -190,7 +190,7 @@ export class Indexer extends Property {
 }
 
 export class LambdaProperty extends Property {
-  constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: Partial<LambdaProperty>) {
+  constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: DeepPartial<LambdaProperty>) {
     super(name, type);
     this.apply(objectInitializer);
   }
@@ -208,7 +208,7 @@ export class LazyProperty extends Property {
   private backingName: string;
   public instanceAccess = 'this';
 
-  constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: Partial<LazyProperty>) {
+  constructor(public name: string, public type: TypeDeclaration, public expression: Expression, objectInitializer?: DeepPartial<LazyProperty>) {
     super(name, type);
     this.backingName = `_${this.name.uncapitalize()}`;
     this.apply(objectInitializer);
@@ -229,7 +229,7 @@ ${this.attributeDeclaration}${this.new}${this.visibility} ${this.static} ${this.
 export class BackedProperty extends Property {
   public backingName: string;
   public initializer?: ExpressionOrLiteral;
-  constructor(name: string, type: TypeDeclaration, objectInitializer?: Partial<BackedProperty>) {
+  constructor(name: string, type: TypeDeclaration, objectInitializer?: DeepPartial<BackedProperty>) {
     const backingName = `_${name.uncapitalize()}`;
     super(name, type, {
       get: toExpression(`this.${backingName}`),

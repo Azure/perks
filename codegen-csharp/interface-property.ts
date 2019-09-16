@@ -6,14 +6,14 @@
 import { Access } from './access-modifier';
 import { Property } from './property';
 import { TypeDeclaration } from './type-declaration';
-import { docComment } from '@azure-tools/codegen';
+import { docComment, DeepPartial } from '@azure-tools/codegen';
 import { summary } from './doc-comments';
 
 export class InterfaceProperty extends Property {
   public getAccess = Access.Public;
   public setAccess = Access.Public;
 
-  constructor(name: string, type: TypeDeclaration, objectInitializer?: Partial<InterfaceProperty>) {
+  constructor(name: string, type: TypeDeclaration, objectInitializer?: DeepPartial<InterfaceProperty>) {
     super(name, type);
     this.apply(objectInitializer);
   }

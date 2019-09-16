@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { EOL, Initializer } from '@azure-tools/codegen';
+import { EOL, Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Access } from './access-modifier';
 import { Attribute } from './attribute';
 

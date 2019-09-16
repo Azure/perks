@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { docComment, EOL } from '@azure-tools/codegen';
+import { docComment, EOL, DeepPartial } from '@azure-tools/codegen';
 import { Access, Modifier, New, ReadOnly, Static, Volitile } from './access-modifier';
 import { Attribute } from './attribute';
 import { xmlize } from './doc-comments';
@@ -28,7 +28,7 @@ export class Field extends Variable {
 
   public description = '';
 
-  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Field>) {
+  constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Field>) {
     super();
     this.apply(objectInitializer);
 

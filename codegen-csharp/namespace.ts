@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Initializer } from '@azure-tools/codegen';
+import { Initializer, DeepPartial } from '@azure-tools/codegen';
 import { comment, dotCombine, EOL, indent, toMap } from '@azure-tools/codegen';
 import { Class } from './class';
 import { Delegate } from './delegate';
@@ -20,7 +20,7 @@ export class Namespace extends Initializer {
   private folder: string;
   public header = '';
 
-  constructor(public name: string, protected parent?: Project | Namespace, objectInitializer?: Partial<Namespace>) {
+  constructor(public name: string, protected parent?: Project | Namespace, objectInitializer?: DeepPartial<Namespace>) {
     super();
     this.folder = this.fullName.replace(/\./g, '/');
     this.apply(objectInitializer);

@@ -3,12 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { indent } from '@azure-tools/codegen';
+import { indent, DeepPartial } from '@azure-tools/codegen';
 import { StatementPossibilities, Statements } from './statement';
 
 
 export class CaseStatement extends Statements {
-  constructor(protected value: string, body: StatementPossibilities, objectInitializer?: Partial<CaseStatement>) {
+  constructor(protected value: string, body: StatementPossibilities, objectInitializer?: DeepPartial<CaseStatement>) {
     super(body);
     this.apply(objectInitializer);
   }
@@ -27,7 +27,7 @@ ${indent('break')};
 }
 
 export class DefaultCaseStatement extends CaseStatement {
-  constructor(body: StatementPossibilities, objectInitializer?: Partial<DefaultCaseStatement>) {
+  constructor(body: StatementPossibilities, objectInitializer?: DeepPartial<DefaultCaseStatement>) {
     super('', body);
     this.apply(objectInitializer);
   }
@@ -44,7 +44,7 @@ ${indent('break')};
 
 
 export class TerminalDefaultCaseStatement extends CaseStatement {
-  constructor(body: StatementPossibilities, objectInitializer?: Partial<TerminalDefaultCaseStatement>) {
+  constructor(body: StatementPossibilities, objectInitializer?: DeepPartial<TerminalDefaultCaseStatement>) {
     super('', body);
     this.apply(objectInitializer);
   }
@@ -59,7 +59,7 @@ ${this.statementsImplementation}
 }
 
 export class TerminalCaseStatement extends CaseStatement {
-  constructor(value: string, body: StatementPossibilities, objectInitializer?: Partial<TerminalCaseStatement>) {
+  constructor(value: string, body: StatementPossibilities, objectInitializer?: DeepPartial<TerminalCaseStatement>) {
     super(value, body);
     this.apply(objectInitializer);
   }
@@ -78,19 +78,19 @@ ${this.statementsImplementation}
   }
 }
 
-export function DefaultCase(body: StatementPossibilities, objectInitializer?: Partial<CaseStatement>): CaseStatement {
+export function DefaultCase(body: StatementPossibilities, objectInitializer?: DeepPartial<CaseStatement>): CaseStatement {
   return new DefaultCaseStatement(body, objectInitializer);
 }
 
 // gs01: fix this -- value should be an expresion.
-export function Case(value: string, body: StatementPossibilities, objectInitializer?: Partial<CaseStatement>): CaseStatement {
+export function Case(value: string, body: StatementPossibilities, objectInitializer?: DeepPartial<CaseStatement>): CaseStatement {
   return new CaseStatement(value, body, objectInitializer);
 }
 
-export function TerminalDefaultCase(body: StatementPossibilities, objectInitializer?: Partial<CaseStatement>): TerminalDefaultCaseStatement {
+export function TerminalDefaultCase(body: StatementPossibilities, objectInitializer?: DeepPartial<CaseStatement>): TerminalDefaultCaseStatement {
   return new TerminalDefaultCaseStatement(body, objectInitializer);
 }
 
-export function TerminalCase(value: string, body: StatementPossibilities, objectInitializer?: Partial<CaseStatement>): TerminalCaseStatement {
+export function TerminalCase(value: string, body: StatementPossibilities, objectInitializer?: DeepPartial<CaseStatement>): TerminalCaseStatement {
   return new TerminalCaseStatement(value, body, objectInitializer);
 }

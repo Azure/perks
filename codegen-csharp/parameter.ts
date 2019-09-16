@@ -9,6 +9,7 @@ import { ParameterModifier } from './parameter-modifier';
 import { OneOrMoreStatements, Statement } from './statements/statement';
 import { TypeDeclaration } from './type-declaration';
 import { Variable } from './variable';
+import { DeepPartial } from '@azure-tools/codegen';
 
 /** represents a method parameter */
 export class Parameter extends Variable {
@@ -24,7 +25,7 @@ export class Parameter extends Variable {
     return this.attributes.length > 0 ? `${this.attributes.joinWith(each => `${each.value}`, ' ')} ` : '';
   }
 
-  public constructor(public name: string, public type: TypeDeclaration, objectInitializer?: Partial<Parameter>) {
+  public constructor(public name: string, public type: TypeDeclaration, objectInitializer?: DeepPartial<Parameter>) {
     super();
     this.apply(objectInitializer);
 

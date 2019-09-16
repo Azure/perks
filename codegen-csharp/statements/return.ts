@@ -5,9 +5,10 @@
 
 import { ExpressionOrLiteral, valueOf } from '../expression';
 import { Statements } from './statement';
+import { DeepPartial } from '@azure-tools/codegen';
 
 export class ReturnStatement extends Statements {
-  constructor(public expression?: ExpressionOrLiteral, objectInitializer?: Partial<ReturnStatement>) {
+  constructor(public expression?: ExpressionOrLiteral, objectInitializer?: DeepPartial<ReturnStatement>) {
     super();
     this.apply(objectInitializer);
   }
@@ -16,6 +17,6 @@ export class ReturnStatement extends Statements {
   }
 }
 
-export function Return(expression?: ExpressionOrLiteral, objectInitializer?: Partial<ReturnStatement>) {
+export function Return(expression?: ExpressionOrLiteral, objectInitializer?: DeepPartial<ReturnStatement>) {
   return new ReturnStatement(expression, objectInitializer);
 }

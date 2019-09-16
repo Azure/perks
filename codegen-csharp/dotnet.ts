@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { intersect } from '@azure-tools/codegen';
+import { intersect, DeepPartial } from '@azure-tools/codegen';
 
 import { Expression, ExpressionOrLiteral, LiteralExpression, toExpression, valueOf } from './expression';
 import { Namespace } from './namespace';
@@ -60,10 +60,10 @@ export class EnumType implements TypeDeclaration {
     return this.declaration;
   }
 
-  public newProperty(name: string, objectInitializer?: Partial<Property>): Property {
+  public newProperty(name: string, objectInitializer?: DeepPartial<Property>): Property {
     return new Property(name, this, objectInitializer);
   }
-  public newParameter(name: string, objectInitializer?: Partial<Parameter>): Parameter {
+  public newParameter(name: string, objectInitializer?: DeepPartial<Parameter>): Parameter {
     return new Parameter(name, this, objectInitializer);
   }
 
@@ -188,8 +188,8 @@ export const System = intersect(system, {
       Headers: intersect(headers, {
         MediaTypeHeaderValue: intersect(
           new ClassType(headers, 'MediaTypeHeaderValue'), {
-            Parse: (header: string) => toExpression(`${System.Net.Http.Headers.MediaTypeHeaderValue}.Parse("${header}")`)
-          }),
+          Parse: (header: string) => toExpression(`${System.Net.Http.Headers.MediaTypeHeaderValue}.Parse("${header}")`)
+        }),
         HttpHeaders: new ClassType(headers, 'HttpHeaders'),
         HttpResponseHeaders: new ClassType(headers, 'HttpResponseHeaders'),
       }),
