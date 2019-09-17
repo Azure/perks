@@ -1,5 +1,5 @@
 import { PrimitiveSchemaTypes, CompoundSchemaTypes } from './schema-type';
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema } from './schema';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema } from './schema';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
@@ -7,7 +7,7 @@ export interface Schemas {
   objects?: Array<ObjectSchema>;
 
   /** schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf) */
-  compounds?: Array<CompoundSchemaTypes>;
+  compounds?: Array<CompoundSchemas>;
 
   /** schemas that represent a set of choices (ie, 'enum') */
   choices?: Array<ChoiceSchema>;
@@ -22,7 +22,7 @@ export interface Schemas {
    * 
    * @note - the important bits in these are the validation restrictions that may be present.
    */
-  primitives?: Array<PrimitiveSchemas>;
+  primitives?: Array<PrimitiveSchemas | ValueSchemas>;
 }
 
 export type CompoundSchemas =
@@ -33,12 +33,20 @@ export type CompoundSchemas =
 /** Schema types that are primitive language values */
 export type PrimitiveSchemas =
   BooleanSchema |
+  DateSchema |
+  DateTimeSchema |
+  UnixTimeSchema |
+  CredentialSchema |
+  UriSchema |
+  UuidSchema |
+  DurationSchema |
+  CharSchema |
   NumberSchema |
-  StringSchema |
-  ArraySchema;
+  StringSchema;
 
 /** schema types that are non-object or complex types */
 export type ValueSchemas =
+  ByteArraySchema |
   PrimitiveSchemas |
   ArraySchema |
   ChoiceSchema;
@@ -56,8 +64,28 @@ export type AllSchemas =
 
 export class Schemas {
 
-  addPrimitive<T extends PrimitiveSchemas>(schema: T): T {
-    this.primitives || (this.primitives = new Array<PrimitiveSchemas>()).push(schema);
+  addPrimitive<T extends ValueSchemas>(schema: T): T {
+    this.primitives || (this.primitives = new Array<ValueSchemas>()).push(schema);
+    return schema;
+  }
+  addObject<T extends ObjectSchema>(schema: T): T {
+    this.objects || (this.objects = new Array<ObjectSchema>()).push(schema);
+    return schema;
+  }
+  addCompound<T extends CompoundSchemas>(schema: T): T {
+    this.compounds || (this.compounds = new Array<CompoundSchemas>()).push(schema);
+    return schema;
+  }
+  addChoice<T extends ChoiceSchema>(schema: T): T {
+    this.choices || (this.choices = new Array<ChoiceSchema>()).push(schema);
+    return schema;
+  }
+  addDictionary<T extends DictionarySchema>(schema: T): T {
+    this.dictionaries || (this.dictionaries = new Array<DictionarySchema>()).push(schema);
+    return schema;
+  }
+  addConstant<T extends ConstantSchema>(schema: T): T {
+    this.constants || (this.constants = new Array<ConstantSchema>()).push(schema);
     return schema;
   }
 }

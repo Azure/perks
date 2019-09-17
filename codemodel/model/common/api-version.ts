@@ -15,7 +15,7 @@
 export interface ApiVersion {
   /** the actual api version string used in the API */
   version: string;
-  range: '-' | '+' | undefined;
+  range?: '-' | '+';
 }
 
 /** a collection of api versions */

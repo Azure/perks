@@ -55,8 +55,11 @@ export namespace Http {
 
     /** content returned by the service in the HTTP headers */
     headers: Array<Schema>;
+  }
 
-
+  export interface StreamResponseProtocol extends ResponseProtocol {
+    /** stream responses  */
+    stream: true;
   }
 
   /** code model metadata for HTTP protocol  */
