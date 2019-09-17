@@ -6,6 +6,7 @@ import { StatusCode } from './status-code';
 import { HttpServer } from './server';
 import { SecurityRequirement } from './security';
 import { Schema } from '../common/schema';
+import { Request } from '../common/operation';
 
 export enum ImplementationLocation {
   Method = 'Method',
@@ -28,7 +29,7 @@ export namespace Http {
   }
 
   /** HTTP operation protocol data */
-  export interface OperationProtocol extends Protocol {
+  export interface RequestProtocol extends Protocol {
     /** A relative path to an individual endpoint. 
      * 
      * The field name MUST begin with a slash. 
@@ -43,7 +44,27 @@ export namespace Http {
 
     /** each method must have one or more servers that it is connected to. */
     servers: Array<HttpServer>;
+  }
 
+  export interface WithBodyRequestProtocol extends RequestProtocol {
+    /** must set a media type for the body */
+    mediaType: string;
+  }
+
+  export interface StreamRequestProtocol extends WithBodyRequestProtocol {
+    /* indicates that the HTTP request should be a stream, not a serialized object */
+    stream: true;
+  }
+
+  export interface MultiPartRequestProtocol extends WithBodyRequestProtocol {
+    /** indicates that the HTTP Request should be a multipart request 
+     * 
+     * ie, that it has multiple requests in a single request.
+    */
+    multipart: true;
+
+    /** the multiple request parts that make up this request ?? is this right? */
+    parts: Request;
   }
 
   export interface ResponseProtocol extends Protocol {

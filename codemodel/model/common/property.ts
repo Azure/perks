@@ -2,6 +2,7 @@ import { uid } from './uid';
 
 import { Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Value } from './value';
+import { Schema } from './schema';
 
 /** a property is a child value in an object */
 export interface Property extends Value {
@@ -16,8 +17,8 @@ export interface Property extends Value {
 
 export class Property extends Value implements Property {
 
-  constructor(name: string, description: string, initializer?: DeepPartial<Property>) {
-    super(name, description);
+  constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Property>) {
+    super(name, description, schema);
 
     this.serializedName = name;
     this.language.default.uid = `property:${uid()}`;

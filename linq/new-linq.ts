@@ -26,6 +26,7 @@ export interface IterableWithLinq<T> extends Iterable<T> {
   forEach(action: (each: T) => void): void;
   aggregate<A, R>(accumulator: (current: T | A, next: T) => A, seed?: T | A, resultAction?: (result?: T | A) => A | R): T | A | R | undefined;
   toArray(): Array<T>;
+  results(): Promise<void>;
 
   /**
      * Gets or sets the length of the iterable. This is a number one higher than the highest element defined in an array.
@@ -62,7 +63,8 @@ function linqify<T>(iterable: Iterable<T>): IterableWithLinq<T> {
     forEach: <any>forEach.bind(iterable),
     aggregate: <any>aggregate.bind(iterable),
     join: <any>join.bind(iterable),
-    count: len.bind(iterable)
+    count: len.bind(iterable),
+    results: <any>results.bind(iterable),
   };
   r.linq = r;
   return r;
@@ -291,6 +293,12 @@ function first<T>(this: Iterable<T>, predicate?: (each: T) => boolean): T | unde
 function toArray<T>(this: Iterable<T>): Array<T> {
   return [...this];
 }
+
+
+async function results<T>(this: Iterable<T>): Promise<void> {
+  await Promise.all([...<any>this]);
+}
+
 
 function join<T>(this: Iterable<T>, separator: string): string {
   return [...this].join(separator);

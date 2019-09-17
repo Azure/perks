@@ -166,6 +166,12 @@ export class ObjectSchema extends Schema<SchemaType.Object> implements ObjectSch
     super(name, description, SchemaType.Object);
     this.apply(objectInitializer);
   }
+
+
+  addProperty(property: Property) {
+    (this.properties = this.properties || []).push(property);
+    return property;
+  }
 }
 
 

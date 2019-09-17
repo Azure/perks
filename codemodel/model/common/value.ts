@@ -13,8 +13,9 @@ export interface Value extends Aspect {
 }
 
 export class Value extends Aspect implements Value {
-  constructor(public $key: string, public description: string, initializer?: DeepPartial<Value>) {
+  constructor(public $key: string, public description: string, schema: Schema, initializer?: DeepPartial<Value>) {
     super($key, description);
+    this.schema = schema;
     this.apply(initializer);
   }
 }

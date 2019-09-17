@@ -130,4 +130,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery;
+  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor; 
