@@ -1,0 +1,955 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ApiVersion": {
+      "description": "- since API version formats range from \nAzure ARM API date style (2018-01-01) to semver (1.2.3) \nand virtually any other text, this value tends to be an \nopaque string with the possibility of a modifier to indicate\nthat it is a range.\n\noptions: \n- prepend a dash or append a plus to indicate a range \n(ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )\n\n- semver-range style (ie, '^1.0.0' or '~1.0.0' )",
+      "type": "object",
+      "properties": {
+        "version": {
+          "description": "the actual api version string used in the API",
+          "type": "string"
+        },
+        "range": {
+          "enum": [
+            "+",
+            "-"
+          ],
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "version"
+      ]
+    },
+    "ApiVersions": {
+      "description": "a collection of api versions",
+      "type": "array",
+      "items": {
+        "$ref": "./master.json#/definitions/ApiVersion"
+      }
+    },
+    "Deprecation": {
+      "description": "represents  deprecation information for a given aspect",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "the reason why this aspect",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "the api versions that this deprecation is applicable to.",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "apiVersions",
+        "message"
+      ]
+    },
+    "Extensions": {
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": []
+    },
+    "uri": {
+      "description": "an URI",
+      "type": "string"
+    },
+    "ExternalDocumentation": {
+      "description": "a reference to external documentation",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "url": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "url"
+      ]
+    },
+    "Languages": {
+      "description": "custom extensible metadata for individual language generators",
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "default": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "csharp": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "python": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "ruby": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "go": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "typescript": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "javascript": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "powershell": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "java": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "c": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "cpp": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "swift": {
+          "$ref": "./master.json#/definitions/Language"
+        },
+        "objectivec": {
+          "$ref": "./master.json#/definitions/Language"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "default"
+      ]
+    },
+    "Protocols": {
+      "description": "custom extensible metadata for individual protocols (ie, HTTP, etc)",
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "http": {
+          "$ref": "./master.json#/definitions/Protocol"
+        },
+        "amqp": {
+          "$ref": "./master.json#/definitions/Protocol"
+        },
+        "mqtt": {
+          "$ref": "./master.json#/definitions/Protocol"
+        },
+        "jsonrpc": {
+          "$ref": "./master.json#/definitions/Protocol"
+        }
+      },
+      "defaultProperties": []
+    },
+    "Metadata": {
+      "description": "common pattern for Metadata on aspects",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "protocol"
+      ]
+    },
+    "Language": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "name used in actual implementation",
+          "type": "string"
+        },
+        "description": {
+          "description": "description text - describes this node.",
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "description",
+        "name"
+      ]
+    },
+    "Protocol": {
+      "type": "object",
+      "defaultProperties": []
+    },
+    "XmlSerlializationFormat": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "attribute": {
+          "type": "boolean"
+        },
+        "wrapped": {
+          "type": "boolean"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "attribute",
+        "wrapped"
+      ]
+    },
+    "SerializationFormats": {
+      "description": "custom extensible metadata for individual serialization formats",
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "json": {
+          "$ref": "./master.json#/definitions/Extensions"
+        },
+        "xml": {
+          "$ref": "./master.json#/definitions/XmlSerlializationFormat"
+        },
+        "protobuf": {
+          "$ref": "./master.json#/definitions/Extensions"
+        }
+      },
+      "defaultProperties": []
+    },
+    "Discriminator": {
+      "description": "Disciminator for polymorphic class hierarchy",
+      "type": "object",
+      "properties": {
+        "propertyName": {
+          "type": "string"
+        },
+        "mapping": {
+          "$ref": "./master.json#/definitions/Dictionary<string>"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "propertyName"
+      ]
+    },
+    "Value": {
+      "description": "common base interface for properties, parameters and the like.",
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "description": "the schema of this Value"
+        },
+        "required": {
+          "description": "if the value is marked 'required'.",
+          "type": "boolean"
+        },
+        "nullable": {
+          "description": "can null be passed in instead",
+          "type": "boolean"
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "schema",
+        "uid"
+      ]
+    },
+    "Property": {
+      "description": "a property is a child value in an object",
+      "type": "object",
+      "properties": {
+        "readOnly": {
+          "description": "if the property is marked read-only (ie, not intended to be sent to the service)",
+          "type": "boolean"
+        },
+        "serializedName": {
+          "description": "the wire name of this property",
+          "type": "string"
+        },
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "description": "the schema of this Value"
+        },
+        "required": {
+          "description": "if the value is marked 'required'.",
+          "type": "boolean"
+        },
+        "nullable": {
+          "description": "can null be passed in instead",
+          "type": "boolean"
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "schema",
+        "serializedName",
+        "uid"
+      ]
+    },
+    "SchemaMetadata": {
+      "description": "language metadata specific to schema instances",
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "description": "namespace of the implementation of this item",
+          "type": "string"
+        },
+        "discriminatorValue": {
+          "description": "if this is a child of a polymorphic class, this will have the value of the descriminator.",
+          "type": "string"
+        },
+        "name": {
+          "description": "name used in actual implementation",
+          "type": "string"
+        },
+        "description": {
+          "description": "description text - describes this node.",
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "description",
+        "name"
+      ]
+    },
+    "SerializationFormat": {
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": []
+    },
+    "email": {
+      "type": "string"
+    },
+    "Contact": {
+      "description": "contact information",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": []
+    },
+    "License": {
+      "description": "license information",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "the nameof the license",
+          "type": "string"
+        },
+        "url": {
+          "description": "an uri pointing to the full license text",
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "name"
+      ]
+    },
+    "Info": {
+      "description": "code model information",
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "the title of this service.",
+          "type": "string"
+        },
+        "description": {
+          "description": "a text description of the service",
+          "type": "string"
+        },
+        "termsOfService": {
+          "description": "an uri to the terms of service specified to access the service",
+          "type": "string"
+        },
+        "contact": {
+          "$ref": "./master.json#/definitions/Contact",
+          "description": "contact information for the service"
+        },
+        "license": {
+          "$ref": "./master.json#/definitions/License",
+          "description": "license information for th service"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "title"
+      ]
+    },
+    "Parameter": {
+      "description": "a definition of an discrete input for an operation",
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "description": "the schema of this Value"
+        },
+        "required": {
+          "description": "if the value is marked 'required'.",
+          "type": "boolean"
+        },
+        "nullable": {
+          "description": "can null be passed in instead",
+          "type": "boolean"
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "schema",
+        "uid"
+      ]
+    },
+    "Response": {
+      "description": "a response from a service.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "protocol"
+      ]
+    },
+    "SchemaResponse": {
+      "description": "a response that should be deserialized into a result of type(schema)",
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "description": "the content returned by the service for a given operaiton"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "protocol",
+        "schema"
+      ]
+    },
+    "Operation": {
+      "description": "represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)",
+      "type": "object",
+      "properties": {
+        "request": {
+          "$ref": "./master.json#/definitions/Request",
+          "description": "the inputs that are used to build the request."
+        },
+        "responses": {
+          "description": "responses that indicate a successful call",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Response"
+          }
+        },
+        "exceptions": {
+          "description": "responses that indicate a failed call",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Response"
+          }
+        },
+        "profile": {
+          "$ref": "./master.json#/definitions/Dictionary<ApiVersion>",
+          "description": "the apiVersion to use for a given profile name"
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "exceptions",
+        "language",
+        "profile",
+        "protocol",
+        "request",
+        "responses",
+        "uid"
+      ]
+    },
+    "Request": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "description": "the parameter inputs to the operation",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Parameter"
+          }
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "uid"
+      ]
+    },
+    "OperationGroup": {
+      "description": "an operation group represents a container around set of operations",
+      "type": "object",
+      "properties": {
+        "$key": {
+          "type": "string"
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Operation"
+          }
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "language",
+        "operations",
+        "protocol"
+      ]
+    },
+    "CodeModel": {
+      "description": "the model that contains all the information required to generate a service api",
+      "type": "object",
+      "properties": {
+        "info": {
+          "$ref": "./master.json#/definitions/Info",
+          "description": "Code model information"
+        },
+        "schemas": {
+          "$ref": "./schemas.json#/definitions/Schemas",
+          "description": "All schemas for the model"
+        },
+        "operationGroups": {
+          "description": "All operations",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/OperationGroup"
+          }
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "info",
+        "language",
+        "operationGroups",
+        "protocol",
+        "schemas"
+      ]
+    },
+    "Example": {
+      "description": "example data [UNFINISHED]",
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "value": {},
+        "externalValue": {
+          "description": "an URI",
+          "type": "string"
+        }
+      },
+      "defaultProperties": []
+    },
+    "Dictionary<any>": {
+      "type": "object",
+      "additionalProperties": true,
+      "defaultProperties": []
+    },
+    "Dictionary<string>": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "defaultProperties": []
+    },
+    "Languages<SchemaMetadata>": {
+      "description": "custom extensible metadata for individual language generators",
+      "type": "object",
+      "additionalProperties": {},
+      "properties": {
+        "default": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "csharp": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "python": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "ruby": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "go": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "typescript": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "javascript": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "powershell": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "java": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "c": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "cpp": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "swift": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        },
+        "objectivec": {
+          "$ref": "./master.json#/definitions/SchemaMetadata"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "default"
+      ]
+    },
+    "Dictionary<ApiVersion>": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "./master.json#/definitions/ApiVersion"
+      },
+      "defaultProperties": []
+    }
+  }
+}

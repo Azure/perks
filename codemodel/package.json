@@ -43,7 +43,10 @@
     "@typescript-eslint/eslint-plugin": "~2.0.0",
     "@typescript-eslint/parser": "~2.0.0",
     "eslint": "~6.2.2",
-    "typescript": "~3.6.2"
+    "typescript": "~3.6.2",
+    "glob": "~7.1.4",
+    "js-yaml": "3.13.1",
+    "typescript-json-schema": "~0.40.0"
   },
   "dependencies": {
     "@azure-tools/autorest-extension-base": "~3.1.0",

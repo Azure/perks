@@ -1,0 +1,814 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "StreamResponse": {
+      "description": "a response where the content should be treated as a stream instead of a value or object",
+      "type": "object",
+      "properties": {
+        "stream": {
+          "description": "indicates that this response is a stream",
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "protocol",
+        "stream"
+      ]
+    },
+    "HttpServer": {
+      "description": "An object representing a Server.\n\nIf the uri supports template substitution, then the variables are required.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "url": {
+          "description": "base url for the server",
+          "type": "string"
+        },
+        "variables": {
+          "description": "an optional collection of variables for server templating",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/ServerVariable"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "url"
+      ]
+    },
+    "ServerVariable": {
+      "description": "An object representing a Server Variable for server URL template substitution.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "$key": {
+          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
+          "type": "string"
+        },
+        "description": {
+          "description": "description of the aspect.",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "schema": {
+          "description": "the schema for the",
+          "anyOf": [
+            {
+              "$ref": "./schemas.json#/definitions/NumberSchema"
+            },
+            {
+              "$ref": "./schemas.json#/definitions/StringSchema"
+            },
+            {
+              "$ref": "./schemas.json#/definitions/ChoiceSchema"
+            }
+          ]
+        },
+        "default": {
+          "description": "The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.",
+          "type": "string"
+        },
+        "required": {
+          "description": "if the value is marked 'required'.",
+          "type": "boolean"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "schema"
+      ]
+    },
+    "AuthorizationCodeOAuthFlow": {
+      "type": "object",
+      "properties": {
+        "authorizationUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "tokenUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "./master.json#/definitions/Dictionary<string>"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "authorizationUrl",
+        "scopes",
+        "tokenUrl"
+      ]
+    },
+    "BearerHTTPSecurityScheme": {
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "enum": [
+            "bearer"
+          ]
+        },
+        "bearerFormat": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "http"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "scheme",
+        "type"
+      ]
+    },
+    "ClientCredentialsFlow": {
+      "type": "object",
+      "properties": {
+        "tokenUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "./master.json#/definitions/Dictionary<string>"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "scopes",
+        "tokenUrl"
+      ]
+    },
+    "ImplicitOAuthFlow": {
+      "type": "object",
+      "properties": {
+        "authorizationUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "./master.json#/definitions/Dictionary<string>"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "authorizationUrl",
+        "scopes"
+      ]
+    },
+    "NonBearerHTTPSecurityScheme": {
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "http"
+          ]
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "scheme",
+        "type"
+      ]
+    },
+    "OAuth2SecurityScheme": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "oauth2"
+          ]
+        },
+        "flows": {
+          "$ref": "./http.json#/definitions/OAuthFlows"
+        },
+        "description": {
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "flows",
+        "type"
+      ]
+    },
+    "OAuthFlows": {
+      "type": "object",
+      "properties": {
+        "implicit": {
+          "$ref": "./http.json#/definitions/ImplicitOAuthFlow"
+        },
+        "password": {
+          "$ref": "./http.json#/definitions/PasswordOAuthFlow"
+        },
+        "clientCredentials": {
+          "$ref": "./http.json#/definitions/ClientCredentialsFlow"
+        },
+        "authorizationCode": {
+          "$ref": "./http.json#/definitions/AuthorizationCodeOAuthFlow"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": []
+    },
+    "HTTPSecurityScheme": {
+      "anyOf": [
+        {
+          "$ref": "./http.json#/definitions/BearerHTTPSecurityScheme"
+        },
+        {
+          "$ref": "./http.json#/definitions/NonBearerHTTPSecurityScheme"
+        }
+      ]
+    },
+    "SecurityScheme": {
+      "anyOf": [
+        {
+          "$ref": "./http.json#/definitions/BearerHTTPSecurityScheme"
+        },
+        {
+          "$ref": "./http.json#/definitions/NonBearerHTTPSecurityScheme"
+        },
+        {
+          "$ref": "./http.json#/definitions/OAuth2SecurityScheme"
+        },
+        {
+          "$ref": "./http.json#/definitions/APIKeySecurityScheme"
+        },
+        {
+          "$ref": "./http.json#/definitions/OpenIdConnectSecurityScheme"
+        }
+      ]
+    },
+    "APIKeySecurityScheme": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "apiKey"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "in": {
+          "$ref": "./enums.json#/definitions/ParameterLocation"
+        },
+        "description": {
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "in",
+        "name",
+        "type"
+      ]
+    },
+    "OpenIdConnectSecurityScheme": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "openIdConnect"
+          ]
+        },
+        "openIdConnectUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "openIdConnectUrl",
+        "type"
+      ]
+    },
+    "PasswordOAuthFlow": {
+      "type": "object",
+      "properties": {
+        "tokenUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "refreshUrl": {
+          "description": "an URI",
+          "type": "string"
+        },
+        "scopes": {
+          "$ref": "./master.json#/definitions/Dictionary<string>"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "scopes",
+        "tokenUrl"
+      ]
+    },
+    "SecurityRequirement": {
+      "description": "common ways of serializing simple parameters",
+      "type": "object",
+      "defaultProperties": []
+    },
+    "Http.ParameterProtocol": {
+      "description": "extended metadata for HTTP operation parameters",
+      "type": "object",
+      "properties": {
+        "in": {
+          "$ref": "./enums.json#/definitions/ParameterLocation",
+          "description": "the location that this parameter is placed in the http request"
+        },
+        "style": {
+          "$ref": "./enums.json#/definitions/SerializationStyle",
+          "description": "the Serialization Style used for the parameter."
+        },
+        "skipUriEncoding": {
+          "description": "when set, this indicates that the content of the parameter should not be subject to URI encoding rules.",
+          "type": "boolean"
+        },
+        "implementation": {
+          "$ref": "./enums.json#/definitions/ImplementationLocation",
+          "description": "suggested implementation location for this parameter"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "implementation",
+        "in",
+        "style"
+      ]
+    },
+    "Http.RequestProtocol": {
+      "description": "HTTP operation protocol data",
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "./enums.json#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "method",
+        "path",
+        "servers"
+      ]
+    },
+    "Http.WithBodyRequestProtocol": {
+      "type": "object",
+      "properties": {
+        "mediaType": {
+          "description": "must set a media type for the body",
+          "type": "string"
+        },
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "./enums.json#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "mediaType",
+        "method",
+        "path",
+        "servers"
+      ]
+    },
+    "Http.StreamRequestProtocol": {
+      "type": "object",
+      "properties": {
+        "stream": {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        },
+        "mediaType": {
+          "description": "must set a media type for the body",
+          "type": "string"
+        },
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "./enums.json#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "mediaType",
+        "method",
+        "path",
+        "servers",
+        "stream"
+      ]
+    },
+    "Http.MultiPartRequestProtocol": {
+      "type": "object",
+      "properties": {
+        "multipart": {
+          "description": "indicates that the HTTP Request should be a multipart request \n\nie, that it has multiple requests in a single request.",
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        },
+        "parts": {
+          "$ref": "./master.json#/definitions/Request",
+          "description": "the multiple request parts that make up this request ?? is this right?"
+        },
+        "mediaType": {
+          "description": "must set a media type for the body",
+          "type": "string"
+        },
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "./enums.json#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "mediaType",
+        "method",
+        "multipart",
+        "parts",
+        "path",
+        "servers"
+      ]
+    },
+    "Http.ResponseProtocol": {
+      "type": "object",
+      "properties": {
+        "statusCodes": {
+          "description": "the possible HTTP status codes that this response MUST match one of.",
+          "type": "array",
+          "items": {
+            "enum": [
+              100,
+              101,
+              102,
+              103,
+              200,
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              226,
+              300,
+              301,
+              302,
+              304,
+              305,
+              306,
+              307,
+              308,
+              400,
+              401,
+              402,
+              403,
+              404,
+              405,
+              406,
+              407,
+              408,
+              409,
+              410,
+              411,
+              412,
+              413,
+              414,
+              415,
+              416,
+              417,
+              418,
+              421,
+              422,
+              423,
+              424,
+              425,
+              426,
+              428,
+              429,
+              431,
+              451,
+              500,
+              501,
+              502,
+              503,
+              504,
+              505,
+              506,
+              507,
+              508,
+              510,
+              511,
+              "default"
+            ]
+          }
+        },
+        "mediaTypes": {
+          "description": "the possible media types that this response MUST match one of",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "description": "content returned by the service in the HTTP headers",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "headers",
+        "mediaTypes",
+        "statusCodes"
+      ]
+    },
+    "Http.StreamResponseProtocol": {
+      "type": "object",
+      "properties": {
+        "stream": {
+          "description": "stream responses",
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        },
+        "statusCodes": {
+          "description": "the possible HTTP status codes that this response MUST match one of.",
+          "type": "array",
+          "items": {
+            "enum": [
+              100,
+              101,
+              102,
+              103,
+              200,
+              201,
+              202,
+              203,
+              204,
+              205,
+              206,
+              207,
+              208,
+              226,
+              300,
+              301,
+              302,
+              304,
+              305,
+              306,
+              307,
+              308,
+              400,
+              401,
+              402,
+              403,
+              404,
+              405,
+              406,
+              407,
+              408,
+              409,
+              410,
+              411,
+              412,
+              413,
+              414,
+              415,
+              416,
+              417,
+              418,
+              421,
+              422,
+              423,
+              424,
+              425,
+              426,
+              428,
+              429,
+              431,
+              451,
+              500,
+              501,
+              502,
+              503,
+              504,
+              505,
+              506,
+              507,
+              508,
+              510,
+              511,
+              "default"
+            ]
+          }
+        },
+        "mediaTypes": {
+          "description": "the possible media types that this response MUST match one of",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "description": "content returned by the service in the HTTP headers",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "headers",
+        "mediaTypes",
+        "statusCodes",
+        "stream"
+      ]
+    },
+    "Http.ModelProtocol": {
+      "description": "code model metadata for HTTP protocol",
+      "type": "object",
+      "properties": {
+        "servers": {
+          "description": "a collection of server definitions for the service",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        },
+        "security": {
+          "description": "a collection of security requirements for the service",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/SecurityRequirement"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "servers"
+      ]
+    }
+  }
+}
