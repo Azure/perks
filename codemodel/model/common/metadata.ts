@@ -4,6 +4,10 @@ import { Languages } from './languages';
 import { Protocols } from './protocols';
 import { Initializer, DeepPartial } from '@azure-tools/codegen';
 
+export interface ModelObject {
+  $type: string;
+}
+
 /** common pattern for Metadata on aspects */
 export interface Metadata extends Extensions {
   /** per-language information for this aspect */

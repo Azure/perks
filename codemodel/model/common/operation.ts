@@ -23,15 +23,15 @@ export interface Operation extends Aspect {
 
 }
 
-export interface Request extends Aspect {
+export interface Request extends Metadata {
   /** the parameter inputs to the operation */
   parameters?: Array<Parameter>;
 }
 
 
-export class Request extends Aspect implements Request {
-  constructor(public $key: string, public description: string, initializer?: DeepPartial<Operation>) {
-    super($key, description);
+export class Request extends Metadata implements Request {
+  constructor(initializer?: DeepPartial<Operation>) {
+    super();
     this.apply(initializer);
   }
 
@@ -45,7 +45,7 @@ export class Operation extends Aspect implements Operation {
   constructor(public $key: string, public description: string, initializer?: DeepPartial<Operation>) {
     super($key, description);
     this.apply({
-      request: new Request('', '')
+      request: new Request()
     }, initializer);
   }
 

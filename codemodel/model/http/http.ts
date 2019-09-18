@@ -64,7 +64,7 @@ export namespace Http {
     multipart: true;
 
     /** the multiple request parts that make up this request ?? is this right? */
-    parts: Request;
+    parts: Array<Request>;
   }
 
   export interface ResponseProtocol extends Protocol {

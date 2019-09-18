@@ -69,23 +69,23 @@ export class Schemas {
     return schema;
   }
   addObject<T extends ObjectSchema>(schema: T): T {
-    this.objects || (this.objects = new Array<ObjectSchema>()).push(schema);
+    (this.objects || (this.objects = new Array<ObjectSchema>())).push(schema);
     return schema;
   }
   addCompound<T extends CompoundSchemas>(schema: T): T {
-    this.compounds || (this.compounds = new Array<CompoundSchemas>()).push(schema);
+    (this.compounds || (this.compounds = new Array<CompoundSchemas>())).push(schema);
     return schema;
   }
   addChoice<T extends ChoiceSchema>(schema: T): T {
-    this.choices || (this.choices = new Array<ChoiceSchema>()).push(schema);
+    (this.choices || (this.choices = new Array<ChoiceSchema>())).push(schema);
     return schema;
   }
   addDictionary<T extends DictionarySchema>(schema: T): T {
-    this.dictionaries || (this.dictionaries = new Array<DictionarySchema>()).push(schema);
+    (this.dictionaries || (this.dictionaries = new Array<DictionarySchema>())).push(schema);
     return schema;
   }
   addConstant<T extends ConstantSchema>(schema: T): T {
-    this.constants || (this.constants = new Array<ConstantSchema>()).push(schema);
+    (this.constants || (this.constants = new Array<ConstantSchema>())).push(schema);
     return schema;
   }
 }

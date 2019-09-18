@@ -7,9 +7,13 @@ import { DEFAULT_SAFE_SCHEMA, dump, safeLoad } from 'js-yaml';
 
 const propertyPriority = [
   '$key',
+  'primitives',
+  'objects',
+  'dictionaries',
+  'compounds',
+  'choices',
   'name',
   'schemas',
-  'name',
   'type',
   'format',
   'schema',
@@ -83,12 +87,13 @@ export function serialize<T>(model: T): string {
     schema: DEFAULT_SAFE_SCHEMA,
     skipInvalid: true,
     lineWidth: 240
-  }).
-    replace(/\s*\w*: {}/g, '').
-    replace(/\s*\w*: \[\]/g, '').
-    replace(/(\s*- \$key:)/g, '\n$1').
-    replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
-    // replace(/([^:]\n)(\s*-)/g, '$1\n$2')
-  ;
+  })
+    .replace(/\s*\w*: {}/g, '')
+    .replace(/\s*\w*: \[\]/g, '')
+    .replace(/(\s*- \$key:)/g, '\n$1')
+    .replace(/-\n\s+version/g, '- version');
+  // .replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
+  // replace(/([^:]\n)(\s*-)/g, '$1\n$2')
+
   //.replace(/(\s*language:)/g, '\n$1');
 }
