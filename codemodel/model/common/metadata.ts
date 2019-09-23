@@ -3,10 +3,7 @@ import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Protocols } from './protocols';
 import { Initializer, DeepPartial } from '@azure-tools/codegen';
-
-export interface ModelObject {
-  $type: string;
-}
+import { SetType } from '../../tag';
 
 /** common pattern for Metadata on aspects */
 export interface Metadata extends Extensions {
@@ -17,23 +14,20 @@ export interface Metadata extends Extensions {
   protocol: Protocols;
 }
 
-export class Metadata extends Initializer implements Metadata {
-  static is(instance: any): instance is Metadata {
-    return instance && instance.language && instance.protocol && true;
-  }
 
+export class Metadata extends Initializer implements Metadata {
   constructor(objectInitializer?: DeepPartial<Metadata>) {
     super();
-    this.language = {
+    this.language = SetType(Languages, {
       default: {
         name: '',
         description: ''
       }
-    };
+    });
 
-    this.protocol = {
+    this.protocol = SetType(Protocols, {
 
-    };
+    });
     this.apply(objectInitializer);
   }
 }
@@ -49,4 +43,7 @@ export interface Language extends Dictionary<any> {
 
 /** the bare-minimum fields for per-protocol metadata on a given aspect */
 export interface Protocol extends Dictionary<any> {
+}
+
+export class Protocol implements Protocol {
 }

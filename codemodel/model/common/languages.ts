@@ -17,3 +17,8 @@ export interface Languages<T extends Language = Language> {
   swift?: T;
   objectivec?: T;
 }
+
+
+export class Languages implements Languages {
+
+}

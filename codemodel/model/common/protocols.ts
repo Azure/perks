@@ -8,3 +8,7 @@ export interface Protocols<T extends Protocol = Protocol> {
   mqtt?: T;
   jsonrpc?: T;
 }
+
+export class Protocols implements Protocols {
+
+}

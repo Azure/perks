@@ -418,7 +418,7 @@
       "type": "object",
       "defaultProperties": []
     },
-    "Http.ParameterProtocol": {
+    "HttpParameter": {
       "description": "extended metadata for HTTP operation parameters",
       "type": "object",
       "properties": {
@@ -446,7 +446,7 @@
         "style"
       ]
     },
-    "Http.RequestProtocol": {
+    "HttpRequest": {
       "description": "HTTP operation protocol data",
       "type": "object",
       "properties": {
@@ -473,7 +473,7 @@
         "servers"
       ]
     },
-    "Http.WithBodyRequestProtocol": {
+    "HttpWithBodyRequest": {
       "type": "object",
       "properties": {
         "mediaType": {
@@ -504,7 +504,7 @@
         "servers"
       ]
     },
-    "Http.StreamRequestProtocol": {
+    "HttpStreamRequest": {
       "type": "object",
       "properties": {
         "stream": {
@@ -542,7 +542,7 @@
         "stream"
       ]
     },
-    "Http.MultiPartRequestProtocol": {
+    "HttpMultiPartRequest": {
       "type": "object",
       "properties": {
         "multipart": {
@@ -553,8 +553,11 @@
           ]
         },
         "parts": {
-          "$ref": "./master.json#/definitions/Request",
-          "description": "the multiple request parts that make up this request ?? is this right?"
+          "description": "the multiple request parts that make up this request ?? is this right?",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Request"
+          }
         },
         "mediaType": {
           "description": "must set a media type for the body",
@@ -586,7 +589,54 @@
         "servers"
       ]
     },
-    "Http.ResponseProtocol": {
+    "HttpMultipartRequest": {
+      "type": "object",
+      "properties": {
+        "multipart": {
+          "description": "indicates that the HTTP Request should be a multipart request \n\nie, that it has multiple requests in a single request.",
+          "type": "boolean",
+          "enum": [
+            true
+          ],
+          "default": true
+        },
+        "parts": {
+          "description": "the multiple request parts that make up this request ?? is this right?",
+          "type": "array",
+          "items": {},
+          "default": []
+        },
+        "mediaType": {
+          "description": "must set a media type for the body",
+          "type": "string"
+        },
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "./enums.json#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "./http.json#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "mediaType",
+        "method",
+        "multipart",
+        "parts",
+        "path",
+        "servers"
+      ]
+    },
+    "HttpResponse": {
       "type": "object",
       "properties": {
         "statusCodes": {
@@ -671,7 +721,7 @@
           "description": "content returned by the service in the HTTP headers",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "./schemas.json#/definitions/Schema"
           }
         }
       },
@@ -682,7 +732,7 @@
         "statusCodes"
       ]
     },
-    "Http.StreamResponseProtocol": {
+    "HttpStreamResponse": {
       "type": "object",
       "properties": {
         "stream": {
@@ -774,7 +824,7 @@
           "description": "content returned by the service in the HTTP headers",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "./schemas.json#/definitions/Schema"
           }
         }
       },
@@ -786,7 +836,7 @@
         "stream"
       ]
     },
-    "Http.ModelProtocol": {
+    "HttpModel": {
       "description": "code model metadata for HTTP protocol",
       "type": "object",
       "properties": {

@@ -220,31 +220,31 @@ definitions:
     description: custom extensible metadata for individual language generators
     properties:
       default:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       c:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       cpp:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       csharp:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       go:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       java:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       javascript:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       objectivec:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       powershell:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       python:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       ruby:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       swift:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
       typescript:
-        $ref: './master.yaml#/definitions/SchemaMetadata'
+        $ref: './schemas.yaml#/definitions/SchemaMetadata'
     required:
       - default
   License:
@@ -369,7 +369,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+        $ref: './schemas.yaml#/definitions/Schema'
       description:
         type: string
       apiVersions:
@@ -418,7 +418,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+        $ref: './schemas.yaml#/definitions/Schema'
       description:
         type: string
       apiVersions:
@@ -483,31 +483,11 @@ definitions:
   Request:
     type: object
     properties:
-      $key:
-        type: string
-      description:
-        type: string
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       parameters:
         type: array
         description: the parameter inputs to the operation
         items:
           $ref: './master.yaml#/definitions/Parameter'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -518,11 +498,8 @@ definitions:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
-      - uid
   Response:
     type: object
     description: a response from a service.
@@ -564,7 +541,7 @@ definitions:
     properties:
       schema:
         description: the content returned by the service for a given operaiton
-        $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+        $ref: './schemas.yaml#/definitions/Schema'
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -602,7 +579,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+        $ref: './schemas.yaml#/definitions/Schema'
       description:
         type: string
       apiVersions:

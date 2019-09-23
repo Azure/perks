@@ -65,6 +65,78 @@
       "description": "an URI",
       "type": "string"
     },
+    "Schema": {
+      "description": "The Schema Object allows the definition of input and output data types.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
+        },
+        "type": {
+          "$ref": "#/definitions/AllSchemaTypes",
+          "description": "the schema type"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "example": {
+          "description": "example information"
+        },
+        "defaultValue": {
+          "description": "If the value isn't sent on the wire, the service will assume this"
+        },
+        "serialization": {
+          "$ref": "#/definitions/SerializationFormats",
+          "description": "per-serialization information for this Schema"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "$key": {
+          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
+          "type": "string"
+        },
+        "description": {
+          "description": "description of the aspect.",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "protocol": {
+          "$ref": "#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ]
+    },
     "ExternalDocumentation": {
       "description": "a reference to external documentation",
       "type": "object",
@@ -384,7 +456,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -459,7 +531,7 @@
           "type": "string"
         },
         "schema": {
-          "$ref": "#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -2268,7 +2340,7 @@
           "description": "the set of schemas that this must be one and only one of.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "#/definitions/Schema"
           }
         },
         "language": {
@@ -2348,7 +2420,7 @@
       "type": "object",
       "properties": {
         "not": {
-          "$ref": "#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "#/definitions/Schema",
           "description": "the schema that this may not be."
         },
         "language": {
@@ -2741,7 +2813,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -2862,7 +2934,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "#/definitions/Schema",
           "description": "the content returned by the service for a given operaiton"
         },
         "language": {
@@ -2975,34 +3047,6 @@
             "$ref": "#/definitions/Parameter"
           }
         },
-        "$key": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
         "language": {
           "$ref": "#/definitions/Languages",
           "description": "per-language information for this aspect"
@@ -3018,11 +3062,8 @@
       },
       "defaultProperties": [],
       "required": [
-        "$key",
-        "description",
         "language",
-        "protocol",
-        "uid"
+        "protocol"
       ]
     },
     "OperationGroup": {
@@ -3657,7 +3698,7 @@
       ],
       "type": "string"
     },
-    "Http.ParameterProtocol": {
+    "HttpParameter": {
       "description": "extended metadata for HTTP operation parameters",
       "type": "object",
       "properties": {
@@ -3685,7 +3726,7 @@
         "style"
       ]
     },
-    "Http.RequestProtocol": {
+    "HttpRequest": {
       "description": "HTTP operation protocol data",
       "type": "object",
       "properties": {
@@ -3712,7 +3753,7 @@
         "servers"
       ]
     },
-    "Http.WithBodyRequestProtocol": {
+    "HttpWithBodyRequest": {
       "type": "object",
       "properties": {
         "mediaType": {
@@ -3743,7 +3784,7 @@
         "servers"
       ]
     },
-    "Http.StreamRequestProtocol": {
+    "HttpStreamRequest": {
       "type": "object",
       "properties": {
         "stream": {
@@ -3781,7 +3822,7 @@
         "stream"
       ]
     },
-    "Http.MultiPartRequestProtocol": {
+    "HttpMultiPartRequest": {
       "type": "object",
       "properties": {
         "multipart": {
@@ -3792,8 +3833,11 @@
           ]
         },
         "parts": {
-          "$ref": "#/definitions/Request",
-          "description": "the multiple request parts that make up this request ?? is this right?"
+          "description": "the multiple request parts that make up this request ?? is this right?",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Request"
+          }
         },
         "mediaType": {
           "description": "must set a media type for the body",
@@ -3825,7 +3869,54 @@
         "servers"
       ]
     },
-    "Http.ResponseProtocol": {
+    "HttpMultipartRequest": {
+      "type": "object",
+      "properties": {
+        "multipart": {
+          "description": "indicates that the HTTP Request should be a multipart request \n\nie, that it has multiple requests in a single request.",
+          "type": "boolean",
+          "enum": [
+            true
+          ],
+          "default": true
+        },
+        "parts": {
+          "description": "the multiple request parts that make up this request ?? is this right?",
+          "type": "array",
+          "items": {},
+          "default": []
+        },
+        "mediaType": {
+          "description": "must set a media type for the body",
+          "type": "string"
+        },
+        "path": {
+          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
+          "type": "string"
+        },
+        "method": {
+          "$ref": "#/definitions/HttpMethod",
+          "description": "the HTTP Method used to process this operation"
+        },
+        "servers": {
+          "description": "each method must have one or more servers that it is connected to.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HttpServer"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "mediaType",
+        "method",
+        "multipart",
+        "parts",
+        "path",
+        "servers"
+      ]
+    },
+    "HttpResponse": {
       "type": "object",
       "properties": {
         "statusCodes": {
@@ -3910,7 +4001,7 @@
           "description": "content returned by the service in the HTTP headers",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "#/definitions/Schema"
           }
         }
       },
@@ -3921,7 +4012,7 @@
         "statusCodes"
       ]
     },
-    "Http.StreamResponseProtocol": {
+    "HttpStreamResponse": {
       "type": "object",
       "properties": {
         "stream": {
@@ -4013,7 +4104,7 @@
           "description": "content returned by the service in the HTTP headers",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "#/definitions/Schema"
           }
         }
       },
@@ -4025,7 +4116,7 @@
         "stream"
       ]
     },
-    "Http.ModelProtocol": {
+    "HttpModel": {
       "description": "code model metadata for HTTP protocol",
       "type": "object",
       "properties": {
@@ -4060,78 +4151,6 @@
         "type": "string"
       },
       "defaultProperties": []
-    },
-    "Schema<AllSchemaTypes>": {
-      "description": "The Schema Object allows the definition of input and output data types.",
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "serialization",
-        "type",
-        "uid"
-      ]
     },
     "Languages<SchemaMetadata>": {
       "description": "custom extensible metadata for individual language generators",

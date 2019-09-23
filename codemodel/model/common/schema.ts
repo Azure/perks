@@ -187,6 +187,10 @@ export interface ChoiceValue {
   description: string;
 }
 
+export class ChoiceValue {
+
+}
+
 /** a schema that represents a choice of several values (ie, an 'enum') */
 export interface ChoiceSchema<ChoiceType extends Schema = Schema<PrimitiveSchemaTypes>> extends Schema<SchemaType.Choice> {
   /** the primitive type for the choices */

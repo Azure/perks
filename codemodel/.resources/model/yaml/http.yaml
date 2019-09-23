@@ -83,7 +83,7 @@ definitions:
     anyOf:
       - $ref: './http.yaml#/definitions/BearerHTTPSecurityScheme'
       - $ref: './http.yaml#/definitions/NonBearerHTTPSecurityScheme'
-  Http.ModelProtocol:
+  HttpModel:
     type: object
     description: code model metadata for HTTP protocol
     properties:
@@ -99,7 +99,7 @@ definitions:
           $ref: './http.yaml#/definitions/HttpServer'
     required:
       - servers
-  Http.MultiPartRequestProtocol:
+  HttpMultiPartRequest:
     type: object
     properties:
       path:
@@ -127,8 +127,10 @@ definitions:
         enum:
           - true
       parts:
+        type: array
         description: the multiple request parts that make up this request ?? is this right?
-        $ref: './master.yaml#/definitions/Request'
+        items:
+          $ref: './master.yaml#/definitions/Request'
       servers:
         type: array
         description: each method must have one or more servers that it is connected to.
@@ -141,7 +143,50 @@ definitions:
       - parts
       - path
       - servers
-  Http.ParameterProtocol:
+  HttpMultipartRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      multipart:
+        type: boolean
+        description: |-
+          indicates that the HTTP Request should be a multipart request 
+
+          ie, that it has multiple requests in a single request.
+        default: true
+        enum:
+          - true
+      parts:
+        type: array
+        description: the multiple request parts that make up this request ?? is this right?
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - mediaType
+      - method
+      - multipart
+      - parts
+      - path
+      - servers
+  HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
     properties:
@@ -161,7 +206,7 @@ definitions:
       - implementation
       - in
       - style
-  Http.RequestProtocol:
+  HttpRequest:
     type: object
     description: HTTP operation protocol data
     properties:
@@ -187,14 +232,14 @@ definitions:
       - method
       - path
       - servers
-  Http.ResponseProtocol:
+  HttpResponse:
     type: object
     properties:
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+          $ref: './schemas.yaml#/definitions/Schema'
       mediaTypes:
         type: array
         description: the possible media types that this response MUST match one of
@@ -272,7 +317,28 @@ definitions:
       - headers
       - mediaTypes
       - statusCodes
-  Http.StreamRequestProtocol:
+  HttpServer:
+    type: object
+    description: |-
+      An object representing a Server.
+
+      If the uri supports template substitution, then the variables are required.
+    properties:
+      url:
+        type: string
+        description: base url for the server
+      variables:
+        type: array
+        description: an optional collection of variables for server templating
+        items:
+          $ref: './http.yaml#/definitions/ServerVariable'
+      language:
+        description: per-language information for this aspect
+        $ref: './master.yaml#/definitions/Languages'
+    required:
+      - language
+      - url
+  HttpStreamRequest:
     type: object
     properties:
       path:
@@ -306,14 +372,14 @@ definitions:
       - path
       - servers
       - stream
-  Http.StreamResponseProtocol:
+  HttpStreamResponse:
     type: object
     properties:
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+          $ref: './schemas.yaml#/definitions/Schema'
       mediaTypes:
         type: array
         description: the possible media types that this response MUST match one of
@@ -397,7 +463,7 @@ definitions:
       - mediaTypes
       - statusCodes
       - stream
-  Http.WithBodyRequestProtocol:
+  HttpWithBodyRequest:
     type: object
     properties:
       path:
@@ -426,27 +492,6 @@ definitions:
       - method
       - path
       - servers
-  HttpServer:
-    type: object
-    description: |-
-      An object representing a Server.
-
-      If the uri supports template substitution, then the variables are required.
-    properties:
-      url:
-        type: string
-        description: base url for the server
-      variables:
-        type: array
-        description: an optional collection of variables for server templating
-        items:
-          $ref: './http.yaml#/definitions/ServerVariable'
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-    required:
-      - language
-      - url
   ImplicitOAuthFlow:
     type: object
     properties:

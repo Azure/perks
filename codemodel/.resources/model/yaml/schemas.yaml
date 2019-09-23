@@ -377,7 +377,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './master.yaml#/definitions/AllSchemaTypes'
+        $ref: './schemas.yaml#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -512,7 +512,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './master.yaml#/definitions/AllSchemaTypes'
+        $ref: './schemas.yaml#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -891,7 +891,7 @@ definitions:
         $ref: './master.yaml#/definitions/ExternalDocumentation'
       not:
         description: the schema that this may not be.
-        $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+        $ref: './schemas.yaml#/definitions/Schema'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'
@@ -927,7 +927,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './enums.yaml#/definitions/NumericSchemaTypes'
+        $ref: './schemas.yaml#/definitions/NumericSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -1175,7 +1175,7 @@ definitions:
       - serialization
       - type
       - uid
-  Schema<AllSchemaTypes>:
+  Schema:
     type: object
     description: The Schema Object allows the definition of input and output data types.
     properties:
@@ -1184,7 +1184,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './master.yaml#/definitions/AllSchemaTypes'
+        $ref: './schemas.yaml#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -1237,7 +1237,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './master.yaml#/definitions/ObjectSchemaTypes'
+        $ref: './schemas.yaml#/definitions/ObjectSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -1290,7 +1290,7 @@ definitions:
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
-        $ref: './enums.yaml#/definitions/PrimitiveSchemaTypes'
+        $ref: './schemas.yaml#/definitions/PrimitiveSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -1657,7 +1657,7 @@ definitions:
         type: array
         description: the set of schemas that this must be one and only one of.
         items:
-          $ref: './schemas.yaml#/definitions/Schema<AllSchemaTypes>'
+          $ref: './schemas.yaml#/definitions/Schema'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'

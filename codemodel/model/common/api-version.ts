@@ -18,5 +18,8 @@ export interface ApiVersion {
   range?: '-' | '+';
 }
 
+export class ApiVersion implements ApiVersion {
+
+}
 /** a collection of api versions */
 export type ApiVersions = Array<ApiVersion>;

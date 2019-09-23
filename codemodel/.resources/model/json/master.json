@@ -272,7 +272,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "./schemas.json#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -347,7 +347,7 @@
           "type": "string"
         },
         "schema": {
-          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "./schemas.json#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -536,7 +536,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "./schemas.json#/definitions/Schema",
           "description": "the schema of this Value"
         },
         "required": {
@@ -626,7 +626,7 @@
       "type": "object",
       "properties": {
         "schema": {
-          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "./schemas.json#/definitions/Schema",
           "description": "the content returned by the service for a given operaiton"
         },
         "language": {
@@ -739,34 +739,6 @@
             "$ref": "./master.json#/definitions/Parameter"
           }
         },
-        "$key": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "./master.json#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
         "language": {
           "$ref": "./master.json#/definitions/Languages",
           "description": "per-language information for this aspect"
@@ -782,11 +754,8 @@
       },
       "defaultProperties": [],
       "required": [
-        "$key",
-        "description",
         "language",
-        "protocol",
-        "uid"
+        "protocol"
       ]
     },
     "OperationGroup": {
@@ -900,43 +869,43 @@
       "additionalProperties": {},
       "properties": {
         "default": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "csharp": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "python": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "ruby": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "go": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "typescript": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "javascript": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "powershell": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "java": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "c": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "cpp": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "swift": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         },
         "objectivec": {
-          "$ref": "./master.json#/definitions/SchemaMetadata"
+          "$ref": "./schemas.json#/definitions/SchemaMetadata"
         }
       },
       "defaultProperties": [],

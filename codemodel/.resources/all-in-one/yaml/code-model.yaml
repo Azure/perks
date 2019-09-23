@@ -1148,7 +1148,19 @@ definitions:
     anyOf:
       - $ref: '#/definitions/BearerHTTPSecurityScheme'
       - $ref: '#/definitions/NonBearerHTTPSecurityScheme'
-  Http.ModelProtocol:
+  HttpMethod:
+    type: string
+    description: standard HTTP protocol methods
+    enum:
+      - delete
+      - get
+      - head
+      - options
+      - patch
+      - post
+      - put
+      - trace
+  HttpModel:
     type: object
     description: code model metadata for HTTP protocol
     properties:
@@ -1164,7 +1176,7 @@ definitions:
           $ref: '#/definitions/HttpServer'
     required:
       - servers
-  Http.MultiPartRequestProtocol:
+  HttpMultiPartRequest:
     type: object
     properties:
       path:
@@ -1192,8 +1204,10 @@ definitions:
         enum:
           - true
       parts:
+        type: array
         description: the multiple request parts that make up this request ?? is this right?
-        $ref: '#/definitions/Request'
+        items:
+          $ref: '#/definitions/Request'
       servers:
         type: array
         description: each method must have one or more servers that it is connected to.
@@ -1206,7 +1220,50 @@ definitions:
       - parts
       - path
       - servers
-  Http.ParameterProtocol:
+  HttpMultipartRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: '#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      multipart:
+        type: boolean
+        description: |-
+          indicates that the HTTP Request should be a multipart request 
+
+          ie, that it has multiple requests in a single request.
+        default: true
+        enum:
+          - true
+      parts:
+        type: array
+        description: the multiple request parts that make up this request ?? is this right?
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: '#/definitions/HttpServer'
+    required:
+      - mediaType
+      - method
+      - multipart
+      - parts
+      - path
+      - servers
+  HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
     properties:
@@ -1226,7 +1283,7 @@ definitions:
       - implementation
       - in
       - style
-  Http.RequestProtocol:
+  HttpRequest:
     type: object
     description: HTTP operation protocol data
     properties:
@@ -1252,14 +1309,14 @@ definitions:
       - method
       - path
       - servers
-  Http.ResponseProtocol:
+  HttpResponse:
     type: object
     properties:
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: '#/definitions/Schema<AllSchemaTypes>'
+          $ref: '#/definitions/Schema'
       mediaTypes:
         type: array
         description: the possible media types that this response MUST match one of
@@ -1337,7 +1394,28 @@ definitions:
       - headers
       - mediaTypes
       - statusCodes
-  Http.StreamRequestProtocol:
+  HttpServer:
+    type: object
+    description: |-
+      An object representing a Server.
+
+      If the uri supports template substitution, then the variables are required.
+    properties:
+      url:
+        type: string
+        description: base url for the server
+      variables:
+        type: array
+        description: an optional collection of variables for server templating
+        items:
+          $ref: '#/definitions/ServerVariable'
+      language:
+        description: per-language information for this aspect
+        $ref: '#/definitions/Languages'
+    required:
+      - language
+      - url
+  HttpStreamRequest:
     type: object
     properties:
       path:
@@ -1371,14 +1449,14 @@ definitions:
       - path
       - servers
       - stream
-  Http.StreamResponseProtocol:
+  HttpStreamResponse:
     type: object
     properties:
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: '#/definitions/Schema<AllSchemaTypes>'
+          $ref: '#/definitions/Schema'
       mediaTypes:
         type: array
         description: the possible media types that this response MUST match one of
@@ -1462,7 +1540,7 @@ definitions:
       - mediaTypes
       - statusCodes
       - stream
-  Http.WithBodyRequestProtocol:
+  HttpWithBodyRequest:
     type: object
     properties:
       path:
@@ -1491,39 +1569,6 @@ definitions:
       - method
       - path
       - servers
-  HttpMethod:
-    type: string
-    description: standard HTTP protocol methods
-    enum:
-      - delete
-      - get
-      - head
-      - options
-      - patch
-      - post
-      - put
-      - trace
-  HttpServer:
-    type: object
-    description: |-
-      An object representing a Server.
-
-      If the uri supports template substitution, then the variables are required.
-    properties:
-      url:
-        type: string
-        description: base url for the server
-      variables:
-        type: array
-        description: an optional collection of variables for server templating
-        items:
-          $ref: '#/definitions/ServerVariable'
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-    required:
-      - language
-      - url
   ImplementationLocation:
     type: string
     enum:
@@ -1729,7 +1774,7 @@ definitions:
         $ref: '#/definitions/ExternalDocumentation'
       not:
         description: the schema that this may not be.
-        $ref: '#/definitions/Schema<AllSchemaTypes>'
+        $ref: '#/definitions/Schema'
       serialization:
         description: per-serialization information for this Schema
         $ref: '#/definitions/SerializationFormats'
@@ -2171,7 +2216,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: '#/definitions/Schema<AllSchemaTypes>'
+        $ref: '#/definitions/Schema'
       description:
         type: string
       apiVersions:
@@ -2280,7 +2325,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: '#/definitions/Schema<AllSchemaTypes>'
+        $ref: '#/definitions/Schema'
       description:
         type: string
       apiVersions:
@@ -2352,31 +2397,11 @@ definitions:
   Request:
     type: object
     properties:
-      $key:
-        type: string
-      description:
-        type: string
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
       parameters:
         type: array
         description: the parameter inputs to the operation
         items:
           $ref: '#/definitions/Parameter'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -2387,11 +2412,8 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
-      - uid
   Response:
     type: object
     description: a response from a service.
@@ -2408,7 +2430,7 @@ definitions:
     required:
       - language
       - protocol
-  Schema<AllSchemaTypes>:
+  Schema:
     type: object
     description: The Schema Object allows the definition of input and output data types.
     properties:
@@ -2592,7 +2614,7 @@ definitions:
     properties:
       schema:
         description: the content returned by the service for a given operaiton
-        $ref: '#/definitions/Schema<AllSchemaTypes>'
+        $ref: '#/definitions/Schema'
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -3110,7 +3132,7 @@ definitions:
         type: string
       schema:
         description: the schema of this Value
-        $ref: '#/definitions/Schema<AllSchemaTypes>'
+        $ref: '#/definitions/Schema'
       description:
         type: string
       apiVersions:
@@ -3222,7 +3244,7 @@ definitions:
         type: array
         description: the set of schemas that this must be one and only one of.
         items:
-          $ref: '#/definitions/Schema<AllSchemaTypes>'
+          $ref: '#/definitions/Schema'
       serialization:
         description: per-serialization information for this Schema
         $ref: '#/definitions/SerializationFormats'

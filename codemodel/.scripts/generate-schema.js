@@ -101,6 +101,7 @@ function fixmodel(schema) {
   txt = JSON.stringify(schema);
   txt = txt
     .replace(/<Schema<AllSchemaTypes>>/g, '')
+    .replace(/Schema<AllSchemaTypes>/g, 'Schema')
     .replace(/<Schema<PrimitiveSchemaTypes>>/g, '')
     .replace(/Schema\.TSchemaType_1/g, 'NumericSchemaTypes')
     .replace(/Schema\.TSchemaType_2/g, 'ObjectSchemaTypes')

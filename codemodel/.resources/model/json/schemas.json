@@ -1,6 +1,78 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "Schema": {
+      "description": "The Schema Object allows the definition of input and output data types.",
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
+        },
+        "type": {
+          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
+          "description": "the schema type"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "example": {
+          "description": "example information"
+        },
+        "defaultValue": {
+          "description": "If the value isn't sent on the wire, the service will assume this"
+        },
+        "serialization": {
+          "$ref": "./master.json#/definitions/SerializationFormats",
+          "description": "per-serialization information for this Schema"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "$key": {
+          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
+          "type": "string"
+        },
+        "description": {
+          "description": "description of the aspect.",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ]
+    },
     "NumberSchema": {
       "description": "a Schema that represents a Number value",
       "type": "object",
@@ -34,7 +106,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./enums.json#/definitions/NumericSchemaTypes",
+          "$ref": "./schemas.json#/definitions/NumericSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -1669,7 +1741,7 @@
           "description": "the set of schemas that this must be one and only one of.",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>"
+            "$ref": "./schemas.json#/definitions/Schema"
           }
         },
         "language": {
@@ -1749,7 +1821,7 @@
       "type": "object",
       "properties": {
         "not": {
-          "$ref": "./schemas.json#/definitions/Schema<AllSchemaTypes>",
+          "$ref": "./schemas.json#/definitions/Schema",
           "description": "the schema that this may not be."
         },
         "language": {
@@ -1824,78 +1896,6 @@
         "uid"
       ]
     },
-    "Schema<AllSchemaTypes>": {
-      "description": "The Schema Object allows the definition of input and output data types.",
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./master.json#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "./master.json#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "./master.json#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "serialization",
-        "type",
-        "uid"
-      ]
-    },
     "Schema<ObjectSchemaTypes>": {
       "description": "The Schema Object allows the definition of input and output data types.",
       "type": "object",
@@ -1905,7 +1905,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./master.json#/definitions/ObjectSchemaTypes",
+          "$ref": "./schemas.json#/definitions/ObjectSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -1977,7 +1977,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./enums.json#/definitions/PrimitiveSchemaTypes",
+          "$ref": "./schemas.json#/definitions/PrimitiveSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -2150,7 +2150,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./master.json#/definitions/AllSchemaTypes",
+          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -2249,7 +2249,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./master.json#/definitions/AllSchemaTypes",
+          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
