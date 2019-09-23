@@ -1,0 +1,118 @@
+$schema: 'http://json-schema.org/draft-07/schema#'
+definitions:
+  AllSchemaTypes:
+    type: string
+    enum:
+      - and
+      - array
+      - boolean
+      - byte-array
+      - char
+      - choice
+      - constant
+      - credential
+      - date
+      - date-time
+      - dictionary
+      - duration
+      - integer
+      - number
+      - object
+      - odata-query
+      - or
+      - string
+      - unixtime
+      - uri
+      - uuid
+      - xor
+  AllSchemas:
+    anyOf:
+      - $ref: './schemas.yaml#/definitions/NumberSchema'
+      - $ref: './schemas.yaml#/definitions/StringSchema'
+      - $ref: './schemas.yaml#/definitions/ObjectSchema'
+      - $ref: './schemas.yaml#/definitions/BooleanSchema'
+      - $ref: './schemas.yaml#/definitions/CredentialSchema'
+      - $ref: './schemas.yaml#/definitions/UriSchema'
+      - $ref: './schemas.yaml#/definitions/UuidSchema'
+      - $ref: './schemas.yaml#/definitions/DurationSchema'
+      - $ref: './schemas.yaml#/definitions/DateTimeSchema'
+      - $ref: './schemas.yaml#/definitions/DateSchema'
+      - $ref: './schemas.yaml#/definitions/CharSchema'
+      - $ref: './schemas.yaml#/definitions/ByteArraySchema'
+      - $ref: './schemas.yaml#/definitions/UnixTimeSchema'
+      - $ref: './schemas.yaml#/definitions/AndSchema'
+      - $ref: './schemas.yaml#/definitions/OrSchema'
+      - $ref: './schemas.yaml#/definitions/ArraySchema'
+      - $ref: './schemas.yaml#/definitions/ChoiceSchema'
+      - $ref: './schemas.yaml#/definitions/DictionarySchema'
+      - $ref: './schemas.yaml#/definitions/ConstantSchema'
+  CompoundSchemaTypes:
+    type: string
+    enum:
+      - and
+      - or
+      - xor
+  CompoundSchemas:
+    anyOf:
+      - $ref: './schemas.yaml#/definitions/AndSchema'
+      - $ref: './schemas.yaml#/definitions/OrSchema'
+      - $ref: './schemas.yaml#/definitions/XorSchema'
+  ObjectSchemaTypes:
+    type: string
+    enum:
+      - and
+      - dictionary
+      - object
+      - or
+  ObjectSchemas:
+    anyOf:
+      - $ref: './schemas.yaml#/definitions/ObjectSchema'
+      - $ref: './schemas.yaml#/definitions/AndSchema'
+      - $ref: './schemas.yaml#/definitions/OrSchema'
+      - $ref: './schemas.yaml#/definitions/DictionarySchema'
+  PrimitiveSchemaTypes:
+    type: string
+    enum:
+      - boolean
+      - char
+      - credential
+      - date
+      - date-time
+      - duration
+      - integer
+      - number
+      - string
+      - unixtime
+      - uri
+      - uuid
+  PrimitiveSchemas:
+    anyOf:
+      - $ref: './schemas.yaml#/definitions/NumberSchema'
+      - $ref: './schemas.yaml#/definitions/StringSchema'
+      - $ref: './schemas.yaml#/definitions/BooleanSchema'
+      - $ref: './schemas.yaml#/definitions/CredentialSchema'
+      - $ref: './schemas.yaml#/definitions/UriSchema'
+      - $ref: './schemas.yaml#/definitions/UuidSchema'
+      - $ref: './schemas.yaml#/definitions/DurationSchema'
+      - $ref: './schemas.yaml#/definitions/DateTimeSchema'
+      - $ref: './schemas.yaml#/definitions/DateSchema'
+      - $ref: './schemas.yaml#/definitions/CharSchema'
+      - $ref: './schemas.yaml#/definitions/UnixTimeSchema'
+  ValueSchemaTypes:
+    type: string
+    enum:
+      - array
+      - boolean
+      - byte-array
+      - char
+      - choice
+      - credential
+      - date
+      - date-time
+      - duration
+      - integer
+      - number
+      - string
+      - unixtime
+      - uri
+      - uuid

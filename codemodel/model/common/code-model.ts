@@ -2,8 +2,9 @@ import { Metadata } from './metadata';
 import { Schemas } from './schemas';
 import { Info } from './info';
 import { OperationGroup } from './operation';
-import { Initializer, DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
-import { threadId } from 'worker_threads';
+import { DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
+
+// + ADD DISCRIMINATORS TO ALL CLASS.
 
 /** the model that contains all the information required to generate a service api */
 export interface CodeModel extends Metadata {
@@ -16,6 +17,7 @@ export interface CodeModel extends Metadata {
   /** All operations  */
   operationGroups: Array<OperationGroup>;
 }
+
 
 export class CodeModel extends Metadata implements CodeModel {
   constructor(title: string, sourceTracking = false, objectInitializer?: DeepPartial<CodeModel>) {

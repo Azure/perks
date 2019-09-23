@@ -32,9 +32,6 @@ export interface Schema<TSchemaType extends SchemaType = AllSchemaTypes> extends
   /** the schema type  */
   type: TSchemaType;
 
-  /** sub-type information */
-  format?: string;
-
   /* short description */
   summary?: string;
 
@@ -79,6 +76,8 @@ export function isNumberSchema(schema: Schema): schema is NumberSchema {
 
 /** a Schema that represents a Number value */
 export interface NumberSchema extends Schema<SchemaType.Number | SchemaType.Integer> {
+  /** precision (# of bits?) of the number */
+  precision: number;
 
   /** if present, the number must be an exact multiple of this value */
   multipleOf?: number;
@@ -94,6 +93,13 @@ export interface NumberSchema extends Schema<SchemaType.Number | SchemaType.Inte
 
   /** if present, the value must be higher than minimum   */
   exclusiveMinimum?: boolean;
+}
+
+export class NumberSchema extends Schema<SchemaType.Number | SchemaType.Integer> implements NumberSchema {
+  constructor(name: string, description: string, type: SchemaType.Number | SchemaType.Integer, precision: number, objectInitializer?: DeepPartial<NumberSchema>) {
+    super(name, description, type);
+    this.apply({ precision }, objectInitializer);
+  }
 }
 
 /** a Schema that represents a string value */
@@ -160,6 +166,12 @@ export class ObjectSchema extends Schema<SchemaType.Object> implements ObjectSch
     super(name, description, SchemaType.Object);
     this.apply(objectInitializer);
   }
+
+
+  addProperty(property: Property) {
+    (this.properties = this.properties || []).push(property);
+    return property;
+  }
 }
 
 
@@ -173,6 +185,10 @@ export interface ChoiceValue {
 
   /** the description for this value */
   description: string;
+}
+
+export class ChoiceValue {
+
 }
 
 /** a schema that represents a choice of several values (ie, an 'enum') */
@@ -224,6 +240,130 @@ export interface BooleanSchema extends Schema<SchemaType.Boolean> {
 export class BooleanSchema extends Schema<SchemaType.Boolean> implements BooleanSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<BooleanSchema>) {
     super(name, description, SchemaType.Boolean);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a ODataQuery value */
+export interface ODataQuerySchema extends Schema<SchemaType.ODataQuery> { }
+
+export class ODataQuerySchema extends Schema<SchemaType.ODataQuery> implements ODataQuerySchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<ODataQuerySchema>) {
+    super(name, description, SchemaType.ODataQuery);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a Credential value */
+export interface CredentialSchema extends Schema<SchemaType.Credential> {
+
+  /** the maximum length of the string */
+  maxLength?: number;
+
+  /** the minimum length of the string */
+  minLength?: number;
+
+  /** a regular expression that the string must be validated against */
+  pattern?: string; // regex
+}
+
+export class CredentialSchema extends Schema<SchemaType.Credential> implements CredentialSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<CredentialSchema>) {
+    super(name, description, SchemaType.Credential);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a Uri value */
+export interface UriSchema extends Schema<SchemaType.Uri> {
+
+  /** the maximum length of the string */
+  maxLength?: number;
+
+  /** the minimum length of the string */
+  minLength?: number;
+
+  /** a regular expression that the string must be validated against */
+  pattern?: string; // regex
+}
+
+export class UriSchema extends Schema<SchemaType.Uri> implements UriSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<UriSchema>) {
+    super(name, description, SchemaType.Uri);
+    this.apply(objectInitializer);
+  }
+}
+/** a schema that represents a Uuid value */
+export interface UuidSchema extends Schema<SchemaType.Uuid> { }
+
+export class UuidSchema extends Schema<SchemaType.Uuid> implements UuidSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<UuidSchema>) {
+    super(name, description, SchemaType.Uuid);
+    this.apply(objectInitializer);
+  }
+}
+/** a schema that represents a Duration value */
+export interface DurationSchema extends Schema<SchemaType.Duration> { }
+
+export class DurationSchema extends Schema<SchemaType.Duration> implements DurationSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<DurationSchema>) {
+    super(name, description, SchemaType.Duration);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a DateTime value */
+export interface DateTimeSchema extends Schema<SchemaType.DateTime> {
+
+  /** date-time format  */
+  format: 'date-time-rfc1123' | 'date-time';
+}
+
+export class DateTimeSchema extends Schema<SchemaType.DateTime> implements DateTimeSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<DateTimeSchema>) {
+    super(name, description, SchemaType.DateTime);
+    this.apply(objectInitializer);
+  }
+}
+/** a schema that represents a Date value */
+export interface DateSchema extends Schema<SchemaType.Date> { }
+
+export class DateSchema extends Schema<SchemaType.Date> implements DateSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<DateSchema>) {
+    super(name, description, SchemaType.Date);
+    this.apply(objectInitializer);
+  }
+}
+/** a schema that represents a Char value */
+export interface CharSchema extends Schema<SchemaType.Char> { }
+
+export class CharSchema extends Schema<SchemaType.Char> implements CharSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<CharSchema>) {
+    super(name, description, SchemaType.Char);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a ByteArray value */
+export interface ByteArraySchema extends Schema<SchemaType.ByteArray> {
+
+  /** date-time format  */
+  format: 'base64url' | 'byte';
+}
+
+export class ByteArraySchema extends Schema<SchemaType.ByteArray> implements ByteArraySchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<ByteArraySchema>) {
+    super(name, description, SchemaType.ByteArray);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a UnixTime value */
+export interface UnixTimeSchema extends Schema<SchemaType.UnixTime> { }
+
+export class UnixTimeSchema extends Schema<SchemaType.UnixTime> implements UnixTimeSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<UnixTimeSchema>) {
+    super(name, description, SchemaType.UnixTime);
     this.apply(objectInitializer);
   }
 }

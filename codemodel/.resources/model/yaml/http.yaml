@@ -1,0 +1,664 @@
+$schema: 'http://json-schema.org/draft-07/schema#'
+definitions:
+  APIKeySecurityScheme:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+        enum:
+          - apiKey
+      description:
+        type: string
+      in:
+        $ref: './enums.yaml#/definitions/ParameterLocation'
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - in
+      - name
+      - type
+  AuthorizationCodeOAuthFlow:
+    type: object
+    properties:
+      authorizationUrl:
+        type: string
+        description: an URI
+      refreshUrl:
+        type: string
+        description: an URI
+      scopes:
+        $ref: './master.yaml#/definitions/Dictionary<string>'
+      tokenUrl:
+        type: string
+        description: an URI
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - authorizationUrl
+      - scopes
+      - tokenUrl
+  BearerHTTPSecurityScheme:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+          - http
+      description:
+        type: string
+      bearerFormat:
+        type: string
+      scheme:
+        type: string
+        enum:
+          - bearer
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - scheme
+      - type
+  ClientCredentialsFlow:
+    type: object
+    properties:
+      refreshUrl:
+        type: string
+        description: an URI
+      scopes:
+        $ref: './master.yaml#/definitions/Dictionary<string>'
+      tokenUrl:
+        type: string
+        description: an URI
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - scopes
+      - tokenUrl
+  HTTPSecurityScheme:
+    anyOf:
+      - $ref: './http.yaml#/definitions/BearerHTTPSecurityScheme'
+      - $ref: './http.yaml#/definitions/NonBearerHTTPSecurityScheme'
+  HttpModel:
+    type: object
+    description: code model metadata for HTTP protocol
+    properties:
+      security:
+        type: array
+        description: a collection of security requirements for the service
+        items:
+          $ref: './http.yaml#/definitions/SecurityRequirement'
+      servers:
+        type: array
+        description: a collection of server definitions for the service
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - servers
+  HttpMultiPartRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      multipart:
+        type: boolean
+        description: |-
+          indicates that the HTTP Request should be a multipart request 
+
+          ie, that it has multiple requests in a single request.
+        enum:
+          - true
+      parts:
+        type: array
+        description: the multiple request parts that make up this request ?? is this right?
+        items:
+          $ref: './master.yaml#/definitions/Request'
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - mediaType
+      - method
+      - multipart
+      - parts
+      - path
+      - servers
+  HttpMultipartRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      multipart:
+        type: boolean
+        description: |-
+          indicates that the HTTP Request should be a multipart request 
+
+          ie, that it has multiple requests in a single request.
+        default: true
+        enum:
+          - true
+      parts:
+        type: array
+        description: the multiple request parts that make up this request ?? is this right?
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - mediaType
+      - method
+      - multipart
+      - parts
+      - path
+      - servers
+  HttpParameter:
+    type: object
+    description: extended metadata for HTTP operation parameters
+    properties:
+      implementation:
+        description: suggested implementation location for this parameter
+        $ref: './enums.yaml#/definitions/ImplementationLocation'
+      in:
+        description: the location that this parameter is placed in the http request
+        $ref: './enums.yaml#/definitions/ParameterLocation'
+      skipUriEncoding:
+        type: boolean
+        description: 'when set, this indicates that the content of the parameter should not be subject to URI encoding rules.'
+      style:
+        description: the Serialization Style used for the parameter.
+        $ref: './enums.yaml#/definitions/SerializationStyle'
+    required:
+      - implementation
+      - in
+      - style
+  HttpRequest:
+    type: object
+    description: HTTP operation protocol data
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - method
+      - path
+      - servers
+  HttpResponse:
+    type: object
+    properties:
+      headers:
+        type: array
+        description: content returned by the service in the HTTP headers
+        items:
+          $ref: './schemas.yaml#/definitions/Schema'
+      mediaTypes:
+        type: array
+        description: the possible media types that this response MUST match one of
+        items:
+          type: string
+      statusCodes:
+        type: array
+        description: the possible HTTP status codes that this response MUST match one of.
+        items:
+          enum:
+            - 100
+            - 101
+            - 102
+            - 103
+            - 200
+            - 201
+            - 202
+            - 203
+            - 204
+            - 205
+            - 206
+            - 207
+            - 208
+            - 226
+            - 300
+            - 301
+            - 302
+            - 304
+            - 305
+            - 306
+            - 307
+            - 308
+            - 400
+            - 401
+            - 402
+            - 403
+            - 404
+            - 405
+            - 406
+            - 407
+            - 408
+            - 409
+            - 410
+            - 411
+            - 412
+            - 413
+            - 414
+            - 415
+            - 416
+            - 417
+            - 418
+            - 421
+            - 422
+            - 423
+            - 424
+            - 425
+            - 426
+            - 428
+            - 429
+            - 431
+            - 451
+            - 500
+            - 501
+            - 502
+            - 503
+            - 504
+            - 505
+            - 506
+            - 507
+            - 508
+            - 510
+            - 511
+            - default
+    required:
+      - headers
+      - mediaTypes
+      - statusCodes
+  HttpServer:
+    type: object
+    description: |-
+      An object representing a Server.
+
+      If the uri supports template substitution, then the variables are required.
+    properties:
+      url:
+        type: string
+        description: base url for the server
+      variables:
+        type: array
+        description: an optional collection of variables for server templating
+        items:
+          $ref: './http.yaml#/definitions/ServerVariable'
+      language:
+        description: per-language information for this aspect
+        $ref: './master.yaml#/definitions/Languages'
+    required:
+      - language
+      - url
+  HttpStreamRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+      stream:
+        type: boolean
+        enum:
+          - true
+    required:
+      - mediaType
+      - method
+      - path
+      - servers
+      - stream
+  HttpStreamResponse:
+    type: object
+    properties:
+      headers:
+        type: array
+        description: content returned by the service in the HTTP headers
+        items:
+          $ref: './schemas.yaml#/definitions/Schema'
+      mediaTypes:
+        type: array
+        description: the possible media types that this response MUST match one of
+        items:
+          type: string
+      statusCodes:
+        type: array
+        description: the possible HTTP status codes that this response MUST match one of.
+        items:
+          enum:
+            - 100
+            - 101
+            - 102
+            - 103
+            - 200
+            - 201
+            - 202
+            - 203
+            - 204
+            - 205
+            - 206
+            - 207
+            - 208
+            - 226
+            - 300
+            - 301
+            - 302
+            - 304
+            - 305
+            - 306
+            - 307
+            - 308
+            - 400
+            - 401
+            - 402
+            - 403
+            - 404
+            - 405
+            - 406
+            - 407
+            - 408
+            - 409
+            - 410
+            - 411
+            - 412
+            - 413
+            - 414
+            - 415
+            - 416
+            - 417
+            - 418
+            - 421
+            - 422
+            - 423
+            - 424
+            - 425
+            - 426
+            - 428
+            - 429
+            - 431
+            - 451
+            - 500
+            - 501
+            - 502
+            - 503
+            - 504
+            - 505
+            - 506
+            - 507
+            - 508
+            - 510
+            - 511
+            - default
+      stream:
+        type: boolean
+        description: stream responses
+        enum:
+          - true
+    required:
+      - headers
+      - mediaTypes
+      - statusCodes
+      - stream
+  HttpWithBodyRequest:
+    type: object
+    properties:
+      path:
+        type: string
+        description: |-
+          A relative path to an individual endpoint. 
+
+          The field name MUST begin with a slash. 
+          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
+          Path templating is allowed. 
+
+          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
+      method:
+        description: the HTTP Method used to process this operation
+        $ref: './enums.yaml#/definitions/HttpMethod'
+      mediaType:
+        type: string
+        description: must set a media type for the body
+      servers:
+        type: array
+        description: each method must have one or more servers that it is connected to.
+        items:
+          $ref: './http.yaml#/definitions/HttpServer'
+    required:
+      - mediaType
+      - method
+      - path
+      - servers
+  ImplicitOAuthFlow:
+    type: object
+    properties:
+      authorizationUrl:
+        type: string
+        description: an URI
+      refreshUrl:
+        type: string
+        description: an URI
+      scopes:
+        $ref: './master.yaml#/definitions/Dictionary<string>'
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - authorizationUrl
+      - scopes
+  NonBearerHTTPSecurityScheme:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+          - http
+      description:
+        type: string
+      scheme:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - scheme
+      - type
+  OAuth2SecurityScheme:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+          - oauth2
+      description:
+        type: string
+      flows:
+        $ref: './http.yaml#/definitions/OAuthFlows'
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - flows
+      - type
+  OAuthFlows:
+    type: object
+    properties:
+      authorizationCode:
+        $ref: './http.yaml#/definitions/AuthorizationCodeOAuthFlow'
+      clientCredentials:
+        $ref: './http.yaml#/definitions/ClientCredentialsFlow'
+      implicit:
+        $ref: './http.yaml#/definitions/ImplicitOAuthFlow'
+      password:
+        $ref: './http.yaml#/definitions/PasswordOAuthFlow'
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+  OpenIdConnectSecurityScheme:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+          - openIdConnect
+      description:
+        type: string
+      openIdConnectUrl:
+        type: string
+        description: an URI
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - openIdConnectUrl
+      - type
+  PasswordOAuthFlow:
+    type: object
+    properties:
+      refreshUrl:
+        type: string
+        description: an URI
+      scopes:
+        $ref: './master.yaml#/definitions/Dictionary<string>'
+      tokenUrl:
+        type: string
+        description: an URI
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - scopes
+      - tokenUrl
+  SecurityRequirement:
+    type: object
+    description: common ways of serializing simple parameters
+  SecurityScheme:
+    anyOf:
+      - $ref: './http.yaml#/definitions/BearerHTTPSecurityScheme'
+      - $ref: './http.yaml#/definitions/NonBearerHTTPSecurityScheme'
+      - $ref: './http.yaml#/definitions/OAuth2SecurityScheme'
+      - $ref: './http.yaml#/definitions/APIKeySecurityScheme'
+      - $ref: './http.yaml#/definitions/OpenIdConnectSecurityScheme'
+  ServerVariable:
+    type: object
+    description: An object representing a Server Variable for server URL template substitution.
+    properties:
+      $key:
+        type: string
+        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
+      schema:
+        description: the schema for the
+        anyOf:
+          - $ref: './schemas.yaml#/definitions/NumberSchema'
+          - $ref: './schemas.yaml#/definitions/StringSchema'
+          - $ref: './schemas.yaml#/definitions/ChoiceSchema'
+      description:
+        type: string
+        description: description of the aspect.
+      default:
+        type: string
+        description: 'The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.'
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: './master.yaml#/definitions/ApiVersion'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: './master.yaml#/definitions/Deprecation'
+      required:
+        type: boolean
+        description: if the value is marked 'required'.
+      language:
+        description: per-language information for this aspect
+        $ref: './master.yaml#/definitions/Languages'
+    required:
+      - $key
+      - description
+      - language
+      - schema
+  StreamResponse:
+    type: object
+    description: a response where the content should be treated as a stream instead of a value or object
+    properties:
+      stream:
+        type: boolean
+        description: indicates that this response is a stream
+        enum:
+          - true
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this aspect
+        $ref: './master.yaml#/definitions/Languages'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: './master.yaml#/definitions/Protocols'
+    required:
+      - language
+      - protocol
+      - stream

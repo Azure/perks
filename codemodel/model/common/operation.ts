@@ -9,8 +9,8 @@ import { DeepPartial, Initializer } from '@azure-tools/codegen';
 /** represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)  */
 export interface Operation extends Aspect {
 
-  /** the inputs to the operation */
-  parameters: Array<Parameter>;
+  /** the inputs that are used to build the request. */
+  request: Request;
 
   /** responses that indicate a successful call */
   responses: Array<Response>;
@@ -23,9 +23,15 @@ export interface Operation extends Aspect {
 
 }
 
-export class Operation extends Aspect implements Operation {
-  constructor(public $key: string, public description: string, initializer?: DeepPartial<Operation>) {
-    super($key, description);
+export interface Request extends Metadata {
+  /** the parameter inputs to the operation */
+  parameters?: Array<Parameter>;
+}
+
+
+export class Request extends Metadata implements Request {
+  constructor(initializer?: DeepPartial<Operation>) {
+    super();
     this.apply(initializer);
   }
 
@@ -33,6 +39,16 @@ export class Operation extends Aspect implements Operation {
     (this.parameters = this.parameters || []).push(parameter);
     return parameter;
   }
+
+}
+export class Operation extends Aspect implements Operation {
+  constructor(public $key: string, public description: string, initializer?: DeepPartial<Operation>) {
+    super($key, description);
+    this.apply({
+      request: new Request()
+    }, initializer);
+  }
+
   addResponse(response: Response) {
     (this.responses = this.responses || []).push(response);
     return response;

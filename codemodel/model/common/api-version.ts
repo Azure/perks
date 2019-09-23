@@ -15,8 +15,11 @@
 export interface ApiVersion {
   /** the actual api version string used in the API */
   version: string;
-  range: '-' | '+' | undefined;
+  range?: '-' | '+';
 }
 
+export class ApiVersion implements ApiVersion {
+
+}
 /** a collection of api versions */
 export type ApiVersions = Array<ApiVersion>;

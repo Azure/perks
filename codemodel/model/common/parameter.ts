@@ -6,6 +6,7 @@
 import { Value } from './value';
 import { DeepPartial } from '@azure-tools/codegen';
 import { uid } from './uid';
+import { Schema } from './schema';
 
 /** a definition of an discrete input for an operation */
 export interface Parameter extends Value {
@@ -13,8 +14,8 @@ export interface Parameter extends Value {
 }
 
 export class Parameter extends Value implements Parameter {
-  constructor(name: string, description: string, initializer?: DeepPartial<Parameter>) {
-    super(name, description);
+  constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Parameter>) {
+    super(name, description, schema);
 
     this.language.default.uid = `parameter:${uid()}`;
     this.apply(initializer);

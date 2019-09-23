@@ -5,16 +5,41 @@
 
 import { keys } from '@azure-tools/linq';
 
-export type DeepPartial<T> = {
-  [P in keyof T]?:
-  T[P] extends Array<infer U> ?                                 // if it is an array
-  Array<DeepPartial<U>> :                                       // then use an Array of DeepPartial
-  T[P] extends ReadonlyArray<infer V> ?                         // if it's an ReadOnly Array,
-  ReadonlyArray<DeepPartial<V>> :                               // use a ReadOnly of DeepPartial
-  T[P] extends string | number | boolean | null | undefined ?   // if it's a primitive
-  T[P] :                                                        // use that
-  DeepPartial<T[P]>                                             // otherwise, it's a DeepPartial of the type.
-};
+export type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+
+export type XDeepPartial<T> = DeepPartial<T>;
+
+export type DeepPartial<T> =
+  T extends Primitive | Function | Date ? T :
+  T extends Map<infer K, infer V> ? DeepPartialMap<K, V> :
+  T extends Set<infer U> ? DeepPartialSet<U> :
+  {
+    [P in keyof T]?:
+    T[P] extends Array<infer U> ? Array<DeepPartial<U>> :
+    T[P] extends ReadonlyArray<infer V> ? ReadonlyArray<DeepPartial<V>> :
+    T[P] extends Primitive ? T[P] :
+    DeepPartial<T[P]>
+  } | T;
+
+export type NDeepPartial<T> =
+  T extends Primitive ? T :
+  T extends Function ? T :
+  T extends Date ? T :
+  T extends Map<infer K, infer V> ? DeepPartialMap<K, V> :
+  T extends Set<infer U> ? DeepPartialSet<U> :
+  T extends {} ? {
+    [P in keyof T]?:
+    // T[P] extends Array<infer U> ? Array<DeepPartial<U>> :        // if it is an array then use an Array of DeepPartial
+    // T[P] extends ReadonlyArray<infer V> ? ReadonlyArray<DeepPartial<V>> :   // if it's an ReadOnly Array, // use a ReadOnly of DeepPartial
+    T[P] extends string | number | boolean | null | undefined ? T[P] :      // if it's a primitive use that
+    NDeepPartial<T[P]>                                                       // otherwise, it's a DeepPartial of the type.
+  } :
+  Partial<T>;
+
+
+interface DeepPartialSet<ItemType> extends Set<NDeepPartial<ItemType>> { }
+interface DeepPartialMap<KeyType, ValueType> extends Map<NDeepPartial<KeyType>, NDeepPartial<ValueType>> { }
+
 
 function applyTo(source: any, target: any, cache = new Set<any>()) {
   if (cache.has(source)) {

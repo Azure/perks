@@ -26,8 +26,41 @@ export enum SchemaType {
   /** an object of some type */
   Object = 'object',
 
-  /** a string  */
+  /** a string of characters  */
   String = 'string',
+
+  /** UnixTime */
+  UnixTime = 'unixtime',
+
+  /** ByteArray -- an array of bytes */
+  ByteArray = 'byte-array',
+
+  /* a binary stream */
+  Stream = 'stream',
+
+  /** a single character */
+  Char = 'char',
+
+  /** a Date */
+  Date = 'date',
+
+  /** a DateTime */
+  DateTime = 'date-time',
+
+  /** a Duration */
+  Duration = 'duration',
+
+  /** a universally unique identifier  */
+  Uuid = 'uuid',
+
+  /** an URI of some kind */
+  Uri = 'uri',
+
+  /** a password or credential  */
+  Credential = 'credential',
+
+  /** OData Query */
+  ODataQuery = 'odata-query',
 
   /** a choice between one of several  values (ie, 'enum')
    * 
@@ -68,6 +101,14 @@ export type CompoundSchemaTypes =
 
 /** Schema types that are primitive language values */
 export type PrimitiveSchemaTypes =
+  SchemaType.Char |
+  SchemaType.Date |
+  SchemaType.DateTime |
+  SchemaType.Duration |
+  SchemaType.Credential |
+  SchemaType.UnixTime |
+  SchemaType.Uri |
+  SchemaType.Uuid |
   SchemaType.Boolean |
   SchemaType.Integer |
   SchemaType.Number |
@@ -75,6 +116,7 @@ export type PrimitiveSchemaTypes =
 
 /** schema types that are non-object or complex types */
 export type ValueSchemaTypes =
+  SchemaType.ByteArray |
   PrimitiveSchemaTypes |
   SchemaType.Array |
   SchemaType.Choice;
@@ -88,4 +130,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant;
+  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor; 

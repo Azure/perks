@@ -3,13 +3,17 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { DEFAULT_SAFE_SCHEMA, dump, safeLoad } from 'js-yaml';
+import { DEFAULT_SAFE_SCHEMA, dump, safeLoad, Schema } from 'js-yaml';
 
 const propertyPriority = [
   '$key',
+  'primitives',
+  'objects',
+  'dictionaries',
+  'compounds',
+  'choices',
   'name',
   'schemas',
-  'name',
   'type',
   'format',
   'schema',
@@ -71,24 +75,29 @@ function sortWithPriorty(a: any, b: any): number {
   return ib != -1 || a > b ? 1 : a < b ? -1 : 0;
 }
 
-export function deserialize<T>(text: string, filename: string) {
+export function deserialize<T>(text: string, filename: string, schema: Schema = DEFAULT_SAFE_SCHEMA) {
   return <T>safeLoad(text, {
+    schema,
     filename,
   });
 }
 
-export function serialize<T>(model: T): string {
+export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): string {
   return dump(model, {
+    schema: schema,
     sortKeys: sortWithPriorty,
-    schema: DEFAULT_SAFE_SCHEMA,
     skipInvalid: true,
-    lineWidth: 240
-  }).
-    replace(/\s*\w*: {}/g, '').
-    replace(/\s*\w*: \[\]/g, '').
-    replace(/(\s*- \$key:)/g, '\n$1').
-    replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
-    // replace(/([^:]\n)(\s*-)/g, '$1\n$2')
-  ;
+    lineWidth: 240,
+
+  })
+    .replace(/\s*\w*: {}/g, '')
+    .replace(/\s*\w*: \[\]/g, '')
+    .replace(/(\s*- \$key:)/g, '\n$1')
+    .replace(/-\n\s+version/g, '- version');
+  // .replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
+  // replace(/([^:]\n)(\s*-)/g, '$1\n$2')
+
   //.replace(/(\s*language:)/g, '\n$1');
 }
+
+

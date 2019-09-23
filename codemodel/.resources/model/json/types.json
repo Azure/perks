@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "CompoundSchemas": {
+      "anyOf": [
+        {
+          "$ref": "./schemas.json#/definitions/AndSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/OrSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/XorSchema"
+        }
+      ]
+    },
+    "PrimitiveSchemas": {
+      "anyOf": [
+        {
+          "$ref": "./schemas.json#/definitions/NumberSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/StringSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/BooleanSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/CredentialSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UriSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UuidSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DurationSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DateTimeSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DateSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/CharSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UnixTimeSchema"
+        }
+      ]
+    },
+    "ObjectSchemas": {
+      "anyOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ObjectSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/AndSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/OrSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DictionarySchema"
+        }
+      ]
+    },
+    "AllSchemas": {
+      "anyOf": [
+        {
+          "$ref": "./schemas.json#/definitions/NumberSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/StringSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/ObjectSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/BooleanSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/CredentialSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UriSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UuidSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DurationSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DateTimeSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DateSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/CharSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/ByteArraySchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/UnixTimeSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/AndSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/OrSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/ArraySchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/ChoiceSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/DictionarySchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/ConstantSchema"
+        }
+      ]
+    },
+    "CompoundSchemaTypes": {
+      "enum": [
+        "and",
+        "or",
+        "xor"
+      ],
+      "type": "string"
+    },
+    "PrimitiveSchemaTypes": {
+      "enum": [
+        "boolean",
+        "char",
+        "credential",
+        "date",
+        "date-time",
+        "duration",
+        "integer",
+        "number",
+        "string",
+        "unixtime",
+        "uri",
+        "uuid"
+      ],
+      "type": "string"
+    },
+    "ValueSchemaTypes": {
+      "enum": [
+        "array",
+        "boolean",
+        "byte-array",
+        "char",
+        "choice",
+        "credential",
+        "date",
+        "date-time",
+        "duration",
+        "integer",
+        "number",
+        "string",
+        "unixtime",
+        "uri",
+        "uuid"
+      ],
+      "type": "string"
+    },
+    "ObjectSchemaTypes": {
+      "enum": [
+        "and",
+        "dictionary",
+        "object",
+        "or"
+      ],
+      "type": "string"
+    },
+    "AllSchemaTypes": {
+      "enum": [
+        "and",
+        "array",
+        "boolean",
+        "byte-array",
+        "char",
+        "choice",
+        "constant",
+        "credential",
+        "date",
+        "date-time",
+        "dictionary",
+        "duration",
+        "integer",
+        "number",
+        "object",
+        "odata-query",
+        "or",
+        "string",
+        "unixtime",
+        "uri",
+        "uuid",
+        "xor"
+      ],
+      "type": "string"
+    }
+  }
+}
