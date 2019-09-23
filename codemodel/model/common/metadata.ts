@@ -18,6 +18,10 @@ export interface Metadata extends Extensions {
 }
 
 export class Metadata extends Initializer implements Metadata {
+  static is(instance: any): instance is Metadata {
+    return instance && instance.language && instance.protocol && true;
+  }
+
   constructor(objectInitializer?: DeepPartial<Metadata>) {
     super();
     this.language = {

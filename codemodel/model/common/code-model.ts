@@ -18,7 +18,13 @@ export interface CodeModel extends Metadata {
   operationGroups: Array<OperationGroup>;
 }
 
+
 export class CodeModel extends Metadata implements CodeModel {
+  static is(instance: any): instance is CodeModel {
+
+    return instance && instance.info && instance.schemas && instance.operationGroups && super.is(instance) && true;
+  }
+
   constructor(title: string, sourceTracking = false, objectInitializer?: DeepPartial<CodeModel>) {
     super();
     // if we are enabling source tracking, then we have to use a proxied version of this

@@ -29,3 +29,4 @@ export * from './model/http/security';
 export * from './model/http/SerializationStyle';
 export * from './model/http/server';
 export * from './model/http/status-code';
+export * from './model/yaml-schema';
