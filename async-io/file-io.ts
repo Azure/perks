@@ -46,7 +46,7 @@ export function filePath(path: string | Buffer | Url | URL): string {
   path = path.toString();
   return path.startsWith('file:///') ? fileURLToPath(path) : path;
 }
-export const exists: (path: string | Buffer) => Promise<boolean> = path => new Promise<boolean>((r, j) => fs.stat(filePath(path), (err: NodeJS.ErrnoException | null, stats: fs.Stats) => err ? r(false) : r(true)));
+export const exists = promisify(fs.exists);
 export const readdir: (path: string | Buffer) => Promise<Array<string>> = promisify(fs.readdir);
 export const close: (fd: number) => Promise<void> = promisify(fs.close);
 
@@ -101,13 +101,10 @@ export async function readBinaryFile(filename: string): Promise<string> {
 
 export async function isFile(filePath: string): Promise<boolean> {
   try {
-    if (await exists(filePath)) {
-      return !(await lstat(filePath)).isDirectory();
-    }
+    return await exists(filePath) && !await isDirectory(filePath);
   } catch (e) {
     // don't throw!
   }
-
   return false;
 }
 
