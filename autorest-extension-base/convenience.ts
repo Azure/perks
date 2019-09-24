@@ -6,8 +6,10 @@
 import { safeEval, deserialize } from '@azure-tools/codegen';
 import { Host } from './exports';
 import { Channel, Message, Mapping, RawSourceMap, JsonPath, Position } from './types';
+import { Schema, DEFAULT_SAFE_SCHEMA } from 'js-yaml';
 
-async function getModel<T>(service: Host) {
+
+async function getModel<T>(service: Host, yamlSchema: Schema = DEFAULT_SAFE_SCHEMA) {
   const files = await service.ListInputs();
   const filename = files[0];
   if (files.length === 0) {
@@ -15,7 +17,7 @@ async function getModel<T>(service: Host) {
   }
   return {
     filename,
-    model: deserialize<T>(await service.ReadFile(filename), filename)
+    model: deserialize<T>(await service.ReadFile(filename), filename, yamlSchema)
   };
 }
 
@@ -29,8 +31,8 @@ export class Session<TInputModel> {
   /* @internal */ constructor(public readonly service: Host) {
   }
 
-  /* @internal */ async init<TProject>(project?: TProject) {
-    const m = await getModel<TInputModel>(this.service);
+  /* @internal */ async init<TProject>(project?: TProject, schema: Schema = DEFAULT_SAFE_SCHEMA) {
+    const m = await getModel<TInputModel>(this.service, schema);
     this.model = m.model;
     this.filename = m.filename;
 
@@ -228,6 +230,6 @@ export class Session<TInputModel> {
   }
 }
 
-export async function startSession<TInputModel>(service: Host, project?: any) {
-  return await new Session<TInputModel>(service).init(project);
+export async function startSession<TInputModel>(service: Host, project?: any, schema: Schema = DEFAULT_SAFE_SCHEMA) {
+  return await new Session<TInputModel>(service).init(project, schema);
 }
