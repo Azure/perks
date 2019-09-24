@@ -25,6 +25,7 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "devDependencies": {
+    "@types/js-yaml": "3.12.1",
     "@types/node": "12.7.2",
     "typescript": "~3.6.2",
     "@typescript-eslint/eslint-plugin": "~2.0.0",
@@ -32,6 +33,7 @@
     "eslint": "~6.2.2"
   },
   "dependencies": {
+    "js-yaml": "3.13.1",
     "vscode-jsonrpc": "^3.5.0",
     "@azure-tools/codegen": "~2.1.0"
   }
