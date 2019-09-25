@@ -3460,55 +3460,6 @@
         "protocol"
       ]
     },
-    "CodeModel": {
-      "description": "the model that contains all the information required to generate a service api",
-      "type": "object",
-      "properties": {
-        "info": {
-          "$ref": "#/definitions/Info",
-          "description": "Code model information"
-        },
-        "schemas": {
-          "$ref": "#/definitions/Schemas",
-          "description": "All schemas for the model"
-        },
-        "operationGroups": {
-          "description": "All operations",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/OperationGroup"
-          }
-        },
-        "globalParameters": {
-          "description": "all global parameters (ie, ImplementationLocation = client )",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Parameter"
-          }
-        },
-        "language": {
-          "$ref": "#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "protocol": {
-          "$ref": "#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "required": [
-        "globalParameters",
-        "info",
-        "language",
-        "operationGroups",
-        "protocol",
-        "schemas"
-      ]
-    },
     "Example": {
       "description": "example data [UNFINISHED]",
       "type": "object",
@@ -4722,5 +4673,52 @@
       },
       "defaultProperties": []
     }
-  }
+  },
+  "description": "the model that contains all the information required to generate a service api",
+  "type": "object",
+  "properties": {
+    "info": {
+      "$ref": "#/definitions/Info",
+      "description": "Code model information"
+    },
+    "schemas": {
+      "$ref": "#/definitions/Schemas",
+      "description": "All schemas for the model"
+    },
+    "operationGroups": {
+      "description": "All operations",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OperationGroup"
+      }
+    },
+    "globalParameters": {
+      "description": "all global parameters (ie, ImplementationLocation = client )",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Parameter"
+      }
+    },
+    "language": {
+      "$ref": "#/definitions/Languages",
+      "description": "per-language information for this aspect"
+    },
+    "protocol": {
+      "$ref": "#/definitions/Protocols",
+      "description": "per-protocol information for this aspect"
+    },
+    "extensions": {
+      "$ref": "#/definitions/Dictionary<any>",
+      "description": "additional metadata extensions dictionary"
+    }
+  },
+  "defaultProperties": [],
+  "required": [
+    "globalParameters",
+    "info",
+    "language",
+    "operationGroups",
+    "protocol",
+    "schemas"
+  ]
 }

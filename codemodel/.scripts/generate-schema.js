@@ -153,6 +153,10 @@ async function main() {
   schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
   schema.definitions['Dictionary<any>'].additionalProperties = true;
 
+  for (let each in schema.definitions['CodeModel']) {
+    schema[each] = schema.definitions['CodeModel'][each]
+  }
+  delete schema.definitions['CodeModel'];
 
   for (let each in schema.definitions) {
     if (schema.definitions[each].type === 'number') {

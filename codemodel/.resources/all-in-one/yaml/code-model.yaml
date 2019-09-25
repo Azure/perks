@@ -1,3 +1,5 @@
+type: object
+description: the model that contains all the information required to generate a service api
 $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
   APIKeySecurityScheme:
@@ -629,42 +631,6 @@ definitions:
     required:
       - scopes
       - tokenUrl
-  CodeModel:
-    type: object
-    description: the model that contains all the information required to generate a service api
-    properties:
-      schemas:
-        description: All schemas for the model
-        $ref: '#/definitions/Schemas'
-      globalParameters:
-        type: array
-        description: 'all global parameters (ie, ImplementationLocation = client )'
-        items:
-          $ref: '#/definitions/Parameter'
-      info:
-        description: Code model information
-        $ref: '#/definitions/Info'
-      operationGroups:
-        type: array
-        description: All operations
-        items:
-          $ref: '#/definitions/OperationGroup'
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
-      - globalParameters
-      - info
-      - language
-      - operationGroups
-      - protocol
-      - schemas
   CompoundSchemaTypes:
     type: string
     enum:
@@ -3438,3 +3404,36 @@ definitions:
   uri:
     type: string
     description: an URI
+properties:
+  schemas:
+    description: All schemas for the model
+    $ref: '#/definitions/Schemas'
+  globalParameters:
+    type: array
+    description: 'all global parameters (ie, ImplementationLocation = client )'
+    items:
+      $ref: '#/definitions/Parameter'
+  info:
+    description: Code model information
+    $ref: '#/definitions/Info'
+  operationGroups:
+    type: array
+    description: All operations
+    items:
+      $ref: '#/definitions/OperationGroup'
+  extensions:
+    description: additional metadata extensions dictionary
+    $ref: '#/definitions/Dictionary<any>'
+  language:
+    description: per-language information for this aspect
+    $ref: '#/definitions/Languages'
+  protocol:
+    description: per-protocol information for this aspect
+    $ref: '#/definitions/Protocols'
+required:
+  - globalParameters
+  - info
+  - language
+  - operationGroups
+  - protocol
+  - schemas
