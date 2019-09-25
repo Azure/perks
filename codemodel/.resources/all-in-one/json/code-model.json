@@ -4720,5 +4720,6 @@
     "operationGroups",
     "protocol",
     "schemas"
-  ]
+  ],
+  "title": "CodeModel"
 }

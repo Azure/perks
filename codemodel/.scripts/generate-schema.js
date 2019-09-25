@@ -156,6 +156,7 @@ async function main() {
   for (let each in schema.definitions['CodeModel']) {
     schema[each] = schema.definitions['CodeModel'][each]
   }
+  schema.title = 'CodeModel';
   delete schema.definitions['CodeModel'];
 
   for (let each in schema.definitions) {
