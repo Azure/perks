@@ -3,6 +3,7 @@ import { Schemas } from './schemas';
 import { Info } from './info';
 import { OperationGroup } from './operation';
 import { DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
+import { Parameter } from './parameter';
 
 // + ADD DISCRIMINATORS TO ALL CLASS.
 
@@ -16,6 +17,9 @@ export interface CodeModel extends Metadata {
 
   /** All operations  */
   operationGroups: Array<OperationGroup>;
+
+  /** all global parameters (ie, ImplementationLocation = client ) */
+  globalParameters: Array<Parameter>;
 }
 
 
@@ -33,11 +37,13 @@ export class CodeModel extends Metadata implements CodeModel {
   }
 
   getOperationGroup(group: string) {
-    let result = this.operationGroups.find(each => each.$key);
+    let result = this.operationGroups.find(each => group === each.$key);
     if (!result) {
+
       result = new OperationGroup(group);
       this.operationGroups.push(result);
     }
+    console.error(`GROUP: ${result.$key}`);
     return result;
   }
 }

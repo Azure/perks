@@ -2,6 +2,7 @@ $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
   AllSchemaTypes:
     type: string
+    description: all schema types
     enum:
       - and
       - array
@@ -15,11 +16,15 @@ definitions:
       - date-time
       - dictionary
       - duration
+      - flag
       - integer
+      - not
       - number
       - object
       - odata-query
       - or
+      - parameter-group
+      - sealed-choice
       - string
       - unixtime
       - uri
@@ -29,7 +34,9 @@ definitions:
     anyOf:
       - $ref: './schemas.yaml#/definitions/NumberSchema'
       - $ref: './schemas.yaml#/definitions/StringSchema'
+      - $ref: './schemas.yaml#/definitions/ParameterGroupSchema'
       - $ref: './schemas.yaml#/definitions/ObjectSchema'
+      - $ref: './schemas.yaml#/definitions/FlagSchema'
       - $ref: './schemas.yaml#/definitions/BooleanSchema'
       - $ref: './schemas.yaml#/definitions/CredentialSchema'
       - $ref: './schemas.yaml#/definitions/UriSchema'
@@ -42,8 +49,10 @@ definitions:
       - $ref: './schemas.yaml#/definitions/UnixTimeSchema'
       - $ref: './schemas.yaml#/definitions/AndSchema'
       - $ref: './schemas.yaml#/definitions/OrSchema'
+      - $ref: './schemas.yaml#/definitions/NotSchema'
       - $ref: './schemas.yaml#/definitions/ArraySchema'
       - $ref: './schemas.yaml#/definitions/ChoiceSchema'
+      - $ref: './schemas.yaml#/definitions/SealedChoiceSchema'
       - $ref: './schemas.yaml#/definitions/DictionarySchema'
       - $ref: './schemas.yaml#/definitions/ConstantSchema'
   CompoundSchemaTypes:
@@ -110,8 +119,10 @@ definitions:
       - date
       - date-time
       - duration
+      - flag
       - integer
       - number
+      - sealed-choice
       - string
       - unixtime
       - uri

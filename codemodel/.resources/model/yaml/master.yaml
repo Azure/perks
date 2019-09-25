@@ -37,6 +37,11 @@ definitions:
       schemas:
         description: All schemas for the model
         $ref: './schemas.yaml#/definitions/Schemas'
+      globalParameters:
+        type: array
+        description: 'all global parameters (ie, ImplementationLocation = client )'
+        items:
+          $ref: './master.yaml#/definitions/Parameter'
       info:
         description: Code model information
         $ref: './master.yaml#/definitions/Info'
@@ -55,6 +60,7 @@ definitions:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
     required:
+      - globalParameters
       - info
       - language
       - operationGroups
@@ -144,6 +150,20 @@ definitions:
         $ref: './master.yaml#/definitions/Dictionary<any>'
     required:
       - url
+  FlagValue:
+    type: object
+    properties:
+      value:
+        type: number
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this value
+        $ref: './master.yaml#/definitions/Languages'
+    required:
+      - language
+      - value
   Info:
     type: object
     description: code model information
@@ -383,6 +403,9 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: './master.yaml#/definitions/ExternalDocumentation'
+      implementation:
+        description: suggested implementation location for this parameter
+        $ref: './enums.yaml#/definitions/ImplementationLocation'
       nullable:
         type: boolean
         description: can null be passed in instead

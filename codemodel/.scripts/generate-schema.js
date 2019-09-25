@@ -103,6 +103,7 @@ function fixmodel(schema) {
     .replace(/<Schema<AllSchemaTypes>>/g, '')
     .replace(/Schema<AllSchemaTypes>/g, 'Schema')
     .replace(/<Schema<PrimitiveSchemaTypes>>/g, '')
+    .replace(/<\w*Schema>/g, '')
     .replace(/Schema\.TSchemaType_1/g, 'NumericSchemaTypes')
     .replace(/Schema\.TSchemaType_2/g, 'ObjectSchemaTypes')
     .replace(/Schema\.TSchemaType_3/g, 'PrimitiveSchemaTypes')
@@ -135,10 +136,10 @@ async function main() {
   let schema = TJS.generateSchema(program, "*", settings);
 
   delete schema.definitions['ValueSchemas'];
-  delete schema.definitions['ArraySchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['ConstantSchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['DictionarySchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['ChoiceSchema<Schema<PrimitiveSchemaTypes>>'];
+  delete schema.definitions['ArraySchema<Schema>'];
+  delete schema.definitions['ConstantSchema<Schema>'];
+  delete schema.definitions['DictionarySchema<Schema>'];
+  delete schema.definitions['ChoiceSchema<Schema>'];
   delete schema.definitions['Aspect'];
   delete schema.definitions['Schema.TSchemaType'];
   delete schema.definitions['Schema.TSchemaType_2'];
@@ -146,6 +147,7 @@ async function main() {
   delete schema.definitions['T'];
   delete schema.definitions['ElementType'];
   delete schema.definitions['ElementType_1'];
+  delete schema.definitions['ChoiceType_1'];
   delete schema.definitions['SerializationFormats<SerializationFormat>'];
 
   schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
@@ -190,13 +192,15 @@ async function main() {
 
   //move schemas
   for (let each in all.master.definitions) {
-    if (each.endsWith('Schema') || each.startsWith('Schema<')) {
+    if (each.endsWith('Schema') || each.startsWith('Schema<') || each.indexOf('Schema<') > -1) {
       moveTo(all, each, 'schemas')
     }
   }
   moveTo(all, 'Schemas', 'schemas');
   moveTo(all, 'ChoiceType', 'schemas');
   moveTo(all, 'ChoiceValue', 'schemas');
+  moveTo(all, 'ChoiceSchema', 'schemas');
+  moveTo(all, 'SealedChoiceSchema', 'schemas');
   moveTo(all, 'ConstantType', 'schemas');
   moveTo(all, 'ConstantValue', 'schemas');
 

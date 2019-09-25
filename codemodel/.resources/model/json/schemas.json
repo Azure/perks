@@ -10,7 +10,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -77,6 +77,14 @@
       "description": "a Schema that represents a Number value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "enum": [
+            "integer",
+            "number"
+          ],
+          "type": "string"
+        },
         "precision": {
           "description": "precision (# of bits?) of the number",
           "type": "number"
@@ -104,10 +112,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./schemas.json#/definitions/NumericSchemaTypes",
-          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -174,6 +178,13 @@
       "description": "a Schema that represents a string value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "string"
+          ]
+        },
         "maxLength": {
           "description": "the maximum length of the string",
           "type": "number"
@@ -189,13 +200,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "string"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -261,6 +265,13 @@
       "description": "a Schema that represents and array of values",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "array"
+          ]
+        },
         "elementType": {
           "$ref": "./master.json#/definitions/Schema",
           "description": "elementType of the array"
@@ -280,13 +291,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "array"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -349,10 +353,100 @@
         "uid"
       ]
     },
+    "ParameterGroupSchema": {
+      "description": "a schema that represents a set of parameters.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "parameter-group"
+          ]
+        },
+        "parameters": {
+          "description": "the collection of properties that are in this object",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Parameter"
+          }
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "example": {
+          "description": "example information"
+        },
+        "defaultValue": {
+          "description": "If the value isn't sent on the wire, the service will assume this"
+        },
+        "serialization": {
+          "$ref": "./master.json#/definitions/SerializationFormats",
+          "description": "per-serialization information for this Schema"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "$key": {
+          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
+          "type": "string"
+        },
+        "description": {
+          "description": "description of the aspect.",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "parameters",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ]
+    },
     "ObjectSchema": {
       "description": "a schema that represents a type with child properties.",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "object"
+          ]
+        },
         "discriminator": {
           "$ref": "./master.json#/definitions/Discriminator",
           "description": "the definition of the polymorphic descriminator for this type"
@@ -376,13 +470,6 @@
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
         },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "object"
-          ]
-        },
         "summary": {
           "description": "a short description",
           "type": "string"
@@ -443,35 +530,23 @@
         "uid"
       ]
     },
-    "ChoiceSchema": {
-      "description": "a schema that represents a choice of several values (ie, an 'enum')",
+    "FlagSchema": {
       "type": "object",
       "properties": {
-        "choiceType": {
-          "$ref": "./schemas.json#/definitions/ChoiceType",
-          "description": "the primitive type for the choices"
-        },
         "choices": {
           "description": "the possible choices for in the set",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/ChoiceValue"
+            "$ref": "./master.json#/definitions/FlagValue"
           }
-        },
-        "sealed": {
-          "description": "if the set of choices is irrevocably sealed",
-          "type": "boolean"
         },
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "choice"
-          ]
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
+          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -525,7 +600,6 @@
       "defaultProperties": [],
       "required": [
         "$key",
-        "choiceType",
         "choices",
         "description",
         "language",
@@ -539,24 +613,24 @@
       "description": "a schema that represents a constant value",
       "type": "object",
       "properties": {
-        "constantSchema": {
-          "$ref": "./schemas.json#/definitions/ConstantType",
-          "description": "the schema type of the constant value (ie, StringSchema, NumberSchema, etc)"
-        },
-        "value": {
-          "$ref": "./master.json#/definitions/Value",
-          "description": "the actual constant value"
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "constant"
           ]
+        },
+        "constantSchema": {
+          "$ref": "./schemas.json#/definitions/ConstantType",
+          "description": "the schema type of the constant value (ie, StringSchema, NumberSchema, etc)"
+        },
+        "value": {
+          "$ref": "./schemas.json#/definitions/ConstantValue",
+          "description": "the actual constant value"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -624,16 +698,16 @@
       "description": "a schema that represents a boolean value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "boolean"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -699,16 +773,16 @@
       "description": "a schema that represents a ODataQuery value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "odata-query"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -774,6 +848,13 @@
       "description": "a schema that represents a Credential value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "credential"
+          ]
+        },
         "maxLength": {
           "description": "the maximum length of the string",
           "type": "number"
@@ -789,13 +870,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "credential"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -861,6 +935,13 @@
       "description": "a schema that represents a Uri value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "uri"
+          ]
+        },
         "maxLength": {
           "description": "the maximum length of the string",
           "type": "number"
@@ -876,13 +957,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "uri"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -948,16 +1022,16 @@
       "description": "a schema that represents a Uuid value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "uuid"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1023,16 +1097,16 @@
       "description": "a schema that represents a Duration value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "duration"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1098,6 +1172,13 @@
       "description": "a schema that represents a DateTime value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "date-time"
+          ]
+        },
         "format": {
           "description": "date-time format",
           "enum": [
@@ -1109,13 +1190,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "date-time"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -1182,16 +1256,16 @@
       "description": "a schema that represents a Date value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "date"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1257,16 +1331,16 @@
       "description": "a schema that represents a Char value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "char"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1332,6 +1406,13 @@
       "description": "a schema that represents a ByteArray value",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "byte-array"
+          ]
+        },
         "format": {
           "description": "date-time format",
           "enum": [
@@ -1343,13 +1424,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "byte-array"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -1416,16 +1490,16 @@
       "description": "a schema that represents a UnixTime value",
       "type": "object",
       "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "unixtime"
           ]
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1491,6 +1565,13 @@
       "description": "a schema that represents a key-value collection",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "dictionary"
+          ]
+        },
         "elementType": {
           "$ref": "./master.json#/definitions/Schema",
           "description": "the element type of the dictionary. (Keys are always strings)"
@@ -1498,13 +1579,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "dictionary"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -1571,23 +1645,36 @@
       "description": "an AND relationship between several schemas",
       "type": "object",
       "properties": {
-        "allOf": {
-          "description": "the set of schemas that this schema is composed of.",
-          "type": "array",
-          "items": {
-            "$ref": "./schemas.json#/definitions/Schema<ObjectSchemaTypes>"
-          }
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
         "type": {
           "description": "the schema type",
           "type": "string",
           "enum": [
             "and"
           ]
+        },
+        "allOf": {
+          "description": "the set of schemas that this schema is composed of.",
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "./schemas.json#/definitions/ObjectSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/AndSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/OrSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/DictionarySchema"
+              }
+            ]
+          }
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
+          "description": "per-language information for Schema uses SchemaMetadata"
         },
         "summary": {
           "description": "a short description",
@@ -1658,7 +1745,20 @@
           "description": "the set of schemas that this schema is composed of. Every schema is optional",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/Schema<ObjectSchemaTypes>"
+            "anyOf": [
+              {
+                "$ref": "./schemas.json#/definitions/ObjectSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/AndSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/OrSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/DictionarySchema"
+              }
+            ]
           }
         },
         "language": {
@@ -1666,11 +1766,8 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "or"
-          ]
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
+          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -1749,11 +1846,8 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "xor"
-          ]
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
+          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -1820,6 +1914,13 @@
       "description": "a NOT relationship between schemas",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "not"
+          ]
+        },
         "not": {
           "$ref": "./schemas.json#/definitions/Schema",
           "description": "the schema that this may not be."
@@ -1827,13 +1928,6 @@
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "description": "the schema type",
-          "type": "string",
-          "enum": [
-            "not"
-          ]
         },
         "summary": {
           "description": "a short description",
@@ -1896,17 +1990,31 @@
         "uid"
       ]
     },
-    "Schema<ObjectSchemaTypes>": {
-      "description": "The Schema Object allows the definition of input and output data types.",
+    "ChoiceSchema": {
+      "description": "a schema that represents a choice of several values (ie, an 'enum')",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "choice"
+          ]
+        },
+        "choiceType": {
+          "$ref": "./schemas.json#/definitions/StringSchema",
+          "description": "the primitive type for the choices"
+        },
+        "choices": {
+          "description": "the possible choices for in the set",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ChoiceValue"
+          }
+        },
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./schemas.json#/definitions/ObjectSchemaTypes",
-          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -1960,6 +2068,8 @@
       "defaultProperties": [],
       "required": [
         "$key",
+        "choiceType",
+        "choices",
         "description",
         "language",
         "protocol",
@@ -1968,17 +2078,31 @@
         "uid"
       ]
     },
-    "Schema<PrimitiveSchemaTypes>": {
-      "description": "The Schema Object allows the definition of input and output data types.",
+    "SealedChoiceSchema": {
+      "description": "a schema that represents a choice of several values (ie, an 'enum')",
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type",
+          "type": "string",
+          "enum": [
+            "sealed-choice"
+          ]
+        },
+        "choiceType": {
+          "$ref": "./schemas.json#/definitions/StringSchema",
+          "description": "the primitive type for the choices"
+        },
+        "choices": {
+          "description": "the possible choices for in the set",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ChoiceValue"
+          }
+        },
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchemaTypes",
-          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -2032,6 +2156,8 @@
       "defaultProperties": [],
       "required": [
         "$key",
+        "choiceType",
+        "choices",
         "description",
         "language",
         "protocol",
@@ -2051,21 +2177,30 @@
             "$ref": "./schemas.json#/definitions/ObjectSchema"
           }
         },
-        "compounds": {
+        "parameterGroups": {
+          "description": "groups of parameters that can be built as an object",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ParameterGroupSchema"
+          }
+        },
+        "orCompounds": {
           "description": "schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf)",
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "./schemas.json#/definitions/AndSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/OrSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/XorSchema"
-              }
-            ]
+            "$ref": "./schemas.json#/definitions/OrSchema"
+          }
+        },
+        "andCompounds": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/AndSchema"
+          }
+        },
+        "xorCompounds": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/XorSchema"
           }
         },
         "choices": {
@@ -2073,6 +2208,19 @@
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ChoiceSchema"
+          }
+        },
+        "sealedChoices": {
+          "description": "schemas that represent a set of choices that are sealed -- that can never have items added to the definition.",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
+          }
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/FlagSchema"
           }
         },
         "dictionaries": {
@@ -2099,6 +2247,9 @@
               },
               {
                 "$ref": "./schemas.json#/definitions/StringSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/FlagSchema"
               },
               {
                 "$ref": "./schemas.json#/definitions/BooleanSchema"
@@ -2135,6 +2286,9 @@
               },
               {
                 "$ref": "./schemas.json#/definitions/ChoiceSchema"
+              },
+              {
+                "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
               }
             ]
           }
@@ -2145,13 +2299,27 @@
     "ChoiceType": {
       "type": "object",
       "properties": {
+        "type": {
+          "description": "the schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type",
+          "enum": [
+            "boolean",
+            "char",
+            "credential",
+            "date",
+            "date-time",
+            "duration",
+            "integer",
+            "number",
+            "string",
+            "unixtime",
+            "uri",
+            "uuid"
+          ],
+          "type": "string"
+        },
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
-          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",
@@ -2217,6 +2385,10 @@
       "description": "an individual choice in a ChoiceSchema",
       "type": "object",
       "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this value"
+        },
         "value": {
           "description": "the actual value",
           "type": [
@@ -2225,19 +2397,14 @@
             "boolean"
           ]
         },
-        "name": {
-          "description": "the name this value should use",
-          "type": "string"
-        },
-        "description": {
-          "description": "the description for this value",
-          "type": "string"
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
         }
       },
       "defaultProperties": [],
       "required": [
-        "description",
-        "name",
+        "language",
         "value"
       ]
     },
@@ -2249,7 +2416,7 @@
           "description": "per-language information for Schema uses SchemaMetadata"
         },
         "type": {
-          "$ref": "./schemas.json#/definitions/AllSchemaTypes",
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
           "description": "the schema type"
         },
         "summary": {
@@ -2316,12 +2483,21 @@
       "description": "a container for the actual constant value",
       "type": "object",
       "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this value"
+        },
         "value": {
           "description": "the actual constant value to use"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
         }
       },
       "defaultProperties": [],
       "required": [
+        "language",
         "value"
       ]
     }

@@ -410,6 +410,77 @@
         "uid"
       ]
     },
+    "Parameter": {
+      "description": "a definition of an discrete input for an operation",
+      "type": "object",
+      "properties": {
+        "implementation": {
+          "$ref": "./enums.json#/definitions/ImplementationLocation",
+          "description": "suggested implementation location for this parameter"
+        },
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema",
+          "description": "the schema of this Value"
+        },
+        "required": {
+          "description": "if the value is marked 'required'.",
+          "type": "boolean"
+        },
+        "nullable": {
+          "description": "can null be passed in instead",
+          "type": "boolean"
+        },
+        "$key": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uid": {
+          "type": "string"
+        },
+        "summary": {
+          "description": "a short description",
+          "type": "string"
+        },
+        "apiVersions": {
+          "description": "API versions that this applies to. Undefined means all versions",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ApiVersion"
+          }
+        },
+        "deprecated": {
+          "$ref": "./master.json#/definitions/Deprecation",
+          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "externalDocs": {
+          "$ref": "./master.json#/definitions/ExternalDocumentation",
+          "description": "External Documentation Links"
+        },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this aspect"
+        },
+        "protocol": {
+          "$ref": "./master.json#/definitions/Protocols",
+          "description": "per-protocol information for this aspect"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "schema",
+        "uid"
+      ]
+    },
     "SchemaMetadata": {
       "description": "language metadata specific to schema instances",
       "type": "object",
@@ -446,6 +517,27 @@
         }
       },
       "defaultProperties": []
+    },
+    "FlagValue": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "$ref": "./master.json#/definitions/Languages",
+          "description": "per-language information for this value"
+        },
+        "value": {
+          "type": "number"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "required": [
+        "language",
+        "value"
+      ]
     },
     "email": {
       "type": "string"
@@ -529,73 +621,6 @@
       "defaultProperties": [],
       "required": [
         "title"
-      ]
-    },
-    "Parameter": {
-      "description": "a definition of an discrete input for an operation",
-      "type": "object",
-      "properties": {
-        "schema": {
-          "$ref": "./schemas.json#/definitions/Schema",
-          "description": "the schema of this Value"
-        },
-        "required": {
-          "description": "if the value is marked 'required'.",
-          "type": "boolean"
-        },
-        "nullable": {
-          "description": "can null be passed in instead",
-          "type": "boolean"
-        },
-        "$key": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "./master.json#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "schema",
-        "uid"
       ]
     },
     "Response": {
@@ -811,6 +836,13 @@
             "$ref": "./master.json#/definitions/OperationGroup"
           }
         },
+        "globalParameters": {
+          "description": "all global parameters (ie, ImplementationLocation = client )",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Parameter"
+          }
+        },
         "language": {
           "$ref": "./master.json#/definitions/Languages",
           "description": "per-language information for this aspect"
@@ -826,6 +858,7 @@
       },
       "defaultProperties": [],
       "required": [
+        "globalParameters",
         "info",
         "language",
         "operationGroups",

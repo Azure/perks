@@ -69,6 +69,10 @@ export enum SchemaType {
    */
   Choice = 'choice',
 
+  SealedChoice = 'sealed-choice',
+
+  Flag = 'flag',
+
   /** a constant value */
   Constant = 'constant',
 
@@ -84,7 +88,9 @@ export enum SchemaType {
    * @description it's possible that we just may make this an error 
    * in representation.
    */
-  Unknown = 'unknown'
+  Unknown = 'unknown',
+
+  ParameterGroup = 'parameter-group',
 }
 
 /** Compound schemas are used to construct complex objects or offer choices of a set of schemas.
@@ -119,7 +125,7 @@ export type ValueSchemaTypes =
   SchemaType.ByteArray |
   PrimitiveSchemaTypes |
   SchemaType.Array |
-  SchemaType.Choice;
+  SchemaType.Choice | SchemaType.SealedChoice | SchemaType.Flag;
 
 /** schema types that can be objects */
 export type ObjectSchemaTypes =
@@ -130,4 +136,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor; 
+  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not; 

@@ -16,12 +16,15 @@
         "date-time",
         "dictionary",
         "duration",
+        "flag",
         "integer",
         "not",
         "number",
         "object",
         "odata-query",
         "or",
+        "parameter-group",
+        "sealed-choice",
         "stream",
         "string",
         "unixtime",
@@ -29,6 +32,13 @@
         "uri",
         "uuid",
         "xor"
+      ],
+      "type": "string"
+    },
+    "ImplementationLocation": {
+      "enum": [
+        "Client",
+        "Method"
       ],
       "type": "string"
     },
@@ -85,7 +95,8 @@
         "cookie",
         "header",
         "path",
-        "query"
+        "query",
+        "uri"
       ],
       "type": "string"
     },
@@ -175,37 +186,6 @@
         "http",
         "oauth2",
         "openIdConnect"
-      ],
-      "type": "string"
-    },
-    "ImplementationLocation": {
-      "enum": [
-        "Client",
-        "Method"
-      ],
-      "type": "string"
-    },
-    "NumericSchemaTypes": {
-      "enum": [
-        "integer",
-        "number"
-      ],
-      "type": "string"
-    },
-    "PrimitiveSchemaTypes": {
-      "enum": [
-        "boolean",
-        "char",
-        "credential",
-        "date",
-        "date-time",
-        "duration",
-        "integer",
-        "number",
-        "string",
-        "unixtime",
-        "uri",
-        "uuid"
       ],
       "type": "string"
     }

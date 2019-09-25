@@ -433,15 +433,10 @@
         "skipUriEncoding": {
           "description": "when set, this indicates that the content of the parameter should not be subject to URI encoding rules.",
           "type": "boolean"
-        },
-        "implementation": {
-          "$ref": "./enums.json#/definitions/ImplementationLocation",
-          "description": "suggested implementation location for this parameter"
         }
       },
       "defaultProperties": [],
       "required": [
-        "implementation",
         "in",
         "style"
       ]

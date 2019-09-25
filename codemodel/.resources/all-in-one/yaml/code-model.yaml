@@ -22,6 +22,7 @@ definitions:
       - type
   AllSchemaTypes:
     type: string
+    description: all schema types
     enum:
       - and
       - array
@@ -35,11 +36,15 @@ definitions:
       - date-time
       - dictionary
       - duration
+      - flag
       - integer
+      - not
       - number
       - object
       - odata-query
       - or
+      - parameter-group
+      - sealed-choice
       - string
       - unixtime
       - uri
@@ -49,7 +54,9 @@ definitions:
     anyOf:
       - $ref: '#/definitions/NumberSchema'
       - $ref: '#/definitions/StringSchema'
+      - $ref: '#/definitions/ParameterGroupSchema'
       - $ref: '#/definitions/ObjectSchema'
+      - $ref: '#/definitions/FlagSchema'
       - $ref: '#/definitions/BooleanSchema'
       - $ref: '#/definitions/CredentialSchema'
       - $ref: '#/definitions/UriSchema'
@@ -62,8 +69,10 @@ definitions:
       - $ref: '#/definitions/UnixTimeSchema'
       - $ref: '#/definitions/AndSchema'
       - $ref: '#/definitions/OrSchema'
+      - $ref: '#/definitions/NotSchema'
       - $ref: '#/definitions/ArraySchema'
       - $ref: '#/definitions/ChoiceSchema'
+      - $ref: '#/definitions/SealedChoiceSchema'
       - $ref: '#/definitions/DictionarySchema'
       - $ref: '#/definitions/ConstantSchema'
   AndSchema:
@@ -85,7 +94,11 @@ definitions:
         type: array
         description: the set of schemas that this schema is composed of.
         items:
-          $ref: '#/definitions/Schema<ObjectSchemaTypes>'
+          anyOf:
+            - $ref: '#/definitions/ObjectSchema'
+            - $ref: '#/definitions/AndSchema'
+            - $ref: '#/definitions/OrSchema'
+            - $ref: '#/definitions/DictionarySchema'
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -461,7 +474,7 @@ definitions:
           $ref: '#/definitions/ApiVersion'
       choiceType:
         description: the primitive type for the choices
-        $ref: '#/definitions/ChoiceType'
+        $ref: '#/definitions/StringSchema'
       choices:
         type: array
         description: the possible choices for in the set
@@ -477,9 +490,6 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: '#/definitions/ExternalDocumentation'
-      sealed:
-        type: boolean
-        description: if the set of choices is irrevocably sealed
       serialization:
         description: per-serialization information for this Schema
         $ref: '#/definitions/SerializationFormats'
@@ -514,8 +524,32 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
-        description: the schema type
-        $ref: '#/definitions/AllSchemaTypes'
+        type: string
+        description: |-
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+          the schema type
+        enum:
+          - boolean
+          - char
+          - credential
+          - date
+          - date-time
+          - duration
+          - integer
+          - number
+          - string
+          - unixtime
+          - uri
+          - uuid
       description:
         type: string
         description: description of the aspect.
@@ -563,21 +597,20 @@ definitions:
     type: object
     description: an individual choice in a ChoiceSchema
     properties:
-      name:
-        type: string
-        description: the name this value should use
-      description:
-        type: string
-        description: the description for this value
       value:
         type:
           - string
           - number
           - boolean
         description: the actual value
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this value
+        $ref: '#/definitions/Languages'
     required:
-      - description
-      - name
+      - language
       - value
   ClientCredentialsFlow:
     type: object
@@ -603,6 +636,11 @@ definitions:
       schemas:
         description: All schemas for the model
         $ref: '#/definitions/Schemas'
+      globalParameters:
+        type: array
+        description: 'all global parameters (ie, ImplementationLocation = client )'
+        items:
+          $ref: '#/definitions/Parameter'
       info:
         description: Code model information
         $ref: '#/definitions/Info'
@@ -621,6 +659,7 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
+      - globalParameters
       - info
       - language
       - operationGroups
@@ -680,7 +719,7 @@ definitions:
         type: string
       value:
         description: the actual constant value
-        $ref: '#/definitions/Value'
+        $ref: '#/definitions/ConstantValue'
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -758,7 +797,14 @@ definitions:
     properties:
       value:
         description: the actual constant value to use
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this value
+        $ref: '#/definitions/Languages'
     required:
+      - language
       - value
   Contact:
     type: object
@@ -1144,6 +1190,78 @@ definitions:
         $ref: '#/definitions/Dictionary<any>'
     required:
       - url
+  FlagSchema:
+    type: object
+    properties:
+      $key:
+        type: string
+        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
+      type:
+        description: the schema type
+        $ref: '#/definitions/AllSchemaTypes'
+      description:
+        type: string
+        description: description of the aspect.
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: '#/definitions/ApiVersion'
+      choices:
+        type: array
+        description: the possible choices for in the set
+        items:
+          $ref: '#/definitions/FlagValue'
+      defaultValue:
+        description: 'If the value isn''t sent on the wire, the service will assume this'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: '#/definitions/Deprecation'
+      example:
+        description: example information
+      externalDocs:
+        description: External Documentation Links
+        $ref: '#/definitions/ExternalDocumentation'
+      serialization:
+        description: per-serialization information for this Schema
+        $ref: '#/definitions/SerializationFormats'
+      summary:
+        type: string
+        description: a short description
+      uid:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for Schema uses SchemaMetadata
+        $ref: '#/definitions/Languages<SchemaMetadata>'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: '#/definitions/Protocols'
+    required:
+      - $key
+      - choices
+      - description
+      - language
+      - protocol
+      - serialization
+      - type
+      - uid
+  FlagValue:
+    type: object
+    properties:
+      value:
+        type: number
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this value
+        $ref: '#/definitions/Languages'
+    required:
+      - language
+      - value
   HTTPSecurityScheme:
     anyOf:
       - $ref: '#/definitions/BearerHTTPSecurityScheme'
@@ -1267,9 +1385,6 @@ definitions:
     type: object
     description: extended metadata for HTTP operation parameters
     properties:
-      implementation:
-        description: suggested implementation location for this parameter
-        $ref: '#/definitions/ImplementationLocation'
       in:
         description: the location that this parameter is placed in the http request
         $ref: '#/definitions/ParameterLocation'
@@ -1280,7 +1395,6 @@ definitions:
         description: the Serialization Style used for the parameter.
         $ref: '#/definitions/SerializationStyle'
     required:
-      - implementation
       - in
       - style
   HttpRequest:
@@ -1809,8 +1923,11 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
+        type: string
         description: the schema type
-        $ref: '#/definitions/NumericSchemaTypes'
+        enum:
+          - integer
+          - number
       description:
         type: string
         description: description of the aspect.
@@ -1873,11 +1990,6 @@ definitions:
       - serialization
       - type
       - uid
-  NumericSchemaTypes:
-    type: string
-    enum:
-      - integer
-      - number
   OAuth2SecurityScheme:
     type: object
     properties:
@@ -2155,10 +2267,8 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
-        type: string
         description: the schema type
-        enum:
-          - or
+        $ref: '#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -2166,7 +2276,11 @@ definitions:
         type: array
         description: the set of schemas that this schema is composed of. Every schema is optional
         items:
-          $ref: '#/definitions/Schema<ObjectSchemaTypes>'
+          anyOf:
+            - $ref: '#/definitions/ObjectSchema'
+            - $ref: '#/definitions/AndSchema'
+            - $ref: '#/definitions/OrSchema'
+            - $ref: '#/definitions/DictionarySchema'
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -2230,6 +2344,9 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: '#/definitions/ExternalDocumentation'
+      implementation:
+        description: suggested implementation location for this parameter
+        $ref: '#/definitions/ImplementationLocation'
       nullable:
         type: boolean
         description: can null be passed in instead
@@ -2257,6 +2374,67 @@ definitions:
       - protocol
       - schema
       - uid
+  ParameterGroupSchema:
+    type: object
+    description: a schema that represents a set of parameters.
+    properties:
+      $key:
+        type: string
+        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
+      type:
+        type: string
+        description: the schema type
+        enum:
+          - parameter-group
+      description:
+        type: string
+        description: description of the aspect.
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: '#/definitions/ApiVersion'
+      defaultValue:
+        description: 'If the value isn''t sent on the wire, the service will assume this'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: '#/definitions/Deprecation'
+      example:
+        description: example information
+      externalDocs:
+        description: External Documentation Links
+        $ref: '#/definitions/ExternalDocumentation'
+      parameters:
+        type: array
+        description: the collection of properties that are in this object
+        items:
+          $ref: '#/definitions/Parameter'
+      serialization:
+        description: per-serialization information for this Schema
+        $ref: '#/definitions/SerializationFormats'
+      summary:
+        type: string
+        description: a short description
+      uid:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for Schema uses SchemaMetadata
+        $ref: '#/definitions/Languages<SchemaMetadata>'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: '#/definitions/Protocols'
+    required:
+      - $key
+      - description
+      - language
+      - parameters
+      - protocol
+      - serialization
+      - type
+      - uid
   ParameterLocation:
     type: string
     description: the location that this parameter is placed in the http request
@@ -2266,6 +2444,7 @@ definitions:
       - header
       - path
       - query
+      - uri
   PasswordOAuthFlow:
     type: object
     properties:
@@ -2483,112 +2662,6 @@ definitions:
       - serialization
       - type
       - uid
-  Schema<ObjectSchemaTypes>:
-    type: object
-    description: The Schema Object allows the definition of input and output data types.
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        description: the schema type
-        $ref: '#/definitions/ObjectSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
-      - $key
-      - description
-      - language
-      - protocol
-      - serialization
-      - type
-      - uid
-  Schema<PrimitiveSchemaTypes>:
-    type: object
-    description: The Schema Object allows the definition of input and output data types.
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        description: the schema type
-        $ref: '#/definitions/PrimitiveSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
-      - $key
-      - description
-      - language
-      - protocol
-      - serialization
-      - type
-      - uid
   SchemaMetadata:
     type: object
     description: language metadata specific to schema instances
@@ -2644,12 +2717,15 @@ definitions:
       - date-time
       - dictionary
       - duration
+      - flag
       - integer
       - not
       - number
       - object
       - odata-query
       - or
+      - parameter-group
+      - sealed-choice
       - stream
       - string
       - unixtime
@@ -2661,19 +2737,15 @@ definitions:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
     properties:
+      andCompounds:
+        type: array
+        items:
+          $ref: '#/definitions/AndSchema'
       choices:
         type: array
         description: 'schemas that represent a set of choices (ie, ''enum'')'
         items:
           $ref: '#/definitions/ChoiceSchema'
-      compounds:
-        type: array
-        description: 'schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf)'
-        items:
-          anyOf:
-            - $ref: '#/definitions/AndSchema'
-            - $ref: '#/definitions/OrSchema'
-            - $ref: '#/definitions/XorSchema'
       constants:
         type: array
         description: constant values that are used in models and parameters
@@ -2684,11 +2756,25 @@ definitions:
         description: schemas that represent key-value dictionaries used in the model.
         items:
           $ref: '#/definitions/DictionarySchema'
+      flags:
+        type: array
+        items:
+          $ref: '#/definitions/FlagSchema'
       objects:
         type: array
         description: schemas that likely result in the creation of new objects during code generation
         items:
           $ref: '#/definitions/ObjectSchema'
+      orCompounds:
+        type: array
+        description: 'schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf)'
+        items:
+          $ref: '#/definitions/OrSchema'
+      parameterGroups:
+        type: array
+        description: groups of parameters that can be built as an object
+        items:
+          $ref: '#/definitions/ParameterGroupSchema'
       primitives:
         type: array
         description: primitive schemas that represent things that should be able to be represented without additional classes generated
@@ -2696,6 +2782,7 @@ definitions:
           anyOf:
             - $ref: '#/definitions/NumberSchema'
             - $ref: '#/definitions/StringSchema'
+            - $ref: '#/definitions/FlagSchema'
             - $ref: '#/definitions/BooleanSchema'
             - $ref: '#/definitions/CredentialSchema'
             - $ref: '#/definitions/UriSchema'
@@ -2708,10 +2795,85 @@ definitions:
             - $ref: '#/definitions/UnixTimeSchema'
             - $ref: '#/definitions/ArraySchema'
             - $ref: '#/definitions/ChoiceSchema'
+            - $ref: '#/definitions/SealedChoiceSchema'
+      sealedChoices:
+        type: array
+        description: schemas that represent a set of choices that are sealed -- that can never have items added to the definition.
+        items:
+          $ref: '#/definitions/SealedChoiceSchema'
+      xorCompounds:
+        type: array
+        items:
+          $ref: '#/definitions/XorSchema'
   Scheme:
     type: string
     enum:
       - bearer
+  SealedChoiceSchema:
+    type: object
+    description: 'a schema that represents a choice of several values (ie, an ''enum'')'
+    properties:
+      $key:
+        type: string
+        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
+      type:
+        type: string
+        description: the schema type
+        enum:
+          - sealed-choice
+      description:
+        type: string
+        description: description of the aspect.
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: '#/definitions/ApiVersion'
+      choiceType:
+        description: the primitive type for the choices
+        $ref: '#/definitions/StringSchema'
+      choices:
+        type: array
+        description: the possible choices for in the set
+        items:
+          $ref: '#/definitions/ChoiceValue'
+      defaultValue:
+        description: 'If the value isn''t sent on the wire, the service will assume this'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: '#/definitions/Deprecation'
+      example:
+        description: example information
+      externalDocs:
+        description: External Documentation Links
+        $ref: '#/definitions/ExternalDocumentation'
+      serialization:
+        description: per-serialization information for this Schema
+        $ref: '#/definitions/SerializationFormats'
+      summary:
+        type: string
+        description: a short description
+      uid:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for Schema uses SchemaMetadata
+        $ref: '#/definitions/Languages<SchemaMetadata>'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: '#/definitions/Protocols'
+    required:
+      - $key
+      - choiceType
+      - choices
+      - description
+      - language
+      - protocol
+      - serialization
+      - type
+      - uid
   SecurityRequirement:
     type: object
     description: common ways of serializing simple parameters
@@ -3185,8 +3347,10 @@ definitions:
       - date
       - date-time
       - duration
+      - flag
       - integer
       - number
+      - sealed-choice
       - string
       - unixtime
       - uri
@@ -3218,10 +3382,8 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
-        type: string
         description: the schema type
-        enum:
-          - xor
+        $ref: '#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.

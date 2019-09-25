@@ -45,5 +45,5 @@ export interface Language extends Dictionary<any> {
 export interface Protocol extends Dictionary<any> {
 }
 
-export class Protocol implements Protocol {
+export class Protocol extends Initializer implements Protocol {
 }

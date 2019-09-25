@@ -25,6 +25,9 @@ const propertyPriority = [
 ];
 
 const propertyNegativePriority = [
+  'request',
+  'responses',
+  'exceptions',
   'callbacks',
   'http',
   'commands',
@@ -99,5 +102,4 @@ export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): st
 
   //.replace(/(\s*language:)/g, '\n$1');
 }
-
 

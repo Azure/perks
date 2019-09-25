@@ -9,5 +9,8 @@ export enum ParameterLocation {
   /**  Used together with Path Templating, where the parameter value is actually part of the operation's URL. This does not include the host or base path of the API. For example, in /items/{itemId}, the path parameter is itemId. */
   Path = 'path',
   /** Used to encode the parameter and send it as the HTTP body  */
-  Body = 'body'
+  Body = 'body',
+  /** Used to associate the parameter to the Server/Uri (ie, parameterized host ) */
+  Uri = 'uri'
+
 }

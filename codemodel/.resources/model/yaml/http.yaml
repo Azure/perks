@@ -190,9 +190,6 @@ definitions:
     type: object
     description: extended metadata for HTTP operation parameters
     properties:
-      implementation:
-        description: suggested implementation location for this parameter
-        $ref: './enums.yaml#/definitions/ImplementationLocation'
       in:
         description: the location that this parameter is placed in the http request
         $ref: './enums.yaml#/definitions/ParameterLocation'
@@ -203,7 +200,6 @@ definitions:
         description: the Serialization Style used for the parameter.
         $ref: './enums.yaml#/definitions/SerializationStyle'
     required:
-      - implementation
       - in
       - style
   HttpRequest:
