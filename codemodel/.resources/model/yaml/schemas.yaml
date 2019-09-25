@@ -327,7 +327,7 @@ definitions:
           $ref: './master.yaml#/definitions/ApiVersion'
       choiceType:
         description: the primitive type for the choices
-        $ref: './schemas.yaml#/definitions/ChoiceType'
+        $ref: './schemas.yaml#/definitions/StringSchema'
       choices:
         type: array
         description: the possible choices for in the set
@@ -1477,7 +1477,7 @@ definitions:
           $ref: './master.yaml#/definitions/ApiVersion'
       choiceType:
         description: the primitive type for the choices
-        $ref: './schemas.yaml#/definitions/ChoiceType_1'
+        $ref: './schemas.yaml#/definitions/StringSchema'
       choices:
         type: array
         description: the possible choices for in the set

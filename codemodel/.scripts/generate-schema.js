@@ -147,6 +147,7 @@ async function main() {
   delete schema.definitions['T'];
   delete schema.definitions['ElementType'];
   delete schema.definitions['ElementType_1'];
+  delete schema.definitions['ChoiceType_1'];
   delete schema.definitions['SerializationFormats<SerializationFormat>'];
 
   schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
@@ -191,13 +192,15 @@ async function main() {
 
   //move schemas
   for (let each in all.master.definitions) {
-    if (each.endsWith('Schema') || each.startsWith('Schema<')) {
+    if (each.endsWith('Schema') || each.startsWith('Schema<') || each.indexOf('Schema<') > -1) {
       moveTo(all, each, 'schemas')
     }
   }
   moveTo(all, 'Schemas', 'schemas');
   moveTo(all, 'ChoiceType', 'schemas');
   moveTo(all, 'ChoiceValue', 'schemas');
+  moveTo(all, 'ChoiceSchema', 'schemas');
+  moveTo(all, 'SealedChoiceSchema', 'schemas');
   moveTo(all, 'ConstantType', 'schemas');
   moveTo(all, 'ConstantValue', 'schemas');
 
