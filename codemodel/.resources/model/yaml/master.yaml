@@ -1,3 +1,5 @@
+type: object
+description: the model that contains all the information required to generate a service api
 $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
   ApiVersion:
@@ -30,42 +32,6 @@ definitions:
     description: a collection of api versions
     items:
       $ref: './master.yaml#/definitions/ApiVersion'
-  CodeModel:
-    type: object
-    description: the model that contains all the information required to generate a service api
-    properties:
-      schemas:
-        description: All schemas for the model
-        $ref: './schemas.yaml#/definitions/Schemas'
-      globalParameters:
-        type: array
-        description: 'all global parameters (ie, ImplementationLocation = client )'
-        items:
-          $ref: './master.yaml#/definitions/Parameter'
-      info:
-        description: Code model information
-        $ref: './master.yaml#/definitions/Info'
-      operationGroups:
-        type: array
-        description: All operations
-        items:
-          $ref: './master.yaml#/definitions/OperationGroup'
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
-    required:
-      - globalParameters
-      - info
-      - language
-      - operationGroups
-      - protocol
-      - schemas
   Contact:
     type: object
     description: contact information
@@ -667,3 +633,36 @@ definitions:
   uri:
     type: string
     description: an URI
+properties:
+  schemas:
+    description: All schemas for the model
+    $ref: './schemas.yaml#/definitions/Schemas'
+  globalParameters:
+    type: array
+    description: 'all global parameters (ie, ImplementationLocation = client )'
+    items:
+      $ref: './master.yaml#/definitions/Parameter'
+  info:
+    description: Code model information
+    $ref: './master.yaml#/definitions/Info'
+  operationGroups:
+    type: array
+    description: All operations
+    items:
+      $ref: './master.yaml#/definitions/OperationGroup'
+  extensions:
+    description: additional metadata extensions dictionary
+    $ref: './master.yaml#/definitions/Dictionary<any>'
+  language:
+    description: per-language information for this aspect
+    $ref: './master.yaml#/definitions/Languages'
+  protocol:
+    description: per-protocol information for this aspect
+    $ref: './master.yaml#/definitions/Protocols'
+required:
+  - globalParameters
+  - info
+  - language
+  - operationGroups
+  - protocol
+  - schemas
