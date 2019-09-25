@@ -300,7 +300,8 @@ export interface InQuery extends HasSchema, Partial<HasExample>, Partial<HasExam
   allowReserved?: boolean;
   style?: QueryEncodingStyle;
 }
-export interface Parameter extends Partial<HasSchema>, Partial<HasContent>, Partial<HasExample>, Partial<HasExamples> {
+
+export interface Parameter extends Partial<HasSchema>, Partial<HasContent>, Partial<HasExample>, Partial<HasExamples>, Extensions {
   name: string;
   in: ParameterLocation;
 

@@ -7,11 +7,7 @@ import { HttpServer } from './server';
 import { SecurityRequirement } from './security';
 import { Schema } from '../common/schema';
 import { Request } from '../common/operation';
-
-export enum ImplementationLocation {
-  Method = 'Method',
-  Client = 'Client',
-}
+import { DeepPartial } from '@azure-tools/codegen';
 
 /** extended metadata for HTTP operation parameters  */
 export interface HttpParameter extends Protocol {
@@ -23,13 +19,14 @@ export interface HttpParameter extends Protocol {
 
   /** when set, this indicates that the content of the parameter should not be subject to URI encoding rules. */
   skipUriEncoding?: boolean;
-
-  /** suggested implementation location for this parameter */
-  implementation: ImplementationLocation;
 }
 
 export class HttpParameter extends Protocol {
-
+  constructor(location: ParameterLocation, objectInitializer?: DeepPartial<HttpParameter>) {
+    super();
+    this.in = location;
+    this.apply(objectInitializer);
+  }
 }
 
 /** HTTP operation protocol data */

@@ -76,7 +76,13 @@
           "$ref": "./schemas.json#/definitions/StringSchema"
         },
         {
+          "$ref": "./schemas.json#/definitions/ParameterGroupSchema"
+        },
+        {
           "$ref": "./schemas.json#/definitions/ObjectSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/FlagSchema"
         },
         {
           "$ref": "./schemas.json#/definitions/BooleanSchema"
@@ -115,10 +121,16 @@
           "$ref": "./schemas.json#/definitions/OrSchema"
         },
         {
+          "$ref": "./schemas.json#/definitions/NotSchema"
+        },
+        {
           "$ref": "./schemas.json#/definitions/ArraySchema"
         },
         {
           "$ref": "./schemas.json#/definitions/ChoiceSchema"
+        },
+        {
+          "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
         },
         {
           "$ref": "./schemas.json#/definitions/DictionarySchema"
@@ -164,8 +176,10 @@
         "date",
         "date-time",
         "duration",
+        "flag",
         "integer",
         "number",
+        "sealed-choice",
         "string",
         "unixtime",
         "uri",
@@ -183,6 +197,7 @@
       "type": "string"
     },
     "AllSchemaTypes": {
+      "description": "all schema types",
       "enum": [
         "and",
         "array",
@@ -196,11 +211,15 @@
         "date-time",
         "dictionary",
         "duration",
+        "flag",
         "integer",
+        "not",
         "number",
         "object",
         "odata-query",
         "or",
+        "parameter-group",
+        "sealed-choice",
         "string",
         "unixtime",
         "uri",

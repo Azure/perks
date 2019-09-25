@@ -103,6 +103,7 @@ function fixmodel(schema) {
     .replace(/<Schema<AllSchemaTypes>>/g, '')
     .replace(/Schema<AllSchemaTypes>/g, 'Schema')
     .replace(/<Schema<PrimitiveSchemaTypes>>/g, '')
+    .replace(/<\w*Schema>/g, '')
     .replace(/Schema\.TSchemaType_1/g, 'NumericSchemaTypes')
     .replace(/Schema\.TSchemaType_2/g, 'ObjectSchemaTypes')
     .replace(/Schema\.TSchemaType_3/g, 'PrimitiveSchemaTypes')
@@ -135,10 +136,10 @@ async function main() {
   let schema = TJS.generateSchema(program, "*", settings);
 
   delete schema.definitions['ValueSchemas'];
-  delete schema.definitions['ArraySchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['ConstantSchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['DictionarySchema<Schema<AllSchemaTypes>>'];
-  delete schema.definitions['ChoiceSchema<Schema<PrimitiveSchemaTypes>>'];
+  delete schema.definitions['ArraySchema<Schema>'];
+  delete schema.definitions['ConstantSchema<Schema>'];
+  delete schema.definitions['DictionarySchema<Schema>'];
+  delete schema.definitions['ChoiceSchema<Schema>'];
   delete schema.definitions['Aspect'];
   delete schema.definitions['Schema.TSchemaType'];
   delete schema.definitions['Schema.TSchemaType_2'];

@@ -22,11 +22,6 @@ definitions:
     enum:
       - Client
       - Method
-  NumericSchemaTypes:
-    type: string
-    enum:
-      - integer
-      - number
   ParameterLocation:
     type: string
     description: the location that this parameter is placed in the http request
@@ -36,27 +31,13 @@ definitions:
       - header
       - path
       - query
+      - uri
   PathEncodingStyle:
     type: string
     enum:
       - label
       - matrix
       - simple
-  PrimitiveSchemaTypes:
-    type: string
-    enum:
-      - boolean
-      - char
-      - credential
-      - date
-      - date-time
-      - duration
-      - integer
-      - number
-      - string
-      - unixtime
-      - uri
-      - uuid
   QueryEncodingStyle:
     type: string
     enum:
@@ -80,12 +61,15 @@ definitions:
       - date-time
       - dictionary
       - duration
+      - flag
       - integer
       - not
       - number
       - object
       - odata-query
       - or
+      - parameter-group
+      - sealed-choice
       - stream
       - string
       - unixtime
