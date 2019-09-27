@@ -46,7 +46,8 @@
     "typescript": "~3.6.2",
     "glob": "~7.1.4",
     "js-yaml": "3.13.1",
-    "typescript-json-schema": "~0.40.0"
+    "typescript-json-schema": "~0.40.0",
+    "ts-morph": "~4.0.1"
   },
   "dependencies": {
     "@azure-tools/autorest-extension-base": "~3.1.0",

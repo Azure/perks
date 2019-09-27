@@ -3,18 +3,9 @@ definitions:
   AndSchema:
     type: object
     description: an AND relationship between several schemas
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - and
-      description:
-        type: string
-        description: description of the aspect.
       allOf:
         type: array
         description: the set of schemas that this schema is composed of.
@@ -24,38 +15,6 @@ definitions:
             - $ref: './schemas.yaml#/definitions/AndSchema'
             - $ref: './schemas.yaml#/definitions/OrSchema'
             - $ref: './schemas.yaml#/definitions/DictionarySchema'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - allOf
@@ -68,62 +27,21 @@ definitions:
   ArraySchema:
     type: object
     description: a Schema that represents and array of values
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - array
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
       elementType:
         description: elementType of the array
         $ref: './master.yaml#/definitions/Schema'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maxItems:
         type: number
         description: maximum number of elements in the array
       minItems:
         type: number
         description: minimum number of elements in the array
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
       uniqueItems:
         type: boolean
         description: if the elements in the array should be unique
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -136,50 +54,8 @@ definitions:
   BooleanSchema:
     type: object
     description: a schema that represents a boolean value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - boolean
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -191,56 +67,15 @@ definitions:
   ByteArraySchema:
     type: object
     description: a schema that represents a ByteArray value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - byte-array
       format:
         type: string
         description: date-time format
         enum:
           - base64url
           - byte
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -253,50 +88,8 @@ definitions:
   CharSchema:
     type: object
     description: a schema that represents a Char value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - char
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -468,56 +261,15 @@ definitions:
   ConstantSchema:
     type: object
     description: a schema that represents a constant value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - constant
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
       constantSchema:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
         $ref: './schemas.yaml#/definitions/ConstantType'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
       value:
         description: the actual constant value
         $ref: './schemas.yaml#/definitions/ConstantValue'
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - constantSchema
@@ -598,33 +350,9 @@ definitions:
   CredentialSchema:
     type: object
     description: a schema that represents a Credential value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - credential
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maxLength:
         type: number
         description: the maximum length of the string
@@ -634,23 +362,6 @@ definitions:
       pattern:
         type: string
         description: a regular expression that the string must be validated against
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -662,50 +373,8 @@ definitions:
   DateSchema:
     type: object
     description: a schema that represents a Date value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - date
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -717,56 +386,15 @@ definitions:
   DateTimeSchema:
     type: object
     description: a schema that represents a DateTime value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - date-time
       format:
         type: string
         description: date-time format
         enum:
           - date-time
           - date-time-rfc1123
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -779,53 +407,12 @@ definitions:
   DictionarySchema:
     type: object
     description: a schema that represents a key-value collection
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - dictionary
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
         $ref: './master.yaml#/definitions/Schema'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -838,50 +425,8 @@ definitions:
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - duration
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -951,53 +496,12 @@ definitions:
   NotSchema:
     type: object
     description: a NOT relationship between schemas
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - not
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       not:
         description: the schema that this may not be.
         $ref: './schemas.yaml#/definitions/Schema'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1010,40 +514,15 @@ definitions:
   NumberSchema:
     type: object
     description: a Schema that represents a Number value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - integer
-          - number
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
       exclusiveMaximum:
         type: boolean
         description: 'if present, the value must be lower than maximum'
       exclusiveMinimum:
         type: boolean
         description: 'if present, the value must be higher than minimum'
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maximum:
         type: number
         description: 'if present, the value must be lower than or equal to this (unless exclusiveMaximum is true)'
@@ -1056,23 +535,6 @@ definitions:
       precision:
         type: number
         description: 'precision (# of bits?) of the number'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1085,50 +547,8 @@ definitions:
   ODataQuerySchema:
     type: object
     description: a schema that represents a ODataQuery value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - odata-query
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -1140,36 +560,12 @@ definitions:
   ObjectSchema:
     type: object
     description: a schema that represents a type with child properties.
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - object
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
       discriminator:
         description: the definition of the polymorphic descriminator for this type
         $ref: './master.yaml#/definitions/Discriminator'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maxProperties:
         type: number
         description: maximum number of properties permitted
@@ -1181,23 +577,6 @@ definitions:
         description: the collection of properties that are in this object
         items:
           $ref: './master.yaml#/definitions/Property'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1209,16 +588,9 @@ definitions:
   OrSchema:
     type: object
     description: an OR relationship between several schemas
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        description: the schema type
-        $ref: './types.yaml#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       anyOf:
         type: array
         description: the set of schemas that this schema is composed of. Every schema is optional
@@ -1228,38 +600,6 @@ definitions:
             - $ref: './schemas.yaml#/definitions/AndSchema'
             - $ref: './schemas.yaml#/definitions/OrSchema'
             - $ref: './schemas.yaml#/definitions/DictionarySchema'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - anyOf
@@ -1272,55 +612,14 @@ definitions:
   ParameterGroupSchema:
     type: object
     description: a schema that represents a set of parameters.
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - parameter-group
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       parameters:
         type: array
         description: the collection of properties that are in this object
         items:
           $ref: './master.yaml#/definitions/Parameter'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1523,33 +822,9 @@ definitions:
   StringSchema:
     type: object
     description: a Schema that represents a string value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - string
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maxLength:
         type: number
         description: the maximum length of the string
@@ -1559,23 +834,6 @@ definitions:
       pattern:
         type: string
         description: a regular expression that the string must be validated against
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1587,50 +845,8 @@ definitions:
   UnixTimeSchema:
     type: object
     description: a schema that represents a UnixTime value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - unixtime
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -1642,33 +858,9 @@ definitions:
   UriSchema:
     type: object
     description: a schema that represents a Uri value
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - uri
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       maxLength:
         type: number
         description: the maximum length of the string
@@ -1678,23 +870,6 @@ definitions:
       pattern:
         type: string
         description: a regular expression that the string must be validated against
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description
@@ -1706,50 +881,8 @@ definitions:
   UuidSchema:
     type: object
     description: a schema that represents a Uuid value
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - uuid
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
+    allOf:
+      - $ref: /definitions/Schema
     required:
       - $key
       - description
@@ -1761,53 +894,14 @@ definitions:
   XorSchema:
     type: object
     description: an XOR relationship between several schemas
+    allOf:
+      - $ref: /definitions/Schema
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        description: the schema type
-        $ref: './types.yaml#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
       oneOf:
         type: array
         description: the set of schemas that this must be one and only one of.
         items:
           $ref: './schemas.yaml#/definitions/Schema'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - $key
       - description

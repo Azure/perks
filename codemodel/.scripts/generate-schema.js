@@ -4,6 +4,18 @@ const fs = require('fs').promises;
 
 const g = require('glob');
 const TJS = require("typescript-json-schema");
+const tsm = require('ts-morph');
+
+const project = new tsm.Project({ tsConfigFilePath: `{__dirname}/../tsconfig.json` });
+const x = project.getSourceFiles().map(each => each.getInterfaces());
+
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
+const interfaces = flatten(x);
 
 const propertyPriority = [
   '$key',
@@ -164,6 +176,39 @@ async function main() {
       delete schema.definitions[each];
     }
   }
+
+
+  for (const each of interfaces) {
+
+    const heritage = each.getHeritageClauses();
+    if (heritage.length > 0) {
+
+      for (const h of heritage) {
+        const parents = h.getText().replace(/.*extends/g, '').split(',').map(i => i.trim()).filter(each => each != 'Extensions' && each != 'Dictionary<any>' && each != 'Dictionary<string>' && each != 'Aspect');
+        if (parents.length > 0) {
+
+          const parent = parents[0];
+          const child = each.getName();
+          if (schema.definitions[child] && schema.definitions[parent]) {
+            schema.definitions[child].allOf = [{ $ref: `/definitions/${parent}` }]
+
+            for (const pp in schema.definitions[parent].properties) {
+              delete schema.definitions[child].properties[pp];
+            }
+          }
+
+
+        }
+
+
+      }
+    }
+
+  }
+
+
+
+
 
   // write out the full all in one model
   await writemodels('code-model', 'all-in-one', schema);
