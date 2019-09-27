@@ -148,6 +148,7 @@ async function main() {
   let schema = TJS.generateSchema(program, "*", settings);
 
   delete schema.definitions['ValueSchemas'];
+  delete schema.definitions['AllSchemas'];
   delete schema.definitions['ArraySchema<Schema>'];
   delete schema.definitions['ConstantSchema<Schema>'];
   delete schema.definitions['DictionarySchema<Schema>'];
@@ -177,34 +178,32 @@ async function main() {
     }
   }
 
-
   for (const each of interfaces) {
-
     const heritage = each.getHeritageClauses();
     if (heritage.length > 0) {
-
       for (const h of heritage) {
         const parents = h.getText().replace(/.*extends/g, '').split(',').map(i => i.trim()).filter(each => each != 'Extensions' && each != 'Dictionary<any>' && each != 'Dictionary<string>' && each != 'Aspect');
         if (parents.length > 0) {
-
           const parent = parents[0];
           const child = each.getName();
           if (schema.definitions[child] && schema.definitions[parent]) {
             schema.definitions[child].allOf = [{ $ref: `#/definitions/${parent}` }]
-
             for (const pp in schema.definitions[parent].properties) {
-              delete schema.definitions[child].properties[pp];
+              schema.definitions[child].properties[pp].deleteMe = true;
             }
           }
-
-
         }
-
-
       }
     }
-
   }
+  for (const each in schema.definitions) {
+    for (const p in schema.definitions[each].properties) {
+      if (schema.definitions[each].properties[p].deleteMe) {
+        delete schema.definitions[each].properties[p];
+      }
+    }
+  }
+
 
 
 

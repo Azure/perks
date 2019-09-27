@@ -549,18 +549,6 @@
         "schema": {
           "$ref": "./schemas.json#/definitions/Schema",
           "description": "the content returned by the service for a given operaiton"
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
         }
       },
       "defaultProperties": [],

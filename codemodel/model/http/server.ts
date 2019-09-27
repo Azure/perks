@@ -6,7 +6,7 @@ import { Languages } from '../common/languages';
 
 import { ApiVersions } from '../common/api-version';
 import { Deprecation } from '../common/deprecation';
-import { ChoiceSchema, StringSchema, NumberSchema } from '../common/schema';
+import { ChoiceSchema, StringSchema, NumberSchema, ValueSchema } from '../common/schema';
 import { Initializer, DeepPartial } from '@azure-tools/codegen';
 
 /** 
@@ -56,8 +56,8 @@ export interface ServerVariable {
   /** deprecation information -- ie, when this aspect doesn't apply and why */
   deprecated?: Deprecation;
 
-  /** the schema for the  */
-  schema: ChoiceSchema | StringSchema | NumberSchema;
+  /** the schema type for the server variable  */
+  schema: ValueSchema;
 
   /** The default value to use for substitution, which SHALL be sent if an alternate value is not supplied. 
    * 

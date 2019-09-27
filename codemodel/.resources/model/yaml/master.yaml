@@ -435,15 +435,6 @@ definitions:
       schema:
         description: the content returned by the service for a given operaiton
         $ref: './schemas.yaml#/definitions/Schema'
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - language
       - protocol

@@ -9,8 +9,6 @@ import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Parameter } from './parameter';
-import { PrimitiveSchemas, ObjectSchemas } from './schemas';
-
 
 /** language metadata specific to schema instances */
 export interface SchemaMetadata extends Language {
@@ -70,13 +68,28 @@ export class Schema extends Aspect implements Schema {
   }
 }
 
+/** schema types that are non-object or complex types */
+export interface ValueSchema extends Schema {
+
+}
+
+/** Schema types that are primitive language values */
+export interface PrimitiveSchema extends ValueSchema {
+
+}
+
+/** schema types that can be objects */
+export interface ComplexSchema extends Schema {
+
+}
+
 /** returns true if the given schema is a NumberSchema */
 export function isNumberSchema(schema: Schema): schema is NumberSchema {
   return schema.type === SchemaType.Number || schema.type === SchemaType.Integer;
 }
 
 /** a Schema that represents a Number value */
-export interface NumberSchema extends Schema {
+export interface NumberSchema extends PrimitiveSchema {
 
   /** the schema type  */
   type: SchemaType.Number | SchemaType.Integer;
@@ -108,7 +121,7 @@ export class NumberSchema extends Schema implements NumberSchema {
 }
 
 /** a Schema that represents a string value */
-export interface StringSchema extends Schema {
+export interface StringSchema extends PrimitiveSchema {
 
   /** the schema type  */
   type: SchemaType.String;
@@ -131,7 +144,7 @@ export class StringSchema extends Schema implements StringSchema {
 }
 
 /** a Schema that represents and array of values */
-export interface ArraySchema<ElementType extends Schema = Schema> extends Schema {
+export interface ArraySchema<ElementType extends Schema = Schema> extends ValueSchema {
   /** the schema type  */
   type: SchemaType.Array;
 
@@ -157,7 +170,7 @@ export class ArraySchema<ElementType extends Schema = Schema> extends Schema imp
 }
 
 /** a schema that represents a set of parameters. */
-export interface ParameterGroupSchema extends Schema {
+export interface ParameterGroupSchema extends ComplexSchema {
   /** the schema type  */
   type: SchemaType.ParameterGroup;
 
@@ -179,7 +192,7 @@ export class ParameterGroupSchema extends Schema implements ParameterGroupSchema
 
 
 /** a schema that represents a type with child properties. */
-export interface ObjectSchema extends Schema {
+export interface ObjectSchema extends ComplexSchema {
   /** the schema type  */
   type: SchemaType.Object;
 
@@ -233,7 +246,7 @@ export class ChoiceValue extends Initializer {
 }
 
 /** a schema that represents a choice of several values (ie, an 'enum') */
-export interface ChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema> extends Schema {
+export interface ChoiceSchema<ChoiceType extends PrimitiveSchema = StringSchema> extends ValueSchema {
   /** the schema type  */
   type: SchemaType.Choice;
 
@@ -244,7 +257,7 @@ export interface ChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema
   choices: Array<ChoiceValue>;
 }
 
-export class ChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema> extends Schema implements ChoiceSchema<ChoiceType>{
+export class ChoiceSchema<ChoiceType extends PrimitiveSchema = StringSchema> extends Schema implements ChoiceSchema<ChoiceType>{
   constructor(name: string, description: string, objectInitializer?: DeepPartial<ChoiceSchema<ChoiceType>>) {
     super(name, description, SchemaType.Choice);
     this.apply(objectInitializer);
@@ -252,7 +265,7 @@ export class ChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema> ex
 }
 
 /** a schema that represents a choice of several values (ie, an 'enum') */
-export interface SealedChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema> extends Schema {
+export interface SealedChoiceSchema<ChoiceType extends PrimitiveSchema = StringSchema> extends ValueSchema {
   /** the schema type  */
   type: SchemaType.SealedChoice;
 
@@ -263,7 +276,7 @@ export interface SealedChoiceSchema<ChoiceType extends PrimitiveSchemas = String
   choices: Array<ChoiceValue>;
 }
 
-export class SealedChoiceSchema<ChoiceType extends PrimitiveSchemas = StringSchema> extends Schema implements SealedChoiceSchema<ChoiceType>{
+export class SealedChoiceSchema<ChoiceType extends PrimitiveSchema = StringSchema> extends Schema implements SealedChoiceSchema<ChoiceType>{
   constructor(name: string, description: string, objectInitializer?: DeepPartial<ChoiceSchema<ChoiceType>>) {
     super(name, description, SchemaType.SealedChoice);
     this.apply(objectInitializer);
@@ -289,7 +302,7 @@ export class FlagValue extends Initializer implements FlagValue {
   }
 }
 
-export interface FlagSchema {
+export interface FlagSchema extends ValueSchema {
   /** the possible choices for in the set */
   choices: Array<FlagValue>;
 
@@ -343,7 +356,7 @@ export class ConstantSchema<ConstantType extends Schema = Schema> extends Schema
 }
 
 /** a schema that represents a boolean value */
-export interface BooleanSchema extends Schema {
+export interface BooleanSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Boolean;
 
@@ -371,7 +384,7 @@ export class ODataQuerySchema extends Schema implements ODataQuerySchema {
 }
 
 /** a schema that represents a Credential value */
-export interface CredentialSchema extends Schema {
+export interface CredentialSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Credential;
 
@@ -393,7 +406,7 @@ export class CredentialSchema extends Schema implements CredentialSchema {
 }
 
 /** a schema that represents a Uri value */
-export interface UriSchema extends Schema {
+export interface UriSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Uri;
 
@@ -414,7 +427,7 @@ export class UriSchema extends Schema implements UriSchema {
   }
 }
 /** a schema that represents a Uuid value */
-export interface UuidSchema extends Schema {
+export interface UuidSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Uuid;
 }
@@ -426,7 +439,7 @@ export class UuidSchema extends Schema implements UuidSchema {
   }
 }
 /** a schema that represents a Duration value */
-export interface DurationSchema extends Schema {
+export interface DurationSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Duration;
 }
@@ -439,7 +452,7 @@ export class DurationSchema extends Schema implements DurationSchema {
 }
 
 /** a schema that represents a DateTime value */
-export interface DateTimeSchema extends Schema {
+export interface DateTimeSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.DateTime;
 
@@ -454,7 +467,7 @@ export class DateTimeSchema extends Schema implements DateTimeSchema {
   }
 }
 /** a schema that represents a Date value */
-export interface DateSchema extends Schema {
+export interface DateSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Date;
 }
@@ -466,7 +479,7 @@ export class DateSchema extends Schema implements DateSchema {
   }
 }
 /** a schema that represents a Char value */
-export interface CharSchema extends Schema {
+export interface CharSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.Char;
 }
@@ -479,7 +492,7 @@ export class CharSchema extends Schema implements CharSchema {
 }
 
 /** a schema that represents a ByteArray value */
-export interface ByteArraySchema extends Schema {
+export interface ByteArraySchema extends ValueSchema {
   /** the schema type  */
   type: SchemaType.ByteArray;
 
@@ -495,7 +508,7 @@ export class ByteArraySchema extends Schema implements ByteArraySchema {
 }
 
 /** a schema that represents a UnixTime value */
-export interface UnixTimeSchema extends Schema {
+export interface UnixTimeSchema extends PrimitiveSchema {
   /** the schema type  */
   type: SchemaType.UnixTime;
 }
@@ -508,7 +521,7 @@ export class UnixTimeSchema extends Schema implements UnixTimeSchema {
 }
 
 /** a schema that represents a key-value collection */
-export interface DictionarySchema<ElementType extends Schema = Schema> extends Schema {
+export interface DictionarySchema<ElementType extends Schema = Schema> extends ComplexSchema {
   /** the schema type  */
   type: SchemaType.Dictionary;
 
@@ -534,12 +547,12 @@ export class DictionarySchema<ElementType extends Schema = Schema> extends Schem
  * and an 'object' at the same time. Nor does it make sense
  * that a value can be two primitive types at the same time.
  */
-export interface AndSchema extends Schema {
+export interface AndSchema extends ComplexSchema {
   /** the schema type  */
   type: SchemaType.And;
 
   /** the set of schemas that this schema is composed of. */
-  allOf: Array<ObjectSchemas>;
+  allOf: Array<ComplexSchema>;
 }
 export class AndSchema extends Schema implements AndSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<AndSchema>) {
@@ -558,9 +571,9 @@ export class AndSchema extends Schema implements AndSchema {
  * and an 'object' at the same time. Nor does it make sense
  * that a value can be two primitive types at the same time.
 */
-export interface OrSchema extends Schema {
+export interface OrSchema extends ComplexSchema {
   /** the set of schemas that this schema is composed of. Every schema is optional  */
-  anyOf: Array<ObjectSchemas>;
+  anyOf: Array<ComplexSchema>;
 }
 export class OrSchema extends Schema implements OrSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<OrSchema>) {

@@ -20,6 +20,7 @@ import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
 import { HttpWithBodyRequest, HttpParameter, HttpStreamRequest, HttpMultipartRequest, HttpStreamResponse, HttpRequest, HttpResponse, HttpModel } from './http/http';
 import { Response, SchemaResponse, StreamResponse } from './common/response';
+import { keys } from '@azure-tools/linq';
 
 function TypeInfo<U extends new (...args: any) => any>(type: U) {
   return new Type(`!${type.name}`, { kind: 'mapping', instanceOf: type, construct: (i) => Object.setPrototypeOf(i, type.prototype) });
@@ -73,6 +74,8 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(CodeModel),
   TypeInfo(Request),
   TypeInfo(Schemas),
+
+
   TypeInfo(Discriminator),
   TypeInfo(ExternalDocumentation),
   TypeInfo(Contact),
@@ -95,6 +98,6 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Languages),
   TypeInfo(Protocols),
   TypeInfo(ApiVersion),
-
+  // new Type('!set', { kind: 'mapping', instanceOf: Set, represent: (o: any) => [...o], construct: (i) => new Set(i) }),
 
 ]);

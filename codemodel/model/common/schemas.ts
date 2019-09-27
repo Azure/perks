@@ -1,122 +1,109 @@
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema } from './schema';
-import { Parameter } from './parameter';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema } from './schema';
+import { camelCase } from '@azure-tools/codegen';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
-  /** schemas that likely result in the creation of new objects during code generation */
+  /** a collection of items */
+  arrays?: Array<ArraySchema>;
+
+  /** an associative array (ie, dictionary, hashtable, etc) */
+  dictionaries?: Array<DictionarySchema>;
+
+  /** a true or false value */
+  booleans?: Array<BooleanSchema>;
+
+  /** a number value */
+  numbers?: Array<NumberSchema>;
+
+  /** an object of some type */
   objects?: Array<ObjectSchema>;
 
-  /** groups of parameters that can be built as an object */
-  parameterGroups?: Array<ParameterGroupSchema>;
+  /** a string of characters  */
+  strings: Array<StringSchema>;
 
-  /** schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf) */
-  orCompounds?: Array<OrSchema>;
-  andCompounds?: Array<AndSchema>;
-  xorCompounds?: Array<XorSchema>;
+  /** UnixTime */
+  unixtimes?: Array<UnixTimeSchema>;
 
-  /** schemas that represent a set of choices (ie, 'enum') */
+  /** ByteArray -- an array of bytes */
+  byteArrays?: Array<ByteArraySchema>;
+
+  /* a binary stream */
+  streams?: Array<Schema>;
+
+  /** a single character */
+  chars?: Array<CharSchema>;
+
+  /** a Date */
+  dates?: Array<DateSchema>;
+
+  /** a DateTime */
+  dateTimes?: Array<DateTimeSchema>;
+
+  /** a Duration */
+  durations?: Array<DurationSchema>;
+
+  /** a universally unique identifier  */
+  uuids?: Array<UuidSchema>;
+
+  /** an URI of some kind */
+  uris?: Array<UriSchema>;
+
+  /** a password or credential  */
+  credentials?: Array<CredentialSchema>;
+
+  /** OData Query */
+  odataQueries?: Array<ODataQuerySchema>;
+
+  /** a choice between one of several  values (ie, 'enum')
+   * 
+   * @description - this is essentially can be thought of as an 'enum' 
+   * that is a choice between one of several strings
+   */
   choices?: Array<ChoiceSchema>;
 
-  /** schemas that represent a set of choices that are sealed -- that can never have items added to the definition. */
   sealedChoices?: Array<SealedChoiceSchema>;
 
   flags?: Array<FlagSchema>;
 
-  /** schemas that represent key-value dictionaries used in the model. */
-  dictionaries?: Array<DictionarySchema>;
-
-  /** constant values that are used in models and parameters */
+  /** a constant value */
   constants?: Array<ConstantSchema>;
 
-  /** primitive schemas that represent things that should be able to be represented without additional classes generated
+  ands?: Array<AndSchema>;
+
+  ors?: Array<OrSchema>;
+
+  xors?: Array<XorSchema>;
+
+  /** the type is not known.
    * 
-   * @note - the important bits in these are the validation restrictions that may be present.
+   * @description it's possible that we just may make this an error 
+   * in representation.
    */
-  primitives?: Array<PrimitiveSchemas | ValueSchemas>;
+  unknowns?: Array<Schema>;
+
+  parameterGroups?: Array<ParameterGroupSchema>;
+
 
 }
 
-export type CompoundSchemas =
-  AndSchema |
-  OrSchema |
-  XorSchema;
-
-/** Schema types that are primitive language values */
-export type PrimitiveSchemas =
-  BooleanSchema |
-  DateSchema |
-  DateTimeSchema |
-  UnixTimeSchema |
-  CredentialSchema |
-  UriSchema |
-  UuidSchema |
-  DurationSchema |
-  CharSchema |
-  NumberSchema |
-  StringSchema;
-
-/** schema types that are non-object or complex types */
-export type ValueSchemas =
-  ByteArraySchema |
-  PrimitiveSchemas |
-  ArraySchema |
-  ChoiceSchema | SealedChoiceSchema | FlagSchema;
-
-/** schema types that can be objects */
-export type ObjectSchemas =
-  AndSchema |
-  OrSchema |
-  DictionarySchema |
-  ObjectSchema;
-
-/** all schema types */
-export type AllSchemas =
-  ValueSchemas | ObjectSchemas | ConstantSchema | NotSchema | ParameterGroupSchema;
-
 export class Schemas {
+  add<T extends Schema>(schema: T): T {
 
-  addPrimitive<T extends ValueSchemas>(schema: T): T {
-    this.primitives || (this.primitives = new Array<ValueSchemas>()).push(schema);
+    let group = `${camelCase(schema.type)}s`.replace(/rys$/g, 'ries');
+    if (group === 'integers') {
+      group = 'numbers;';
+    }
+    // ((<any>this)[group] || ((<any>this)[group] = new Set<Schema>())).add(schema);
+    // ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>())).push(schema);
+    const a: Array<Schema> = ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>()));
+    if (a.indexOf(schema) > -1) {
+      // throw new Error(`Duplicate ! ${schema.type} : ${schema.language.default.name}`);
+      return schema;
+    } else {
+      //console.error(`Adding ${schema.type} : ${schema.language.default.name}`);
+    }
+    a.push(schema);
     return schema;
   }
-  addObject<T extends ObjectSchema>(schema: T): T {
-    (this.objects || (this.objects = new Array<ObjectSchema>())).push(schema);
-    return schema;
-  }
-  addParameterGroup<T extends ParameterGroupSchema>(schema: T): T {
-    (this.parameterGroups || (this.parameterGroups = new Array<ParameterGroupSchema>())).push(schema);
-    return schema;
-  }
-  addOrSchema<T extends OrSchema>(schema: T): T {
-    (this.orCompounds || (this.orCompounds = new Array<OrSchema>())).push(schema);
-    return schema;
-  }
-  addAndSchema<T extends AndSchema>(schema: T): T {
-    (this.andCompounds || (this.andCompounds = new Array<AndSchema>())).push(schema);
-    return schema;
-  }
-  addXorSchema<T extends XorSchema>(schema: T): T {
-    (this.xorCompounds || (this.xorCompounds = new Array<XorSchema>())).push(schema);
-    return schema;
-  }
-  addChoice<T extends ChoiceSchema>(schema: T): T {
-    (this.choices || (this.choices = new Array<ChoiceSchema>())).push(schema);
-    return schema;
-  }
-  addFlag<T extends FlagSchema>(schema: T): T {
-    (this.flags || (this.flags = new Array<FlagSchema>())).push(schema);
-    return schema;
-  }
-  addSealedChoice<T extends SealedChoiceSchema>(schema: T): T {
-    (this.sealedChoices || (this.sealedChoices = new Array<SealedChoiceSchema>())).push(schema);
-    return schema;
-  }
-  addDictionary<T extends DictionarySchema>(schema: T): T {
-    (this.dictionaries || (this.dictionaries = new Array<DictionarySchema>())).push(schema);
-    return schema;
-  }
-  addConstant<T extends ConstantSchema>(schema: T): T {
-    (this.constants || (this.constants = new Array<ConstantSchema>())).push(schema);
-    return schema;
-  }
+
 }

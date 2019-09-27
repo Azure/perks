@@ -52,46 +52,17 @@ definitions:
       - uri
       - uuid
       - xor
-  AllSchemas:
-    anyOf:
-      - $ref: '#/definitions/NumberSchema'
-      - $ref: '#/definitions/StringSchema'
-      - $ref: '#/definitions/ParameterGroupSchema'
-      - $ref: '#/definitions/ObjectSchema'
-      - $ref: '#/definitions/FlagSchema'
-      - $ref: '#/definitions/BooleanSchema'
-      - $ref: '#/definitions/CredentialSchema'
-      - $ref: '#/definitions/UriSchema'
-      - $ref: '#/definitions/UuidSchema'
-      - $ref: '#/definitions/DurationSchema'
-      - $ref: '#/definitions/DateTimeSchema'
-      - $ref: '#/definitions/DateSchema'
-      - $ref: '#/definitions/CharSchema'
-      - $ref: '#/definitions/ByteArraySchema'
-      - $ref: '#/definitions/UnixTimeSchema'
-      - $ref: '#/definitions/AndSchema'
-      - $ref: '#/definitions/OrSchema'
-      - $ref: '#/definitions/NotSchema'
-      - $ref: '#/definitions/ArraySchema'
-      - $ref: '#/definitions/ChoiceSchema'
-      - $ref: '#/definitions/SealedChoiceSchema'
-      - $ref: '#/definitions/DictionarySchema'
-      - $ref: '#/definitions/ConstantSchema'
   AndSchema:
     type: object
     description: an AND relationship between several schemas
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ComplexSchema'
     properties:
       allOf:
         type: array
         description: the set of schemas that this schema is composed of.
         items:
-          anyOf:
-            - $ref: '#/definitions/ObjectSchema'
-            - $ref: '#/definitions/AndSchema'
-            - $ref: '#/definitions/OrSchema'
-            - $ref: '#/definitions/DictionarySchema'
+          $ref: '#/definitions/ComplexSchema'
     required:
       - $key
       - allOf
@@ -135,7 +106,7 @@ definitions:
     type: object
     description: a Schema that represents and array of values
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ValueSchema'
     properties:
       elementType:
         description: elementType of the array
@@ -204,7 +175,7 @@ definitions:
     type: object
     description: a schema that represents a boolean value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -217,7 +188,7 @@ definitions:
     type: object
     description: a schema that represents a ByteArray value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ValueSchema'
     properties:
       format:
         type: string
@@ -238,7 +209,7 @@ definitions:
     type: object
     description: a schema that represents a Char value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -319,32 +290,8 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
-        type: string
-        description: |-
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-          the schema type
-        enum:
-          - boolean
-          - char
-          - credential
-          - date
-          - date-time
-          - duration
-          - integer
-          - number
-          - string
-          - unixtime
-          - uri
-          - uuid
+        description: the schema type
+        $ref: '#/definitions/AllSchemaTypes'
       description:
         type: string
         description: description of the aspect.
@@ -424,17 +371,25 @@ definitions:
     required:
       - scopes
       - tokenUrl
+  ComplexSchema:
+    type: object
+    description: schema types that can be objects
+    allOf:
+      - $ref: '#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - serialization
+      - type
+      - uid
   CompoundSchemaTypes:
     type: string
     enum:
       - and
       - or
       - xor
-  CompoundSchemas:
-    anyOf:
-      - $ref: '#/definitions/AndSchema'
-      - $ref: '#/definitions/OrSchema'
-      - $ref: '#/definitions/XorSchema'
   ConstantSchema:
     type: object
     description: a schema that represents a constant value
@@ -542,7 +497,7 @@ definitions:
     type: object
     description: a schema that represents a Credential value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     properties:
       maxLength:
         type: number
@@ -565,7 +520,7 @@ definitions:
     type: object
     description: a schema that represents a Date value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -578,7 +533,7 @@ definitions:
     type: object
     description: a schema that represents a DateTime value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     properties:
       format:
         type: string
@@ -630,7 +585,7 @@ definitions:
     type: object
     description: a schema that represents a key-value collection
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ComplexSchema'
     properties:
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
@@ -661,7 +616,7 @@ definitions:
     type: object
     description: a schema that represents a Duration value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -703,53 +658,14 @@ definitions:
       - url
   FlagSchema:
     type: object
+    allOf:
+      - $ref: '#/definitions/ValueSchema'
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        description: the schema type
-        $ref: '#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
       choices:
         type: array
         description: the possible choices for in the set
         items:
           $ref: '#/definitions/FlagValue'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
     required:
       - $key
       - choices
@@ -812,19 +728,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/HttpWithBodyRequest'
     properties:
-      path:
-        type: string
-        description: |-
-          A relative path to an individual endpoint. 
-
-          The field name MUST begin with a slash. 
-          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
-          Path templating is allowed. 
-
-          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
-      method:
-        description: the HTTP Method used to process this operation
-        $ref: '#/definitions/HttpMethod'
       multipart:
         type: boolean
         description: |-
@@ -838,11 +741,6 @@ definitions:
         description: the multiple request parts that make up this request ?? is this right?
         items:
           $ref: '#/definitions/Request'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: '#/definitions/HttpServer'
     required:
       - mediaType
       - method
@@ -1052,24 +950,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/HttpWithBodyRequest'
     properties:
-      path:
-        type: string
-        description: |-
-          A relative path to an individual endpoint. 
-
-          The field name MUST begin with a slash. 
-          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
-          Path templating is allowed. 
-
-          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
-      method:
-        description: the HTTP Method used to process this operation
-        $ref: '#/definitions/HttpMethod'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: '#/definitions/HttpServer'
       stream:
         type: boolean
         enum:
@@ -1303,7 +1183,7 @@ definitions:
     type: object
     description: a Schema that represents a Number value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     properties:
       exclusiveMaximum:
         type: boolean
@@ -1380,7 +1260,7 @@ definitions:
     type: object
     description: a schema that represents a type with child properties.
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ComplexSchema'
     properties:
       discriminator:
         description: the definition of the polymorphic descriminator for this type
@@ -1411,12 +1291,6 @@ definitions:
       - dictionary
       - object
       - or
-  ObjectSchemas:
-    anyOf:
-      - $ref: '#/definitions/ObjectSchema'
-      - $ref: '#/definitions/AndSchema'
-      - $ref: '#/definitions/OrSchema'
-      - $ref: '#/definitions/DictionarySchema'
   OpenIdConnectSecurityScheme:
     type: object
     properties:
@@ -1515,17 +1389,13 @@ definitions:
     type: object
     description: an OR relationship between several schemas
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ComplexSchema'
     properties:
       anyOf:
         type: array
         description: the set of schemas that this schema is composed of. Every schema is optional
         items:
-          anyOf:
-            - $ref: '#/definitions/ObjectSchema'
-            - $ref: '#/definitions/AndSchema'
-            - $ref: '#/definitions/OrSchema'
-            - $ref: '#/definitions/DictionarySchema'
+          $ref: '#/definitions/ComplexSchema'
     required:
       - $key
       - anyOf
@@ -1555,7 +1425,7 @@ definitions:
     type: object
     description: a schema that represents a set of parameters.
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ComplexSchema'
     properties:
       parameters:
         type: array
@@ -1604,6 +1474,19 @@ definitions:
       - label
       - matrix
       - simple
+  PrimitiveSchema:
+    type: object
+    description: Schema types that are primitive language values
+    allOf:
+      - $ref: '#/definitions/ValueSchema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - serialization
+      - type
+      - uid
   PrimitiveSchemaTypes:
     type: string
     enum:
@@ -1619,19 +1502,6 @@ definitions:
       - unixtime
       - uri
       - uuid
-  PrimitiveSchemas:
-    anyOf:
-      - $ref: '#/definitions/NumberSchema'
-      - $ref: '#/definitions/StringSchema'
-      - $ref: '#/definitions/BooleanSchema'
-      - $ref: '#/definitions/CredentialSchema'
-      - $ref: '#/definitions/UriSchema'
-      - $ref: '#/definitions/UuidSchema'
-      - $ref: '#/definitions/DurationSchema'
-      - $ref: '#/definitions/DateTimeSchema'
-      - $ref: '#/definitions/DateSchema'
-      - $ref: '#/definitions/CharSchema'
-      - $ref: '#/definitions/UnixTimeSchema'
   Property:
     type: object
     description: a property is a child value in an object
@@ -1771,15 +1641,6 @@ definitions:
       schema:
         description: the content returned by the service for a given operaiton
         $ref: '#/definitions/Schema'
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
     required:
       - language
       - protocol
@@ -1820,74 +1681,135 @@ definitions:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
     properties:
-      andCompounds:
+      ands:
         type: array
         items:
           $ref: '#/definitions/AndSchema'
+      arrays:
+        type: array
+        description: a collection of items
+        items:
+          $ref: '#/definitions/ArraySchema'
+      booleans:
+        type: array
+        description: a true or false value
+        items:
+          $ref: '#/definitions/BooleanSchema'
+      byteArrays:
+        type: array
+        description: ByteArray -- an array of bytes
+        items:
+          $ref: '#/definitions/ByteArraySchema'
+      chars:
+        type: array
+        description: a single character
+        items:
+          $ref: '#/definitions/CharSchema'
       choices:
         type: array
-        description: 'schemas that represent a set of choices (ie, ''enum'')'
+        description: |-
+          - this is essentially can be thought of as an 'enum' 
+          that is a choice between one of several strings
         items:
           $ref: '#/definitions/ChoiceSchema'
       constants:
         type: array
-        description: constant values that are used in models and parameters
+        description: a constant value
         items:
           $ref: '#/definitions/ConstantSchema'
+      credentials:
+        type: array
+        description: a password or credential
+        items:
+          $ref: '#/definitions/CredentialSchema'
+      dateTimes:
+        type: array
+        description: a DateTime
+        items:
+          $ref: '#/definitions/DateTimeSchema'
+      dates:
+        type: array
+        description: a Date
+        items:
+          $ref: '#/definitions/DateSchema'
       dictionaries:
         type: array
-        description: schemas that represent key-value dictionaries used in the model.
+        description: 'an associative array (ie, dictionary, hashtable, etc)'
         items:
           $ref: '#/definitions/DictionarySchema'
+      durations:
+        type: array
+        description: a Duration
+        items:
+          $ref: '#/definitions/DurationSchema'
       flags:
         type: array
         items:
           $ref: '#/definitions/FlagSchema'
+      numbers:
+        type: array
+        description: a number value
+        items:
+          $ref: '#/definitions/NumberSchema'
       objects:
         type: array
-        description: schemas that likely result in the creation of new objects during code generation
+        description: an object of some type
         items:
           $ref: '#/definitions/ObjectSchema'
-      orCompounds:
+      odataQueries:
         type: array
-        description: 'schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf)'
+        description: OData Query
+        items:
+          $ref: '#/definitions/ODataQuerySchema'
+      ors:
+        type: array
         items:
           $ref: '#/definitions/OrSchema'
       parameterGroups:
         type: array
-        description: groups of parameters that can be built as an object
         items:
           $ref: '#/definitions/ParameterGroupSchema'
-      primitives:
-        type: array
-        description: primitive schemas that represent things that should be able to be represented without additional classes generated
-        items:
-          anyOf:
-            - $ref: '#/definitions/NumberSchema'
-            - $ref: '#/definitions/StringSchema'
-            - $ref: '#/definitions/FlagSchema'
-            - $ref: '#/definitions/BooleanSchema'
-            - $ref: '#/definitions/CredentialSchema'
-            - $ref: '#/definitions/UriSchema'
-            - $ref: '#/definitions/UuidSchema'
-            - $ref: '#/definitions/DurationSchema'
-            - $ref: '#/definitions/DateTimeSchema'
-            - $ref: '#/definitions/DateSchema'
-            - $ref: '#/definitions/CharSchema'
-            - $ref: '#/definitions/ByteArraySchema'
-            - $ref: '#/definitions/UnixTimeSchema'
-            - $ref: '#/definitions/ArraySchema'
-            - $ref: '#/definitions/ChoiceSchema'
-            - $ref: '#/definitions/SealedChoiceSchema'
       sealedChoices:
         type: array
-        description: schemas that represent a set of choices that are sealed -- that can never have items added to the definition.
         items:
           $ref: '#/definitions/SealedChoiceSchema'
-      xorCompounds:
+      streams:
+        type: array
+        items:
+          $ref: '#/definitions/Schema'
+      strings:
+        type: array
+        description: a string of characters
+        items:
+          $ref: '#/definitions/StringSchema'
+      unixtimes:
+        type: array
+        description: UnixTime
+        items:
+          $ref: '#/definitions/UnixTimeSchema'
+      unknowns:
+        type: array
+        description: |-
+          it's possible that we just may make this an error 
+          in representation.
+        items:
+          $ref: '#/definitions/Schema'
+      uris:
+        type: array
+        description: an URI of some kind
+        items:
+          $ref: '#/definitions/UriSchema'
+      uuids:
+        type: array
+        description: a universally unique identifier
+        items:
+          $ref: '#/definitions/UuidSchema'
+      xors:
         type: array
         items:
           $ref: '#/definitions/XorSchema'
+    required:
+      - strings
   Scheme:
     type: string
     enum:
@@ -2014,11 +1936,8 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       schema:
-        description: the schema for the
-        anyOf:
-          - $ref: '#/definitions/NumberSchema'
-          - $ref: '#/definitions/StringSchema'
-          - $ref: '#/definitions/ChoiceSchema'
+        description: the schema type for the server variable
+        $ref: '#/definitions/ValueSchema'
       description:
         type: string
         description: description of the aspect.
@@ -2120,15 +2039,6 @@ definitions:
         description: indicates that this response is a stream
         enum:
           - true
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
     required:
       - language
       - protocol
@@ -2137,7 +2047,7 @@ definitions:
     type: object
     description: a Schema that represents a string value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     properties:
       maxLength:
         type: number
@@ -2160,7 +2070,7 @@ definitions:
     type: object
     description: a schema that represents a UnixTime value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -2173,7 +2083,7 @@ definitions:
     type: object
     description: a schema that represents a Uri value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     properties:
       maxLength:
         type: number
@@ -2196,7 +2106,7 @@ definitions:
     type: object
     description: a schema that represents a Uuid value
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/PrimitiveSchema'
     required:
       - $key
       - description
@@ -2253,6 +2163,19 @@ definitions:
       - language
       - protocol
       - schema
+      - uid
+  ValueSchema:
+    type: object
+    description: schema types that are non-object or complex types
+    allOf:
+      - $ref: '#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - serialization
+      - type
       - uid
   ValueSchemaTypes:
     type: string

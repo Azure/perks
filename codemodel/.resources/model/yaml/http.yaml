@@ -106,19 +106,6 @@ definitions:
     allOf:
       - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
-      path:
-        type: string
-        description: |-
-          A relative path to an individual endpoint. 
-
-          The field name MUST begin with a slash. 
-          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
-          Path templating is allowed. 
-
-          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
-      method:
-        description: the HTTP Method used to process this operation
-        $ref: './enums.yaml#/definitions/HttpMethod'
       multipart:
         type: boolean
         description: |-
@@ -132,11 +119,6 @@ definitions:
         description: the multiple request parts that make up this request ?? is this right?
         items:
           $ref: './master.yaml#/definitions/Request'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: './http.yaml#/definitions/HttpServer'
     required:
       - mediaType
       - method
@@ -346,24 +328,6 @@ definitions:
     allOf:
       - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
-      path:
-        type: string
-        description: |-
-          A relative path to an individual endpoint. 
-
-          The field name MUST begin with a slash. 
-          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
-          Path templating is allowed. 
-
-          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
-      method:
-        description: the HTTP Method used to process this operation
-        $ref: './enums.yaml#/definitions/HttpMethod'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: './http.yaml#/definitions/HttpServer'
       stream:
         type: boolean
         enum:
@@ -520,11 +484,8 @@ definitions:
         type: string
         description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       schema:
-        description: the schema for the
-        anyOf:
-          - $ref: './schemas.yaml#/definitions/NumberSchema'
-          - $ref: './schemas.yaml#/definitions/StringSchema'
-          - $ref: './schemas.yaml#/definitions/ChoiceSchema'
+        description: the schema type for the server variable
+        $ref: './schemas.yaml#/definitions/ValueSchema'
       description:
         type: string
         description: description of the aspect.
@@ -561,15 +522,6 @@ definitions:
         description: indicates that this response is a stream
         enum:
           - true
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
     required:
       - language
       - protocol

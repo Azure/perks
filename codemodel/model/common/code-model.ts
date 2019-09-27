@@ -43,7 +43,6 @@ export class CodeModel extends Metadata implements CodeModel {
       result = new OperationGroup(group);
       this.operationGroups.push(result);
     }
-    console.error(`GROUP: ${result.$key}`);
     return result;
   }
 }

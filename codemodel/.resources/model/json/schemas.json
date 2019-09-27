@@ -73,6 +73,66 @@
         "uid"
       ]
     },
+    "ValueSchema": {
+      "description": "schema types that are non-object or complex types",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
+    "PrimitiveSchema": {
+      "description": "Schema types that are primitive language values",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "ComplexSchema": {
+      "description": "schema types that can be objects",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "serialization",
+        "type",
+        "uid"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
     "NumberSchema": {
       "description": "a Schema that represents a Number value",
       "type": "object",
@@ -115,7 +175,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -148,7 +208,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -186,7 +246,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ValueSchema"
         }
       ]
     },
@@ -215,7 +275,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
         }
       ]
     },
@@ -255,7 +315,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
         }
       ]
     },
@@ -268,62 +328,6 @@
           "items": {
             "$ref": "./master.json#/definitions/FlagValue"
           }
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
-          "description": "per-language information for Schema uses SchemaMetadata"
-        },
-        "type": {
-          "$ref": "./types.json#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "./master.json#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "uid": {
-          "type": "string"
-        },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "./master.json#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
         }
       },
       "defaultProperties": [],
@@ -336,6 +340,11 @@
         "serialization",
         "type",
         "uid"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
       ]
     },
     "ConstantSchema": {
@@ -385,7 +394,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -438,7 +447,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -471,7 +480,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -491,7 +500,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -511,7 +520,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -541,7 +550,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -561,7 +570,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -581,7 +590,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -611,7 +620,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ValueSchema"
         }
       ]
     },
@@ -631,7 +640,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -657,7 +666,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
         }
       ]
     },
@@ -669,20 +678,7 @@
           "description": "the set of schemas that this schema is composed of.",
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "./schemas.json#/definitions/ObjectSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/AndSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/OrSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/DictionarySchema"
-              }
-            ]
+            "$ref": "./schemas.json#/definitions/ComplexSchema"
           }
         }
       },
@@ -699,7 +695,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
         }
       ]
     },
@@ -711,20 +707,7 @@
           "description": "the set of schemas that this schema is composed of. Every schema is optional",
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "./schemas.json#/definitions/ObjectSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/AndSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/OrSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/DictionarySchema"
-              }
-            ]
+            "$ref": "./schemas.json#/definitions/ComplexSchema"
           }
         }
       },
@@ -741,7 +724,7 @@
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
         }
       ]
     },
@@ -980,48 +963,132 @@
       "description": "the full set of schemas for a given service, categorized into convenient collections",
       "type": "object",
       "properties": {
+        "arrays": {
+          "description": "a collection of items",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ArraySchema"
+          }
+        },
+        "dictionaries": {
+          "description": "an associative array (ie, dictionary, hashtable, etc)",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/DictionarySchema"
+          }
+        },
+        "booleans": {
+          "description": "a true or false value",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/BooleanSchema"
+          }
+        },
+        "numbers": {
+          "description": "a number value",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/NumberSchema"
+          }
+        },
         "objects": {
-          "description": "schemas that likely result in the creation of new objects during code generation",
+          "description": "an object of some type",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ObjectSchema"
           }
         },
-        "parameterGroups": {
-          "description": "groups of parameters that can be built as an object",
+        "strings": {
+          "description": "a string of characters",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/ParameterGroupSchema"
+            "$ref": "./schemas.json#/definitions/StringSchema"
           }
         },
-        "orCompounds": {
-          "description": "schemas that construct more complex schemas based on compound construction (ie, allOf, oneOf, anyOf)",
+        "unixtimes": {
+          "description": "UnixTime",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/OrSchema"
+            "$ref": "./schemas.json#/definitions/UnixTimeSchema"
           }
         },
-        "andCompounds": {
+        "byteArrays": {
+          "description": "ByteArray -- an array of bytes",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/AndSchema"
+            "$ref": "./schemas.json#/definitions/ByteArraySchema"
           }
         },
-        "xorCompounds": {
+        "streams": {
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/XorSchema"
+            "$ref": "./schemas.json#/definitions/Schema"
+          }
+        },
+        "chars": {
+          "description": "a single character",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/CharSchema"
+          }
+        },
+        "dates": {
+          "description": "a Date",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/DateSchema"
+          }
+        },
+        "dateTimes": {
+          "description": "a DateTime",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/DateTimeSchema"
+          }
+        },
+        "durations": {
+          "description": "a Duration",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/DurationSchema"
+          }
+        },
+        "uuids": {
+          "description": "a universally unique identifier",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/UuidSchema"
+          }
+        },
+        "uris": {
+          "description": "an URI of some kind",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/UriSchema"
+          }
+        },
+        "credentials": {
+          "description": "a password or credential",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/CredentialSchema"
+          }
+        },
+        "odataQueries": {
+          "description": "OData Query",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ODataQuerySchema"
           }
         },
         "choices": {
-          "description": "schemas that represent a set of choices (ie, 'enum')",
+          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several strings",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ChoiceSchema"
           }
         },
         "sealedChoices": {
-          "description": "schemas that represent a set of choices that are sealed -- that can never have items added to the definition.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
@@ -1033,103 +1100,60 @@
             "$ref": "./schemas.json#/definitions/FlagSchema"
           }
         },
-        "dictionaries": {
-          "description": "schemas that represent key-value dictionaries used in the model.",
-          "type": "array",
-          "items": {
-            "$ref": "./schemas.json#/definitions/DictionarySchema"
-          }
-        },
         "constants": {
-          "description": "constant values that are used in models and parameters",
+          "description": "a constant value",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ConstantSchema"
           }
         },
-        "primitives": {
-          "description": "primitive schemas that represent things that should be able to be represented without additional classes generated",
+        "ands": {
           "type": "array",
           "items": {
-            "anyOf": [
-              {
-                "$ref": "./schemas.json#/definitions/NumberSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/StringSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/FlagSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/BooleanSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/CredentialSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/UriSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/UuidSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/DurationSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/DateTimeSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/DateSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/CharSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/ByteArraySchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/UnixTimeSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/ArraySchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/ChoiceSchema"
-              },
-              {
-                "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
-              }
-            ]
+            "$ref": "./schemas.json#/definitions/AndSchema"
+          }
+        },
+        "ors": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/OrSchema"
+          }
+        },
+        "xors": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/XorSchema"
+          }
+        },
+        "unknowns": {
+          "description": "it's possible that we just may make this an error \nin representation.",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/Schema"
+          }
+        },
+        "parameterGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ParameterGroupSchema"
           }
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "required": [
+        "strings"
+      ]
     },
     "ChoiceType": {
       "type": "object",
       "properties": {
-        "type": {
-          "description": "the schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type\nthe schema type",
-          "enum": [
-            "boolean",
-            "char",
-            "credential",
-            "date",
-            "date-time",
-            "duration",
-            "integer",
-            "number",
-            "string",
-            "unixtime",
-            "uri",
-            "uuid"
-          ],
-          "type": "string"
-        },
         "language": {
           "$ref": "./master.json#/definitions/Languages<SchemaMetadata>",
           "description": "per-language information for Schema uses SchemaMetadata"
+        },
+        "type": {
+          "$ref": "./types.json#/definitions/AllSchemaTypes",
+          "description": "the schema type"
         },
         "summary": {
           "description": "a short description",

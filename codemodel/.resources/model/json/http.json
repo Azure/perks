@@ -11,18 +11,6 @@
           "enum": [
             true
           ]
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
         }
       },
       "defaultProperties": [],
@@ -91,18 +79,8 @@
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
         "schema": {
-          "description": "the schema for the",
-          "anyOf": [
-            {
-              "$ref": "./schemas.json#/definitions/NumberSchema"
-            },
-            {
-              "$ref": "./schemas.json#/definitions/StringSchema"
-            },
-            {
-              "$ref": "./schemas.json#/definitions/ChoiceSchema"
-            }
-          ]
+          "$ref": "./schemas.json#/definitions/ValueSchema",
+          "description": "the schema type for the server variable"
         },
         "default": {
           "description": "The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.",
@@ -512,21 +490,6 @@
           "enum": [
             true
           ]
-        },
-        "path": {
-          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
-          "type": "string"
-        },
-        "method": {
-          "$ref": "./enums.json#/definitions/HttpMethod",
-          "description": "the HTTP Method used to process this operation"
-        },
-        "servers": {
-          "description": "each method must have one or more servers that it is connected to.",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/HttpServer"
-          }
         }
       },
       "defaultProperties": [],
@@ -558,21 +521,6 @@
           "type": "array",
           "items": {
             "$ref": "./master.json#/definitions/Request"
-          }
-        },
-        "path": {
-          "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
-          "type": "string"
-        },
-        "method": {
-          "$ref": "./enums.json#/definitions/HttpMethod",
-          "description": "the HTTP Method used to process this operation"
-        },
-        "servers": {
-          "description": "each method must have one or more servers that it is connected to.",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/HttpServer"
           }
         }
       },
