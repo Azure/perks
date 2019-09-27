@@ -87,7 +87,7 @@ definitions:
     type: object
     description: code model metadata for HTTP protocol
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: './master.yaml#/definitions/Protocol'
     properties:
       security:
         type: array
@@ -104,7 +104,7 @@ definitions:
   HttpMultiPartRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpWithBodyRequest
+      - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
       path:
         type: string
@@ -191,7 +191,7 @@ definitions:
     type: object
     description: extended metadata for HTTP operation parameters
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: './master.yaml#/definitions/Protocol'
     properties:
       in:
         description: the location that this parameter is placed in the http request
@@ -209,7 +209,7 @@ definitions:
     type: object
     description: HTTP operation protocol data
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: './master.yaml#/definitions/Protocol'
     properties:
       path:
         type: string
@@ -236,7 +236,7 @@ definitions:
   HttpResponse:
     type: object
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: './master.yaml#/definitions/Protocol'
     properties:
       headers:
         type: array
@@ -344,7 +344,7 @@ definitions:
   HttpStreamRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpWithBodyRequest
+      - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
       path:
         type: string
@@ -377,7 +377,7 @@ definitions:
   HttpStreamResponse:
     type: object
     allOf:
-      - $ref: /definitions/HttpResponse
+      - $ref: './http.yaml#/definitions/HttpResponse'
     properties:
       stream:
         type: boolean
@@ -392,7 +392,7 @@ definitions:
   HttpWithBodyRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpRequest
+      - $ref: './http.yaml#/definitions/HttpRequest'
     properties:
       mediaType:
         type: string
@@ -554,7 +554,7 @@ definitions:
     type: object
     description: a response where the content should be treated as a stream instead of a value or object
     allOf:
-      - $ref: /definitions/Response
+      - $ref: './master.yaml#/definitions/Response'
     properties:
       stream:
         type: boolean

@@ -327,7 +327,7 @@ definitions:
     type: object
     description: an operation group represents a container around set of operations
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: './master.yaml#/definitions/Metadata'
     properties:
       $key:
         type: string
@@ -344,7 +344,7 @@ definitions:
     type: object
     description: a definition of an discrete input for an operation
     allOf:
-      - $ref: /definitions/Value
+      - $ref: './master.yaml#/definitions/Value'
     properties:
       implementation:
         description: suggested implementation location for this parameter
@@ -360,7 +360,7 @@ definitions:
     type: object
     description: a property is a child value in an object
     allOf:
-      - $ref: /definitions/Value
+      - $ref: './master.yaml#/definitions/Value'
     properties:
       readOnly:
         type: boolean
@@ -393,7 +393,7 @@ definitions:
   Request:
     type: object
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: './master.yaml#/definitions/Metadata'
     properties:
       parameters:
         type: array
@@ -407,7 +407,7 @@ definitions:
     type: object
     description: a response from a service.
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: './master.yaml#/definitions/Metadata'
     required:
       - language
       - protocol
@@ -415,7 +415,7 @@ definitions:
     type: object
     description: language metadata specific to schema instances
     allOf:
-      - $ref: /definitions/Language
+      - $ref: './master.yaml#/definitions/Language'
     properties:
       discriminatorValue:
         type: string
@@ -430,7 +430,7 @@ definitions:
     type: object
     description: a response that should be deserialized into a result of type(schema)
     allOf:
-      - $ref: /definitions/Response
+      - $ref: './master.yaml#/definitions/Response'
     properties:
       schema:
         description: the content returned by the service for a given operaiton
@@ -516,7 +516,7 @@ definitions:
   XmlSerlializationFormat:
     type: object
     allOf:
-      - $ref: /definitions/SerializationFormat
+      - $ref: './master.yaml#/definitions/SerializationFormat'
     properties:
       name:
         type: string

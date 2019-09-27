@@ -33,7 +33,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Response"
+          "$ref": "./master.json#/definitions/Response"
         }
       ]
     },
@@ -447,7 +447,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "./master.json#/definitions/Protocol"
         }
       ]
     },
@@ -479,7 +479,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "./master.json#/definitions/Protocol"
         }
       ]
     },
@@ -500,7 +500,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpRequest"
+          "$ref": "./http.json#/definitions/HttpRequest"
         }
       ]
     },
@@ -539,7 +539,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpWithBodyRequest"
+          "$ref": "./http.json#/definitions/HttpWithBodyRequest"
         }
       ]
     },
@@ -587,7 +587,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpWithBodyRequest"
+          "$ref": "./http.json#/definitions/HttpWithBodyRequest"
         }
       ]
     },
@@ -735,7 +735,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "./master.json#/definitions/Protocol"
         }
       ]
     },
@@ -759,7 +759,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpResponse"
+          "$ref": "./http.json#/definitions/HttpResponse"
         }
       ]
     },
@@ -788,7 +788,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "./master.json#/definitions/Protocol"
         }
       ]
     }

@@ -4,7 +4,7 @@ definitions:
     type: object
     description: an AND relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       allOf:
         type: array
@@ -28,7 +28,7 @@ definitions:
     type: object
     description: a Schema that represents and array of values
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       elementType:
         description: elementType of the array
@@ -55,7 +55,7 @@ definitions:
     type: object
     description: a schema that represents a boolean value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -68,7 +68,7 @@ definitions:
     type: object
     description: a schema that represents a ByteArray value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       format:
         type: string
@@ -89,7 +89,7 @@ definitions:
     type: object
     description: a schema that represents a Char value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -262,7 +262,7 @@ definitions:
     type: object
     description: a schema that represents a constant value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       constantSchema:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
@@ -351,7 +351,7 @@ definitions:
     type: object
     description: a schema that represents a Credential value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -374,7 +374,7 @@ definitions:
     type: object
     description: a schema that represents a Date value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -387,7 +387,7 @@ definitions:
     type: object
     description: a schema that represents a DateTime value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       format:
         type: string
@@ -408,7 +408,7 @@ definitions:
     type: object
     description: a schema that represents a key-value collection
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
@@ -426,7 +426,7 @@ definitions:
     type: object
     description: a schema that represents a Duration value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -497,7 +497,7 @@ definitions:
     type: object
     description: a NOT relationship between schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       not:
         description: the schema that this may not be.
@@ -515,7 +515,7 @@ definitions:
     type: object
     description: a Schema that represents a Number value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       exclusiveMaximum:
         type: boolean
@@ -548,7 +548,7 @@ definitions:
     type: object
     description: a schema that represents a ODataQuery value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -561,7 +561,7 @@ definitions:
     type: object
     description: a schema that represents a type with child properties.
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       discriminator:
         description: the definition of the polymorphic descriminator for this type
@@ -589,7 +589,7 @@ definitions:
     type: object
     description: an OR relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       anyOf:
         type: array
@@ -613,7 +613,7 @@ definitions:
     type: object
     description: a schema that represents a set of parameters.
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       parameters:
         type: array
@@ -823,7 +823,7 @@ definitions:
     type: object
     description: a Schema that represents a string value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -846,7 +846,7 @@ definitions:
     type: object
     description: a schema that represents a UnixTime value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -859,7 +859,7 @@ definitions:
     type: object
     description: a schema that represents a Uri value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -882,7 +882,7 @@ definitions:
     type: object
     description: a schema that represents a Uuid value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -895,7 +895,7 @@ definitions:
     type: object
     description: an XOR relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: './schemas.yaml#/definitions/Schema'
     properties:
       oneOf:
         type: array

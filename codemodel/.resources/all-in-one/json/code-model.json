@@ -299,7 +299,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/SerializationFormat"
+          "$ref": "#/definitions/SerializationFormat"
         }
       ]
     },
@@ -554,7 +554,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Value"
+          "$ref": "#/definitions/Value"
         }
       ]
     },
@@ -585,7 +585,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Value"
+          "$ref": "#/definitions/Value"
         }
       ]
     },
@@ -609,7 +609,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Language"
+          "$ref": "#/definitions/Language"
         }
       ]
     },
@@ -665,7 +665,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -698,7 +698,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -736,7 +736,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -765,7 +765,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -805,7 +805,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1161,7 +1161,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1181,7 +1181,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1201,7 +1201,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1234,7 +1234,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1267,7 +1267,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1287,7 +1287,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1307,7 +1307,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1337,7 +1337,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1357,7 +1357,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1377,7 +1377,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1407,7 +1407,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1427,7 +1427,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1453,7 +1453,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1495,7 +1495,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1537,7 +1537,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1566,7 +1566,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1592,7 +1592,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "#/definitions/Schema"
         }
       ]
     },
@@ -1960,7 +1960,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "#/definitions/Metadata"
         }
       ]
     },
@@ -1996,7 +1996,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Response"
+          "$ref": "#/definitions/Response"
         }
       ]
     },
@@ -2029,7 +2029,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Response"
+          "$ref": "#/definitions/Response"
         }
       ]
     },
@@ -2131,7 +2131,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "#/definitions/Metadata"
         }
       ]
     },
@@ -2158,7 +2158,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "#/definitions/Metadata"
         }
       ]
     },
@@ -2737,7 +2737,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "#/definitions/Protocol"
         }
       ]
     },
@@ -2769,7 +2769,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "#/definitions/Protocol"
         }
       ]
     },
@@ -2790,7 +2790,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpRequest"
+          "$ref": "#/definitions/HttpRequest"
         }
       ]
     },
@@ -2829,7 +2829,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpWithBodyRequest"
+          "$ref": "#/definitions/HttpWithBodyRequest"
         }
       ]
     },
@@ -2877,7 +2877,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpWithBodyRequest"
+          "$ref": "#/definitions/HttpWithBodyRequest"
         }
       ]
     },
@@ -3025,7 +3025,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "#/definitions/Protocol"
         }
       ]
     },
@@ -3049,7 +3049,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/HttpResponse"
+          "$ref": "#/definitions/HttpResponse"
         }
       ]
     },
@@ -3078,7 +3078,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Protocol"
+          "$ref": "#/definitions/Protocol"
         }
       ]
     },

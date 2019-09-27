@@ -81,7 +81,7 @@ definitions:
     type: object
     description: an AND relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       allOf:
         type: array
@@ -135,7 +135,7 @@ definitions:
     type: object
     description: a Schema that represents and array of values
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       elementType:
         description: elementType of the array
@@ -204,7 +204,7 @@ definitions:
     type: object
     description: a schema that represents a boolean value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -217,7 +217,7 @@ definitions:
     type: object
     description: a schema that represents a ByteArray value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       format:
         type: string
@@ -238,7 +238,7 @@ definitions:
     type: object
     description: a schema that represents a Char value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -439,7 +439,7 @@ definitions:
     type: object
     description: a schema that represents a constant value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       constantSchema:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
@@ -542,7 +542,7 @@ definitions:
     type: object
     description: a schema that represents a Credential value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -565,7 +565,7 @@ definitions:
     type: object
     description: a schema that represents a Date value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -578,7 +578,7 @@ definitions:
     type: object
     description: a schema that represents a DateTime value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       format:
         type: string
@@ -630,7 +630,7 @@ definitions:
     type: object
     description: a schema that represents a key-value collection
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
@@ -661,7 +661,7 @@ definitions:
     type: object
     description: a schema that represents a Duration value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -793,7 +793,7 @@ definitions:
     type: object
     description: code model metadata for HTTP protocol
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: '#/definitions/Protocol'
     properties:
       security:
         type: array
@@ -810,7 +810,7 @@ definitions:
   HttpMultiPartRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpWithBodyRequest
+      - $ref: '#/definitions/HttpWithBodyRequest'
     properties:
       path:
         type: string
@@ -897,7 +897,7 @@ definitions:
     type: object
     description: extended metadata for HTTP operation parameters
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: '#/definitions/Protocol'
     properties:
       in:
         description: the location that this parameter is placed in the http request
@@ -915,7 +915,7 @@ definitions:
     type: object
     description: HTTP operation protocol data
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: '#/definitions/Protocol'
     properties:
       path:
         type: string
@@ -942,7 +942,7 @@ definitions:
   HttpResponse:
     type: object
     allOf:
-      - $ref: /definitions/Protocol
+      - $ref: '#/definitions/Protocol'
     properties:
       headers:
         type: array
@@ -1050,7 +1050,7 @@ definitions:
   HttpStreamRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpWithBodyRequest
+      - $ref: '#/definitions/HttpWithBodyRequest'
     properties:
       path:
         type: string
@@ -1083,7 +1083,7 @@ definitions:
   HttpStreamResponse:
     type: object
     allOf:
-      - $ref: /definitions/HttpResponse
+      - $ref: '#/definitions/HttpResponse'
     properties:
       stream:
         type: boolean
@@ -1098,7 +1098,7 @@ definitions:
   HttpWithBodyRequest:
     type: object
     allOf:
-      - $ref: /definitions/HttpRequest
+      - $ref: '#/definitions/HttpRequest'
     properties:
       mediaType:
         type: string
@@ -1285,7 +1285,7 @@ definitions:
     type: object
     description: a NOT relationship between schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       not:
         description: the schema that this may not be.
@@ -1303,7 +1303,7 @@ definitions:
     type: object
     description: a Schema that represents a Number value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       exclusiveMaximum:
         type: boolean
@@ -1367,7 +1367,7 @@ definitions:
     type: object
     description: a schema that represents a ODataQuery value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -1380,7 +1380,7 @@ definitions:
     type: object
     description: a schema that represents a type with child properties.
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       discriminator:
         description: the definition of the polymorphic descriminator for this type
@@ -1498,7 +1498,7 @@ definitions:
     type: object
     description: an operation group represents a container around set of operations
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: '#/definitions/Metadata'
     properties:
       $key:
         type: string
@@ -1515,7 +1515,7 @@ definitions:
     type: object
     description: an OR relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       anyOf:
         type: array
@@ -1539,7 +1539,7 @@ definitions:
     type: object
     description: a definition of an discrete input for an operation
     allOf:
-      - $ref: /definitions/Value
+      - $ref: '#/definitions/Value'
     properties:
       implementation:
         description: suggested implementation location for this parameter
@@ -1555,7 +1555,7 @@ definitions:
     type: object
     description: a schema that represents a set of parameters.
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       parameters:
         type: array
@@ -1636,7 +1636,7 @@ definitions:
     type: object
     description: a property is a child value in an object
     allOf:
-      - $ref: /definitions/Value
+      - $ref: '#/definitions/Value'
     properties:
       readOnly:
         type: boolean
@@ -1676,7 +1676,7 @@ definitions:
   Request:
     type: object
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: '#/definitions/Metadata'
     properties:
       parameters:
         type: array
@@ -1690,7 +1690,7 @@ definitions:
     type: object
     description: a response from a service.
     allOf:
-      - $ref: /definitions/Metadata
+      - $ref: '#/definitions/Metadata'
     required:
       - language
       - protocol
@@ -1751,7 +1751,7 @@ definitions:
     type: object
     description: language metadata specific to schema instances
     allOf:
-      - $ref: /definitions/Language
+      - $ref: '#/definitions/Language'
     properties:
       discriminatorValue:
         type: string
@@ -1766,7 +1766,7 @@ definitions:
     type: object
     description: a response that should be deserialized into a result of type(schema)
     allOf:
-      - $ref: /definitions/Response
+      - $ref: '#/definitions/Response'
     properties:
       schema:
         description: the content returned by the service for a given operaiton
@@ -2113,7 +2113,7 @@ definitions:
     type: object
     description: a response where the content should be treated as a stream instead of a value or object
     allOf:
-      - $ref: /definitions/Response
+      - $ref: '#/definitions/Response'
     properties:
       stream:
         type: boolean
@@ -2137,7 +2137,7 @@ definitions:
     type: object
     description: a Schema that represents a string value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -2160,7 +2160,7 @@ definitions:
     type: object
     description: a schema that represents a UnixTime value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -2173,7 +2173,7 @@ definitions:
     type: object
     description: a schema that represents a Uri value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       maxLength:
         type: number
@@ -2196,7 +2196,7 @@ definitions:
     type: object
     description: a schema that represents a Uuid value
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     required:
       - $key
       - description
@@ -2277,7 +2277,7 @@ definitions:
   XmlSerlializationFormat:
     type: object
     allOf:
-      - $ref: /definitions/SerializationFormat
+      - $ref: '#/definitions/SerializationFormat'
     properties:
       name:
         type: string
@@ -2296,7 +2296,7 @@ definitions:
     type: object
     description: an XOR relationship between several schemas
     allOf:
-      - $ref: /definitions/Schema
+      - $ref: '#/definitions/Schema'
     properties:
       oneOf:
         type: array

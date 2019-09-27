@@ -190,7 +190,7 @@ async function main() {
           const parent = parents[0];
           const child = each.getName();
           if (schema.definitions[child] && schema.definitions[parent]) {
-            schema.definitions[child].allOf = [{ $ref: `/definitions/${parent}` }]
+            schema.definitions[child].allOf = [{ $ref: `#/definitions/${parent}` }]
 
             for (const pp in schema.definitions[parent].properties) {
               delete schema.definitions[child].properties[pp];

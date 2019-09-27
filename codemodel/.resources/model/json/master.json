@@ -227,7 +227,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/SerializationFormat"
+          "$ref": "./master.json#/definitions/SerializationFormat"
         }
       ]
     },
@@ -360,7 +360,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Value"
+          "$ref": "./master.json#/definitions/Value"
         }
       ]
     },
@@ -384,7 +384,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Value"
+          "$ref": "./master.json#/definitions/Value"
         }
       ]
     },
@@ -408,7 +408,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Language"
+          "$ref": "./master.json#/definitions/Language"
         }
       ]
     },
@@ -538,7 +538,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "./master.json#/definitions/Metadata"
         }
       ]
     },
@@ -571,7 +571,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Response"
+          "$ref": "./master.json#/definitions/Response"
         }
       ]
     },
@@ -673,7 +673,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "./master.json#/definitions/Metadata"
         }
       ]
     },
@@ -700,7 +700,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Metadata"
+          "$ref": "./master.json#/definitions/Metadata"
         }
       ]
     },

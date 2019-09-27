@@ -115,7 +115,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -148,7 +148,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -186,7 +186,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -215,7 +215,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -255,7 +255,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -365,7 +365,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -385,7 +385,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -405,7 +405,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -438,7 +438,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -471,7 +471,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -491,7 +491,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -511,7 +511,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -541,7 +541,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -561,7 +561,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -581,7 +581,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -611,7 +611,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -631,7 +631,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -657,7 +657,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -699,7 +699,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -741,7 +741,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -770,7 +770,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -796,7 +796,7 @@
       ],
       "allOf": [
         {
-          "$ref": "/definitions/Schema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
