@@ -232,23 +232,9 @@ definitions:
     type: object
     description: 'a schema that represents a choice of several values (ie, an ''enum'')'
     additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/ValueSchema'
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - choice
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
       choiceType:
         description: the primitive type for the choices
         $ref: '#/definitions/StringSchema'
@@ -257,33 +243,6 @@ definitions:
         description: the possible choices for in the set
         items:
           $ref: '#/definitions/ChoiceValue'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
     required:
       - $key
       - choiceType
@@ -334,8 +293,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: '#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
@@ -414,7 +373,7 @@ definitions:
     properties:
       constantSchema:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
-        $ref: '#/definitions/ConstantType'
+        $ref: '#/definitions/Schema'
       value:
         description: the actual constant value
         $ref: '#/definitions/ConstantValue'
@@ -468,8 +427,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: '#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
@@ -599,7 +558,8 @@ definitions:
       $ref: '#/definitions/ApiVersion'
   Dictionary<any>:
     type: object
-    additionalProperties: true
+    additionalProperties:
+      type: object
   Dictionary<string>:
     type: object
     additionalProperties:
@@ -1082,7 +1042,8 @@ definitions:
       - title
   Language:
     type: object
-    additionalProperties: false
+    additionalProperties:
+      type: object
     properties:
       name:
         type: string
@@ -1123,38 +1084,6 @@ definitions:
         $ref: '#/definitions/Language'
       typescript:
         $ref: '#/definitions/Language'
-    required:
-      - default
-  Languages<SchemaMetadata>:
-    type: object
-    description: custom extensible metadata for individual language generators
-    properties:
-      default:
-        $ref: '#/definitions/SchemaMetadata'
-      c:
-        $ref: '#/definitions/SchemaMetadata'
-      cpp:
-        $ref: '#/definitions/SchemaMetadata'
-      csharp:
-        $ref: '#/definitions/SchemaMetadata'
-      go:
-        $ref: '#/definitions/SchemaMetadata'
-      java:
-        $ref: '#/definitions/SchemaMetadata'
-      javascript:
-        $ref: '#/definitions/SchemaMetadata'
-      objectivec:
-        $ref: '#/definitions/SchemaMetadata'
-      powershell:
-        $ref: '#/definitions/SchemaMetadata'
-      python:
-        $ref: '#/definitions/SchemaMetadata'
-      ruby:
-        $ref: '#/definitions/SchemaMetadata'
-      swift:
-        $ref: '#/definitions/SchemaMetadata'
-      typescript:
-        $ref: '#/definitions/SchemaMetadata'
     required:
       - default
   License:
@@ -1631,7 +1560,6 @@ definitions:
       - protocol
   Schema:
     type: object
-    description: The Schema Object allows the definition of input and output data types.
     additionalProperties: false
     properties:
       $key:
@@ -1670,8 +1598,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: '#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
@@ -1683,22 +1611,6 @@ definitions:
       - serialization
       - type
       - uid
-  SchemaMetadata:
-    type: object
-    description: language metadata specific to schema instances
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/Language'
-    properties:
-      discriminatorValue:
-        type: string
-        description: 'if this is a child of a polymorphic class, this will have the value of the descriminator.'
-      namespace:
-        type: string
-        description: namespace of the implementation of this item
-    required:
-      - description
-      - name
   SchemaResponse:
     type: object
     description: a response that should be deserialized into a result of type(schema)
@@ -1887,23 +1799,9 @@ definitions:
     type: object
     description: 'a schema that represents a choice of several values (ie, an ''enum'')'
     additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/ValueSchema'
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - sealed-choice
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
       choiceType:
         description: the primitive type for the choices
         $ref: '#/definitions/StringSchema'
@@ -1912,33 +1810,6 @@ definitions:
         description: the possible choices for in the set
         items:
           $ref: '#/definitions/ChoiceValue'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: '#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
     required:
       - $key
       - choiceType
@@ -1979,9 +1850,9 @@ definitions:
     description: custom extensible metadata for individual serialization formats
     properties:
       json:
-        $ref: '#/definitions/Extensions'
+        $ref: '#/definitions/SerializationFormat'
       protobuf:
-        $ref: '#/definitions/Extensions'
+        $ref: '#/definitions/SerializationFormat'
       xml:
         $ref: '#/definitions/XmlSerlializationFormat'
   SerializationStyle:

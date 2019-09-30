@@ -10,23 +10,14 @@ import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Parameter } from './parameter';
 
-/** language metadata specific to schema instances */
-export interface SchemaMetadata extends Language {
-  /** namespace of the implementation of this item */
-  namespace?: string;
-
-  /** if this is a child of a polymorphic class, this will have the value of the descriminator.  */
-  discriminatorValue?: string;
-}
-
 export interface SerializationFormat extends Extensions, Dictionary<any> {
 
 }
 
 /** The Schema Object allows the definition of input and output data types. */
 export interface Schema extends Aspect {
-  /** per-language information for Schema uses SchemaMetadata */
-  language: Languages<SchemaMetadata>;
+  /** per-language information for Schema */
+  language: Languages;
 
   /** the schema type  */
   type: AllSchemaTypes;

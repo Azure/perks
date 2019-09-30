@@ -148,6 +148,8 @@ async function main() {
   // We can either get the schema for one file and one type...
   let schema = TJS.generateSchema(program, "*", settings);
 
+  schema = fixmodel(schema);
+
   delete schema.definitions['ValueSchemas'];
   delete schema.definitions['AllSchemas'];
   delete schema.definitions['ArraySchema<Schema>'];
@@ -164,8 +166,6 @@ async function main() {
   delete schema.definitions['ChoiceType_1'];
   delete schema.definitions['SerializationFormats<SerializationFormat>'];
 
-  schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
-  schema.definitions['Dictionary<any>'].additionalProperties = true;
 
   for (let each in schema.definitions['CodeModel']) {
     schema[each] = schema.definitions['CodeModel'][each]
@@ -207,8 +207,11 @@ async function main() {
 
 
 
+  schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
+  schema.definitions['Dictionary<any>'].additionalProperties = { type: 'object' };
+  schema.definitions['Language'].additionalProperties = { type: 'object' }
 
-
+  console.log(schema.definitions['Language']);
 
   // write out the full all in one model
   await writemodels('code-model', 'all-in-one', schema);

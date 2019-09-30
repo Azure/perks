@@ -71,7 +71,8 @@ definitions:
       $ref: './master.yaml#/definitions/ApiVersion'
   Dictionary<any>:
     type: object
-    additionalProperties: true
+    additionalProperties:
+      type: object
   Dictionary<string>:
     type: object
     additionalProperties:
@@ -169,7 +170,8 @@ definitions:
       - title
   Language:
     type: object
-    additionalProperties: false
+    additionalProperties:
+      type: object
     properties:
       name:
         type: string
@@ -210,38 +212,6 @@ definitions:
         $ref: './master.yaml#/definitions/Language'
       typescript:
         $ref: './master.yaml#/definitions/Language'
-    required:
-      - default
-  Languages<SchemaMetadata>:
-    type: object
-    description: custom extensible metadata for individual language generators
-    properties:
-      default:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      c:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      cpp:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      csharp:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      go:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      java:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      javascript:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      objectivec:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      powershell:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      python:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      ruby:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      swift:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
-      typescript:
-        $ref: './schemas.yaml#/definitions/SchemaMetadata'
     required:
       - default
   License:
@@ -431,22 +401,6 @@ definitions:
     required:
       - language
       - protocol
-  SchemaMetadata:
-    type: object
-    description: language metadata specific to schema instances
-    additionalProperties: false
-    allOf:
-      - $ref: './master.yaml#/definitions/Language'
-    properties:
-      discriminatorValue:
-        type: string
-        description: 'if this is a child of a polymorphic class, this will have the value of the descriminator.'
-      namespace:
-        type: string
-        description: namespace of the implementation of this item
-    required:
-      - description
-      - name
   SchemaResponse:
     type: object
     description: a response that should be deserialized into a result of type(schema)
@@ -473,9 +427,9 @@ definitions:
     description: custom extensible metadata for individual serialization formats
     properties:
       json:
-        $ref: './master.yaml#/definitions/Extensions'
+        $ref: './master.yaml#/definitions/SerializationFormat'
       protobuf:
-        $ref: './master.yaml#/definitions/Extensions'
+        $ref: './master.yaml#/definitions/SerializationFormat'
       xml:
         $ref: './master.yaml#/definitions/XmlSerlializationFormat'
   Value:

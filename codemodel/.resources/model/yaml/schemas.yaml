@@ -30,7 +30,7 @@ definitions:
     properties:
       elementType:
         description: elementType of the array
-        $ref: './master.yaml#/definitions/Schema'
+        $ref: './schemas.yaml#/definitions/Schema'
       maxItems:
         type: number
         description: maximum number of elements in the array
@@ -99,72 +99,6 @@ definitions:
       - serialization
       - type
       - uid
-  ChoiceSchema:
-    type: object
-    description: 'a schema that represents a choice of several values (ie, an ''enum'')'
-    additionalProperties: false
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - choice
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      choiceType:
-        description: the primitive type for the choices
-        $ref: './schemas.yaml#/definitions/StringSchema'
-      choices:
-        type: array
-        description: the possible choices for in the set
-        items:
-          $ref: './schemas.yaml#/definitions/ChoiceValue'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
-    required:
-      - $key
-      - choiceType
-      - choices
-      - description
-      - language
-      - protocol
-      - serialization
-      - type
-      - uid
   ChoiceType:
     type: object
     additionalProperties: false
@@ -205,8 +139,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: './master.yaml#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
@@ -261,7 +195,7 @@ definitions:
     properties:
       constantSchema:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
-        $ref: './schemas.yaml#/definitions/ConstantType'
+        $ref: './schemas.yaml#/definitions/Schema'
       value:
         description: the actual constant value
         $ref: './schemas.yaml#/definitions/ConstantValue'
@@ -315,8 +249,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: './master.yaml#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
@@ -413,7 +347,7 @@ definitions:
     properties:
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
-        $ref: './master.yaml#/definitions/Schema'
+        $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
       - description
@@ -611,7 +545,6 @@ definitions:
       - uid
   Schema:
     type: object
-    description: The Schema Object allows the definition of input and output data types.
     additionalProperties: false
     properties:
       $key:
@@ -650,8 +583,8 @@ definitions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
       language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
+        description: per-language information for Schema
+        $ref: './master.yaml#/definitions/Languages'
       protocol:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
@@ -797,72 +730,6 @@ definitions:
           $ref: './schemas.yaml#/definitions/XorSchema'
     required:
       - strings
-  SealedChoiceSchema:
-    type: object
-    description: 'a schema that represents a choice of several values (ie, an ''enum'')'
-    additionalProperties: false
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      type:
-        type: string
-        description: the schema type
-        enum:
-          - sealed-choice
-      description:
-        type: string
-        description: description of the aspect.
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      choiceType:
-        description: the primitive type for the choices
-        $ref: './schemas.yaml#/definitions/StringSchema'
-      choices:
-        type: array
-        description: the possible choices for in the set
-        items:
-          $ref: './schemas.yaml#/definitions/ChoiceValue'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: './master.yaml#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: './master.yaml#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      uid:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema uses SchemaMetadata
-        $ref: './master.yaml#/definitions/Languages<SchemaMetadata>'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: './master.yaml#/definitions/Protocols'
-    required:
-      - $key
-      - choiceType
-      - choices
-      - description
-      - language
-      - protocol
-      - serialization
-      - type
-      - uid
   StringSchema:
     type: object
     description: a Schema that represents a string value

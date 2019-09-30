@@ -197,7 +197,9 @@
         }
       },
       "defaultProperties": [],
-      "additionalProperties": false,
+      "additionalProperties": {
+        "type": "object"
+      },
       "required": [
         "description",
         "name"
@@ -245,13 +247,13 @@
       "additionalProperties": {},
       "properties": {
         "json": {
-          "$ref": "./master.json#/definitions/Extensions"
+          "$ref": "./master.json#/definitions/SerializationFormat"
         },
         "xml": {
           "$ref": "./master.json#/definitions/XmlSerlializationFormat"
         },
         "protobuf": {
-          "$ref": "./master.json#/definitions/Extensions"
+          "$ref": "./master.json#/definitions/SerializationFormat"
         }
       },
       "defaultProperties": []
@@ -397,31 +399,6 @@
       "allOf": [
         {
           "$ref": "./master.json#/definitions/Value"
-        }
-      ]
-    },
-    "SchemaMetadata": {
-      "description": "language metadata specific to schema instances",
-      "type": "object",
-      "properties": {
-        "namespace": {
-          "description": "namespace of the implementation of this item",
-          "type": "string"
-        },
-        "discriminatorValue": {
-          "description": "if this is a child of a polymorphic class, this will have the value of the descriminator.",
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "description",
-        "name"
-      ],
-      "allOf": [
-        {
-          "$ref": "./master.json#/definitions/Language"
         }
       ]
     },
@@ -736,7 +713,9 @@
     },
     "Dictionary<any>": {
       "type": "object",
-      "additionalProperties": true,
+      "additionalProperties": {
+        "type": "object"
+      },
       "defaultProperties": []
     },
     "Dictionary<string>": {
@@ -745,56 +724,6 @@
         "type": "string"
       },
       "defaultProperties": []
-    },
-    "Languages<SchemaMetadata>": {
-      "description": "custom extensible metadata for individual language generators",
-      "type": "object",
-      "additionalProperties": {},
-      "properties": {
-        "default": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "csharp": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "python": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "ruby": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "go": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "typescript": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "javascript": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "powershell": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "java": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "c": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "cpp": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "swift": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        },
-        "objectivec": {
-          "$ref": "./schemas.json#/definitions/SchemaMetadata"
-        }
-      },
-      "defaultProperties": [],
-      "required": [
-        "default"
-      ]
     },
     "Dictionary<ApiVersion>": {
       "type": "object",
