@@ -93,7 +93,9 @@
     "Languages": {
       "description": "custom extensible metadata for individual language generators",
       "type": "object",
-      "additionalProperties": {},
+      "additionalProperties": {
+        "type": "object"
+      },
       "properties": {
         "default": {
           "$ref": "./master.json#/definitions/Language"
@@ -143,7 +145,9 @@
     "Protocols": {
       "description": "custom extensible metadata for individual protocols (ie, HTTP, etc)",
       "type": "object",
-      "additionalProperties": {},
+      "additionalProperties": {
+        "type": "object"
+      },
       "properties": {
         "http": {
           "$ref": "./master.json#/definitions/Protocol"
@@ -244,7 +248,9 @@
     "SerializationFormats": {
       "description": "custom extensible metadata for individual serialization formats",
       "type": "object",
-      "additionalProperties": {},
+      "additionalProperties": {
+        "type": "object"
+      },
       "properties": {
         "json": {
           "$ref": "./master.json#/definitions/SerializationFormat"

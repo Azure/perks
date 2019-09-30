@@ -207,11 +207,14 @@ async function main() {
 
 
 
-  schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' }
+  schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' };
   schema.definitions['Dictionary<any>'].additionalProperties = { type: 'object' };
-  schema.definitions['Language'].additionalProperties = { type: 'object' }
+  schema.definitions['Language'].additionalProperties = { type: 'object' };
+  schema.definitions['Languages'].additionalProperties = { type: 'object' };
+  schema.definitions['Protocols'].additionalProperties = { type: 'object' };
+  schema.definitions['SerializationFormats'].additionalProperties = { type: 'object' };
 
-  console.log(schema.definitions['Language']);
+  // console.log(schema.definitions['Language']);
 
   // write out the full all in one model
   await writemodels('code-model', 'all-in-one', schema);
