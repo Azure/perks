@@ -18,7 +18,7 @@ export interface PathReference<T> {
 
 export interface Dereferenced<T> {
   instance: T;
-  name?: string;
+  name: string;
 }
 
 export type Reference<T> = T;
@@ -65,9 +65,9 @@ export function dereference<T>(document: any, item: Refable<T>, stack = new Arra
       // it's a ref to a ref.
       return dereference(document, node, stack);
     }
-    return { instance: node, name };
+    return { instance: node, name: name || '' };
   }
-  return { instance: item, name: undefined };
+  return { instance: item, name: '' };
 }
 
 

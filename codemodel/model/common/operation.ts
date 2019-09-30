@@ -69,7 +69,7 @@ export interface OperationGroup extends Metadata {
   operations: Array<Operation>;
 }
 
-export class OperationGroup extends Initializer implements OperationGroup {
+export class OperationGroup extends Metadata implements OperationGroup {
   constructor(name: string, objectInitializer?: DeepPartial<OperationGroup>) {
     super();
     this.$key = name;
