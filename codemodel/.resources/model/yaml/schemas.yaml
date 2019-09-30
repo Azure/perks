@@ -3,6 +3,7 @@ definitions:
   AndSchema:
     type: object
     description: an AND relationship between several schemas
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
@@ -23,6 +24,7 @@ definitions:
   ArraySchema:
     type: object
     description: a Schema that represents and array of values
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ValueSchema'
     properties:
@@ -50,6 +52,7 @@ definitions:
   BooleanSchema:
     type: object
     description: a schema that represents a boolean value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -63,6 +66,7 @@ definitions:
   ByteArraySchema:
     type: object
     description: a schema that represents a ByteArray value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ValueSchema'
     properties:
@@ -84,6 +88,7 @@ definitions:
   CharSchema:
     type: object
     description: a schema that represents a Char value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -97,6 +102,7 @@ definitions:
   ChoiceSchema:
     type: object
     description: 'a schema that represents a choice of several values (ie, an ''enum'')'
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -161,6 +167,7 @@ definitions:
       - uid
   ChoiceType:
     type: object
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -214,6 +221,7 @@ definitions:
   ChoiceValue:
     type: object
     description: an individual choice in a ChoiceSchema
+    additionalProperties: false
     properties:
       value:
         type:
@@ -233,6 +241,7 @@ definitions:
   ComplexSchema:
     type: object
     description: schema types that can be objects
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
@@ -246,6 +255,7 @@ definitions:
   ConstantSchema:
     type: object
     description: a schema that represents a constant value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     properties:
@@ -267,6 +277,7 @@ definitions:
       - value
   ConstantType:
     type: object
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -320,6 +331,7 @@ definitions:
   ConstantValue:
     type: object
     description: a container for the actual constant value
+    additionalProperties: false
     properties:
       value:
         description: the actual constant value to use
@@ -335,6 +347,7 @@ definitions:
   CredentialSchema:
     type: object
     description: a schema that represents a Credential value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     properties:
@@ -358,6 +371,7 @@ definitions:
   DateSchema:
     type: object
     description: a schema that represents a Date value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -371,6 +385,7 @@ definitions:
   DateTimeSchema:
     type: object
     description: a schema that represents a DateTime value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     properties:
@@ -392,6 +407,7 @@ definitions:
   DictionarySchema:
     type: object
     description: a schema that represents a key-value collection
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
@@ -410,6 +426,7 @@ definitions:
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -422,6 +439,7 @@ definitions:
       - uid
   FlagSchema:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ValueSchema'
     properties:
@@ -442,6 +460,7 @@ definitions:
   NotSchema:
     type: object
     description: a NOT relationship between schemas
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     properties:
@@ -460,6 +479,7 @@ definitions:
   NumberSchema:
     type: object
     description: a Schema that represents a Number value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     properties:
@@ -493,6 +513,7 @@ definitions:
   ODataQuerySchema:
     type: object
     description: a schema that represents a ODataQuery value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
@@ -506,6 +527,7 @@ definitions:
   ObjectSchema:
     type: object
     description: a schema that represents a type with child properties.
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
@@ -534,6 +556,7 @@ definitions:
   OrSchema:
     type: object
     description: an OR relationship between several schemas
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
@@ -554,6 +577,7 @@ definitions:
   ParameterGroupSchema:
     type: object
     description: a schema that represents a set of parameters.
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
@@ -574,6 +598,7 @@ definitions:
   PrimitiveSchema:
     type: object
     description: Schema types that are primitive language values
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ValueSchema'
     required:
@@ -587,6 +612,7 @@ definitions:
   Schema:
     type: object
     description: The Schema Object allows the definition of input and output data types.
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -640,6 +666,7 @@ definitions:
   Schemas:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
+    additionalProperties: false
     properties:
       ands:
         type: array
@@ -773,6 +800,7 @@ definitions:
   SealedChoiceSchema:
     type: object
     description: 'a schema that represents a choice of several values (ie, an ''enum'')'
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -838,6 +866,7 @@ definitions:
   StringSchema:
     type: object
     description: a Schema that represents a string value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     properties:
@@ -861,6 +890,7 @@ definitions:
   UnixTimeSchema:
     type: object
     description: a schema that represents a UnixTime value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -874,6 +904,7 @@ definitions:
   UriSchema:
     type: object
     description: a schema that represents a Uri value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     properties:
@@ -897,6 +928,7 @@ definitions:
   UuidSchema:
     type: object
     description: a schema that represents a Uuid value
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
@@ -910,6 +942,7 @@ definitions:
   ValueSchema:
     type: object
     description: schema types that are non-object or complex types
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
@@ -923,6 +956,7 @@ definitions:
   XorSchema:
     type: object
     description: an XOR relationship between several schemas
+    additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     properties:

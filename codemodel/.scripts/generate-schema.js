@@ -140,6 +140,7 @@ async function main() {
     defaultProps: true,
     strictNullChecks: true,
     excludePrivate: true,
+    noExtraProps: true,
   };
 
   const program = TJS.getProgramFromFiles(g.sync(`${__dirname}/../model/**/*.ts`), {}, __dirname);

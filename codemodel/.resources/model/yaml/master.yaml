@@ -1,6 +1,7 @@
 type: object
 description: the model that contains all the information required to generate a service api
 $schema: 'http://json-schema.org/draft-07/schema#'
+additionalProperties: false
 definitions:
   ApiVersion:
     type: object
@@ -16,6 +17,7 @@ definitions:
       (ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )
 
       - semver-range style (ie, '^1.0.0' or '~1.0.0' )
+    additionalProperties: false
     properties:
       range:
         type: string
@@ -35,6 +37,7 @@ definitions:
   Contact:
     type: object
     description: contact information
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -49,6 +52,7 @@ definitions:
   Deprecation:
     type: object
     description: represents  deprecation information for a given aspect
+    additionalProperties: false
     properties:
       apiVersions:
         type: array
@@ -75,6 +79,7 @@ definitions:
   Discriminator:
     type: object
     description: Disciminator for polymorphic class hierarchy
+    additionalProperties: false
     properties:
       mapping:
         $ref: './master.yaml#/definitions/Dictionary<string>'
@@ -88,6 +93,7 @@ definitions:
   Example:
     type: object
     description: 'example data [UNFINISHED]'
+    additionalProperties: false
     properties:
       description:
         type: string
@@ -98,6 +104,7 @@ definitions:
         type: string
   Extensions:
     type: object
+    additionalProperties: false
     properties:
       extensions:
         description: additional metadata extensions dictionary
@@ -105,6 +112,7 @@ definitions:
   ExternalDocumentation:
     type: object
     description: a reference to external documentation
+    additionalProperties: false
     properties:
       description:
         type: string
@@ -118,6 +126,7 @@ definitions:
       - url
   FlagValue:
     type: object
+    additionalProperties: false
     properties:
       value:
         type: number
@@ -133,6 +142,7 @@ definitions:
   Info:
     type: object
     description: code model information
+    additionalProperties: false
     properties:
       description:
         type: string
@@ -159,6 +169,7 @@ definitions:
       - title
   Language:
     type: object
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -236,6 +247,7 @@ definitions:
   License:
     type: object
     description: license information
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -251,6 +263,7 @@ definitions:
   Metadata:
     type: object
     description: common pattern for Metadata on aspects
+    additionalProperties: false
     properties:
       extensions:
         description: additional metadata extensions dictionary
@@ -267,6 +280,7 @@ definitions:
   Operation:
     type: object
     description: 'represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)'
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -326,6 +340,7 @@ definitions:
   OperationGroup:
     type: object
     description: an operation group represents a container around set of operations
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Metadata'
     properties:
@@ -343,6 +358,7 @@ definitions:
   Parameter:
     type: object
     description: a definition of an discrete input for an operation
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
@@ -359,6 +375,7 @@ definitions:
   Property:
     type: object
     description: a property is a child value in an object
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
@@ -378,6 +395,7 @@ definitions:
       - uid
   Protocol:
     type: object
+    additionalProperties: false
   Protocols:
     type: object
     description: 'custom extensible metadata for individual protocols (ie, HTTP, etc)'
@@ -392,6 +410,7 @@ definitions:
         $ref: './master.yaml#/definitions/Protocol'
   Request:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Metadata'
     properties:
@@ -406,6 +425,7 @@ definitions:
   Response:
     type: object
     description: a response from a service.
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Metadata'
     required:
@@ -414,6 +434,7 @@ definitions:
   SchemaMetadata:
     type: object
     description: language metadata specific to schema instances
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Language'
     properties:
@@ -429,6 +450,7 @@ definitions:
   SchemaResponse:
     type: object
     description: a response that should be deserialized into a result of type(schema)
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Response'
     properties:
@@ -441,6 +463,7 @@ definitions:
       - schema
   SerializationFormat:
     type: object
+    additionalProperties: false
     properties:
       extensions:
         description: additional metadata extensions dictionary
@@ -458,6 +481,7 @@ definitions:
   Value:
     type: object
     description: 'common base interface for properties, parameters and the like.'
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -506,6 +530,7 @@ definitions:
       - uid
   XmlSerlializationFormat:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/SerializationFormat'
     properties:

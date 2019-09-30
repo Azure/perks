@@ -2,6 +2,7 @@ $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
   APIKeySecurityScheme:
     type: object
+    additionalProperties: false
     properties:
       name:
         type: string
@@ -22,6 +23,7 @@ definitions:
       - type
   AuthorizationCodeOAuthFlow:
     type: object
+    additionalProperties: false
     properties:
       authorizationUrl:
         type: string
@@ -43,6 +45,7 @@ definitions:
       - tokenUrl
   BearerHTTPSecurityScheme:
     type: object
+    additionalProperties: false
     properties:
       type:
         type: string
@@ -64,6 +67,7 @@ definitions:
       - type
   ClientCredentialsFlow:
     type: object
+    additionalProperties: false
     properties:
       refreshUrl:
         type: string
@@ -86,6 +90,7 @@ definitions:
   HttpModel:
     type: object
     description: code model metadata for HTTP protocol
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Protocol'
     properties:
@@ -103,6 +108,7 @@ definitions:
       - servers
   HttpMultiPartRequest:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
@@ -128,6 +134,7 @@ definitions:
       - servers
   HttpMultipartRequest:
     type: object
+    additionalProperties: false
     properties:
       path:
         type: string
@@ -172,6 +179,7 @@ definitions:
   HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Protocol'
     properties:
@@ -190,6 +198,7 @@ definitions:
   HttpRequest:
     type: object
     description: HTTP operation protocol data
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Protocol'
     properties:
@@ -217,6 +226,7 @@ definitions:
       - servers
   HttpResponse:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Protocol'
     properties:
@@ -308,6 +318,7 @@ definitions:
       An object representing a Server.
 
       If the uri supports template substitution, then the variables are required.
+    additionalProperties: false
     properties:
       url:
         type: string
@@ -325,6 +336,7 @@ definitions:
       - url
   HttpStreamRequest:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './http.yaml#/definitions/HttpWithBodyRequest'
     properties:
@@ -340,6 +352,7 @@ definitions:
       - stream
   HttpStreamResponse:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './http.yaml#/definitions/HttpResponse'
     properties:
@@ -355,6 +368,7 @@ definitions:
       - stream
   HttpWithBodyRequest:
     type: object
+    additionalProperties: false
     allOf:
       - $ref: './http.yaml#/definitions/HttpRequest'
     properties:
@@ -368,6 +382,7 @@ definitions:
       - servers
   ImplicitOAuthFlow:
     type: object
+    additionalProperties: false
     properties:
       authorizationUrl:
         type: string
@@ -385,6 +400,7 @@ definitions:
       - scopes
   NonBearerHTTPSecurityScheme:
     type: object
+    additionalProperties: false
     properties:
       type:
         type: string
@@ -402,6 +418,7 @@ definitions:
       - type
   OAuth2SecurityScheme:
     type: object
+    additionalProperties: false
     properties:
       type:
         type: string
@@ -419,6 +436,7 @@ definitions:
       - type
   OAuthFlows:
     type: object
+    additionalProperties: false
     properties:
       authorizationCode:
         $ref: './http.yaml#/definitions/AuthorizationCodeOAuthFlow'
@@ -433,6 +451,7 @@ definitions:
         $ref: './master.yaml#/definitions/Dictionary<any>'
   OpenIdConnectSecurityScheme:
     type: object
+    additionalProperties: false
     properties:
       type:
         type: string
@@ -451,6 +470,7 @@ definitions:
       - type
   PasswordOAuthFlow:
     type: object
+    additionalProperties: false
     properties:
       refreshUrl:
         type: string
@@ -469,6 +489,7 @@ definitions:
   SecurityRequirement:
     type: object
     description: common ways of serializing simple parameters
+    additionalProperties: false
   SecurityScheme:
     anyOf:
       - $ref: './http.yaml#/definitions/BearerHTTPSecurityScheme'
@@ -479,6 +500,7 @@ definitions:
   ServerVariable:
     type: object
     description: An object representing a Server Variable for server URL template substitution.
+    additionalProperties: false
     properties:
       $key:
         type: string
@@ -514,6 +536,7 @@ definitions:
   StreamResponse:
     type: object
     description: a response where the content should be treated as a stream instead of a value or object
+    additionalProperties: false
     allOf:
       - $ref: './master.yaml#/definitions/Response'
     properties:

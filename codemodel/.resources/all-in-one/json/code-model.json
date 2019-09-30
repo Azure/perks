@@ -18,6 +18,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "version"
       ]
@@ -46,6 +47,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "apiVersions",
         "message"
@@ -59,7 +61,8 @@
           "description": "additional metadata extensions dictionary"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "uri": {
       "description": "an URI",
@@ -127,6 +130,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -154,6 +158,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "url"
       ]
@@ -246,6 +251,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol"
@@ -264,6 +270,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "description",
         "name"
@@ -271,7 +278,8 @@
     },
     "Protocol": {
       "type": "object",
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "XmlSerlializationFormat": {
       "type": "object",
@@ -293,6 +301,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "attribute",
         "wrapped"
@@ -458,6 +467,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "propertyName"
       ]
@@ -520,6 +530,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -543,6 +554,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -575,6 +587,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -603,6 +616,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "description",
         "name"
@@ -621,13 +635,15 @@
           "description": "additional metadata extensions dictionary"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "ValueSchema": {
       "description": "schema types that are non-object or complex types",
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -648,6 +664,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -668,6 +685,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -713,6 +731,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -747,6 +766,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -784,6 +804,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -813,6 +834,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -854,6 +876,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -891,6 +914,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "value"
@@ -972,6 +996,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choiceType",
@@ -1060,6 +1085,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choiceType",
@@ -1088,6 +1114,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "value"
@@ -1105,6 +1132,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choices",
@@ -1138,6 +1166,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "value"
@@ -1157,6 +1186,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "constantSchema",
@@ -1179,6 +1209,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1199,6 +1230,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1232,6 +1264,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1265,6 +1298,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1285,6 +1319,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1305,6 +1340,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1334,6 +1370,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1355,6 +1392,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1375,6 +1413,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1404,6 +1443,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1425,6 +1465,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1450,6 +1491,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1479,6 +1521,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "allOf",
@@ -1508,6 +1551,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "anyOf",
@@ -1537,6 +1581,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1563,6 +1608,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1760,6 +1806,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "strings"
       ]
@@ -1786,7 +1833,8 @@
           "description": "additional metadata extensions dictionary"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "License": {
       "description": "license information",
@@ -1806,6 +1854,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "name"
       ]
@@ -1844,6 +1893,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "title"
       ]
@@ -1853,6 +1903,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol"
@@ -1876,6 +1927,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol",
@@ -1897,6 +1949,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol",
@@ -1976,6 +2029,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -2000,6 +2054,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol"
@@ -2025,6 +2080,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "language",
@@ -2053,7 +2109,8 @@
           "type": "string"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "SerializationStyle": {
       "description": "The Serialization Style used for the parameter.\n\nDescribes how the parameter value will be serialized depending on the type of the parameter value.",
@@ -2208,6 +2265,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "url"
@@ -2254,6 +2312,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -2300,6 +2359,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "authorizationUrl",
         "scopes",
@@ -2333,6 +2393,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scheme",
         "type"
@@ -2358,6 +2419,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scopes",
         "tokenUrl"
@@ -2383,6 +2445,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "authorizationUrl",
         "scopes"
@@ -2409,6 +2472,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scheme",
         "type"
@@ -2435,6 +2499,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "flows",
         "type"
@@ -2460,7 +2525,8 @@
           "description": "additional metadata extensions dictionary"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "HTTPSecurityScheme": {
       "anyOf": [
@@ -2515,6 +2581,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "in",
         "name",
@@ -2543,6 +2610,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "openIdConnectUrl",
         "type"
@@ -2568,6 +2636,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scopes",
         "tokenUrl"
@@ -2576,7 +2645,8 @@
     "SecurityRequirement": {
       "description": "common ways of serializing simple parameters",
       "type": "object",
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "HttpParameter": {
       "description": "extended metadata for HTTP operation parameters",
@@ -2596,6 +2666,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "in",
         "style"
@@ -2627,6 +2698,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "method",
         "path",
@@ -2647,6 +2719,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -2670,6 +2743,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -2702,6 +2776,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -2754,6 +2829,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -2853,6 +2929,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "headers",
         "mediaTypes",
@@ -2876,6 +2953,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "headers",
         "mediaTypes",
@@ -2908,6 +2986,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "servers"
       ],
@@ -3040,6 +3119,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -3111,6 +3191,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -3168,6 +3249,7 @@
     }
   },
   "defaultProperties": [],
+  "additionalProperties": false,
   "required": [
     "globalParameters",
     "info",

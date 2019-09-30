@@ -63,6 +63,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -78,6 +79,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -98,6 +100,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -118,6 +121,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -163,6 +167,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -197,6 +202,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -234,6 +240,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -263,6 +270,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -304,6 +312,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -331,6 +340,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choices",
@@ -361,6 +371,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "constantSchema",
@@ -383,6 +394,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -403,6 +415,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -436,6 +449,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -469,6 +483,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -489,6 +504,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -509,6 +525,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -538,6 +555,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -559,6 +577,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -579,6 +598,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -608,6 +628,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -629,6 +650,7 @@
       "type": "object",
       "properties": {},
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -654,6 +676,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -683,6 +706,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "allOf",
@@ -712,6 +736,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "anyOf",
@@ -741,6 +766,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -767,6 +793,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -859,6 +886,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choiceType",
@@ -947,6 +975,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "choiceType",
@@ -1140,6 +1169,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "strings"
       ]
@@ -1205,6 +1235,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1237,6 +1268,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "value"
@@ -1303,6 +1335,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -1330,6 +1363,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "value"

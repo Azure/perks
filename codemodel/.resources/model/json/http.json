@@ -14,6 +14,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "protocol",
@@ -46,6 +47,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "language",
         "url"
@@ -92,6 +94,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "$key",
         "description",
@@ -123,6 +126,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "authorizationUrl",
         "scopes",
@@ -156,6 +160,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scheme",
         "type"
@@ -181,6 +186,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scopes",
         "tokenUrl"
@@ -206,6 +212,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "authorizationUrl",
         "scopes"
@@ -232,6 +239,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scheme",
         "type"
@@ -258,6 +266,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "flows",
         "type"
@@ -283,7 +292,8 @@
           "description": "additional metadata extensions dictionary"
         }
       },
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "HTTPSecurityScheme": {
       "anyOf": [
@@ -338,6 +348,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "in",
         "name",
@@ -366,6 +377,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "openIdConnectUrl",
         "type"
@@ -391,6 +403,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "scopes",
         "tokenUrl"
@@ -399,7 +412,8 @@
     "SecurityRequirement": {
       "description": "common ways of serializing simple parameters",
       "type": "object",
-      "defaultProperties": []
+      "defaultProperties": [],
+      "additionalProperties": false
     },
     "HttpParameter": {
       "description": "extended metadata for HTTP operation parameters",
@@ -419,6 +433,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "in",
         "style"
@@ -450,6 +465,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "method",
         "path",
@@ -470,6 +486,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -493,6 +510,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -525,6 +543,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -577,6 +596,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "mediaType",
         "method",
@@ -676,6 +696,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "headers",
         "mediaTypes",
@@ -699,6 +720,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "headers",
         "mediaTypes",
@@ -731,6 +753,7 @@
         }
       },
       "defaultProperties": [],
+      "additionalProperties": false,
       "required": [
         "servers"
       ],
