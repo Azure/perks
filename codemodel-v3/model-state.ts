@@ -123,8 +123,10 @@ export class ModelState<T extends Dictionary<any>> extends Initializer {
   }
 
 
-  cache = new Array<any>();
+  cache!: Array<any>;
   replacer(key: string, value: any) {
+    this.cache = this.cache || new Array<any>();
+
     if (typeof value === 'object' && value !== null) {
       if (this.cache.indexOf(value) !== -1) {
         // Duplicate reference found

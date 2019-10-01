@@ -27,6 +27,7 @@ function TypeInfo<U extends new (...args: any) => any>(type: U) {
 }
 
 export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
+
   TypeInfo(HttpModel),
   TypeInfo(HttpParameter),
   TypeInfo(HttpStreamRequest),
@@ -81,8 +82,8 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Contact),
   TypeInfo(Info),
   TypeInfo(License),
-  TypeInfo(Metadata),
   TypeInfo(OperationGroup),
+
   TypeInfo(APIKeySecurityScheme),
   TypeInfo(BearerHTTPSecurityScheme),
   TypeInfo(ImplicitOAuthFlow),
@@ -98,6 +99,8 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Languages),
   TypeInfo(Protocols),
   TypeInfo(ApiVersion),
+  TypeInfo(Metadata),
+
   // new Type('!set', { kind: 'mapping', instanceOf: Set, represent: (o: any) => [...o], construct: (i) => new Set(i) }),
 
 ]);

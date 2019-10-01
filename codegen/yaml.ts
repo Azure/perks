@@ -93,8 +93,8 @@ export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): st
     lineWidth: 240,
 
   })
-    .replace(/\s*\w*: {}/g, '')
-    .replace(/\s*\w*: \[\]/g, '')
+    // .replace(/\s*\w*: {}/g, '')
+    // .replace(/\s*\w*: \[\]/g, '')
     .replace(/(\s*- \$key:)/g, '\n$1')
     .replace(/-\n\s+version/g, '- version');
   // .replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
