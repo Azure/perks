@@ -185,6 +185,8 @@ definitions:
   Languages:
     type: object
     description: custom extensible metadata for individual language generators
+    additionalProperties:
+      type: object
     properties:
       default:
         $ref: './master.yaml#/definitions/Language'
@@ -369,6 +371,8 @@ definitions:
   Protocols:
     type: object
     description: 'custom extensible metadata for individual protocols (ie, HTTP, etc)'
+    additionalProperties:
+      type: object
     properties:
       amqp:
         $ref: './master.yaml#/definitions/Protocol'
@@ -425,6 +429,8 @@ definitions:
   SerializationFormats:
     type: object
     description: custom extensible metadata for individual serialization formats
+    additionalProperties:
+      type: object
     properties:
       json:
         $ref: './master.yaml#/definitions/SerializationFormat'
