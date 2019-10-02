@@ -210,9 +210,9 @@ async function main() {
   schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' };
   schema.definitions['Dictionary<any>'].additionalProperties = { type: 'object' };
   schema.definitions['Language'].additionalProperties = { type: 'object' };
-  schema.definitions['Languages'].additionalProperties = { type: 'object' };
-  schema.definitions['Protocols'].additionalProperties = { type: 'object' };
-  schema.definitions['SerializationFormats'].additionalProperties = { type: 'object' };
+  schema.definitions['Languages'].additionalProperties = false;//  { type: 'object' };
+  schema.definitions['Protocols'].additionalProperties = false;// { type: 'object' };
+  schema.definitions['SerializationFormats'].additionalProperties = false; // { type: 'object' };
 
   // console.log(schema.definitions['Language']);
 

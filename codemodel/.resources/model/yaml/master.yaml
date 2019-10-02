@@ -34,6 +34,9 @@ definitions:
     description: a collection of api versions
     items:
       $ref: './master.yaml#/definitions/ApiVersion'
+  CSharpLanguage:
+    type: object
+    additionalProperties: false
   Contact:
     type: object
     description: contact information
@@ -105,6 +108,7 @@ definitions:
         type: string
   Extensions:
     type: object
+    description: A dictionary of open-ended 'x-*' extensions propogated from the original source document.
     additionalProperties: false
     properties:
       extensions:
@@ -170,6 +174,7 @@ definitions:
       - title
   Language:
     type: object
+    description: the bare-minimum fields for per-language metadata on a given aspect
     additionalProperties:
       type: object
     properties:
@@ -185,8 +190,7 @@ definitions:
   Languages:
     type: object
     description: custom extensible metadata for individual language generators
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       default:
         $ref: './master.yaml#/definitions/Language'
@@ -195,7 +199,7 @@ definitions:
       cpp:
         $ref: './master.yaml#/definitions/Language'
       csharp:
-        $ref: './master.yaml#/definitions/Language'
+        $ref: './master.yaml#/definitions/CSharpLanguage'
       go:
         $ref: './master.yaml#/definitions/Language'
       java:
@@ -367,12 +371,12 @@ definitions:
       - uid
   Protocol:
     type: object
+    description: the bare-minimum fields for per-protocol metadata on a given aspect
     additionalProperties: false
   Protocols:
     type: object
     description: 'custom extensible metadata for individual protocols (ie, HTTP, etc)'
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       amqp:
         $ref: './master.yaml#/definitions/Protocol'
@@ -429,8 +433,7 @@ definitions:
   SerializationFormats:
     type: object
     description: custom extensible metadata for individual serialization formats
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       json:
         $ref: './master.yaml#/definitions/SerializationFormat'

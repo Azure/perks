@@ -214,6 +214,9 @@ definitions:
       - serialization
       - type
       - uid
+  CSharpLanguage:
+    type: object
+    additionalProperties: false
   CharSchema:
     type: object
     description: a schema that represents a Char value
@@ -625,6 +628,7 @@ definitions:
         type: string
   Extensions:
     type: object
+    description: A dictionary of open-ended 'x-*' extensions propogated from the original source document.
     additionalProperties: false
     properties:
       extensions:
@@ -1042,6 +1046,7 @@ definitions:
       - title
   Language:
     type: object
+    description: the bare-minimum fields for per-language metadata on a given aspect
     additionalProperties:
       type: object
     properties:
@@ -1057,8 +1062,7 @@ definitions:
   Languages:
     type: object
     description: custom extensible metadata for individual language generators
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       default:
         $ref: '#/definitions/Language'
@@ -1067,7 +1071,7 @@ definitions:
       cpp:
         $ref: '#/definitions/Language'
       csharp:
-        $ref: '#/definitions/Language'
+        $ref: '#/definitions/CSharpLanguage'
       go:
         $ref: '#/definitions/Language'
       java:
@@ -1517,12 +1521,12 @@ definitions:
       - uid
   Protocol:
     type: object
+    description: the bare-minimum fields for per-protocol metadata on a given aspect
     additionalProperties: false
   Protocols:
     type: object
     description: 'custom extensible metadata for individual protocols (ie, HTTP, etc)'
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       amqp:
         $ref: '#/definitions/Protocol'
@@ -1852,8 +1856,7 @@ definitions:
   SerializationFormats:
     type: object
     description: custom extensible metadata for individual serialization formats
-    additionalProperties:
-      type: object
+    additionalProperties: false
     properties:
       json:
         $ref: '#/definitions/SerializationFormat'

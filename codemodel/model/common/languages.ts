@@ -1,21 +1,20 @@
-import { Language } from './metadata';
+import { Language, CSharpLanguage } from './metadata';
 
 /** custom extensible metadata for individual language generators */
-export interface Languages<T extends Language = Language> {
-  [key: string]: T | undefined | unknown;
-  default: T;
-  csharp?: T;
-  python?: T;
-  ruby?: T;
-  go?: T;
-  typescript?: T;
-  javascript?: T;
-  powershell?: T;
-  java?: T;
-  c?: T;
-  cpp?: T;
-  swift?: T;
-  objectivec?: T;
+export interface Languages {
+  default: Language;
+  csharp?: CSharpLanguage;
+  python?: Language;
+  ruby?: Language;
+  go?: Language;
+  typescript?: Language;
+  javascript?: Language;
+  powershell?: Language;
+  java?: Language;
+  c?: Language;
+  cpp?: Language;
+  swift?: Language;
+  objectivec?: Language;
 }
 
 

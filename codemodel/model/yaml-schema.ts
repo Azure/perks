@@ -1,7 +1,7 @@
 import { Schema, Type, DEFAULT_SAFE_SCHEMA } from 'js-yaml';
 
 import { CodeModel } from './common/code-model';
-import { Metadata } from './common/metadata';
+import { Metadata, CSharpLanguage, Language } from './common/metadata';
 import { Parameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
@@ -20,7 +20,7 @@ import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
 import { HttpWithBodyRequest, HttpParameter, HttpStreamRequest, HttpMultipartRequest, HttpStreamResponse, HttpRequest, HttpResponse, HttpModel } from './http/http';
 import { Response, SchemaResponse, StreamResponse } from './common/response';
-import { keys } from '@azure-tools/linq';
+
 
 function TypeInfo<U extends new (...args: any) => any>(type: U) {
   return new Type(`!${type.name}`, { kind: 'mapping', instanceOf: type, construct: (i) => Object.setPrototypeOf(i, type.prototype) });
@@ -97,6 +97,8 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(HttpServer),
   TypeInfo(ServerVariable),
   TypeInfo(Languages),
+  TypeInfo(Language),
+  TypeInfo(CSharpLanguage),
   TypeInfo(Protocols),
   TypeInfo(ApiVersion),
   TypeInfo(Metadata),

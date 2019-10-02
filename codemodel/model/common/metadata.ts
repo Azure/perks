@@ -40,6 +40,14 @@ export interface Language extends Dictionary<any> {
   /** description text - describes this node. */
   description: string;
 }
+export class Language implements Language {
+}
+
+export interface CSharpLanguage {
+}
+
+export class CSharpLanguage implements CSharpLanguage {
+}
 
 /** the bare-minimum fields for per-protocol metadata on a given aspect */
 export interface Protocol extends Dictionary<any> {
