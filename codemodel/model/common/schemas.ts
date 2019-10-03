@@ -91,7 +91,7 @@ export class Schemas {
 
     let group = `${camelCase(schema.type)}s`.replace(/rys$/g, 'ries');
     if (group === 'integers') {
-      group = 'numbers;';
+      group = 'numbers';
     }
     // ((<any>this)[group] || ((<any>this)[group] = new Set<Schema>())).add(schema);
     // ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>())).push(schema);
