@@ -90,6 +90,7 @@ export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): st
     schema: schema,
     sortKeys: sortWithPriorty,
     skipInvalid: true,
+    noArrayIndent: true,
     lineWidth: 240,
 
   })
