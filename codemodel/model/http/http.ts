@@ -15,7 +15,7 @@ export interface HttpParameter extends Protocol {
   in: ParameterLocation;
 
   /** the Serialization Style used for the parameter. */
-  style: SerializationStyle;
+  style?: SerializationStyle;
 
   /** when set, this indicates that the content of the parameter should not be subject to URI encoding rules. */
   skipUriEncoding?: boolean;
@@ -92,7 +92,7 @@ export interface HttpResponse extends Protocol {
   mediaTypes: Array<string>; // the response mediaTypes that this should apply to (ie, 'application/json')
 
   /** content returned by the service in the HTTP headers */
-  headers: Array<Schema>;
+  headers?: Array<Schema>;
 }
 
 export class HttpResponse extends Protocol implements HttpResponse {

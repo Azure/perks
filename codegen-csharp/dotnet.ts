@@ -15,7 +15,7 @@ import { Dictionary, length } from '@azure-tools/linq';
 import { IInterface } from './type-container';
 
 export class ClassType implements TypeDeclaration {
-  private get fullName() {
+  get fullName() {
     return this.namespace.fullName ? `${this.namespace.fullName}.${this.name}` : this.name;
   }
   private namespace: Namespace;

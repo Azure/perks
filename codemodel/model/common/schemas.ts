@@ -82,8 +82,6 @@ export interface Schemas {
   unknowns?: Array<Schema>;
 
   parameterGroups?: Array<ParameterGroupSchema>;
-
-
 }
 
 export class Schemas {
@@ -93,12 +91,11 @@ export class Schemas {
     if (group === 'integers') {
       group = 'numbers';
     }
-    // ((<any>this)[group] || ((<any>this)[group] = new Set<Schema>())).add(schema);
-    // ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>())).push(schema);
+
     const a: Array<Schema> = ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>()));
     if (a.indexOf(schema) > -1) {
-      // throw new Error(`Duplicate ! ${schema.type} : ${schema.language.default.name}`);
-      return schema;
+      throw new Error(`Duplicate ! ${schema.type} : ${schema.language.default.name}`);
+      // return schema;
     } else {
       //console.error(`Adding ${schema.type} : ${schema.language.default.name}`);
     }

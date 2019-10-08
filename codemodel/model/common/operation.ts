@@ -13,13 +13,13 @@ export interface Operation extends Aspect {
   request: Request;
 
   /** responses that indicate a successful call */
-  responses: Array<Response>;
+  responses?: Array<Response>;
 
   /** responses that indicate a failed call */
-  exceptions: Array<Response>;
+  exceptions?: Array<Response>;
 
   /** the apiVersion to use for a given profile name */
-  profile: Dictionary<ApiVersion>;
+  profile?: Dictionary<ApiVersion>;
 
 }
 
