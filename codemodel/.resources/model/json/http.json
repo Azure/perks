@@ -435,8 +435,7 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "in",
-        "style"
+        "in"
       ],
       "allOf": [
         {
@@ -698,7 +697,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "headers",
         "mediaTypes",
         "statusCodes"
       ],
@@ -722,7 +720,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "headers",
         "mediaTypes",
         "statusCodes",
         "stream"

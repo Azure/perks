@@ -306,12 +306,9 @@ definitions:
     required:
       - $key
       - description
-      - exceptions
       - language
-      - profile
       - protocol
       - request
-      - responses
       - uid
   OperationGroup:
     type: object
@@ -542,7 +539,6 @@ properties:
     description: per-protocol information for this aspect
     $ref: './master.yaml#/definitions/Protocols'
 required:
-  - globalParameters
   - info
   - language
   - operationGroups
