@@ -32,7 +32,7 @@ export interface Schema extends Aspect {
   defaultValue?: any;
 
   /** per-serialization information for this Schema  */
-  serialization: SerializationFormats;
+  serialization?: SerializationFormats;
 
   /* are these needed I don't think so? */
   // nullable: boolean;

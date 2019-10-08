@@ -19,7 +19,7 @@ export interface CodeModel extends Metadata {
   operationGroups: Array<OperationGroup>;
 
   /** all global parameters (ie, ImplementationLocation = client ) */
-  globalParameters: Array<Parameter>;
+  globalParameters?: Array<Parameter>;
 }
 
 

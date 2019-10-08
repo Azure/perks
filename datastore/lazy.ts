@@ -23,7 +23,7 @@ export class LazyPromise<T> implements PromiseLike<T> {
   public constructor(private factory: () => Promise<T>) {
   }
 
-  private get Value(): Promise<T> {
+  private getValue(): Promise<T> {
     if (this.promise === null) {
       this.promise = this.factory();
     }
@@ -37,6 +37,6 @@ export class LazyPromise<T> implements PromiseLike<T> {
   then<TResult1, TResult2>(
     onfulfilled: (value: T) => TResult1 | PromiseLike<TResult1>,
     onrejected: (reason: any) => TResult2 | PromiseLike<TResult2>): PromiseLike<TResult1 | TResult2> {
-    return this.Value.then(onfulfilled, onrejected);
+    return this.getValue().then(onfulfilled, onrejected);
   }
 }
