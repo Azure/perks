@@ -180,7 +180,7 @@ export function deconstruct(identifier: string | Array<string>): Array<string> {
   if (Array.isArray(identifier)) {
     return [...values(identifier).selectMany(deconstruct)];
   }
-  return identifier.
+  return `${identifier}`.
     replace(/([a-z]+)([A-Z])/g, '$1 $2').
     replace(/(\d+)([a-z|A-Z]+)/g, '$1 $2').
     replace(/\b([A-Z]+)([A-Z])([a-z])/, '$1 $2$3').
