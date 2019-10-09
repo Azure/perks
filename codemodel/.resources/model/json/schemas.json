@@ -68,7 +68,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ]
@@ -84,7 +83,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -105,7 +103,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -126,7 +123,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -173,7 +169,6 @@
         "language",
         "precision",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -207,7 +202,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -246,7 +240,6 @@
         "elementType",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -276,7 +269,6 @@
         "language",
         "parameters",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -317,7 +309,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -346,7 +337,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -377,7 +367,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid",
         "value"
@@ -399,7 +388,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -420,7 +408,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -454,7 +441,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -488,7 +474,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -509,7 +494,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -530,7 +514,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -561,7 +544,6 @@
         "format",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -582,7 +564,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -603,7 +584,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -634,7 +614,6 @@
         "format",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -655,7 +634,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -682,7 +660,6 @@
         "elementType",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -712,7 +689,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -742,7 +718,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -772,7 +747,6 @@
         "language",
         "oneOf",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -799,7 +773,6 @@
         "language",
         "not",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ],
@@ -1062,7 +1035,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ]
@@ -1162,7 +1134,6 @@
         "description",
         "language",
         "protocol",
-        "serialization",
         "type",
         "uid"
       ]

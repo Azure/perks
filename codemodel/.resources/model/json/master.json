@@ -640,12 +640,9 @@
       "required": [
         "$key",
         "description",
-        "exceptions",
         "language",
-        "profile",
         "protocol",
         "request",
-        "responses",
         "uid"
       ]
     },
@@ -782,7 +779,6 @@
   "defaultProperties": [],
   "additionalProperties": false,
   "required": [
-    "globalParameters",
     "info",
     "language",
     "operationGroups",

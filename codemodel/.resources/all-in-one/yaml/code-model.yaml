@@ -72,7 +72,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ApiVersion:
@@ -131,7 +130,6 @@ definitions:
       - elementType
       - language
       - protocol
-      - serialization
       - type
       - uid
   AuthorizationCodeOAuthFlow:
@@ -189,7 +187,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ByteArraySchema:
@@ -211,7 +208,6 @@ definitions:
       - format
       - language
       - protocol
-      - serialization
       - type
       - uid
   CSharpLanguage:
@@ -228,7 +224,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ChoiceSchema:
@@ -253,7 +248,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ChoiceType:
@@ -306,7 +300,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ChoiceValue:
@@ -358,7 +351,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   CompoundSchemaTypes:
@@ -386,7 +378,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
       - value
@@ -440,7 +431,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ConstantValue:
@@ -495,7 +485,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   DateSchema:
@@ -509,7 +498,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   DateTimeSchema:
@@ -531,7 +519,6 @@ definitions:
       - format
       - language
       - protocol
-      - serialization
       - type
       - uid
   Default:
@@ -583,7 +570,6 @@ definitions:
       - elementType
       - language
       - protocol
-      - serialization
       - type
       - uid
   Discriminator:
@@ -611,7 +597,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   Example:
@@ -666,7 +651,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   FlagValue:
@@ -807,7 +791,6 @@ definitions:
         $ref: '#/definitions/SerializationStyle'
     required:
       - in
-      - style
   HttpRequest:
     type: object
     description: HTTP operation protocol data
@@ -922,7 +905,6 @@ definitions:
             - 511
             - default
     required:
-      - headers
       - mediaTypes
       - statusCodes
   HttpServer:
@@ -975,7 +957,6 @@ definitions:
         enum:
           - true
     required:
-      - headers
       - mediaTypes
       - statusCodes
       - stream
@@ -1159,7 +1140,6 @@ definitions:
       - language
       - not
       - protocol
-      - serialization
       - type
       - uid
   NumberSchema:
@@ -1193,7 +1173,6 @@ definitions:
       - language
       - precision
       - protocol
-      - serialization
       - type
       - uid
   OAuth2SecurityScheme:
@@ -1240,7 +1219,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ObjectSchema:
@@ -1269,7 +1247,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ObjectSchemaTypes:
@@ -1351,12 +1328,9 @@ definitions:
     required:
       - $key
       - description
-      - exceptions
       - language
-      - profile
       - protocol
       - request
-      - responses
       - uid
   OperationGroup:
     type: object
@@ -1394,7 +1368,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   Parameter:
@@ -1432,7 +1405,6 @@ definitions:
       - language
       - parameters
       - protocol
-      - serialization
       - type
       - uid
   ParameterLocation:
@@ -1480,7 +1452,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   PrimitiveSchemaTypes:
@@ -1616,7 +1587,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   SchemaResponse:
@@ -1825,7 +1795,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   SecurityRequirement:
@@ -2018,7 +1987,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UnixTimeSchema:
@@ -2032,7 +2000,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UriSchema:
@@ -2056,7 +2023,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UuidSchema:
@@ -2070,7 +2036,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   Value:
@@ -2134,7 +2099,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ValueSchemaTypes:
@@ -2194,7 +2158,6 @@ definitions:
       - language
       - oneOf
       - protocol
-      - serialization
       - type
       - uid
   email:
@@ -2229,7 +2192,6 @@ properties:
     description: per-protocol information for this aspect
     $ref: '#/definitions/Protocols'
 required:
-  - globalParameters
   - info
   - language
   - operationGroups

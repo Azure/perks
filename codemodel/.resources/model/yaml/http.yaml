@@ -194,7 +194,6 @@ definitions:
         $ref: './enums.yaml#/definitions/SerializationStyle'
     required:
       - in
-      - style
   HttpRequest:
     type: object
     description: HTTP operation protocol data
@@ -309,7 +308,6 @@ definitions:
             - 511
             - default
     required:
-      - headers
       - mediaTypes
       - statusCodes
   HttpServer:
@@ -362,7 +360,6 @@ definitions:
         enum:
           - true
     required:
-      - headers
       - mediaTypes
       - statusCodes
       - stream

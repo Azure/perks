@@ -18,7 +18,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ArraySchema:
@@ -46,7 +45,6 @@ definitions:
       - elementType
       - language
       - protocol
-      - serialization
       - type
       - uid
   BooleanSchema:
@@ -60,7 +58,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ByteArraySchema:
@@ -82,7 +79,6 @@ definitions:
       - format
       - language
       - protocol
-      - serialization
       - type
       - uid
   CharSchema:
@@ -96,7 +92,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ChoiceType:
@@ -149,7 +144,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ChoiceValue:
@@ -183,7 +177,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ConstantSchema:
@@ -205,7 +198,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
       - value
@@ -259,7 +251,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ConstantValue:
@@ -299,7 +290,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   DateSchema:
@@ -313,7 +303,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   DateTimeSchema:
@@ -335,7 +324,6 @@ definitions:
       - format
       - language
       - protocol
-      - serialization
       - type
       - uid
   DictionarySchema:
@@ -354,7 +342,6 @@ definitions:
       - elementType
       - language
       - protocol
-      - serialization
       - type
       - uid
   DurationSchema:
@@ -368,7 +355,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   FlagSchema:
@@ -388,7 +374,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   NotSchema:
@@ -407,7 +392,6 @@ definitions:
       - language
       - not
       - protocol
-      - serialization
       - type
       - uid
   NumberSchema:
@@ -441,7 +425,6 @@ definitions:
       - language
       - precision
       - protocol
-      - serialization
       - type
       - uid
   ODataQuerySchema:
@@ -455,7 +438,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ObjectSchema:
@@ -484,7 +466,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   OrSchema:
@@ -505,7 +486,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ParameterGroupSchema:
@@ -526,7 +506,6 @@ definitions:
       - language
       - parameters
       - protocol
-      - serialization
       - type
       - uid
   PrimitiveSchema:
@@ -540,7 +519,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   Schema:
@@ -593,7 +571,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   Schemas:
@@ -751,7 +728,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UnixTimeSchema:
@@ -765,7 +741,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UriSchema:
@@ -789,7 +764,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   UuidSchema:
@@ -803,7 +777,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   ValueSchema:
@@ -817,7 +790,6 @@ definitions:
       - description
       - language
       - protocol
-      - serialization
       - type
       - uid
   XorSchema:
@@ -838,6 +810,5 @@ definitions:
       - language
       - oneOf
       - protocol
-      - serialization
       - type
       - uid
