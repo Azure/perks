@@ -93,11 +93,11 @@ export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): st
     noArrayIndent: true,
     lineWidth: 240,
 
-  })
-    // .replace(/\s*\w*: {}/g, '')
-    // .replace(/\s*\w*: \[\]/g, '')
-    .replace(/(\s*- \$key:)/g, '\n$1')
-    .replace(/-\n\s+version/g, '- version');
+  });
+  // .replace(/\s*\w*: {}/g, '')
+  // .replace(/\s*\w*: \[\]/g, '')
+  // .replace(/(\s*- \$key:)/g, '\n$1')
+  // .replace(/-\n\s+version/g, '- version');
   // .replace(/(\s*)(language:)/g, '\n$1## ----------------------------------------------------------------------$1$2')
   // replace(/([^:]\n)(\s*-)/g, '$1\n$2')
 
