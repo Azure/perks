@@ -2,7 +2,6 @@ export * from './model/common/api-version';
 export * from './model/common/aspect';
 export * from './model/common/code-model';
 export * from './model/common/deprecation';
-export * from './model/common/discriminator';
 export * from './model/common/example';
 export * from './model/common/extensions';
 export * from './model/common/external-documentation';
