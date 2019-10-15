@@ -13,6 +13,8 @@ export interface Property extends Value {
   serializedName: string;
 
   // add addtional x-ms-mutability-style-stuff 
+  /** if this property is used as a discriminator for a polymorphic type */
+  isDiscriminator?: boolean;
 }
 
 export class Property extends Value implements Property {

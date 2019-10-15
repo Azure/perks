@@ -80,20 +80,6 @@ definitions:
     type: object
     additionalProperties:
       type: string
-  Discriminator:
-    type: object
-    description: Disciminator for polymorphic class hierarchy
-    additionalProperties: false
-    properties:
-      mapping:
-        $ref: './master.yaml#/definitions/Dictionary<string>'
-      propertyName:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: './master.yaml#/definitions/Dictionary<any>'
-    required:
-      - propertyName
   Example:
     type: object
     description: 'example data [UNFINISHED]'
@@ -352,6 +338,9 @@ definitions:
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
+      isDiscriminator:
+        type: boolean
+        description: if this property is used as a discriminator for a polymorphic type
       readOnly:
         type: boolean
         description: 'if the property is marked read-only (ie, not intended to be sent to the service)'

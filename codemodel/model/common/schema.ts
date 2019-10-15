@@ -2,7 +2,6 @@ import { Language, Protocol, Metadata } from './metadata';
 import { Aspect } from './aspect';
 import { SerializationFormats } from './formats';
 import { SchemaType, AllSchemaTypes, PrimitiveSchemaTypes, ObjectSchemaTypes } from './schema-type';
-import { Discriminator } from './discriminator';
 import { DeepPartial, Initializer, } from '@azure-tools/codegen';
 import { Property } from './property';
 import { Dictionary } from '@azure-tools/linq';
@@ -187,8 +186,8 @@ export interface ObjectSchema extends ComplexSchema {
   /** the schema type  */
   type: SchemaType.Object;
 
-  /** the definition of the polymorphic descriminator for this type */
-  discriminator?: Discriminator;
+  /** the property of the polymorphic descriminator for this type, if there is one */
+  discriminatorProperty?: Property;
 
   /** the collection of properties that are in this object */
   properties?: Array<Property>;
@@ -544,6 +543,8 @@ export interface AndSchema extends ComplexSchema {
 
   /** the set of schemas that this schema is composed of. */
   allOf: Array<ComplexSchema>;
+
+  discriminatorValue?: string;
 }
 export class AndSchema extends Schema implements AndSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<AndSchema>) {

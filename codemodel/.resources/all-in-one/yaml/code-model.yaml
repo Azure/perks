@@ -66,6 +66,8 @@ definitions:
         description: the set of schemas that this schema is composed of.
         items:
           $ref: '#/definitions/ComplexSchema'
+      discriminatorValue:
+        type: string
     required:
       - $key
       - allOf
@@ -572,20 +574,6 @@ definitions:
       - protocol
       - type
       - uid
-  Discriminator:
-    type: object
-    description: Disciminator for polymorphic class hierarchy
-    additionalProperties: false
-    properties:
-      mapping:
-        $ref: '#/definitions/Dictionary<string>'
-      propertyName:
-        type: string
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-    required:
-      - propertyName
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
@@ -1228,9 +1216,9 @@ definitions:
     allOf:
       - $ref: '#/definitions/ComplexSchema'
     properties:
-      discriminator:
-        description: the definition of the polymorphic descriminator for this type
-        $ref: '#/definitions/Discriminator'
+      discriminatorProperty:
+        description: 'the property of the polymorphic descriminator for this type, if there is one'
+        $ref: '#/definitions/Property'
       maxProperties:
         type: number
         description: maximum number of properties permitted
@@ -1476,6 +1464,9 @@ definitions:
     allOf:
       - $ref: '#/definitions/Value'
     properties:
+      isDiscriminator:
+        type: boolean
+        description: if this property is used as a discriminator for a polymorphic type
       readOnly:
         type: boolean
         description: 'if the property is marked read-only (ie, not intended to be sent to the service)'

@@ -9,7 +9,6 @@ import { Operation, Request, OperationGroup } from './common/operation';
 import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, AndSchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema } from './common/schema';
 import { Aspect } from './common/aspect';
 import { Schemas } from './common/schemas';
-import { Discriminator } from './common/discriminator';
 import { ExternalDocumentation } from './common/external-documentation';
 import { Contact, Info, License } from './common/info';
 import { APIKeySecurityScheme, BearerHTTPSecurityScheme, ImplicitOAuthFlow, NonBearerHTTPSecurityScheme, OAuth2SecurityScheme, OAuthFlows, OpenIdConnectSecurityScheme, PasswordOAuthFlow, AuthorizationCodeOAuthFlow, ClientCredentialsFlow } from './http/security';
@@ -76,8 +75,6 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Request),
   TypeInfo(Schemas),
 
-
-  TypeInfo(Discriminator),
   TypeInfo(ExternalDocumentation),
   TypeInfo(Contact),
   TypeInfo(Info),
