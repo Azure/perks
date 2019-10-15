@@ -282,9 +282,9 @@
       "description": "a schema that represents a type with child properties.",
       "type": "object",
       "properties": {
-        "discriminator": {
-          "$ref": "./master.json#/definitions/Discriminator",
-          "description": "the definition of the polymorphic descriminator for this type"
+        "discriminatorProperty": {
+          "$ref": "./master.json#/definitions/Property",
+          "description": "the property of the polymorphic descriminator for this type, if there is one"
         },
         "properties": {
           "description": "the collection of properties that are in this object",
@@ -679,6 +679,9 @@
           "items": {
             "$ref": "./schemas.json#/definitions/ComplexSchema"
           }
+        },
+        "discriminatorValue": {
+          "type": "string"
         }
       },
       "defaultProperties": [],

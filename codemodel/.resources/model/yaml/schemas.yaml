@@ -12,6 +12,8 @@ definitions:
         description: the set of schemas that this schema is composed of.
         items:
           $ref: './schemas.yaml#/definitions/ComplexSchema'
+      discriminatorValue:
+        type: string
     required:
       - $key
       - allOf
@@ -447,9 +449,9 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
-      discriminator:
-        description: the definition of the polymorphic descriminator for this type
-        $ref: './master.yaml#/definitions/Discriminator'
+      discriminatorProperty:
+        description: 'the property of the polymorphic descriminator for this type, if there is one'
+        $ref: './master.yaml#/definitions/Property'
       maxProperties:
         type: number
         description: maximum number of properties permitted

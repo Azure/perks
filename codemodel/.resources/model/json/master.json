@@ -266,27 +266,6 @@
       "defaultProperties": [],
       "additionalProperties": false
     },
-    "Discriminator": {
-      "description": "Disciminator for polymorphic class hierarchy",
-      "type": "object",
-      "properties": {
-        "propertyName": {
-          "type": "string"
-        },
-        "mapping": {
-          "$ref": "./master.json#/definitions/Dictionary<string>"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "propertyName"
-      ]
-    },
     "Value": {
       "description": "common base interface for properties, parameters and the like.",
       "type": "object",
@@ -366,6 +345,10 @@
         "serializedName": {
           "description": "the wire name of this property",
           "type": "string"
+        },
+        "isDiscriminator": {
+          "description": "if this property is used as a discriminator for a polymorphic type",
+          "type": "boolean"
         }
       },
       "defaultProperties": [],
@@ -723,17 +706,17 @@
       },
       "defaultProperties": []
     },
-    "Dictionary<string>": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string"
-      },
-      "defaultProperties": []
-    },
     "Dictionary<ApiVersion>": {
       "type": "object",
       "additionalProperties": {
         "$ref": "./master.json#/definitions/ApiVersion"
+      },
+      "defaultProperties": []
+    },
+    "Dictionary<string>": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
       },
       "defaultProperties": []
     }
