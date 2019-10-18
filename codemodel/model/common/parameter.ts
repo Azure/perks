@@ -23,7 +23,7 @@ export class Parameter extends Value implements Parameter {
   constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Parameter>) {
     super(name, description, schema);
 
-    this.language.default.uid = `parameter:${uid()}`;
+    // this.language.default.uid = `parameter:${uid()}`;
     this.apply(initializer);
   }
 }
