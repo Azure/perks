@@ -72,7 +72,14 @@ export enum SerializationStyle {
    * @type primitive, array, object
    * @in body
    */
-  Xml = 'xml'
+  Xml = 'xml',
+
+  /**
+   * The content is a binary (stream)
+   * @type binary
+   * @in body
+   */
+  Binary = 'binary',
 }
 
 export type QueryEncodingStyle =

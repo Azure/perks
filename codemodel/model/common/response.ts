@@ -14,16 +14,16 @@ export class Response extends Metadata implements Response {
   }
 }
 
-/** a response where the content should be treated as a stream instead of a value or object */
-export interface StreamResponse extends Response {
-  /** indicates that this response is a stream  */
-  stream: true;
+/** a response where the content should be treated as a binary instead of a value or object */
+export interface BinaryResponse extends Response {
+  /** indicates that this response is a binary stream  */
+  binary: true;
 }
 
-export class StreamResponse extends Response implements StreamResponse {
-  constructor(objectInitializer?: DeepPartial<StreamResponse>) {
+export class BinaryResponse extends Response implements BinaryResponse {
+  constructor(objectInitializer?: DeepPartial<BinaryResponse>) {
     super();
-    this.stream = true;
+    this.binary = true;
     this.apply(objectInitializer);
   }
 }

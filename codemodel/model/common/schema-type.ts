@@ -36,7 +36,7 @@ export enum SchemaType {
   ByteArray = 'byte-array',
 
   /* a binary stream */
-  Stream = 'stream',
+  Binary = 'binary',
 
   /** a single character */
   Char = 'char',
@@ -136,4 +136,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not; 
+  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not | SchemaType.Binary; 

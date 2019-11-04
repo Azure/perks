@@ -43,10 +43,10 @@
     "@types/mocha": "5.2.5",
     "@types/node": "12.7.2",
     "mocha": "5.2.0",
-    "@typescript-eslint/eslint-plugin": "~2.0.0",
-    "@typescript-eslint/parser": "~2.0.0",
-    "eslint": "~6.2.2",
-    "typescript": "~3.7.0-beta"
+    "@typescript-eslint/eslint-plugin": "~2.6.0",
+    "@typescript-eslint/parser": "~2.6.0",
+    "eslint": "~6.6.0",
+    "typescript": "~3.7.1-rc"
   },
   "dependencies": {
     "get-uri": "~2.0.2",

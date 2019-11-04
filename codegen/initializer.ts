@@ -46,7 +46,7 @@ function applyTo(source: any, target: any, cache = new Set<any>()) {
     throw new Error('Circular refrenced models are not permitted in apply() initializers.');
   }
 
-  for (const i of keys(source)) {
+  for (const i of <any>keys(source)) {
     switch (typeof source[i]) {
 
       case 'object':

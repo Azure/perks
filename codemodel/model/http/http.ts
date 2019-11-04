@@ -7,7 +7,7 @@ import { HttpServer } from './server';
 import { SecurityRequirement } from './security';
 import { Schema } from '../common/schema';
 import { Request } from '../common/operation';
-import { DeepPartial } from '@azure-tools/codegen';
+import { DeepPartial, KnownMediaType } from '@azure-tools/codegen';
 
 /** extended metadata for HTTP operation parameters  */
 export interface HttpParameter extends Protocol {
@@ -52,19 +52,22 @@ export class HttpRequest extends Protocol {
 }
 
 export interface HttpWithBodyRequest extends HttpRequest {
-  /** must set a media type for the body */
-  mediaType: string;
+  /** a normalized value for the media type (ie, distills down to a well-known moniker (ie, 'json')) */
+  knownMediaType: KnownMediaType;
+
+  /** must contain at least one media type to send for the body */
+  mediaTypes: Array<string>;
 }
 
 export class HttpWithBodyRequest extends HttpRequest implements HttpWithBodyRequest {
 
 }
-export interface HttpStreamRequest extends HttpWithBodyRequest {
-  /* indicates that the HTTP request should be a stream, not a serialized object */
-  stream: true;
+export interface HttpBinaryRequest extends HttpWithBodyRequest {
+  /* indicates that the HTTP request should be a binary, not a serialized object */
+  binary: true;
 }
 
-export class HttpStreamRequest extends HttpWithBodyRequest implements HttpStreamRequest {
+export class HttpBinaryRequest extends HttpWithBodyRequest implements HttpBinaryRequest {
 }
 
 export interface HttpMultiPartRequest extends HttpWithBodyRequest {
@@ -73,20 +76,19 @@ export interface HttpMultiPartRequest extends HttpWithBodyRequest {
    * ie, that it has multiple requests in a single request.
   */
   multipart: true;
-
-  /** the multiple request parts that make up this request ?? is this right? */
-  parts: Array<Request>;
 }
 
 
 export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMultiPartRequest {
   multipart = <true>true;
-  parts = [];
 }
 
 export interface HttpResponse extends Protocol {
   /** the possible HTTP status codes that this response MUST match one of. */
   statusCodes: Array<StatusCode>; // oai3 supported options.
+
+  /** canonical response type (ie, 'json') */
+  knownMediaType: KnownMediaType;
 
   /** the possible media types that this response MUST match one of */
   mediaTypes: Array<string>; // the response mediaTypes that this should apply to (ie, 'application/json')
@@ -98,12 +100,12 @@ export interface HttpResponse extends Protocol {
 export class HttpResponse extends Protocol implements HttpResponse {
 }
 
-export interface HttpStreamResponse extends HttpResponse {
-  /** stream responses  */
-  stream: true;
+export interface HttpBinaryResponse extends HttpResponse {
+  /** binary responses  */
+  binary: true;
 }
 
-export class HttpStreamResponse extends HttpResponse implements HttpStreamResponse {
+export class HttpBinaryResponse extends HttpResponse implements HttpBinaryResponse {
 }
 
 /** code model metadata for HTTP protocol  */

@@ -6,7 +6,7 @@ import { Parameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
 import { Operation, Request, OperationGroup } from './common/operation';
-import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, AndSchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema } from './common/schema';
+import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, AndSchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema,BinarySchema  } from './common/schema';
 import { Aspect } from './common/aspect';
 import { Schemas } from './common/schemas';
 import { ExternalDocumentation } from './common/external-documentation';
@@ -17,8 +17,8 @@ import { Languages } from './common/languages';
 
 import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
-import { HttpWithBodyRequest, HttpParameter, HttpStreamRequest, HttpMultipartRequest, HttpStreamResponse, HttpRequest, HttpResponse, HttpModel } from './http/http';
-import { Response, SchemaResponse, StreamResponse } from './common/response';
+import { HttpWithBodyRequest, HttpParameter, HttpBinaryRequest, HttpMultipartRequest, HttpBinaryResponse, HttpRequest, HttpResponse, HttpModel } from './http/http';
+import { Response, SchemaResponse, BinaryResponse } from './common/response';
 
 
 function TypeInfo<U extends new (...args: any) => any>(type: U) {
@@ -29,14 +29,14 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
 
   TypeInfo(HttpModel),
   TypeInfo(HttpParameter),
-  TypeInfo(HttpStreamRequest),
+  TypeInfo(HttpBinaryRequest),
   TypeInfo(HttpMultipartRequest),
   TypeInfo(HttpResponse),
-  TypeInfo(HttpStreamResponse),
+  TypeInfo(HttpBinaryResponse),
   TypeInfo(HttpWithBodyRequest),
   TypeInfo(HttpRequest),
   TypeInfo(SchemaResponse),
-  TypeInfo(StreamResponse),
+  TypeInfo(BinaryResponse),
   TypeInfo(Response),
   TypeInfo(Parameter),
   TypeInfo(Property),
@@ -69,6 +69,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(AndSchema),
   TypeInfo(OrSchema),
   TypeInfo(XorSchema),
+  TypeInfo(BinarySchema),
   TypeInfo(Schema),
   TypeInfo(Aspect),
   TypeInfo(CodeModel),

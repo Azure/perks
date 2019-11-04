@@ -27,6 +27,9 @@ export interface IterableWithLinq<T> extends Iterable<T> {
   aggregate<A, R>(accumulator: (current: T | A, next: T) => A, seed?: T | A, resultAction?: (result?: T | A) => A | R): T | A | R | undefined;
   toArray(): Array<T>;
   results(): Promise<void>;
+  toDictionary<TValue>(keySelector: (each: T) => string, selector: (each: T) => TValue): Dictionary<TValue>;
+  toMap<TKey, TValue>(keySelector: (each: T) => TKey, selector: (each: T) => TValue): Map<TKey, TValue>;
+  groupBy<TKey, TValue>(keySelector: (each: T) => TKey, selector: (each: T) => TValue): Map<TKey, Array<TValue>>;
 
   /**
      * Gets or sets the length of the iterable. This is a number one higher than the highest element defined in an array.
@@ -65,6 +68,9 @@ function linqify<T>(iterable: Iterable<T>): IterableWithLinq<T> {
     join: <any>join.bind(iterable),
     count: len.bind(iterable),
     results: <any>results.bind(iterable),
+    toDictionary: <any>toDictionary.bind(iterable),
+    toMap: <any>toMap.bind(iterable),
+    groupBy: <any>groupBy.bind(iterable),
   };
   r.linq = r;
   return r;
@@ -75,14 +81,19 @@ function len<T>(this: Iterable<T>): number {
 }
 
 /** returns an IterableWithLinq<> for keys in the collection */
-export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<IndexOf<TSrc>> {
+export function keys<K, T>(source: Map<K, T> | null | undefined): IterableWithLinq<K>
+export function keys<T, TSrc extends Dictionary<T>>(source: Dictionary<T> | null | undefined): IterableWithLinq<string>
+export function keys<T, TSrc extends Array<T>>(source: Array<T> | null | undefined): IterableWithLinq<number>
+export function keys<K, T, TSrc>(source: undefined | null): IterableWithLinq<never>
+export function keys<K, T, TSrc>(source: any): any {
+  //export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<IndexOf<TSrc>> {
   if (source) {
     if (Array.isArray(source)) {
       return <IterableWithLinq<IndexOf<TSrc>>>linqify((<Array<T>>source).keys());
     }
 
     if (source instanceof Map) {
-      return <IterableWithLinq<IndexOf<TSrc>>><unknown>linqify((<Map<K, T>>source).keys());
+      return <IterableWithLinq<K>><unknown>linqify((<Map<K, T>>source).keys());
     }
 
     if (source instanceof Set) {
@@ -183,6 +194,35 @@ export function length<T, K>(source?: string | Iterable<T> | Dictionary<T> | Arr
     return source ? Object.getOwnPropertyNames(source).length : 0;
   }
   return 0;
+}
+
+function toDictionary<TElement, TValue>(this: Iterable<TElement>, keySelector: (each: TElement) => string, selector: (each: TElement) => TValue): Dictionary<TValue> {
+  const result = new Dictionary<TValue>();
+  for (const each of this) {
+    result[keySelector(each)] = selector(each);
+  }
+  return result;
+}
+
+function toMap<TElement, TValue, TKey>(this: Iterable<TElement>, keySelector: (each: TElement) => TKey, selector: (each: TElement) => TValue): Map<TKey, TValue> {
+  const result = new Map<TKey, TValue>();
+  for (const each of this) {
+    result.set(keySelector(each), selector(each));
+  }
+  return result;
+}
+
+
+function groupBy<TElement, TValue, TKey>(this: Iterable<TElement>, keySelector: (each: TElement) => TKey, selector: (each: TElement) => TValue): Map<TKey, TValue[]> {
+  const result = new Map<TKey, TValue[]>();
+  for (const each of this) {
+    const key = keySelector(each);
+    if (!result.has(key)) {
+      result.set(key, new Array<TValue>())
+    }
+    result.get(key) ?.push(selector(each));
+  }
+  return result;
 }
 
 function any<T>(this: Iterable<T>, predicate?: (each: T) => boolean): boolean {

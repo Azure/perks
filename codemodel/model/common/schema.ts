@@ -73,6 +73,17 @@ export interface ComplexSchema extends Schema {
 
 }
 
+export interface BinarySchema extends Schema {
+
+}
+
+export class BinarySchema extends Schema implements BinarySchema {
+  constructor(description: string, objectInitializer?: DeepPartial<BinarySchema>) {
+    super('binary', description, SchemaType.Binary);
+    this.apply(objectInitializer);
+  }
+}
+
 /** returns true if the given schema is a NumberSchema */
 export function isNumberSchema(schema: Schema): schema is NumberSchema {
   return schema.type === SchemaType.Number || schema.type === SchemaType.Integer;

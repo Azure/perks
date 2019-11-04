@@ -6,4 +6,5 @@ export interface SerializationFormats {
   json?: SerializationFormat;
   xml?: XmlSerlializationFormat;
   protobuf?: SerializationFormat;
+  binary?: SerializationFormat;
 }

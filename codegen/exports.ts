@@ -10,3 +10,4 @@ export * from './yaml';
 export * from './apiversion';
 export * from './safe-eval';
 export * from './source-track';
+export * from './media-types';

@@ -44,12 +44,12 @@
     "@types/node": "12.7.2",
     "@types/js-yaml": "3.12.1",
     "mocha": "5.2.0",
-    "typescript": "~3.7.0-beta",
+    "typescript": "~3.7.1-rc",
     "@azure-tools/async-io": "~3.0.0",
     "source-map-support": "0.5.13",
-    "@typescript-eslint/eslint-plugin": "~2.0.0",
-    "@typescript-eslint/parser": "~2.0.0",
-    "eslint": "~6.2.2",
+    "@typescript-eslint/eslint-plugin": "~2.6.0",
+    "@typescript-eslint/parser": "~2.6.0",
+    "eslint": "~6.6.0",
     "@types/source-map": "0.5.0"
   },
   "dependencies": {
