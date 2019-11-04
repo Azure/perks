@@ -13,7 +13,7 @@ import { YieldCPU } from '@azure-tools/tasks';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
-
+const n = 0;
 function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): { [key: string]: string } {
   const result: { [key: string]: string } = {};
   for (const { value, key } of items(dict1)) {
@@ -188,7 +188,7 @@ export class Deduplicator {
             const keysToIgnore: Array<string> = ['description', 'tags'];
 
             // they should have the same name to be merged and they should be similar
-            if (areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore) && path[xMsMetadata].path === anotherPath[xMsMetadata].path) {
+            if (path[xMsMetadata].path === anotherPath[xMsMetadata].path && areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore)) {
 
               // merge metadata
               apiVersions = apiVersions.concat(anotherPath[xMsMetadata].apiVersions);
@@ -237,6 +237,7 @@ export class Deduplicator {
   }
 
   private async deduplicateComponent(componentUid: string, type: string) {
+
     switch (type) {
       case 'schemas':
       case 'responses':
@@ -263,7 +264,7 @@ export class Deduplicator {
             let apiVersions = component[xMsMetadata].apiVersions;
             let filename = component[xMsMetadata].filename;
             let originalLocations = component[xMsMetadata].originalLocations;
-            const name = component[xMsMetadata].name;
+            let name = component[xMsMetadata].name;
 
             // extract component properties excluding metadata
             const { 'x-ms-metadata': metadataCurrent, ...filteredComponent } = component;
@@ -271,7 +272,7 @@ export class Deduplicator {
             // iterate over all the components of the same type of the component
             for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
               // ignore merge with itself && anotherComponent already deleted (i.e. undefined)
-              if (anotherComponent !== undefined && componentUid !== anotherComponentUid) {
+              if (anotherComponent !== undefined && componentUid !== anotherComponentUid && (type === 'schemas' || type === 'headers')) {
 
                 // extract the another component's properties excluding metadata
                 const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
@@ -279,8 +280,24 @@ export class Deduplicator {
                 // TODO: Add more keys to ignore.
                 const keysToIgnore: Array<string> = ['description'];
 
+                const namesMatch =
+                  anotherComponent[xMsMetadata].name.replace(/\d*$/, '') === component[xMsMetadata].name.replace(/\d*$/, '') ||
+                  anotherComponent[xMsMetadata].name.indexOf('·') > -1 ||
+                  component[xMsMetadata].name.indexOf('·') > -1;
+
+                const t1 = component['type'];
+                const t2 = anotherComponent['type'];
+                if (namesMatch) {
+                  ///console.log(`! ${n++} : '${component[xMsMetadata].name}' vs '${anotherComponent[xMsMetadata].name}'`);
+                }
+
                 // they should have the same name to be merged and they should be similar
-                if (areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore) && anotherComponent[xMsMetadata].name === component[xMsMetadata].name) {
+                if (((type === 'schemas' && t1 === t2 && (t1 === 'object' || t1 === 'string' || t1 === undefined))) && namesMatch && areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {
+
+                  // if the primary has a synthetic name, and the secondary doesn't use the secondary's name
+                  if (name.indexOf('·') > 0 && anotherComponent[xMsMetadata].name.indexOf('·') === -1) {
+                    name = anotherComponent[xMsMetadata].name;
+                  }
 
                   // merge metadata
                   apiVersions = apiVersions.concat(anotherComponent[xMsMetadata].apiVersions);
@@ -320,7 +337,7 @@ export class Deduplicator {
         }
         break;
       default:
-        throw new Error(`Unknow component type: '${type}'`);
+        throw new Error(`Unknown component type: '${type}'`);
     }
   }
 

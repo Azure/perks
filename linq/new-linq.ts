@@ -84,8 +84,8 @@ function len<T>(this: Iterable<T>): number {
 export function keys<K, T>(source: Map<K, T> | null | undefined): IterableWithLinq<K>
 export function keys<T, TSrc extends Dictionary<T>>(source: Dictionary<T> | null | undefined): IterableWithLinq<string>
 export function keys<T, TSrc extends Array<T>>(source: Array<T> | null | undefined): IterableWithLinq<number>
-export function keys<K, T, TSrc>(source: undefined | null): IterableWithLinq<never>
-export function keys<K, T, TSrc>(source: any): any {
+export function keys<K, T, TSrc>(source: any | undefined | null): IterableWithLinq<any>
+export function keys<K, T, TSrc>(source: any): IterableWithLinq<any> {
   //export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<IndexOf<TSrc>> {
   if (source) {
     if (Array.isArray(source)) {
