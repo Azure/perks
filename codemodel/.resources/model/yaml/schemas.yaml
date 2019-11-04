@@ -21,7 +21,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ArraySchema:
     type: object
     description: a Schema that represents and array of values
@@ -48,7 +47,17 @@ definitions:
       - language
       - protocol
       - type
-      - uid
+  BinarySchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   BooleanSchema:
     type: object
     description: a schema that represents a boolean value
@@ -61,7 +70,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ByteArraySchema:
     type: object
     description: a schema that represents a ByteArray value
@@ -82,7 +90,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   CharSchema:
     type: object
     description: a schema that represents a Char value
@@ -95,7 +102,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ChoiceType:
     type: object
     additionalProperties: false
@@ -130,8 +136,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -147,7 +151,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ChoiceValue:
     type: object
     description: an individual choice in a ChoiceSchema
@@ -180,7 +183,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ConstantSchema:
     type: object
     description: a schema that represents a constant value
@@ -201,7 +203,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
       - value
   ConstantType:
     type: object
@@ -237,8 +238,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -254,7 +253,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ConstantValue:
     type: object
     description: a container for the actual constant value
@@ -293,7 +291,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DateSchema:
     type: object
     description: a schema that represents a Date value
@@ -306,7 +303,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DateTimeSchema:
     type: object
     description: a schema that represents a DateTime value
@@ -327,7 +323,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DictionarySchema:
     type: object
     description: a schema that represents a key-value collection
@@ -345,7 +340,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
@@ -358,7 +352,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   FlagSchema:
     type: object
     additionalProperties: false
@@ -377,7 +370,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   NotSchema:
     type: object
     description: a NOT relationship between schemas
@@ -395,7 +387,6 @@ definitions:
       - not
       - protocol
       - type
-      - uid
   NumberSchema:
     type: object
     description: a Schema that represents a Number value
@@ -428,7 +419,6 @@ definitions:
       - precision
       - protocol
       - type
-      - uid
   ODataQuerySchema:
     type: object
     description: a schema that represents a ODataQuery value
@@ -441,7 +431,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ObjectSchema:
     type: object
     description: a schema that represents a type with child properties.
@@ -469,7 +458,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   OrSchema:
     type: object
     description: an OR relationship between several schemas
@@ -489,7 +477,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ParameterGroupSchema:
     type: object
     description: a schema that represents a set of parameters.
@@ -509,7 +496,6 @@ definitions:
       - parameters
       - protocol
       - type
-      - uid
   PrimitiveSchema:
     type: object
     description: Schema types that are primitive language values
@@ -522,7 +508,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Schema:
     type: object
     additionalProperties: false
@@ -557,8 +542,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -574,7 +557,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Schemas:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
@@ -731,7 +713,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UnixTimeSchema:
     type: object
     description: a schema that represents a UnixTime value
@@ -744,7 +725,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UriSchema:
     type: object
     description: a schema that represents a Uri value
@@ -767,7 +747,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UuidSchema:
     type: object
     description: a schema that represents a Uuid value
@@ -780,7 +759,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ValueSchema:
     type: object
     description: schema types that are non-object or complex types
@@ -793,7 +771,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   XorSchema:
     type: object
     description: an XOR relationship between several schemas
@@ -813,4 +790,3 @@ definitions:
       - oneOf
       - protocol
       - type
-      - uid

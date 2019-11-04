@@ -34,6 +34,22 @@ definitions:
     description: a collection of api versions
     items:
       $ref: './master.yaml#/definitions/ApiVersion'
+  BinaryResponse:
+    type: object
+    description: a response where the content should be treated as a binary instead of a value or object
+    additionalProperties: false
+    allOf:
+      - $ref: './master.yaml#/definitions/Response'
+    properties:
+      binary:
+        type: boolean
+        description: indicates that this response is a binary stream
+        enum:
+          - true
+    required:
+      - binary
+      - language
+      - protocol
   CSharpLanguage:
     type: object
     additionalProperties: false
@@ -278,8 +294,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -295,7 +309,6 @@ definitions:
       - language
       - protocol
       - request
-      - uid
   OperationGroup:
     type: object
     description: an operation group represents a container around set of operations
@@ -330,7 +343,6 @@ definitions:
       - language
       - protocol
       - schema
-      - uid
   Property:
     type: object
     description: a property is a child value in an object
@@ -354,7 +366,6 @@ definitions:
       - protocol
       - schema
       - serializedName
-      - uid
   Protocol:
     type: object
     description: the bare-minimum fields for per-protocol metadata on a given aspect
@@ -421,6 +432,8 @@ definitions:
     description: custom extensible metadata for individual serialization formats
     additionalProperties: false
     properties:
+      binary:
+        $ref: './master.yaml#/definitions/SerializationFormat'
       json:
         $ref: './master.yaml#/definitions/SerializationFormat'
       protobuf:
@@ -459,8 +472,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -476,7 +487,6 @@ definitions:
       - language
       - protocol
       - schema
-      - uid
   XmlSerlializationFormat:
     type: object
     additionalProperties: false

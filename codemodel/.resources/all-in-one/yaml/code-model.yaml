@@ -30,6 +30,7 @@ definitions:
     enum:
       - and
       - array
+      - binary
       - boolean
       - byte-array
       - char
@@ -75,7 +76,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ApiVersion:
     type: object
     description: |-
@@ -133,7 +133,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   AuthorizationCodeOAuthFlow:
     type: object
     additionalProperties: false
@@ -178,6 +177,33 @@ definitions:
     required:
       - scheme
       - type
+  BinaryResponse:
+    type: object
+    description: a response where the content should be treated as a binary instead of a value or object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Response'
+    properties:
+      binary:
+        type: boolean
+        description: indicates that this response is a binary stream
+        enum:
+          - true
+    required:
+      - binary
+      - language
+      - protocol
+  BinarySchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   BooleanSchema:
     type: object
     description: a schema that represents a boolean value
@@ -190,7 +216,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ByteArraySchema:
     type: object
     description: a schema that represents a ByteArray value
@@ -211,7 +236,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   CSharpLanguage:
     type: object
     additionalProperties: false
@@ -227,7 +251,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ChoiceSchema:
     type: object
     description: 'a schema that represents a choice of several values (ie, an ''enum'')'
@@ -251,7 +274,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ChoiceType:
     type: object
     additionalProperties: false
@@ -286,8 +308,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -303,7 +323,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ChoiceValue:
     type: object
     description: an individual choice in a ChoiceSchema
@@ -354,7 +373,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   CompoundSchemaTypes:
     type: string
     enum:
@@ -381,7 +399,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
       - value
   ConstantType:
     type: object
@@ -417,8 +434,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -434,7 +449,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ConstantValue:
     type: object
     description: a container for the actual constant value
@@ -488,7 +502,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DateSchema:
     type: object
     description: a schema that represents a Date value
@@ -501,7 +514,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DateTimeSchema:
     type: object
     description: a schema that represents a DateTime value
@@ -522,7 +534,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Default:
     type: string
     description: A catch-all for all un-handled response codes.
@@ -573,7 +584,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
@@ -586,7 +596,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Example:
     type: object
     description: 'example data [UNFINISHED]'
@@ -640,7 +649,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   FlagValue:
     type: object
     additionalProperties: false
@@ -660,6 +668,39 @@ definitions:
     anyOf:
       - $ref: '#/definitions/BearerHTTPSecurityScheme'
       - $ref: '#/definitions/NonBearerHTTPSecurityScheme'
+  HttpBinaryRequest:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/HttpWithBodyRequest'
+    properties:
+      binary:
+        type: boolean
+        enum:
+          - true
+    required:
+      - binary
+      - knownMediaType
+      - mediaTypes
+      - method
+      - path
+      - servers
+  HttpBinaryResponse:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/HttpResponse'
+    properties:
+      binary:
+        type: boolean
+        description: binary responses
+        enum:
+          - true
+    required:
+      - binary
+      - knownMediaType
+      - mediaTypes
+      - statusCodes
   HttpMethod:
     type: string
     description: standard HTTP protocol methods
@@ -705,16 +746,11 @@ definitions:
           ie, that it has multiple requests in a single request.
         enum:
           - true
-      parts:
-        type: array
-        description: the multiple request parts that make up this request ?? is this right?
-        items:
-          $ref: '#/definitions/Request'
     required:
-      - mediaType
+      - knownMediaType
+      - mediaTypes
       - method
       - multipart
-      - parts
       - path
       - servers
   HttpMultipartRequest:
@@ -734,9 +770,14 @@ definitions:
       method:
         description: the HTTP Method used to process this operation
         $ref: '#/definitions/HttpMethod'
-      mediaType:
-        type: string
-        description: must set a media type for the body
+      knownMediaType:
+        description: 'a normalized value for the media type (ie, distills down to a well-known moniker (ie, ''json''))'
+        $ref: '#/definitions/KnownMediaType'
+      mediaTypes:
+        type: array
+        description: must contain at least one media type to send for the body
+        items:
+          type: string
       multipart:
         type: boolean
         description: |-
@@ -746,19 +787,16 @@ definitions:
         default: true
         enum:
           - true
-      parts:
-        type: array
-        description: the multiple request parts that make up this request ?? is this right?
       servers:
         type: array
         description: each method must have one or more servers that it is connected to.
         items:
           $ref: '#/definitions/HttpServer'
     required:
-      - mediaType
+      - knownMediaType
+      - mediaTypes
       - method
       - multipart
-      - parts
       - path
       - servers
   HttpParameter:
@@ -819,6 +857,9 @@ definitions:
         description: content returned by the service in the HTTP headers
         items:
           $ref: '#/definitions/Schema'
+      knownMediaType:
+        description: 'canonical response type (ie, ''json'')'
+        $ref: '#/definitions/KnownMediaType'
       mediaTypes:
         type: array
         description: the possible media types that this response MUST match one of
@@ -893,6 +934,7 @@ definitions:
             - 511
             - default
     required:
+      - knownMediaType
       - mediaTypes
       - statusCodes
   HttpServer:
@@ -917,48 +959,23 @@ definitions:
     required:
       - language
       - url
-  HttpStreamRequest:
-    type: object
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/HttpWithBodyRequest'
-    properties:
-      stream:
-        type: boolean
-        enum:
-          - true
-    required:
-      - mediaType
-      - method
-      - path
-      - servers
-      - stream
-  HttpStreamResponse:
-    type: object
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/HttpResponse'
-    properties:
-      stream:
-        type: boolean
-        description: stream responses
-        enum:
-          - true
-    required:
-      - mediaTypes
-      - statusCodes
-      - stream
   HttpWithBodyRequest:
     type: object
     additionalProperties: false
     allOf:
       - $ref: '#/definitions/HttpRequest'
     properties:
-      mediaType:
-        type: string
-        description: must set a media type for the body
+      knownMediaType:
+        description: 'a normalized value for the media type (ie, distills down to a well-known moniker (ie, ''json''))'
+        $ref: '#/definitions/KnownMediaType'
+      mediaTypes:
+        type: array
+        description: must contain at least one media type to send for the body
+        items:
+          type: string
     required:
-      - mediaType
+      - knownMediaType
+      - mediaTypes
       - method
       - path
       - servers
@@ -1013,6 +1030,16 @@ definitions:
         $ref: '#/definitions/Dictionary<any>'
     required:
       - title
+  KnownMediaType:
+    type: string
+    enum:
+      - binary
+      - form
+      - json
+      - multipart
+      - text
+      - unknown
+      - xml
   Language:
     type: object
     description: the bare-minimum fields for per-language metadata on a given aspect
@@ -1129,7 +1156,6 @@ definitions:
       - not
       - protocol
       - type
-      - uid
   NumberSchema:
     type: object
     description: a Schema that represents a Number value
@@ -1162,7 +1188,6 @@ definitions:
       - precision
       - protocol
       - type
-      - uid
   OAuth2SecurityScheme:
     type: object
     additionalProperties: false
@@ -1208,7 +1233,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ObjectSchema:
     type: object
     description: a schema that represents a type with child properties.
@@ -1236,7 +1260,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ObjectSchemaTypes:
     type: string
     enum:
@@ -1302,8 +1325,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -1319,7 +1340,6 @@ definitions:
       - language
       - protocol
       - request
-      - uid
   OperationGroup:
     type: object
     description: an operation group represents a container around set of operations
@@ -1357,7 +1377,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Parameter:
     type: object
     description: a definition of an discrete input for an operation
@@ -1374,7 +1393,6 @@ definitions:
       - language
       - protocol
       - schema
-      - uid
   ParameterGroupSchema:
     type: object
     description: a schema that represents a set of parameters.
@@ -1394,7 +1412,6 @@ definitions:
       - parameters
       - protocol
       - type
-      - uid
   ParameterLocation:
     type: string
     description: the location that this parameter is placed in the http request
@@ -1441,7 +1458,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   PrimitiveSchemaTypes:
     type: string
     enum:
@@ -1480,7 +1496,6 @@ definitions:
       - protocol
       - schema
       - serializedName
-      - uid
   Protocol:
     type: object
     description: the bare-minimum fields for per-protocol metadata on a given aspect
@@ -1562,8 +1577,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -1579,7 +1592,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   SchemaResponse:
     type: object
     description: a response that should be deserialized into a result of type(schema)
@@ -1600,6 +1612,7 @@ definitions:
     enum:
       - and
       - array
+      - binary
       - boolean
       - byte-array
       - char
@@ -1619,7 +1632,6 @@ definitions:
       - or
       - parameter-group
       - sealed-choice
-      - stream
       - string
       - unixtime
       - unknown
@@ -1787,7 +1799,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   SecurityRequirement:
     type: object
     description: common ways of serializing simple parameters
@@ -1818,6 +1829,8 @@ definitions:
     description: custom extensible metadata for individual serialization formats
     additionalProperties: false
     properties:
+      binary:
+        $ref: '#/definitions/SerializationFormat'
       json:
         $ref: '#/definitions/SerializationFormat'
       protobuf:
@@ -1831,6 +1844,7 @@ definitions:
 
       Describes how the parameter value will be serialized depending on the type of the parameter value.
     enum:
+      - binary
       - deepObject
       - form
       - json
@@ -1941,22 +1955,6 @@ definitions:
       - 510
       - 511
       - default
-  StreamResponse:
-    type: object
-    description: a response where the content should be treated as a stream instead of a value or object
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/Response'
-    properties:
-      stream:
-        type: boolean
-        description: indicates that this response is a stream
-        enum:
-          - true
-    required:
-      - language
-      - protocol
-      - stream
   StringSchema:
     type: object
     description: a Schema that represents a string value
@@ -1979,7 +1977,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UnixTimeSchema:
     type: object
     description: a schema that represents a UnixTime value
@@ -1992,7 +1989,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UriSchema:
     type: object
     description: a schema that represents a Uri value
@@ -2015,7 +2011,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   UuidSchema:
     type: object
     description: a schema that represents a Uuid value
@@ -2028,7 +2023,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   Value:
     type: object
     description: 'common base interface for properties, parameters and the like.'
@@ -2061,8 +2055,6 @@ definitions:
       summary:
         type: string
         description: a short description
-      uid:
-        type: string
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
@@ -2078,7 +2070,6 @@ definitions:
       - language
       - protocol
       - schema
-      - uid
   ValueSchema:
     type: object
     description: schema types that are non-object or complex types
@@ -2091,7 +2082,6 @@ definitions:
       - language
       - protocol
       - type
-      - uid
   ValueSchemaTypes:
     type: string
     enum:
@@ -2150,7 +2140,6 @@ definitions:
       - oneOf
       - protocol
       - type
-      - uid
   email:
     type: string
   uri:

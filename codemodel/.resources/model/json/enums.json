@@ -6,6 +6,7 @@
       "enum": [
         "and",
         "array",
+        "binary",
         "boolean",
         "byte-array",
         "char",
@@ -25,7 +26,6 @@
         "or",
         "parameter-group",
         "sealed-choice",
-        "stream",
         "string",
         "unixtime",
         "unknown",
@@ -45,6 +45,7 @@
     "SerializationStyle": {
       "description": "The Serialization Style used for the parameter.\n\nDescribes how the parameter value will be serialized depending on the type of the parameter value.",
       "enum": [
+        "binary",
         "deepObject",
         "form",
         "json",
@@ -186,6 +187,18 @@
         "http",
         "oauth2",
         "openIdConnect"
+      ],
+      "type": "string"
+    },
+    "KnownMediaType": {
+      "enum": [
+        "binary",
+        "form",
+        "json",
+        "multipart",
+        "text",
+        "unknown",
+        "xml"
       ],
       "type": "string"
     }

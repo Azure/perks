@@ -261,6 +261,9 @@
         },
         "protobuf": {
           "$ref": "./master.json#/definitions/SerializationFormat"
+        },
+        "binary": {
+          "$ref": "./master.json#/definitions/SerializationFormat"
         }
       },
       "defaultProperties": [],
@@ -286,9 +289,6 @@
           "type": "string"
         },
         "description": {
-          "type": "string"
-        },
-        "uid": {
           "type": "string"
         },
         "summary": {
@@ -330,8 +330,7 @@
         "description",
         "language",
         "protocol",
-        "schema",
-        "uid"
+        "schema"
       ]
     },
     "Property": {
@@ -359,8 +358,7 @@
         "language",
         "protocol",
         "schema",
-        "serializedName",
-        "uid"
+        "serializedName"
       ],
       "allOf": [
         {
@@ -384,8 +382,7 @@
         "description",
         "language",
         "protocol",
-        "schema",
-        "uid"
+        "schema"
       ],
       "allOf": [
         {
@@ -529,6 +526,31 @@
         }
       ]
     },
+    "BinaryResponse": {
+      "description": "a response where the content should be treated as a binary instead of a value or object",
+      "type": "object",
+      "properties": {
+        "binary": {
+          "description": "indicates that this response is a binary stream",
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "binary",
+        "language",
+        "protocol"
+      ],
+      "allOf": [
+        {
+          "$ref": "./master.json#/definitions/Response"
+        }
+      ]
+    },
     "SchemaResponse": {
       "description": "a response that should be deserialized into a result of type(schema)",
       "type": "object",
@@ -583,9 +605,6 @@
         "description": {
           "type": "string"
         },
-        "uid": {
-          "type": "string"
-        },
         "summary": {
           "description": "a short description",
           "type": "string"
@@ -625,8 +644,7 @@
         "description",
         "language",
         "protocol",
-        "request",
-        "uid"
+        "request"
       ]
     },
     "Request": {

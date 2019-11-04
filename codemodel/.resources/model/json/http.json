@@ -1,31 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "StreamResponse": {
-      "description": "a response where the content should be treated as a stream instead of a value or object",
-      "type": "object",
-      "properties": {
-        "stream": {
-          "description": "indicates that this response is a stream",
-          "type": "boolean",
-          "enum": [
-            true
-          ]
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "stream"
-      ],
-      "allOf": [
-        {
-          "$ref": "./master.json#/definitions/Response"
-        }
-      ]
-    },
     "HttpServer": {
       "description": "An object representing a Server.\n\nIf the uri supports template substitution, then the variables are required.",
       "type": "object",
@@ -479,15 +454,23 @@
     "HttpWithBodyRequest": {
       "type": "object",
       "properties": {
-        "mediaType": {
-          "description": "must set a media type for the body",
-          "type": "string"
+        "knownMediaType": {
+          "$ref": "./enums.json#/definitions/KnownMediaType",
+          "description": "a normalized value for the media type (ie, distills down to a well-known moniker (ie, 'json'))"
+        },
+        "mediaTypes": {
+          "description": "must contain at least one media type to send for the body",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "mediaType",
+        "knownMediaType",
+        "mediaTypes",
         "method",
         "path",
         "servers"
@@ -498,10 +481,10 @@
         }
       ]
     },
-    "HttpStreamRequest": {
+    "HttpBinaryRequest": {
       "type": "object",
       "properties": {
-        "stream": {
+        "binary": {
           "type": "boolean",
           "enum": [
             true
@@ -511,11 +494,12 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "mediaType",
+        "binary",
+        "knownMediaType",
+        "mediaTypes",
         "method",
         "path",
-        "servers",
-        "stream"
+        "servers"
       ],
       "allOf": [
         {
@@ -532,22 +516,15 @@
           "enum": [
             true
           ]
-        },
-        "parts": {
-          "description": "the multiple request parts that make up this request ?? is this right?",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/Request"
-          }
         }
       },
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "mediaType",
+        "knownMediaType",
+        "mediaTypes",
         "method",
         "multipart",
-        "parts",
         "path",
         "servers"
       ],
@@ -568,15 +545,16 @@
           ],
           "default": true
         },
-        "parts": {
-          "description": "the multiple request parts that make up this request ?? is this right?",
-          "type": "array",
-          "items": {},
-          "default": []
+        "knownMediaType": {
+          "$ref": "./enums.json#/definitions/KnownMediaType",
+          "description": "a normalized value for the media type (ie, distills down to a well-known moniker (ie, 'json'))"
         },
-        "mediaType": {
-          "description": "must set a media type for the body",
-          "type": "string"
+        "mediaTypes": {
+          "description": "must contain at least one media type to send for the body",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "path": {
           "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
@@ -597,10 +575,10 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "mediaType",
+        "knownMediaType",
+        "mediaTypes",
         "method",
         "multipart",
-        "parts",
         "path",
         "servers"
       ]
@@ -679,6 +657,10 @@
             ]
           }
         },
+        "knownMediaType": {
+          "$ref": "./enums.json#/definitions/KnownMediaType",
+          "description": "canonical response type (ie, 'json')"
+        },
         "mediaTypes": {
           "description": "the possible media types that this response MUST match one of",
           "type": "array",
@@ -697,6 +679,7 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
+        "knownMediaType",
         "mediaTypes",
         "statusCodes"
       ],
@@ -706,11 +689,11 @@
         }
       ]
     },
-    "HttpStreamResponse": {
+    "HttpBinaryResponse": {
       "type": "object",
       "properties": {
-        "stream": {
-          "description": "stream responses",
+        "binary": {
+          "description": "binary responses",
           "type": "boolean",
           "enum": [
             true
@@ -720,9 +703,10 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
+        "binary",
+        "knownMediaType",
         "mediaTypes",
-        "statusCodes",
-        "stream"
+        "statusCodes"
       ],
       "allOf": [
         {

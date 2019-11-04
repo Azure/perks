@@ -62,6 +62,7 @@
       "enum": [
         "and",
         "array",
+        "binary",
         "boolean",
         "byte-array",
         "char",
