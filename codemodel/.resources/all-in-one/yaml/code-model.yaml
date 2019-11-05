@@ -1652,6 +1652,10 @@ definitions:
         description: a collection of items
         items:
           $ref: '#/definitions/ArraySchema'
+      binaries:
+        type: array
+        items:
+          $ref: '#/definitions/BinarySchema'
       booleans:
         type: array
         description: a true or false value

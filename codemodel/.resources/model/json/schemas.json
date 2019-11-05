@@ -939,6 +939,12 @@
             "$ref": "./schemas.json#/definitions/XorSchema"
           }
         },
+        "binaries": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/BinarySchema"
+          }
+        },
         "unknowns": {
           "description": "it's possible that we just may make this an error \nin representation.",
           "type": "array",
