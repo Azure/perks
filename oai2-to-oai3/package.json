@@ -44,7 +44,7 @@
     "@types/node": "12.7.2",
     "@types/js-yaml": "3.12.1",
     "mocha": "5.2.0",
-    "typescript": "~3.7.1-rc",
+    "typescript": "~3.7.2",
     "@azure-tools/async-io": "~3.0.0",
     "source-map-support": "0.5.13",
     "@typescript-eslint/eslint-plugin": "~2.6.0",

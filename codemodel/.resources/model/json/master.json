@@ -401,6 +401,50 @@
       "defaultProperties": [],
       "additionalProperties": false
     },
+    "Relations": {
+      "type": "object",
+      "properties": {
+        "immediate": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ComplexSchema"
+          }
+        },
+        "all": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ComplexSchema"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "all",
+        "immediate"
+      ]
+    },
+    "Discriminator": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "$ref": "./master.json#/definitions/Property"
+        },
+        "immediate": {
+          "$ref": "./master.json#/definitions/Dictionary"
+        },
+        "all": {
+          "$ref": "./master.json#/definitions/Dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "all",
+        "immediate",
+        "property"
+      ]
+    },
     "FlagValue": {
       "type": "object",
       "properties": {
@@ -721,6 +765,13 @@
       "type": "object",
       "additionalProperties": {
         "type": "object"
+      },
+      "defaultProperties": []
+    },
+    "Dictionary": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "./master.json#/definitions/ApiVersion"
       },
       "defaultProperties": []
     },

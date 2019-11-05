@@ -3,7 +3,6 @@
   "definitions": {
     "CompoundSchemaTypes": {
       "enum": [
-        "and",
         "or",
         "xor"
       ],
@@ -50,7 +49,6 @@
     },
     "ObjectSchemaTypes": {
       "enum": [
-        "and",
         "dictionary",
         "object",
         "or"
@@ -60,7 +58,6 @@
     "AllSchemaTypes": {
       "description": "all schema types",
       "enum": [
-        "and",
         "array",
         "binary",
         "boolean",

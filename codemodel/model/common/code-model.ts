@@ -5,8 +5,6 @@ import { OperationGroup } from './operation';
 import { DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
 import { Parameter } from './parameter';
 
-// + ADD DISCRIMINATORS TO ALL CLASS.
-
 /** the model that contains all the information required to generate a service api */
 export interface CodeModel extends Metadata {
   /** Code model information */

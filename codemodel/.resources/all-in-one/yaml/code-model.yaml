@@ -28,7 +28,6 @@ definitions:
     type: string
     description: all schema types
     enum:
-      - and
       - array
       - binary
       - boolean
@@ -55,27 +54,6 @@ definitions:
       - uri
       - uuid
       - xor
-  AndSchema:
-    type: object
-    description: an AND relationship between several schemas
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/ComplexSchema'
-    properties:
-      allOf:
-        type: array
-        description: the set of schemas that this schema is composed of.
-        items:
-          $ref: '#/definitions/ComplexSchema'
-      discriminatorValue:
-        type: string
-    required:
-      - $key
-      - allOf
-      - description
-      - language
-      - protocol
-      - type
   ApiVersion:
     type: object
     description: |-
@@ -376,7 +354,6 @@ definitions:
   CompoundSchemaTypes:
     type: string
     enum:
-      - and
       - or
       - xor
   ConstantSchema:
@@ -555,6 +532,10 @@ definitions:
     required:
       - apiVersions
       - message
+  Dictionary:
+    type: object
+    additionalProperties:
+      $ref: '#/definitions/ApiVersion'
   Dictionary<ApiVersion>:
     type: object
     additionalProperties:
@@ -584,6 +565,20 @@ definitions:
       - language
       - protocol
       - type
+  Discriminator:
+    type: object
+    additionalProperties: false
+    properties:
+      all:
+        $ref: '#/definitions/Dictionary'
+      immediate:
+        $ref: '#/definitions/Dictionary'
+      property:
+        $ref: '#/definitions/Property'
+    required:
+      - all
+      - immediate
+      - property
   DurationSchema:
     type: object
     description: a schema that represents a Duration value
@@ -1240,15 +1235,21 @@ definitions:
     allOf:
       - $ref: '#/definitions/ComplexSchema'
     properties:
-      discriminatorProperty:
+      children:
+        $ref: '#/definitions/Relations'
+      discriminator:
         description: 'the property of the polymorphic descriminator for this type, if there is one'
-        $ref: '#/definitions/Property'
+        $ref: '#/definitions/Discriminator'
+      discriminatorValue:
+        type: string
       maxProperties:
         type: number
         description: maximum number of properties permitted
       minProperties:
         type: number
         description: minimum number of properties permitted
+      parents:
+        $ref: '#/definitions/Relations'
       properties:
         type: array
         description: the collection of properties that are in this object
@@ -1263,7 +1264,6 @@ definitions:
   ObjectSchemaTypes:
     type: string
     enum:
-      - and
       - dictionary
       - object
       - or
@@ -1520,6 +1520,21 @@ definitions:
       - form
       - pipeDelimited
       - spaceDelimited
+  Relations:
+    type: object
+    additionalProperties: false
+    properties:
+      all:
+        type: array
+        items:
+          $ref: '#/definitions/ComplexSchema'
+      immediate:
+        type: array
+        items:
+          $ref: '#/definitions/ComplexSchema'
+    required:
+      - all
+      - immediate
   Request:
     type: object
     additionalProperties: false
@@ -1610,7 +1625,6 @@ definitions:
     type: string
     description: possible schema types that indicate the type of schema.
     enum:
-      - and
       - array
       - binary
       - boolean
@@ -1643,10 +1657,6 @@ definitions:
     description: 'the full set of schemas for a given service, categorized into convenient collections'
     additionalProperties: false
     properties:
-      ands:
-        type: array
-        items:
-          $ref: '#/definitions/AndSchema'
       arrays:
         type: array
         description: a collection of items

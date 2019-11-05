@@ -84,6 +84,10 @@ definitions:
     required:
       - apiVersions
       - message
+  Dictionary:
+    type: object
+    additionalProperties:
+      $ref: './master.yaml#/definitions/ApiVersion'
   Dictionary<ApiVersion>:
     type: object
     additionalProperties:
@@ -96,6 +100,20 @@ definitions:
     type: object
     additionalProperties:
       type: string
+  Discriminator:
+    type: object
+    additionalProperties: false
+    properties:
+      all:
+        $ref: './master.yaml#/definitions/Dictionary'
+      immediate:
+        $ref: './master.yaml#/definitions/Dictionary'
+      property:
+        $ref: './master.yaml#/definitions/Property'
+    required:
+      - all
+      - immediate
+      - property
   Example:
     type: object
     description: 'example data [UNFINISHED]'
@@ -383,6 +401,21 @@ definitions:
         $ref: './master.yaml#/definitions/Protocol'
       http:
         $ref: './master.yaml#/definitions/Protocol'
+  Relations:
+    type: object
+    additionalProperties: false
+    properties:
+      all:
+        type: array
+        items:
+          $ref: './schemas.yaml#/definitions/ComplexSchema'
+      immediate:
+        type: array
+        items:
+          $ref: './schemas.yaml#/definitions/ComplexSchema'
+    required:
+      - all
+      - immediate
   Request:
     type: object
     additionalProperties: false

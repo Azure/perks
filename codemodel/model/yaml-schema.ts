@@ -6,7 +6,7 @@ import { Parameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
 import { Operation, Request, OperationGroup } from './common/operation';
-import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, AndSchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema,BinarySchema  } from './common/schema';
+import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema, BinarySchema, Discriminator, Relations } from './common/schema';
 import { Aspect } from './common/aspect';
 import { Schemas } from './common/schemas';
 import { ExternalDocumentation } from './common/external-documentation';
@@ -66,7 +66,6 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(ByteArraySchema),
   TypeInfo(UnixTimeSchema),
   TypeInfo(DictionarySchema),
-  TypeInfo(AndSchema),
   TypeInfo(OrSchema),
   TypeInfo(XorSchema),
   TypeInfo(BinarySchema),
@@ -75,6 +74,8 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(CodeModel),
   TypeInfo(Request),
   TypeInfo(Schemas),
+  TypeInfo(Discriminator),
+  TypeInfo(Relations),
 
   TypeInfo(ExternalDocumentation),
   TypeInfo(Contact),

@@ -8,6 +8,7 @@ import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Parameter } from './parameter';
+import { Http2Session } from 'http2';
 
 export interface SerializationFormat extends Extensions, Dictionary<any> {
 
@@ -191,6 +192,29 @@ export class ParameterGroupSchema extends Schema implements ParameterGroupSchema
   }
 }
 
+export interface Relations {
+  immediate: Array<ComplexSchema>;
+  all: Array<ComplexSchema>;
+}
+export class Relations {
+  constructor() {
+    this.immediate = [];
+    this.all = [];
+  }
+}
+
+export interface Discriminator {
+  property: Property;
+  immediate: Dictionary<ComplexSchema>;
+  all: Dictionary<ComplexSchema>;
+}
+
+export class Discriminator implements Discriminator {
+  constructor(public property: Property) {
+    this.immediate = {};
+    this.all = {};
+  }
+}
 
 /** a schema that represents a type with child properties. */
 export interface ObjectSchema extends ComplexSchema {
@@ -198,7 +222,7 @@ export interface ObjectSchema extends ComplexSchema {
   type: SchemaType.Object;
 
   /** the property of the polymorphic descriminator for this type, if there is one */
-  discriminatorProperty?: Property;
+  discriminator?: Discriminator;
 
   /** the collection of properties that are in this object */
   properties?: Array<Property>;
@@ -208,6 +232,12 @@ export interface ObjectSchema extends ComplexSchema {
 
   /**  minimum number of properties permitted */
   minProperties?: number;
+
+  parents?: Relations;
+
+  children?: Relations;
+
+  discriminatorValue?: string;
 }
 
 export class ObjectSchema extends Schema implements ObjectSchema {
@@ -538,32 +568,6 @@ export class DictionarySchema<ElementType extends Schema = Schema> extends Schem
     this.apply(objectInitializer);
   }
 }
-
-/** an AND relationship between several schemas
- * 
- * @note - this expresses that the schema must be
- * all of the schema types given, which means
- * that this restricts the types to just <ObjectSchemaTypes>
- * because it does not make sense that a value can be a 'primitive'
- * and an 'object' at the same time. Nor does it make sense
- * that a value can be two primitive types at the same time.
- */
-export interface AndSchema extends ComplexSchema {
-  /** the schema type  */
-  type: SchemaType.And;
-
-  /** the set of schemas that this schema is composed of. */
-  allOf: Array<ComplexSchema>;
-
-  discriminatorValue?: string;
-}
-export class AndSchema extends Schema implements AndSchema {
-  constructor(name: string, description: string, objectInitializer?: DeepPartial<AndSchema>) {
-    super(name, description, SchemaType.And);
-    this.apply(objectInitializer);
-  }
-}
-
 
 /** an OR relationship between several schemas 
  * 

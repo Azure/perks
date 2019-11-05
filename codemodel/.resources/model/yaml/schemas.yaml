@@ -1,26 +1,5 @@
 $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
-  AndSchema:
-    type: object
-    description: an AND relationship between several schemas
-    additionalProperties: false
-    allOf:
-      - $ref: './schemas.yaml#/definitions/ComplexSchema'
-    properties:
-      allOf:
-        type: array
-        description: the set of schemas that this schema is composed of.
-        items:
-          $ref: './schemas.yaml#/definitions/ComplexSchema'
-      discriminatorValue:
-        type: string
-    required:
-      - $key
-      - allOf
-      - description
-      - language
-      - protocol
-      - type
   ArraySchema:
     type: object
     description: a Schema that represents and array of values
@@ -438,15 +417,21 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
     properties:
-      discriminatorProperty:
+      children:
+        $ref: './master.yaml#/definitions/Relations'
+      discriminator:
         description: 'the property of the polymorphic descriminator for this type, if there is one'
-        $ref: './master.yaml#/definitions/Property'
+        $ref: './master.yaml#/definitions/Discriminator'
+      discriminatorValue:
+        type: string
       maxProperties:
         type: number
         description: maximum number of properties permitted
       minProperties:
         type: number
         description: minimum number of properties permitted
+      parents:
+        $ref: './master.yaml#/definitions/Relations'
       properties:
         type: array
         description: the collection of properties that are in this object
@@ -562,10 +547,6 @@ definitions:
     description: 'the full set of schemas for a given service, categorized into convenient collections'
     additionalProperties: false
     properties:
-      ands:
-        type: array
-        items:
-          $ref: './schemas.yaml#/definitions/AndSchema'
       arrays:
         type: array
         description: a collection of items

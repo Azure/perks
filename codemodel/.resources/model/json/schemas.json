@@ -289,8 +289,8 @@
       "description": "a schema that represents a type with child properties.",
       "type": "object",
       "properties": {
-        "discriminatorProperty": {
-          "$ref": "./master.json#/definitions/Property",
+        "discriminator": {
+          "$ref": "./master.json#/definitions/Discriminator",
           "description": "the property of the polymorphic descriminator for this type, if there is one"
         },
         "properties": {
@@ -307,6 +307,15 @@
         "minProperties": {
           "description": "minimum number of properties permitted",
           "type": "number"
+        },
+        "parents": {
+          "$ref": "./master.json#/definitions/Relations"
+        },
+        "children": {
+          "$ref": "./master.json#/definitions/Relations"
+        },
+        "discriminatorValue": {
+          "type": "string"
         }
       },
       "defaultProperties": [],
@@ -661,37 +670,6 @@
         }
       ]
     },
-    "AndSchema": {
-      "description": "an AND relationship between several schemas",
-      "type": "object",
-      "properties": {
-        "allOf": {
-          "description": "the set of schemas that this schema is composed of.",
-          "type": "array",
-          "items": {
-            "$ref": "./schemas.json#/definitions/ComplexSchema"
-          }
-        },
-        "discriminatorValue": {
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "allOf",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/ComplexSchema"
-        }
-      ]
-    },
     "OrSchema": {
       "description": "an OR relationship between several schemas",
       "type": "object",
@@ -919,12 +897,6 @@
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ConstantSchema"
-          }
-        },
-        "ands": {
-          "type": "array",
-          "items": {
-            "$ref": "./schemas.json#/definitions/AndSchema"
           }
         },
         "ors": {

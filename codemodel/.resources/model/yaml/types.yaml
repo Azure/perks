@@ -4,7 +4,6 @@ definitions:
     type: string
     description: all schema types
     enum:
-      - and
       - array
       - binary
       - boolean
@@ -34,13 +33,11 @@ definitions:
   CompoundSchemaTypes:
     type: string
     enum:
-      - and
       - or
       - xor
   ObjectSchemaTypes:
     type: string
     enum:
-      - and
       - dictionary
       - object
       - or

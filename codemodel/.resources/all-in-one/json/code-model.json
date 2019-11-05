@@ -339,7 +339,6 @@
     "SchemaType": {
       "description": "possible schema types that indicate the type of schema.",
       "enum": [
-        "and",
         "array",
         "binary",
         "boolean",
@@ -372,7 +371,6 @@
     },
     "CompoundSchemaTypes": {
       "enum": [
-        "and",
         "or",
         "xor"
       ],
@@ -419,7 +417,6 @@
     },
     "ObjectSchemaTypes": {
       "enum": [
-        "and",
         "dictionary",
         "object",
         "or"
@@ -429,7 +426,6 @@
     "AllSchemaTypes": {
       "description": "all schema types",
       "enum": [
-        "and",
         "array",
         "binary",
         "boolean",
@@ -815,12 +811,56 @@
         }
       ]
     },
+    "Relations": {
+      "type": "object",
+      "properties": {
+        "immediate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComplexSchema"
+          }
+        },
+        "all": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComplexSchema"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "all",
+        "immediate"
+      ]
+    },
+    "Discriminator": {
+      "type": "object",
+      "properties": {
+        "property": {
+          "$ref": "#/definitions/Property"
+        },
+        "immediate": {
+          "$ref": "#/definitions/Dictionary"
+        },
+        "all": {
+          "$ref": "#/definitions/Dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "all",
+        "immediate",
+        "property"
+      ]
+    },
     "ObjectSchema": {
       "description": "a schema that represents a type with child properties.",
       "type": "object",
       "properties": {
-        "discriminatorProperty": {
-          "$ref": "#/definitions/Property",
+        "discriminator": {
+          "$ref": "#/definitions/Discriminator",
           "description": "the property of the polymorphic descriminator for this type, if there is one"
         },
         "properties": {
@@ -837,6 +877,15 @@
         "minProperties": {
           "description": "minimum number of properties permitted",
           "type": "number"
+        },
+        "parents": {
+          "$ref": "#/definitions/Relations"
+        },
+        "children": {
+          "$ref": "#/definitions/Relations"
+        },
+        "discriminatorValue": {
+          "type": "string"
         }
       },
       "defaultProperties": [],
@@ -1330,37 +1379,6 @@
         }
       ]
     },
-    "AndSchema": {
-      "description": "an AND relationship between several schemas",
-      "type": "object",
-      "properties": {
-        "allOf": {
-          "description": "the set of schemas that this schema is composed of.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ComplexSchema"
-          }
-        },
-        "discriminatorValue": {
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "allOf",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/ComplexSchema"
-        }
-      ]
-    },
     "OrSchema": {
       "description": "an OR relationship between several schemas",
       "type": "object",
@@ -1588,12 +1606,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ConstantSchema"
-          }
-        },
-        "ands": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AndSchema"
           }
         },
         "ors": {
@@ -2823,6 +2835,13 @@
       "type": "object",
       "additionalProperties": {
         "type": "object"
+      },
+      "defaultProperties": []
+    },
+    "Dictionary": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ApiVersion"
       },
       "defaultProperties": []
     },

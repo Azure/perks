@@ -76,8 +76,6 @@ export enum SchemaType {
   /** a constant value */
   Constant = 'constant',
 
-  And = 'and',
-
   Or = 'or',
 
   Xor = 'xor',
@@ -101,7 +99,6 @@ export enum SchemaType {
  * 
    */
 export type CompoundSchemaTypes =
-  SchemaType.And |
   SchemaType.Or |
   SchemaType.Xor;
 
@@ -129,7 +126,6 @@ export type ValueSchemaTypes =
 
 /** schema types that can be objects */
 export type ObjectSchemaTypes =
-  SchemaType.And |
   SchemaType.Or |
   SchemaType.Dictionary |
   SchemaType.Object;

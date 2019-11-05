@@ -1,4 +1,4 @@
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, AndSchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema } from './schema';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema } from './schema';
 import { camelCase } from '@azure-tools/codegen';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
@@ -67,8 +67,6 @@ export interface Schemas {
 
   /** a constant value */
   constants?: Array<ConstantSchema>;
-
-  ands?: Array<AndSchema>;
 
   ors?: Array<OrSchema>;
 
