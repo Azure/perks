@@ -771,7 +771,7 @@
     "Dictionary<ComplexSchema>": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "./master.json#/definitions/ApiVersion"
+        "$ref": "./schemas.json#/definitions/ComplexSchema"
       },
       "defaultProperties": []
     },

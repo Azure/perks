@@ -2861,7 +2861,7 @@
     "Dictionary<ComplexSchema>": {
       "type": "object",
       "additionalProperties": {
-        "$ref": "#/definitions/ApiVersion"
+        "$ref": "#/definitions/ComplexSchema"
       },
       "defaultProperties": []
     },

@@ -551,7 +551,7 @@ definitions:
   Dictionary<ComplexSchema>:
     type: object
     additionalProperties:
-      $ref: '#/definitions/ApiVersion'
+      $ref: '#/definitions/ComplexSchema'
   Dictionary<any>:
     type: object
     additionalProperties:

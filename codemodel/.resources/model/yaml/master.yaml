@@ -91,7 +91,7 @@ definitions:
   Dictionary<ComplexSchema>:
     type: object
     additionalProperties:
-      $ref: './master.yaml#/definitions/ApiVersion'
+      $ref: './schemas.yaml#/definitions/ComplexSchema'
   Dictionary<any>:
     type: object
     additionalProperties:
