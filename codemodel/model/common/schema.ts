@@ -40,6 +40,7 @@ export interface Schema extends Aspect {
   // writeOnly: boolean;
 }
 
+
 export class Schema extends Aspect implements Schema {
   type: AllSchemaTypes;
 
@@ -56,6 +57,17 @@ export class Schema extends Aspect implements Schema {
       protocol: {
       }
     }, initializer);
+  }
+}
+
+
+export interface AnySchema extends Schema {
+}
+
+export class AnySchema extends Schema implements AnySchema {
+  constructor(description: string, objectInitializer?: DeepPartial<AnySchema>) {
+    super('any', description, SchemaType.Any);
+    this.apply(objectInitializer);
   }
 }
 

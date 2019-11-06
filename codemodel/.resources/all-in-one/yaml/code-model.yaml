@@ -28,6 +28,7 @@ definitions:
     type: string
     description: all schema types
     enum:
+      - any
       - array
       - binary
       - boolean
@@ -54,6 +55,17 @@ definitions:
       - uri
       - uuid
       - xor
+  AnySchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   ApiVersion:
     type: object
     description: |-
@@ -1625,6 +1637,7 @@ definitions:
     type: string
     description: possible schema types that indicate the type of schema.
     enum:
+      - any
       - array
       - binary
       - boolean

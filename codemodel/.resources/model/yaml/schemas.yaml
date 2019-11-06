@@ -1,5 +1,16 @@
 $schema: 'http://json-schema.org/draft-07/schema#'
 definitions:
+  AnySchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/Schema'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   ArraySchema:
     type: object
     description: a Schema that represents and array of values

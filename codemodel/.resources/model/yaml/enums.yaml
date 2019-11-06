@@ -59,6 +59,7 @@ definitions:
     type: string
     description: possible schema types that indicate the type of schema.
     enum:
+      - any
       - array
       - binary
       - boolean

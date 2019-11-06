@@ -339,6 +339,7 @@
     "SchemaType": {
       "description": "possible schema types that indicate the type of schema.",
       "enum": [
+        "any",
         "array",
         "binary",
         "boolean",
@@ -426,6 +427,7 @@
     "AllSchemaTypes": {
       "description": "all schema types",
       "enum": [
+        "any",
         "array",
         "binary",
         "boolean",
@@ -593,6 +595,24 @@
       },
       "defaultProperties": [],
       "additionalProperties": false
+    },
+    "AnySchema": {
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Schema"
+        }
+      ]
     },
     "ValueSchema": {
       "description": "schema types that are non-object or complex types",

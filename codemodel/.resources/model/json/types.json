@@ -58,6 +58,7 @@
     "AllSchemaTypes": {
       "description": "all schema types",
       "enum": [
+        "any",
         "array",
         "binary",
         "boolean",

@@ -1,5 +1,6 @@
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema } from './schema';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema, AnySchema } from './schema';
 import { camelCase } from '@azure-tools/codegen';
+import { SchemaType } from './schema-type';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
@@ -86,6 +87,10 @@ export interface Schemas {
 
 export class Schemas {
   add<T extends Schema>(schema: T): T {
+
+    if (schema.type === SchemaType.Any) {
+      return schema;
+    }
 
     let group = `${camelCase(schema.type)}s`.replace(/rys$/g, 'ries');
     if (group === 'integers') {

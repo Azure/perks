@@ -1,3 +1,5 @@
+import { AnySchema } from './schema';
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -61,6 +63,9 @@ export enum SchemaType {
 
   /** OData Query */
   ODataQuery = 'odata-query',
+
+  /** a type that can be anything */
+  Any = 'any',
 
   /** a choice between one of several  values (ie, 'enum')
    * 
@@ -132,4 +137,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not | SchemaType.Binary; 
+  SchemaType.Any | ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not | SchemaType.Binary; 

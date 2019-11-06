@@ -4,6 +4,7 @@ definitions:
     type: string
     description: all schema types
     enum:
+      - any
       - array
       - binary
       - boolean

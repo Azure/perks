@@ -68,6 +68,24 @@
         "type"
       ]
     },
+    "AnySchema": {
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "$key",
+        "description",
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
     "ValueSchema": {
       "description": "schema types that are non-object or complex types",
       "type": "object",
