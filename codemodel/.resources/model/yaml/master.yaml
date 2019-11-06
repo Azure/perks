@@ -84,11 +84,11 @@ definitions:
     required:
       - apiVersions
       - message
-  Dictionary:
+  Dictionary<ApiVersion>:
     type: object
     additionalProperties:
       $ref: './master.yaml#/definitions/ApiVersion'
-  Dictionary<ApiVersion>:
+  Dictionary<ComplexSchema>:
     type: object
     additionalProperties:
       $ref: './master.yaml#/definitions/ApiVersion'
@@ -105,9 +105,9 @@ definitions:
     additionalProperties: false
     properties:
       all:
-        $ref: './master.yaml#/definitions/Dictionary'
+        $ref: './master.yaml#/definitions/Dictionary<ComplexSchema>'
       immediate:
-        $ref: './master.yaml#/definitions/Dictionary'
+        $ref: './master.yaml#/definitions/Dictionary<ComplexSchema>'
       property:
         $ref: './master.yaml#/definitions/Property'
     required:

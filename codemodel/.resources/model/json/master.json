@@ -431,10 +431,10 @@
           "$ref": "./master.json#/definitions/Property"
         },
         "immediate": {
-          "$ref": "./master.json#/definitions/Dictionary"
+          "$ref": "./master.json#/definitions/Dictionary<ComplexSchema>"
         },
         "all": {
-          "$ref": "./master.json#/definitions/Dictionary"
+          "$ref": "./master.json#/definitions/Dictionary<ComplexSchema>"
         }
       },
       "defaultProperties": [],
@@ -768,7 +768,7 @@
       },
       "defaultProperties": []
     },
-    "Dictionary": {
+    "Dictionary<ComplexSchema>": {
       "type": "object",
       "additionalProperties": {
         "$ref": "./master.json#/definitions/ApiVersion"

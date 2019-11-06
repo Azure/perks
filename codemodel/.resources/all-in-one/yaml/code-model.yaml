@@ -544,11 +544,11 @@ definitions:
     required:
       - apiVersions
       - message
-  Dictionary:
+  Dictionary<ApiVersion>:
     type: object
     additionalProperties:
       $ref: '#/definitions/ApiVersion'
-  Dictionary<ApiVersion>:
+  Dictionary<ComplexSchema>:
     type: object
     additionalProperties:
       $ref: '#/definitions/ApiVersion'
@@ -582,9 +582,9 @@ definitions:
     additionalProperties: false
     properties:
       all:
-        $ref: '#/definitions/Dictionary'
+        $ref: '#/definitions/Dictionary<ComplexSchema>'
       immediate:
-        $ref: '#/definitions/Dictionary'
+        $ref: '#/definitions/Dictionary<ComplexSchema>'
       property:
         $ref: '#/definitions/Property'
     required:

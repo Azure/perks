@@ -861,10 +861,10 @@
           "$ref": "#/definitions/Property"
         },
         "immediate": {
-          "$ref": "#/definitions/Dictionary"
+          "$ref": "#/definitions/Dictionary<ComplexSchema>"
         },
         "all": {
-          "$ref": "#/definitions/Dictionary"
+          "$ref": "#/definitions/Dictionary<ComplexSchema>"
         }
       },
       "defaultProperties": [],
@@ -2858,7 +2858,7 @@
       },
       "defaultProperties": []
     },
-    "Dictionary": {
+    "Dictionary<ComplexSchema>": {
       "type": "object",
       "additionalProperties": {
         "$ref": "#/definitions/ApiVersion"

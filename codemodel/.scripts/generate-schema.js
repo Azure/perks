@@ -115,7 +115,9 @@ function fixmodel(schema) {
     .replace(/<Schema<AllSchemaTypes>>/g, '')
     .replace(/Schema<AllSchemaTypes>/g, 'Schema')
     .replace(/<Schema<PrimitiveSchemaTypes>>/g, '')
+    .replace(/<ComplexSchema>/g, '!ComplexSchema!')
     .replace(/<\w*Schema>/g, '')
+    .replace(/!ComplexSchema!/g, '<ComplexSchema>')
     .replace(/Schema\.TSchemaType_1/g, 'NumericSchemaTypes')
     .replace(/Schema\.TSchemaType_2/g, 'ObjectSchemaTypes')
     .replace(/Schema\.TSchemaType_3/g, 'PrimitiveSchemaTypes')
@@ -155,6 +157,7 @@ async function main() {
   delete schema.definitions['ArraySchema<Schema>'];
   delete schema.definitions['ConstantSchema<Schema>'];
   delete schema.definitions['DictionarySchema<Schema>'];
+
   delete schema.definitions['ChoiceSchema<Schema>'];
   delete schema.definitions['Aspect'];
   delete schema.definitions['Schema.TSchemaType'];
