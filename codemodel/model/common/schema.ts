@@ -385,7 +385,7 @@ export interface ConstantSchema<ConstantType extends Schema = Schema> extends Sc
   type: SchemaType.Constant;
 
   /** the schema type of the constant value (ie, StringSchema, NumberSchema, etc) */
-  constantSchema: ConstantType;
+  valueType: ConstantType;
 
   /** the actual constant value */
   value: ConstantValue;

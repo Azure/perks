@@ -234,6 +234,8 @@ definitions:
         $ref: './master.yaml#/definitions/Language'
       ruby:
         $ref: './master.yaml#/definitions/Language'
+      sputnik:
+        $ref: './master.yaml#/definitions/Language'
       swift:
         $ref: './master.yaml#/definitions/Language'
       typescript:

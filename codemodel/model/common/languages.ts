@@ -15,6 +15,7 @@ export interface Languages {
   cpp?: Language;
   swift?: Language;
   objectivec?: Language;
+  sputnik?: Language;
 }
 
 

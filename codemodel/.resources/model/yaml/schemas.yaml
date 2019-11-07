@@ -180,20 +180,20 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     properties:
-      constantSchema:
-        description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
-        $ref: './schemas.yaml#/definitions/Schema'
       value:
         description: the actual constant value
         $ref: './schemas.yaml#/definitions/ConstantValue'
+      valueType:
+        description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
+        $ref: './schemas.yaml#/definitions/Schema'
     required:
       - $key
-      - constantSchema
       - description
       - language
       - protocol
       - type
       - value
+      - valueType
   ConstantType:
     type: object
     additionalProperties: false

@@ -133,6 +133,9 @@
         },
         "objectivec": {
           "$ref": "./master.json#/definitions/Language"
+        },
+        "sputnik": {
+          "$ref": "./master.json#/definitions/Language"
         }
       },
       "defaultProperties": [],

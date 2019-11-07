@@ -208,8 +208,6 @@ async function main() {
     }
   }
 
-
-
   schema.definitions['Dictionary<string>'].additionalProperties = { type: 'string' };
   schema.definitions['Dictionary<any>'].additionalProperties = { type: 'object' };
   schema.definitions['Dictionary<ComplexSchema>'].additionalProperties = { $ref: `#/definitions/ComplexSchema` };
