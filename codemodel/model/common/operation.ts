@@ -74,6 +74,7 @@ export class OperationGroup extends Metadata implements OperationGroup {
     super();
     this.$key = name;
     this.apply(objectInitializer);
+    this.language.default.name = name;
   }
 
   addOperation(operation: Operation) {
