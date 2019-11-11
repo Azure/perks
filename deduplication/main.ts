@@ -292,7 +292,7 @@ export class Deduplicator {
                 }
 
                 // they should have the same name to be merged and they should be similar
-                if (((type === 'schemas' && t1 === t2 && (t1 === 'object' || t1 === 'string' || t1 === undefined))) && namesMatch && areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {
+                if (((type === 'schemas' && t1 === t2 && (t1 === 'object' || (t1 === 'string' && component['format']) || t1 === undefined))) && namesMatch && areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {
 
                   // if the primary has a synthetic name, and the secondary doesn't use the secondary's name
                   if (name.indexOf('·') > 0 && anotherComponent[xMsMetadata].name.indexOf('·') === -1) {
