@@ -7,7 +7,7 @@ import { isDirectory, isFile, readdir } from '@azure-tools/async-io';
 import { spawn } from 'child_process';
 import * as path from 'path';
 
-function cmdlineToArray(text: string, result: Array<string> = [], matcher = /[^\s"]+|"([^"]*)"/gi, count = 0): Array<string> {
+export function cmdlineToArray(text: string, result: Array<string> = [], matcher = /[^\s"]+|"([^"]*)"/gi, count = 0): Array<string> {
   text = text.replace(/\\"/g, '\ufffe');
   const match = matcher.exec(text);
   return match ? cmdlineToArray(text, result, matcher, result.push(match[1] ? match[1].replace(/\ufffe/g, '\\"') : match[0].replace(/\ufffe/g, '\\"'))) : result;
@@ -111,27 +111,46 @@ export async function resolveFullPath(command: string, alternateRecursiveFolders
   return fullCommandPath;
 }
 
-export async function execute(fullCommandPath: string, cwd: string, ...parameters: Array<string>) {
+export async function execute(cwd: string, command: string, ...parameters: Array<string>): Promise<void> {
+  const fullCommandPath = await resolveFullPath(command);
+  if (!fullCommandPath) {
+    throw new Error(`Unknown command ${command}`);
+  }
 
   // quote parameters if necessary?
   for (let i = 0; i < parameters.length; i++) {
-    parameters[i] = quoteIfNecessary(parameters[i]);
+    // parameters[i] = quoteIfNecessary(parameters[i]);
   }
 
-  if (process.platform === 'win32' && fullCommandPath.indexOf(' ') > -1 && !/.exe$/ig.exec(fullCommandPath)) {
-    const pathVar = getPathVariableName();
-    // preserve the current path
-    const originalPath = process.env[pathVar];
-    try {
-      // insert the dir into the path
-      process.env[pathVar] = `${path.dirname(fullCommandPath)}${path.delimiter}${originalPath}`;
+  return new Promise((r, j) => {
+    if (process.platform === 'win32' && fullCommandPath.indexOf(' ') > -1 && !/.exe$/ig.exec(fullCommandPath)) {
+      const pathVar = getPathVariableName();
+      // preserve the current path
+      const originalPath = process.env[pathVar];
+      try {
+        // insert the dir into the path
+        process.env[pathVar] = `${path.dirname(fullCommandPath)}${path.delimiter}${originalPath}`;
 
-      // call spawn and return
-      return spawn(path.basename(fullCommandPath), parameters, { env: process.env, cwd });
-    } finally {
-      // regardless, restore the original path on the way out!
-      process.env[pathVar] = originalPath;
+        // call spawn and return
+        spawn(path.basename(fullCommandPath), parameters, { env: process.env, cwd, stdio: 'inherit' }).on('close', (c, s) => {
+          if (c) {
+            j('Command Failed');
+          }
+          r();
+        });
+        return;
+      } finally {
+        // regardless, restore the original path on the way out!
+        process.env[pathVar] = originalPath;
+      }
     }
-  }
-  return spawn(fullCommandPath, parameters, { env: process.env, cwd });
+    spawn(fullCommandPath, parameters, { env: process.env, cwd, stdio: 'inherit' }).on('close', (c, s) => {
+      if (c) {
+        j('Command Failed');
+      }
+      r();
+    });
+    return;
+  });
+
 }

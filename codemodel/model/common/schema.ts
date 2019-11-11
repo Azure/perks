@@ -8,7 +8,6 @@ import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
 import { Languages } from './languages';
 import { Parameter } from './parameter';
-import { Http2Session } from 'http2';
 
 export interface SerializationFormat extends Extensions, Dictionary<any> {
 
@@ -368,12 +367,14 @@ export interface ConstantValue extends Extensions {
 }
 
 export class ConstantValue extends Initializer implements ConstantValue {
-  constructor(name: string, description: string, value: any, objectInitializer?: DeepPartial<ConstantValue>) {
+  constructor(value: any, objectInitializer?: DeepPartial<ConstantValue>) {
     super();
     this.value = value;
-    this.language.default = {
-      name,
-      description
+    this.language = {
+      default: {
+        name: '',
+        description: ''
+      }
     };
     this.apply(objectInitializer);
   }
