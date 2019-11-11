@@ -120,6 +120,20 @@ definitions:
       - knownMediaType
       - mediaTypes
       - statusCodes
+  HttpHeader:
+    type: object
+    additionalProperties: false
+    properties:
+      schema:
+        $ref: './schemas.yaml#/definitions/Schema'
+      header:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+    required:
+      - header
+      - schema
   HttpModel:
     type: object
     description: code model metadata for HTTP protocol
@@ -259,11 +273,16 @@ definitions:
     allOf:
       - $ref: './master.yaml#/definitions/Protocol'
     properties:
+      headerGroups:
+        type: array
+        description: sets of HTTP headers grouped together into a single schema
+        items:
+          $ref: './schemas.yaml#/definitions/GroupSchema'
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: './schemas.yaml#/definitions/Schema'
+          $ref: './http.yaml#/definitions/HttpHeader'
       knownMediaType:
         description: 'canonical response type (ie, ''json'')'
         $ref: './enums.yaml#/definitions/KnownMediaType'

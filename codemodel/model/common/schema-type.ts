@@ -93,7 +93,8 @@ export enum SchemaType {
    */
   Unknown = 'unknown',
 
-  ParameterGroup = 'parameter-group',
+  Group = 'group',
+
 }
 
 /** Compound schemas are used to construct complex objects or offer choices of a set of schemas.
@@ -137,4 +138,4 @@ export type ObjectSchemaTypes =
 
 /** all schema types */
 export type AllSchemaTypes =
-  SchemaType.Any | ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.ParameterGroup | SchemaType.Not | SchemaType.Binary; 
+  SchemaType.Any | ValueSchemaTypes | ObjectSchemaTypes | SchemaType.Constant | SchemaType.ODataQuery | SchemaType.Xor | SchemaType.Group | SchemaType.Not | SchemaType.Binary; 

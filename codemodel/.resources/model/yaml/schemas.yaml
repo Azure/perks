@@ -360,6 +360,22 @@ definitions:
       - language
       - protocol
       - type
+  GroupSchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/Schema'
+    properties:
+      properties:
+        type: array
+        items:
+          $ref: './master.yaml#/definitions/Property'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   NotSchema:
     type: object
     description: a NOT relationship between schemas
@@ -471,25 +487,6 @@ definitions:
       - anyOf
       - description
       - language
-      - protocol
-      - type
-  ParameterGroupSchema:
-    type: object
-    description: a schema that represents a set of parameters.
-    additionalProperties: false
-    allOf:
-      - $ref: './schemas.yaml#/definitions/ComplexSchema'
-    properties:
-      parameters:
-        type: array
-        description: the collection of properties that are in this object
-        items:
-          $ref: './master.yaml#/definitions/Parameter'
-    required:
-      - $key
-      - description
-      - language
-      - parameters
       - protocol
       - type
   PrimitiveSchema:
@@ -623,6 +620,10 @@ definitions:
         type: array
         items:
           $ref: './schemas.yaml#/definitions/FlagSchema'
+      groups:
+        type: array
+        items:
+          $ref: './schemas.yaml#/definitions/GroupSchema'
       numbers:
         type: array
         description: a number value
@@ -642,10 +643,6 @@ definitions:
         type: array
         items:
           $ref: './schemas.yaml#/definitions/OrSchema'
-      parameterGroups:
-        type: array
-        items:
-          $ref: './schemas.yaml#/definitions/ParameterGroupSchema'
       sealedChoices:
         type: array
         items:

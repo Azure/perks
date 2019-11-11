@@ -73,13 +73,13 @@ definitions:
       - dictionary
       - duration
       - flag
+      - group
       - integer
       - not
       - number
       - object
       - odata-query
       - or
-      - parameter-group
       - sealed-choice
       - string
       - unixtime

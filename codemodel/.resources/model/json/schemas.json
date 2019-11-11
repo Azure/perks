@@ -275,15 +275,13 @@
         }
       ]
     },
-    "ParameterGroupSchema": {
-      "description": "a schema that represents a set of parameters.",
+    "GroupSchema": {
       "type": "object",
       "properties": {
-        "parameters": {
-          "description": "the collection of properties that are in this object",
+        "properties": {
           "type": "array",
           "items": {
-            "$ref": "./master.json#/definitions/Parameter"
+            "$ref": "./master.json#/definitions/Property"
           }
         }
       },
@@ -293,13 +291,12 @@
         "$key",
         "description",
         "language",
-        "parameters",
         "protocol",
         "type"
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/ComplexSchema"
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -942,10 +939,10 @@
             "$ref": "./schemas.json#/definitions/Schema"
           }
         },
-        "parameterGroups": {
+        "groups": {
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/ParameterGroupSchema"
+            "$ref": "./schemas.json#/definitions/GroupSchema"
           }
         }
       },

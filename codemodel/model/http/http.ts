@@ -5,9 +5,10 @@ import { Protocol } from '../common/metadata';
 import { StatusCode } from './status-code';
 import { HttpServer } from './server';
 import { SecurityRequirement } from './security';
-import { Schema } from '../common/schema';
+import { Schema, GroupSchema } from '../common/schema';
 import { Request } from '../common/operation';
-import { DeepPartial, KnownMediaType } from '@azure-tools/codegen';
+import { DeepPartial, KnownMediaType, Initializer } from '@azure-tools/codegen';
+import { Extensions } from '../common/extensions';
 
 /** extended metadata for HTTP operation parameters  */
 export interface HttpParameter extends Protocol {
@@ -83,6 +84,16 @@ export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMul
   multipart = <true>true;
 }
 
+export interface HttpHeader extends Extensions {
+  header: string;
+  schema: Schema;
+}
+export class HttpHeader extends Initializer implements HttpHeader {
+  constructor(public header: string, public schema: Schema, objectInitializer?: DeepPartial<HttpHeader>) {
+    super();
+    this.apply(objectInitializer);
+  }
+}
 export interface HttpResponse extends Protocol {
   /** the possible HTTP status codes that this response MUST match one of. */
   statusCodes: Array<StatusCode>; // oai3 supported options.
@@ -94,7 +105,10 @@ export interface HttpResponse extends Protocol {
   mediaTypes: Array<string>; // the response mediaTypes that this should apply to (ie, 'application/json')
 
   /** content returned by the service in the HTTP headers */
-  headers?: Array<Schema>;
+  headers?: Array<HttpHeader>;
+
+  /** sets of HTTP headers grouped together into a single schema */
+  headerGroups?: Array<GroupSchema>;
 }
 
 export class HttpResponse extends Protocol implements HttpResponse {

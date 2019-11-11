@@ -6,7 +6,7 @@ import { Parameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
 import { Operation, Request, OperationGroup } from './common/operation';
-import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, ParameterGroupSchema, BinarySchema, Discriminator, Relations, AnySchema } from './common/schema';
+import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, GroupSchema, BinarySchema, Discriminator, Relations, AnySchema } from './common/schema';
 import { Aspect } from './common/aspect';
 import { Schemas } from './common/schemas';
 import { ExternalDocumentation } from './common/external-documentation';
@@ -17,7 +17,7 @@ import { Languages } from './common/languages';
 
 import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
-import { HttpWithBodyRequest, HttpParameter, HttpBinaryRequest, HttpMultipartRequest, HttpBinaryResponse, HttpRequest, HttpResponse, HttpModel } from './http/http';
+import { HttpWithBodyRequest, HttpParameter, HttpBinaryRequest, HttpMultipartRequest, HttpBinaryResponse, HttpRequest, HttpResponse, HttpModel, HttpHeader } from './http/http';
 import { Response, SchemaResponse, BinaryResponse } from './common/response';
 
 
@@ -34,6 +34,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(HttpResponse),
   TypeInfo(HttpBinaryResponse),
   TypeInfo(HttpWithBodyRequest),
+  TypeInfo(HttpHeader),
   TypeInfo(HttpRequest),
   TypeInfo(SchemaResponse),
   TypeInfo(BinaryResponse),
@@ -42,7 +43,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Property),
   TypeInfo(Value),
   TypeInfo(Operation),
-  TypeInfo(ParameterGroupSchema),
+  TypeInfo(GroupSchema),
   TypeInfo(FlagSchema),
   TypeInfo(FlagValue),
   TypeInfo(NumberSchema),
@@ -51,6 +52,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(ObjectSchema),
   TypeInfo(ChoiceValue),
   TypeInfo(ConstantValue),
+
   new Type('!ChoiceSchema', { kind: 'mapping', instanceOf: ChoiceSchema, construct: (i) => Object.setPrototypeOf(i, ChoiceSchema.prototype) }),
   new Type('!SealedChoiceSchema', { kind: 'mapping', instanceOf: SealedChoiceSchema, construct: (i) => Object.setPrototypeOf(i, SealedChoiceSchema.prototype) }),
   TypeInfo(ConstantSchema),

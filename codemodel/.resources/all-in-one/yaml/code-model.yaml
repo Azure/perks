@@ -42,13 +42,13 @@ definitions:
       - dictionary
       - duration
       - flag
+      - group
       - integer
       - not
       - number
       - object
       - odata-query
       - or
-      - parameter-group
       - sealed-choice
       - string
       - unixtime
@@ -671,6 +671,22 @@ definitions:
     required:
       - language
       - value
+  GroupSchema:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Schema'
+    properties:
+      properties:
+        type: array
+        items:
+          $ref: '#/definitions/Property'
+    required:
+      - $key
+      - description
+      - language
+      - protocol
+      - type
   HTTPSecurityScheme:
     anyOf:
       - $ref: '#/definitions/BearerHTTPSecurityScheme'
@@ -708,6 +724,20 @@ definitions:
       - knownMediaType
       - mediaTypes
       - statusCodes
+  HttpHeader:
+    type: object
+    additionalProperties: false
+    properties:
+      schema:
+        $ref: '#/definitions/Schema'
+      header:
+        type: string
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+    required:
+      - header
+      - schema
   HttpMethod:
     type: string
     description: standard HTTP protocol methods
@@ -859,11 +889,16 @@ definitions:
     allOf:
       - $ref: '#/definitions/Protocol'
     properties:
+      headerGroups:
+        type: array
+        description: sets of HTTP headers grouped together into a single schema
+        items:
+          $ref: '#/definitions/GroupSchema'
       headers:
         type: array
         description: content returned by the service in the HTTP headers
         items:
-          $ref: '#/definitions/Schema'
+          $ref: '#/definitions/HttpHeader'
       knownMediaType:
         description: 'canonical response type (ie, ''json'')'
         $ref: '#/definitions/KnownMediaType'
@@ -1407,25 +1442,6 @@ definitions:
       - language
       - protocol
       - schema
-  ParameterGroupSchema:
-    type: object
-    description: a schema that represents a set of parameters.
-    additionalProperties: false
-    allOf:
-      - $ref: '#/definitions/ComplexSchema'
-    properties:
-      parameters:
-        type: array
-        description: the collection of properties that are in this object
-        items:
-          $ref: '#/definitions/Parameter'
-    required:
-      - $key
-      - description
-      - language
-      - parameters
-      - protocol
-      - type
   ParameterLocation:
     type: string
     description: the location that this parameter is placed in the http request
@@ -1653,13 +1669,13 @@ definitions:
       - dictionary
       - duration
       - flag
+      - group
       - integer
       - not
       - number
       - object
       - odata-query
       - or
-      - parameter-group
       - sealed-choice
       - string
       - unixtime
@@ -1737,6 +1753,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/FlagSchema'
+      groups:
+        type: array
+        items:
+          $ref: '#/definitions/GroupSchema'
       numbers:
         type: array
         description: a number value
@@ -1756,10 +1776,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/OrSchema'
-      parameterGroups:
-        type: array
-        items:
-          $ref: '#/definitions/ParameterGroupSchema'
       sealedChoices:
         type: array
         items:

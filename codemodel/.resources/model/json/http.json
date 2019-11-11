@@ -583,6 +583,27 @@
         "servers"
       ]
     },
+    "HttpHeader": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "string"
+        },
+        "schema": {
+          "$ref": "./schemas.json#/definitions/Schema"
+        },
+        "extensions": {
+          "$ref": "./master.json#/definitions/Dictionary<any>",
+          "description": "additional metadata extensions dictionary"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "header",
+        "schema"
+      ]
+    },
     "HttpResponse": {
       "type": "object",
       "properties": {
@@ -672,7 +693,14 @@
           "description": "content returned by the service in the HTTP headers",
           "type": "array",
           "items": {
-            "$ref": "./schemas.json#/definitions/Schema"
+            "$ref": "./http.json#/definitions/HttpHeader"
+          }
+        },
+        "headerGroups": {
+          "description": "sets of HTTP headers grouped together into a single schema",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/GroupSchema"
           }
         }
       },

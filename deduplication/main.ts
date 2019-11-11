@@ -287,9 +287,6 @@ export class Deduplicator {
 
                 const t1 = component['type'];
                 const t2 = anotherComponent['type'];
-                if (namesMatch) {
-                  ///console.log(`! ${n++} : '${component[xMsMetadata].name}' vs '${anotherComponent[xMsMetadata].name}'`);
-                }
 
                 // they should have the same name to be merged and they should be similar
                 if (((type === 'schemas' && t1 === t2 && (t1 === 'object' || (t1 === 'string' && component['format']) || t1 === undefined))) && namesMatch && areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {

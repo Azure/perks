@@ -1,4 +1,4 @@
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, ParameterGroupSchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema, AnySchema } from './schema';
+import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema, AnySchema, GroupSchema } from './schema';
 import { camelCase } from '@azure-tools/codegen';
 import { SchemaType } from './schema-type';
 
@@ -82,7 +82,7 @@ export interface Schemas {
    */
   unknowns?: Array<Schema>;
 
-  parameterGroups?: Array<ParameterGroupSchema>;
+  groups?: Array<GroupSchema>;
 }
 
 export class Schemas {

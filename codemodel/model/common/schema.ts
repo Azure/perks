@@ -182,27 +182,6 @@ export class ArraySchema<ElementType extends Schema = Schema> extends Schema imp
   }
 }
 
-/** a schema that represents a set of parameters. */
-export interface ParameterGroupSchema extends ComplexSchema {
-  /** the schema type  */
-  type: SchemaType.ParameterGroup;
-
-  /** the collection of properties that are in this object */
-  parameters: Array<Parameter>;
-}
-
-export class ParameterGroupSchema extends Schema implements ParameterGroupSchema {
-  constructor(name: string, description: string, objectInitializer?: DeepPartial<ObjectSchema>) {
-    super(name, description, SchemaType.Object);
-    this.apply(objectInitializer);
-  }
-
-  addParameter(parameter: Parameter) {
-    (this.parameters = this.parameters || []).push(parameter);
-    return parameter;
-  }
-}
-
 export interface Relations {
   immediate: Array<ComplexSchema>;
   all: Array<ComplexSchema>;
@@ -224,6 +203,22 @@ export class Discriminator implements Discriminator {
   constructor(public property: Property) {
     this.immediate = {};
     this.all = {};
+  }
+}
+
+export interface GroupSchema extends Schema {
+  type: SchemaType.Group;
+  properties?: Array<Property>;
+}
+export class GroupSchema extends Schema implements GroupSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<GroupSchema>) {
+    super(name, description, SchemaType.Group);
+    this.apply(objectInitializer);
+  }
+
+  add(property: Property) {
+    (this.properties = this.properties || []).push(property);
+    return property;
   }
 }
 
