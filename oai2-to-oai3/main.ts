@@ -1080,6 +1080,7 @@ export class Oai2ToOai3 {
     'additionalProperties',
     'pattern',
     'enum',
+    'x-ms-enum',
     'default'
   ];
 
