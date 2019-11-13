@@ -1,5 +1,6 @@
 import * as semver from 'semver';
 
+
 /*
  Handling:
 
@@ -12,7 +13,7 @@ import * as semver from 'semver';
  vx.x-preview                 x.x.0-preview
 */
 export function toSemver(apiversion: string) {
-  let result = '';
+  // let result = '';
 
   // strip off leading "v" or "=" character
   apiversion = apiversion.replace(/^v|^=/gi, '');
@@ -23,44 +24,10 @@ export function toSemver(apiversion: string) {
     const date = apiversion.replace(versionedDateRegex, '$1');
     const miliseconds = new Date(date).getTime();
     const lastNumbers = apiversion.replace(versionedDateRegex, '$2');
-    result = `${miliseconds}${lastNumbers}`;
-  } else {
-
-    // convert partial version to complete version
-    const partialVersionRegex = new RegExp(/^\d+\.\d+$|^\d+\.\d+\-[a-z]+$/gi);
-    if (apiversion.match(partialVersionRegex)) {
-      const parts = apiversion.split('-');
-      if (parts.length > 1) {
-        apiversion = `${parts[0]}.0-${parts[1]}`;
-      } else {
-        apiversion = `${parts[0]}.0`;
-      }
-
-    }
-
-    // drop numbers after third number
-    const longVersionRegex = new RegExp(/^(\d+\.\d+\.\d+)(\.\d+)$/gi);
-    if (apiversion.match(longVersionRegex)) {
-      apiversion = apiversion.replace(longVersionRegex, '$1');
-    }
-
-    // convert:
-    // yyyy-mm-dd                 n(yyyy).n(mm).n(dd)
-    // yyyy-mm-dd-tag             n(yyyy).n(mm).n(dd)-tag
-    // x.x.x                      x.x.x
-    // x.x.x.x                    x.x.x
-    for (const i of apiversion.split(/[\.\-]/g)) {
-      if (!result) {
-        result = i;
-        continue;
-      }
-      const n = Number.parseInt(i);
-      result = Number.isNaN(n) ? `${result}-${i}` : `${result}.${Number(n)}`;
-    }
-
+    return `${miliseconds}${lastNumbers}`;
   }
-
-  return result === '' ? '0.0.0' : result;
+  const [whole, major, minor, revision, tag] = /^(\d+)-(\d+)-(\d+)(.*)/.exec(apiversion) || /(\d*)\.(\d*)\.(\d*)(.*)/.exec(apiversion) || /(\d*)\.(\d*)()(.*)/.exec(apiversion) || /(\d*)()()(.*)/.exec(apiversion) || [];
+  return `${Number.parseInt(major || '0') || 0}.${Number.parseInt(minor || '0') || 0}.${Number.parseInt(revision || '0') || 0}${tag?.startsWith('-') ? tag : ''}`;
 }
 
 export function lt(apiVersion1: string, apiVersion2: string) {

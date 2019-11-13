@@ -32,5 +32,9 @@ import { toSemver } from '../apiversion';
     const actual7 = toSemver('1.3.1');
     const expected7 = '1.3.1';
     assert.strictEqual(actual7, expected7);
+
+    assert.strictEqual(toSemver('v1'), '1.0.0');
+
+    assert.strictEqual(toSemver('3.0-preview.1'), '3.0.0-preview.1');
   }
 }
