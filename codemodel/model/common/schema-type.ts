@@ -1,5 +1,3 @@
-import { AnySchema } from './schema';
-
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -76,6 +74,10 @@ export enum SchemaType {
 
   SealedChoice = 'sealed-choice',
 
+  Conditional = 'conditional',
+
+  SealedConditional = 'sealed-conditional',
+
   Flag = 'flag',
 
   /** a constant value */
@@ -94,6 +96,7 @@ export enum SchemaType {
   Unknown = 'unknown',
 
   Group = 'group',
+
 
 }
 
@@ -128,7 +131,7 @@ export type ValueSchemaTypes =
   SchemaType.ByteArray |
   PrimitiveSchemaTypes |
   SchemaType.Array |
-  SchemaType.Choice | SchemaType.SealedChoice | SchemaType.Flag;
+  SchemaType.Choice | SchemaType.SealedChoice | SchemaType.Flag | SchemaType.Conditional | SchemaType.SealedConditional;
 
 /** schema types that can be objects */
 export type ObjectSchemaTypes =

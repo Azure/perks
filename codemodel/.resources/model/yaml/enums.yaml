@@ -21,6 +21,7 @@ definitions:
     type: string
     enum:
       - Client
+      - Context
       - Method
   KnownMediaType:
     type: string
@@ -39,6 +40,7 @@ definitions:
       - body
       - cookie
       - header
+      - none
       - path
       - query
       - uri
@@ -66,6 +68,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - constant
       - credential
       - date
@@ -81,6 +84,7 @@ definitions:
       - odata-query
       - or
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - unknown

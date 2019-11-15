@@ -1,82 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "HttpServer": {
-      "description": "An object representing a Server.\n\nIf the uri supports template substitution, then the variables are required.",
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "url": {
-          "description": "base url for the server",
-          "type": "string"
-        },
-        "variables": {
-          "description": "an optional collection of variables for server templating",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/ServerVariable"
-          }
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "url"
-      ]
-    },
-    "ServerVariable": {
-      "description": "An object representing a Server Variable for server URL template substitution.",
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "schema": {
-          "$ref": "./schemas.json#/definitions/ValueSchema",
-          "description": "the schema type for the server variable"
-        },
-        "default": {
-          "description": "The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.",
-          "type": "string"
-        },
-        "required": {
-          "description": "if the value is marked 'required'.",
-          "type": "boolean"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "schema"
-      ]
-    },
     "AuthorizationCodeOAuthFlow": {
       "type": "object",
       "properties": {
@@ -429,21 +353,13 @@
         "method": {
           "$ref": "./enums.json#/definitions/HttpMethod",
           "description": "the HTTP Method used to process this operation"
-        },
-        "servers": {
-          "description": "each method must have one or more servers that it is connected to.",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/HttpServer"
-          }
         }
       },
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
         "method",
-        "path",
-        "servers"
+        "path"
       ],
       "allOf": [
         {
@@ -472,8 +388,7 @@
         "knownMediaType",
         "mediaTypes",
         "method",
-        "path",
-        "servers"
+        "path"
       ],
       "allOf": [
         {
@@ -498,8 +413,7 @@
         "knownMediaType",
         "mediaTypes",
         "method",
-        "path",
-        "servers"
+        "path"
       ],
       "allOf": [
         {
@@ -525,8 +439,7 @@
         "mediaTypes",
         "method",
         "multipart",
-        "path",
-        "servers"
+        "path"
       ],
       "allOf": [
         {
@@ -563,13 +476,6 @@
         "method": {
           "$ref": "./enums.json#/definitions/HttpMethod",
           "description": "the HTTP Method used to process this operation"
-        },
-        "servers": {
-          "description": "each method must have one or more servers that it is connected to.",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/HttpServer"
-          }
         }
       },
       "defaultProperties": [],
@@ -579,8 +485,7 @@
         "mediaTypes",
         "method",
         "multipart",
-        "path",
-        "servers"
+        "path"
       ]
     },
     "HttpHeader": {
@@ -746,13 +651,6 @@
       "description": "code model metadata for HTTP protocol",
       "type": "object",
       "properties": {
-        "servers": {
-          "description": "a collection of server definitions for the service",
-          "type": "array",
-          "items": {
-            "$ref": "./http.json#/definitions/HttpServer"
-          }
-        },
         "security": {
           "description": "a collection of security requirements for the service",
           "type": "array",
@@ -763,9 +661,6 @@
       },
       "defaultProperties": [],
       "additionalProperties": false,
-      "required": [
-        "servers"
-      ],
       "allOf": [
         {
           "$ref": "./master.json#/definitions/Protocol"

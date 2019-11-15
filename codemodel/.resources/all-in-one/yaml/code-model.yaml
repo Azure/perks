@@ -35,6 +35,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - constant
       - credential
       - date
@@ -50,6 +51,7 @@ definitions:
       - odata-query
       - or
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - uri
@@ -61,8 +63,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -117,8 +117,6 @@ definitions:
         type: boolean
         description: if the elements in the array should be unique
     required:
-      - $key
-      - description
       - elementType
       - language
       - protocol
@@ -189,8 +187,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -201,8 +197,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -220,8 +214,6 @@ definitions:
           - base64url
           - byte
     required:
-      - $key
-      - description
       - format
       - language
       - protocol
@@ -236,8 +228,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -257,10 +247,8 @@ definitions:
         items:
           $ref: '#/definitions/ChoiceValue'
     required:
-      - $key
       - choiceType
       - choices
-      - description
       - language
       - protocol
       - type
@@ -268,15 +256,9 @@ definitions:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: '#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -308,8 +290,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -358,8 +338,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -368,40 +346,38 @@ definitions:
     enum:
       - or
       - xor
-  ConstantSchema:
+  ConditionalSchema:
     type: object
-    description: a schema that represents a constant value
+    description: a schema that represents a value dependent on another
     additionalProperties: false
     allOf:
-      - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/ValueSchema'
     properties:
-      value:
-        description: the actual constant value
-        $ref: '#/definitions/ConstantValue'
-      valueType:
-        description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
-        $ref: '#/definitions/Schema'
+      conditionalType:
+        description: the primitive type for the conditional
+        $ref: '#/definitions/StringSchema'
+      conditions:
+        type: array
+        description: the possible conditinal values
+        items:
+          $ref: '#/definitions/ConditionalValue'
+      sourceValue:
+        description: the source value that drives the target value (property or parameter)
+        $ref: '#/definitions/Value'
     required:
-      - $key
-      - description
+      - conditionalType
+      - conditions
       - language
       - protocol
+      - sourceValue
       - type
-      - value
-      - valueType
-  ConstantType:
+  ConditionalType:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: '#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -433,8 +409,134 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
+      - language
+      - protocol
+      - type
+  ConditionalType_1:
+    type: object
+    additionalProperties: false
+    properties:
+      type:
+        description: the schema type
+        $ref: '#/definitions/AllSchemaTypes'
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: '#/definitions/ApiVersion'
+      defaultValue:
+        description: 'If the value isn''t sent on the wire, the service will assume this'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: '#/definitions/Deprecation'
+      example:
+        description: example information
+      externalDocs:
+        description: External Documentation Links
+        $ref: '#/definitions/ExternalDocumentation'
+      serialization:
+        description: per-serialization information for this Schema
+        $ref: '#/definitions/SerializationFormats'
+      summary:
+        type: string
+        description: a short description
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for Schema
+        $ref: '#/definitions/Languages'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: '#/definitions/Protocols'
+    required:
+      - language
+      - protocol
+      - type
+  ConditionalValue:
+    type: object
+    description: an individual value in a ConditionalSchema
+    additionalProperties: false
+    properties:
+      source:
+        type:
+          - string
+          - number
+          - boolean
+        description: the actual value
+      target:
+        type:
+          - string
+          - number
+          - boolean
+        description: the actual value
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this value
+        $ref: '#/definitions/Languages'
+    required:
+      - language
+      - source
+      - target
+  ConstantSchema:
+    type: object
+    description: a schema that represents a constant value
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Schema'
+    properties:
+      value:
+        description: the actual constant value
+        $ref: '#/definitions/ConstantValue'
+      valueType:
+        description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
+        $ref: '#/definitions/Schema'
+    required:
+      - language
+      - protocol
+      - type
+      - value
+      - valueType
+  ConstantType:
+    type: object
+    additionalProperties: false
+    properties:
+      type:
+        description: the schema type
+        $ref: '#/definitions/AllSchemaTypes'
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: '#/definitions/ApiVersion'
+      defaultValue:
+        description: 'If the value isn''t sent on the wire, the service will assume this'
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: '#/definitions/Deprecation'
+      example:
+        description: example information
+      externalDocs:
+        description: External Documentation Links
+        $ref: '#/definitions/ExternalDocumentation'
+      serialization:
+        description: per-serialization information for this Schema
+        $ref: '#/definitions/SerializationFormats'
+      summary:
+        type: string
+        description: a short description
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: '#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for Schema
+        $ref: '#/definitions/Languages'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: '#/definitions/Protocols'
+    required:
       - language
       - protocol
       - type
@@ -486,8 +588,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -498,8 +598,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -517,8 +615,6 @@ definitions:
           - date-time
           - date-time-rfc1123
     required:
-      - $key
-      - description
       - format
       - language
       - protocol
@@ -571,8 +667,6 @@ definitions:
         description: the element type of the dictionary. (Keys are always strings)
         $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - elementType
       - language
       - protocol
@@ -598,8 +692,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -650,9 +742,7 @@ definitions:
         items:
           $ref: '#/definitions/FlagValue'
     required:
-      - $key
       - choices
-      - description
       - language
       - protocol
       - type
@@ -682,8 +772,6 @@ definitions:
         items:
           $ref: '#/definitions/Property'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -707,7 +795,6 @@ definitions:
       - mediaTypes
       - method
       - path
-      - servers
   HttpBinaryResponse:
     type: object
     additionalProperties: false
@@ -762,13 +849,6 @@ definitions:
         description: a collection of security requirements for the service
         items:
           $ref: '#/definitions/SecurityRequirement'
-      servers:
-        type: array
-        description: a collection of server definitions for the service
-        items:
-          $ref: '#/definitions/HttpServer'
-    required:
-      - servers
   HttpMultiPartRequest:
     type: object
     additionalProperties: false
@@ -789,7 +869,6 @@ definitions:
       - method
       - multipart
       - path
-      - servers
   HttpMultipartRequest:
     type: object
     additionalProperties: false
@@ -824,18 +903,12 @@ definitions:
         default: true
         enum:
           - true
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: '#/definitions/HttpServer'
     required:
       - knownMediaType
       - mediaTypes
       - method
       - multipart
       - path
-      - servers
   HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
@@ -874,15 +947,9 @@ definitions:
       method:
         description: the HTTP Method used to process this operation
         $ref: '#/definitions/HttpMethod'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: '#/definitions/HttpServer'
     required:
       - method
       - path
-      - servers
   HttpResponse:
     type: object
     additionalProperties: false
@@ -979,28 +1046,6 @@ definitions:
       - knownMediaType
       - mediaTypes
       - statusCodes
-  HttpServer:
-    type: object
-    description: |-
-      An object representing a Server.
-
-      If the uri supports template substitution, then the variables are required.
-    additionalProperties: false
-    properties:
-      url:
-        type: string
-        description: base url for the server
-      variables:
-        type: array
-        description: an optional collection of variables for server templating
-        items:
-          $ref: '#/definitions/ServerVariable'
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-    required:
-      - language
-      - url
   HttpWithBodyRequest:
     type: object
     additionalProperties: false
@@ -1020,11 +1065,11 @@ definitions:
       - mediaTypes
       - method
       - path
-      - servers
   ImplementationLocation:
     type: string
     enum:
       - Client
+      - Context
       - Method
   ImplicitOAuthFlow:
     type: object
@@ -1194,8 +1239,6 @@ definitions:
         description: the schema that this may not be.
         $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - not
       - protocol
@@ -1226,8 +1269,6 @@ definitions:
         type: number
         description: 'precision (# of bits?) of the number'
     required:
-      - $key
-      - description
       - language
       - precision
       - protocol
@@ -1272,8 +1313,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -1305,8 +1344,6 @@ definitions:
         items:
           $ref: '#/definitions/Property'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -1340,10 +1377,6 @@ definitions:
     description: 'represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)'
     additionalProperties: false
     properties:
-      $key:
-        type: string
-      description:
-        type: string
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -1384,8 +1417,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - request
@@ -1420,9 +1451,7 @@ definitions:
         items:
           $ref: '#/definitions/ComplexSchema'
     required:
-      - $key
       - anyOf
-      - description
       - language
       - protocol
       - type
@@ -1437,8 +1466,6 @@ definitions:
         description: suggested implementation location for this parameter
         $ref: '#/definitions/ImplementationLocation'
     required:
-      - $key
-      - description
       - language
       - protocol
       - schema
@@ -1449,6 +1476,7 @@ definitions:
       - body
       - cookie
       - header
+      - none
       - path
       - query
       - uri
@@ -1483,8 +1511,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/ValueSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -1520,8 +1546,6 @@ definitions:
         type: string
         description: the wire name of this property
     required:
-      - $key
-      - description
       - language
       - protocol
       - schema
@@ -1592,15 +1616,9 @@ definitions:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: '#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -1632,8 +1650,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -1662,6 +1678,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - constant
       - credential
       - date
@@ -1677,6 +1694,7 @@ definitions:
       - odata-query
       - or
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - unknown
@@ -1716,9 +1734,14 @@ definitions:
         type: array
         description: |-
           - this is essentially can be thought of as an 'enum' 
-          that is a choice between one of several strings
+          that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: '#/definitions/ChoiceSchema'
+      conditionals:
+        type: array
+        description: 'ie, when ''profile'' is ''production'', use ''2018-01-01'' for apiversion'
+        items:
+          $ref: '#/definitions/ConditionalSchema'
       constants:
         type: array
         description: a constant value
@@ -1778,8 +1801,15 @@ definitions:
           $ref: '#/definitions/OrSchema'
       sealedChoices:
         type: array
+        description: |-
+          - this is essentially can be thought of as an 'enum'
+          that is a choice between one of several items, but an unknown value is not allowed.
         items:
           $ref: '#/definitions/SealedChoiceSchema'
+      sealedConditionals:
+        type: array
+        items:
+          $ref: '#/definitions/SealedConditionalSchema'
       streams:
         type: array
         items:
@@ -1837,12 +1867,35 @@ definitions:
         items:
           $ref: '#/definitions/ChoiceValue'
     required:
-      - $key
       - choiceType
       - choices
-      - description
       - language
       - protocol
+      - type
+  SealedConditionalSchema:
+    type: object
+    description: a schema that represents a value dependent on another (not overridable)
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/ValueSchema'
+    properties:
+      conditionalType:
+        description: the primitive type for the condition
+        $ref: '#/definitions/StringSchema'
+      conditions:
+        type: array
+        description: the possible conditional values
+        items:
+          $ref: '#/definitions/ConditionalValue'
+      sourceValue:
+        description: the source value that drives the target value
+        $ref: '#/definitions/Value'
+    required:
+      - conditionalType
+      - conditions
+      - language
+      - protocol
+      - sourceValue
       - type
   SecurityRequirement:
     type: object
@@ -1899,42 +1952,6 @@ definitions:
       - simple
       - spaceDelimited
       - xml
-  ServerVariable:
-    type: object
-    description: An object representing a Server Variable for server URL template substitution.
-    additionalProperties: false
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      schema:
-        description: the schema type for the server variable
-        $ref: '#/definitions/ValueSchema'
-      description:
-        type: string
-        description: description of the aspect.
-      default:
-        type: string
-        description: 'The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      required:
-        type: boolean
-        description: if the value is marked 'required'.
-      language:
-        description: per-language information for this aspect
-        $ref: '#/definitions/Languages'
-    required:
-      - $key
-      - description
-      - language
-      - schema
   StatusCode:
     enum:
       - 100
@@ -2017,8 +2034,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -2029,8 +2044,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -2051,8 +2064,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -2063,8 +2074,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -2073,18 +2082,18 @@ definitions:
     description: 'common base interface for properties, parameters and the like.'
     additionalProperties: false
     properties:
-      $key:
-        type: string
       schema:
         description: the schema of this Value
         $ref: '#/definitions/Schema'
-      description:
-        type: string
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
         items:
           $ref: '#/definitions/ApiVersion'
+      assumedValue:
+        description: the value that the remote will assume if this value is not present
+      clientDefaultValue:
+        description: the value that the client should provide if the consumer doesn't provide one
       deprecated:
         description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
         $ref: '#/definitions/Deprecation'
@@ -2110,8 +2119,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: '#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - schema
@@ -2122,8 +2129,6 @@ definitions:
     allOf:
       - $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -2135,6 +2140,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - credential
       - date
       - date-time
@@ -2143,6 +2149,7 @@ definitions:
       - integer
       - number
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - uri
@@ -2179,8 +2186,6 @@ definitions:
         items:
           $ref: '#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - oneOf
       - protocol

@@ -3,12 +3,11 @@ import { HttpMethod } from './HttpMethod';
 import { ParameterLocation } from './ParameterLocation';
 import { Protocol } from '../common/metadata';
 import { StatusCode } from './status-code';
-import { HttpServer } from './server';
 import { SecurityRequirement } from './security';
-import { Schema, GroupSchema } from '../common/schema';
-import { Request } from '../common/operation';
+import { Schema } from '../common/schema';
 import { DeepPartial, KnownMediaType, Initializer } from '@azure-tools/codegen';
 import { Extensions } from '../common/extensions';
+import { GroupSchema } from '../common/schemas/object';
 
 /** extended metadata for HTTP operation parameters  */
 export interface HttpParameter extends Protocol {
@@ -43,9 +42,6 @@ export interface HttpRequest extends Protocol {
 
   /** the HTTP Method used to process this operation */
   method: HttpMethod;
-
-  /** each method must have one or more servers that it is connected to. */
-  servers: Array<HttpServer>;
 }
 
 export class HttpRequest extends Protocol {
@@ -124,8 +120,6 @@ export class HttpBinaryResponse extends HttpResponse implements HttpBinaryRespon
 
 /** code model metadata for HTTP protocol  */
 export interface HttpModel extends Protocol {
-  /** a collection of server definitions for the service  */
-  servers: Array<HttpServer>;
 
   /** a collection of security requirements for the service */
   security?: Array<SecurityRequirement>;

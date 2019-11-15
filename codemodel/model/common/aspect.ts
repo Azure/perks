@@ -11,11 +11,11 @@ export interface Aspect extends Metadata {
   // / * * a unique id for correlation between cloned objects */
   // /** @internal */ uid: string;
 
-  /** common name of the aspect -- in OAI3 this was typically the key in the parent dictionary */
-  $key: string;
+  // ** common name of the aspect -- in OAI3 this was typically the key in the parent dictionary */
+  // $key: string;
 
-  /** description of the aspect. */
-  description: string;
+  // ** description of the aspect. */
+  //description: string;
 
   /** a short description
    *
@@ -34,7 +34,7 @@ export interface Aspect extends Metadata {
 }
 
 export class Aspect extends Metadata implements Aspect {
-  constructor(public $key: string, public description: string, initializer?: DeepPartial<Aspect>) {
+  constructor($key: string, description: string, initializer?: DeepPartial<Aspect>) {
     super();
 
     this.apply({

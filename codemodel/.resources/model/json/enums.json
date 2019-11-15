@@ -11,6 +11,7 @@
         "byte-array",
         "char",
         "choice",
+        "conditional",
         "constant",
         "credential",
         "date",
@@ -26,6 +27,7 @@
         "odata-query",
         "or",
         "sealed-choice",
+        "sealed-conditional",
         "string",
         "unixtime",
         "unknown",
@@ -38,6 +40,7 @@
     "ImplementationLocation": {
       "enum": [
         "Client",
+        "Context",
         "Method"
       ],
       "type": "string"
@@ -95,6 +98,7 @@
         "body",
         "cookie",
         "header",
+        "none",
         "path",
         "query",
         "uri"

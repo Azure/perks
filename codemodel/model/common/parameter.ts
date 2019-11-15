@@ -5,12 +5,17 @@
 
 import { Value } from './value';
 import { DeepPartial } from '@azure-tools/codegen';
-import { uid } from './uid';
 import { Schema } from './schema';
 
 export enum ImplementationLocation {
+  /** should be exposed as a method parameter in the operation */
   Method = 'Method',
+
+  /** should be exposed as a client parameter (not exposed in the operation directly) */
   Client = 'Client',
+
+  /** should be used as input to constructing the context of the client (ie, 'profile') */
+  Context = 'Context'
 }
 
 /** a definition of an discrete input for an operation */
@@ -23,7 +28,7 @@ export class Parameter extends Value implements Parameter {
   constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Parameter>) {
     super(name, description, schema);
 
-    // this.language.default.uid = `parameter:${uid()}`;
     this.apply(initializer);
   }
 }
+

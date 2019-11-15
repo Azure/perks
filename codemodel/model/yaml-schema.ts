@@ -6,19 +6,32 @@ import { Parameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
 import { Operation, Request, OperationGroup } from './common/operation';
-import { FlagSchema, NumberSchema, StringSchema, ArraySchema, ObjectSchema, ChoiceSchema, ConstantSchema, BooleanSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, DateTimeSchema, DateSchema, CharSchema, ByteArraySchema, UnixTimeSchema, DictionarySchema, OrSchema, XorSchema, ChoiceValue, SealedChoiceSchema, FlagValue, ConstantValue, GroupSchema, BinarySchema, Discriminator, Relations, AnySchema } from './common/schema';
+
+import { ChoiceSchema, ChoiceValue, SealedChoiceSchema } from './common/schemas/choice';
 import { Aspect } from './common/aspect';
 import { Schemas } from './common/schemas';
 import { ExternalDocumentation } from './common/external-documentation';
 import { Contact, Info, License } from './common/info';
 import { APIKeySecurityScheme, BearerHTTPSecurityScheme, ImplicitOAuthFlow, NonBearerHTTPSecurityScheme, OAuth2SecurityScheme, OAuthFlows, OpenIdConnectSecurityScheme, PasswordOAuthFlow, AuthorizationCodeOAuthFlow, ClientCredentialsFlow } from './http/security';
-import { HttpServer, ServerVariable } from './http/server';
 import { Languages } from './common/languages';
 
 import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
 import { HttpWithBodyRequest, HttpParameter, HttpBinaryRequest, HttpMultipartRequest, HttpBinaryResponse, HttpRequest, HttpResponse, HttpModel, HttpHeader } from './http/http';
 import { Response, SchemaResponse, BinaryResponse } from './common/response';
+import { GroupSchema, ObjectSchema, Discriminator, Relations } from './common/schemas/object';
+import { FlagSchema, FlagValue } from './common/schemas/flag';
+import { NumberSchema } from './common/schemas/number';
+import { StringSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema } from './common/schemas/string';
+import { ArraySchema, ByteArraySchema } from './common/schemas/array';
+import { ConstantValue, ConstantSchema } from './common/schemas/constant';
+import { BooleanSchema, CharSchema } from './common/schemas/primitive';
+import { DurationSchema, DateTimeSchema, DateSchema, UnixTimeSchema } from './common/schemas/time';
+import { AnySchema } from './common/schemas/any';
+import { DictionarySchema } from './common/schemas/dictionary';
+import { OrSchema, XorSchema } from './common/schemas/relationship';
+import { BinarySchema } from './common/schemas/binary';
+import { ConditionalValue, ConditionalSchema, SealedConditionalSchema } from './common/schemas/conditional';
 
 
 function TypeInfo<U extends new (...args: any) => any>(type: U) {
@@ -51,10 +64,13 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(ArraySchema),
   TypeInfo(ObjectSchema),
   TypeInfo(ChoiceValue),
+  TypeInfo(ConditionalValue),
   TypeInfo(ConstantValue),
 
   new Type('!ChoiceSchema', { kind: 'mapping', instanceOf: ChoiceSchema, construct: (i) => Object.setPrototypeOf(i, ChoiceSchema.prototype) }),
   new Type('!SealedChoiceSchema', { kind: 'mapping', instanceOf: SealedChoiceSchema, construct: (i) => Object.setPrototypeOf(i, SealedChoiceSchema.prototype) }),
+  new Type('!ConditionalSchema', { kind: 'mapping', instanceOf: ConditionalSchema, construct: (i) => Object.setPrototypeOf(i, ConditionalSchema.prototype) }),
+  new Type('!SealedConditionalSchema', { kind: 'mapping', instanceOf: SealedConditionalSchema, construct: (i) => Object.setPrototypeOf(i, SealedConditionalSchema.prototype) }),
   TypeInfo(ConstantSchema),
   TypeInfo(BooleanSchema),
   TypeInfo(ODataQuerySchema),
@@ -96,8 +112,6 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(PasswordOAuthFlow),
   TypeInfo(AuthorizationCodeOAuthFlow),
   TypeInfo(ClientCredentialsFlow),
-  TypeInfo(HttpServer),
-  TypeInfo(ServerVariable),
   TypeInfo(Languages),
   TypeInfo(Language),
   TypeInfo(CSharpLanguage),

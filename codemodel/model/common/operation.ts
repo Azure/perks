@@ -42,7 +42,7 @@ export class Request extends Metadata implements Request {
 
 }
 export class Operation extends Aspect implements Operation {
-  constructor(public $key: string, public description: string, initializer?: DeepPartial<Operation>) {
+  constructor($key: string, description: string, initializer?: DeepPartial<Operation>) {
     super($key, description);
     this.apply({
       request: new Request()

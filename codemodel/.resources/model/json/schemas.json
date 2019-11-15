@@ -26,14 +26,6 @@
           "$ref": "./master.json#/definitions/SerializationFormats",
           "description": "per-serialization information for this Schema"
         },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
         "apiVersions": {
           "description": "API versions that this applies to. Undefined means all versions",
           "type": "array",
@@ -61,29 +53,9 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
-      ]
-    },
-    "AnySchema": {
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/Schema"
-        }
       ]
     },
     "ValueSchema": {
@@ -93,8 +65,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -112,8 +82,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -131,8 +99,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -143,14 +109,43 @@
         }
       ]
     },
-    "BinarySchema": {
+    "StringSchema": {
+      "description": "a Schema that represents a string value",
+      "type": "object",
+      "properties": {
+        "maxLength": {
+          "description": "the maximum length of the string",
+          "type": "number"
+        },
+        "minLength": {
+          "description": "the minimum length of the string",
+          "type": "number"
+        },
+        "pattern": {
+          "description": "a regular expression that the string must be validated against",
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
+    "ODataQuerySchema": {
+      "description": "a schema that represents a ODataQuery value",
       "type": "object",
       "properties": {},
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -158,6 +153,202 @@
       "allOf": [
         {
           "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
+    "CredentialSchema": {
+      "description": "a schema that represents a Credential value",
+      "type": "object",
+      "properties": {
+        "maxLength": {
+          "description": "the maximum length of the string",
+          "type": "number"
+        },
+        "minLength": {
+          "description": "the minimum length of the string",
+          "type": "number"
+        },
+        "pattern": {
+          "description": "a regular expression that the string must be validated against",
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
+    "UriSchema": {
+      "description": "a schema that represents a Uri value",
+      "type": "object",
+      "properties": {
+        "maxLength": {
+          "description": "the maximum length of the string",
+          "type": "number"
+        },
+        "minLength": {
+          "description": "the minimum length of the string",
+          "type": "number"
+        },
+        "pattern": {
+          "description": "a regular expression that the string must be validated against",
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
+    "UuidSchema": {
+      "description": "a schema that represents a Uuid value",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
+    "ArraySchema": {
+      "description": "a Schema that represents and array of values",
+      "type": "object",
+      "properties": {
+        "elementType": {
+          "$ref": "./schemas.json#/definitions/Schema",
+          "description": "elementType of the array"
+        },
+        "maxItems": {
+          "description": "maximum number of elements in the array",
+          "type": "number"
+        },
+        "minItems": {
+          "description": "minimum number of elements in the array",
+          "type": "number"
+        },
+        "uniqueItems": {
+          "description": "if the elements in the array should be unique",
+          "type": "boolean"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "elementType",
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "ByteArraySchema": {
+      "description": "a schema that represents a ByteArray value",
+      "type": "object",
+      "properties": {
+        "format": {
+          "description": "date-time format",
+          "enum": [
+            "base64url",
+            "byte"
+          ],
+          "type": "string"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "DictionarySchema": {
+      "description": "a schema that represents a key-value collection",
+      "type": "object",
+      "properties": {
+        "elementType": {
+          "$ref": "./schemas.json#/definitions/Schema",
+          "description": "the element type of the dictionary. (Keys are always strings)"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "elementType",
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ComplexSchema"
+        }
+      ]
+    },
+    "BooleanSchema": {
+      "description": "a schema that represents a boolean value",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
+    "CharSchema": {
+      "description": "a schema that represents a Char value",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
         }
       ]
     },
@@ -193,8 +384,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "precision",
         "protocol",
@@ -203,75 +392,6 @@
       "allOf": [
         {
           "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "StringSchema": {
-      "description": "a Schema that represents a string value",
-      "type": "object",
-      "properties": {
-        "maxLength": {
-          "description": "the maximum length of the string",
-          "type": "number"
-        },
-        "minLength": {
-          "description": "the minimum length of the string",
-          "type": "number"
-        },
-        "pattern": {
-          "description": "a regular expression that the string must be validated against",
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "ArraySchema": {
-      "description": "a Schema that represents and array of values",
-      "type": "object",
-      "properties": {
-        "elementType": {
-          "$ref": "./schemas.json#/definitions/Schema",
-          "description": "elementType of the array"
-        },
-        "maxItems": {
-          "description": "maximum number of elements in the array",
-          "type": "number"
-        },
-        "minItems": {
-          "description": "minimum number of elements in the array",
-          "type": "number"
-        },
-        "uniqueItems": {
-          "description": "if the elements in the array should be unique",
-          "type": "boolean"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "elementType",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/ValueSchema"
         }
       ]
     },
@@ -288,8 +408,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -336,8 +454,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -348,184 +464,6 @@
         }
       ]
     },
-    "FlagSchema": {
-      "type": "object",
-      "properties": {
-        "choices": {
-          "description": "the possible choices for in the set",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/FlagValue"
-          }
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "choices",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/ValueSchema"
-        }
-      ]
-    },
-    "ConstantSchema": {
-      "description": "a schema that represents a constant value",
-      "type": "object",
-      "properties": {
-        "valueType": {
-          "$ref": "./schemas.json#/definitions/Schema",
-          "description": "the schema type of the constant value (ie, StringSchema, NumberSchema, etc)"
-        },
-        "value": {
-          "$ref": "./schemas.json#/definitions/ConstantValue",
-          "description": "the actual constant value"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type",
-        "value",
-        "valueType"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/Schema"
-        }
-      ]
-    },
-    "BooleanSchema": {
-      "description": "a schema that represents a boolean value",
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "ODataQuerySchema": {
-      "description": "a schema that represents a ODataQuery value",
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/Schema"
-        }
-      ]
-    },
-    "CredentialSchema": {
-      "description": "a schema that represents a Credential value",
-      "type": "object",
-      "properties": {
-        "maxLength": {
-          "description": "the maximum length of the string",
-          "type": "number"
-        },
-        "minLength": {
-          "description": "the minimum length of the string",
-          "type": "number"
-        },
-        "pattern": {
-          "description": "a regular expression that the string must be validated against",
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "UriSchema": {
-      "description": "a schema that represents a Uri value",
-      "type": "object",
-      "properties": {
-        "maxLength": {
-          "description": "the maximum length of the string",
-          "type": "number"
-        },
-        "minLength": {
-          "description": "the minimum length of the string",
-          "type": "number"
-        },
-        "pattern": {
-          "description": "a regular expression that the string must be validated against",
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "UuidSchema": {
-      "description": "a schema that represents a Uuid value",
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
     "DurationSchema": {
       "description": "a schema that represents a Duration value",
       "type": "object",
@@ -533,8 +471,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -561,8 +497,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "format",
         "language",
         "protocol",
@@ -581,8 +515,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -590,54 +522,6 @@
       "allOf": [
         {
           "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "CharSchema": {
-      "description": "a schema that represents a Char value",
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
-        }
-      ]
-    },
-    "ByteArraySchema": {
-      "description": "a schema that represents a ByteArray value",
-      "type": "object",
-      "properties": {
-        "format": {
-          "description": "date-time format",
-          "enum": [
-            "base64url",
-            "byte"
-          ],
-          "type": "string"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "$key",
-        "description",
-        "format",
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "./schemas.json#/definitions/ValueSchema"
         }
       ]
     },
@@ -648,8 +532,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -660,28 +542,128 @@
         }
       ]
     },
-    "DictionarySchema": {
-      "description": "a schema that represents a key-value collection",
+    "ConditionalSchema": {
+      "description": "a schema that represents a value dependent on another",
       "type": "object",
       "properties": {
-        "elementType": {
-          "$ref": "./schemas.json#/definitions/Schema",
-          "description": "the element type of the dictionary. (Keys are always strings)"
+        "conditionalType": {
+          "$ref": "./schemas.json#/definitions/StringSchema",
+          "description": "the primitive type for the conditional"
+        },
+        "conditions": {
+          "description": "the possible conditinal values",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ConditionalValue"
+          }
+        },
+        "sourceValue": {
+          "$ref": "./master.json#/definitions/Value",
+          "description": "the source value that drives the target value (property or parameter)"
         }
       },
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
-        "elementType",
+        "conditionalType",
+        "conditions",
+        "language",
+        "protocol",
+        "sourceValue",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "SealedConditionalSchema": {
+      "description": "a schema that represents a value dependent on another (not overridable)",
+      "type": "object",
+      "properties": {
+        "conditionalType": {
+          "$ref": "./schemas.json#/definitions/StringSchema",
+          "description": "the primitive type for the condition"
+        },
+        "conditions": {
+          "description": "the possible conditional values",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/ConditionalValue"
+          }
+        },
+        "sourceValue": {
+          "$ref": "./master.json#/definitions/Value",
+          "description": "the source value that drives the target value"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "conditionalType",
+        "conditions",
+        "language",
+        "protocol",
+        "sourceValue",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "FlagSchema": {
+      "type": "object",
+      "properties": {
+        "choices": {
+          "description": "the possible choices for in the set",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/FlagValue"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "choices",
         "language",
         "protocol",
         "type"
       ],
       "allOf": [
         {
-          "$ref": "./schemas.json#/definitions/ComplexSchema"
+          "$ref": "./schemas.json#/definitions/ValueSchema"
+        }
+      ]
+    },
+    "ConstantSchema": {
+      "description": "a schema that represents a constant value",
+      "type": "object",
+      "properties": {
+        "valueType": {
+          "$ref": "./schemas.json#/definitions/Schema",
+          "description": "the schema type of the constant value (ie, StringSchema, NumberSchema, etc)"
+        },
+        "value": {
+          "$ref": "./schemas.json#/definitions/ConstantValue",
+          "description": "the actual constant value"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type",
+        "value",
+        "valueType"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
         }
       ]
     },
@@ -700,9 +682,7 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
         "anyOf",
-        "description",
         "language",
         "protocol",
         "type"
@@ -728,8 +708,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "oneOf",
         "protocol",
@@ -753,10 +731,40 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "not",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
+    "BinarySchema": {
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/Schema"
+        }
+      ]
+    },
+    "AnySchema": {
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
         "protocol",
         "type"
       ],
@@ -889,16 +897,30 @@
           }
         },
         "choices": {
-          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several strings",
+          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several items, but an unspecified value is permitted.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ChoiceSchema"
           }
         },
         "sealedChoices": {
+          "description": "- this is essentially can be thought of as an 'enum'\nthat is a choice between one of several items, but an unknown value is not allowed.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
+          }
+        },
+        "conditionals": {
+          "description": "ie, when 'profile' is 'production', use '2018-01-01' for apiversion",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/ConditionalSchema"
+          }
+        },
+        "sealedConditionals": {
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/SealedConditionalSchema"
           }
         },
         "flags": {
@@ -977,14 +999,6 @@
           "$ref": "./master.json#/definitions/SerializationFormats",
           "description": "per-serialization information for this Schema"
         },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
         "apiVersions": {
           "description": "API versions that this applies to. Undefined means all versions",
           "type": "array",
@@ -1012,8 +1026,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"
@@ -1072,14 +1084,6 @@
           "$ref": "./master.json#/definitions/SerializationFormats",
           "description": "per-serialization information for this Schema"
         },
-        "$key": {
-          "description": "common name of the aspect -- in OAI3 this was typically the key in the parent dictionary",
-          "type": "string"
-        },
-        "description": {
-          "description": "description of the aspect.",
-          "type": "string"
-        },
         "apiVersions": {
           "description": "API versions that this applies to. Undefined means all versions",
           "type": "array",
@@ -1107,8 +1111,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "$key",
-        "description",
         "language",
         "protocol",
         "type"

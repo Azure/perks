@@ -6,8 +6,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -31,8 +29,6 @@ definitions:
         type: boolean
         description: if the elements in the array should be unique
     required:
-      - $key
-      - description
       - elementType
       - language
       - protocol
@@ -43,8 +39,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -55,8 +49,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -74,8 +66,6 @@ definitions:
           - base64url
           - byte
     required:
-      - $key
-      - description
       - format
       - language
       - protocol
@@ -87,8 +77,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -96,15 +84,9 @@ definitions:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: './types.yaml#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -136,8 +118,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -168,10 +148,33 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
+      - type
+  ConditionalSchema:
+    type: object
+    description: a schema that represents a value dependent on another
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/ValueSchema'
+    properties:
+      conditionalType:
+        description: the primitive type for the conditional
+        $ref: './schemas.yaml#/definitions/StringSchema'
+      conditions:
+        type: array
+        description: the possible conditinal values
+        items:
+          $ref: './master.yaml#/definitions/ConditionalValue'
+      sourceValue:
+        description: the source value that drives the target value (property or parameter)
+        $ref: './master.yaml#/definitions/Value'
+    required:
+      - conditionalType
+      - conditions
+      - language
+      - protocol
+      - sourceValue
       - type
   ConstantSchema:
     type: object
@@ -187,8 +190,6 @@ definitions:
         description: 'the schema type of the constant value (ie, StringSchema, NumberSchema, etc)'
         $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -198,15 +199,9 @@ definitions:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: './types.yaml#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -238,8 +233,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -276,8 +269,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -288,8 +279,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -307,8 +296,6 @@ definitions:
           - date-time
           - date-time-rfc1123
     required:
-      - $key
-      - description
       - format
       - language
       - protocol
@@ -324,8 +311,6 @@ definitions:
         description: the element type of the dictionary. (Keys are always strings)
         $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - elementType
       - language
       - protocol
@@ -337,8 +322,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -354,9 +337,7 @@ definitions:
         items:
           $ref: './master.yaml#/definitions/FlagValue'
     required:
-      - $key
       - choices
-      - description
       - language
       - protocol
       - type
@@ -371,8 +352,6 @@ definitions:
         items:
           $ref: './master.yaml#/definitions/Property'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -387,8 +366,6 @@ definitions:
         description: the schema that this may not be.
         $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - not
       - protocol
@@ -419,8 +396,6 @@ definitions:
         type: number
         description: 'precision (# of bits?) of the number'
     required:
-      - $key
-      - description
       - language
       - precision
       - protocol
@@ -432,8 +407,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -465,8 +438,6 @@ definitions:
         items:
           $ref: './master.yaml#/definitions/Property'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -483,9 +454,7 @@ definitions:
         items:
           $ref: './schemas.yaml#/definitions/ComplexSchema'
     required:
-      - $key
       - anyOf
-      - description
       - language
       - protocol
       - type
@@ -496,8 +465,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/ValueSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -505,15 +472,9 @@ definitions:
     type: object
     additionalProperties: false
     properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
       type:
         description: the schema type
         $ref: './types.yaml#/definitions/AllSchemaTypes'
-      description:
-        type: string
-        description: description of the aspect.
       apiVersions:
         type: array
         description: API versions that this applies to. Undefined means all versions
@@ -545,8 +506,6 @@ definitions:
         description: per-protocol information for this aspect
         $ref: './master.yaml#/definitions/Protocols'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -583,9 +542,14 @@ definitions:
         type: array
         description: |-
           - this is essentially can be thought of as an 'enum' 
-          that is a choice between one of several strings
+          that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: './schemas.yaml#/definitions/ChoiceSchema'
+      conditionals:
+        type: array
+        description: 'ie, when ''profile'' is ''production'', use ''2018-01-01'' for apiversion'
+        items:
+          $ref: './schemas.yaml#/definitions/ConditionalSchema'
       constants:
         type: array
         description: a constant value
@@ -645,8 +609,15 @@ definitions:
           $ref: './schemas.yaml#/definitions/OrSchema'
       sealedChoices:
         type: array
+        description: |-
+          - this is essentially can be thought of as an 'enum'
+          that is a choice between one of several items, but an unknown value is not allowed.
         items:
           $ref: './schemas.yaml#/definitions/SealedChoiceSchema'
+      sealedConditionals:
+        type: array
+        items:
+          $ref: './schemas.yaml#/definitions/SealedConditionalSchema'
       streams:
         type: array
         items:
@@ -684,6 +655,31 @@ definitions:
           $ref: './schemas.yaml#/definitions/XorSchema'
     required:
       - strings
+  SealedConditionalSchema:
+    type: object
+    description: a schema that represents a value dependent on another (not overridable)
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/ValueSchema'
+    properties:
+      conditionalType:
+        description: the primitive type for the condition
+        $ref: './schemas.yaml#/definitions/StringSchema'
+      conditions:
+        type: array
+        description: the possible conditional values
+        items:
+          $ref: './master.yaml#/definitions/ConditionalValue'
+      sourceValue:
+        description: the source value that drives the target value
+        $ref: './master.yaml#/definitions/Value'
+    required:
+      - conditionalType
+      - conditions
+      - language
+      - protocol
+      - sourceValue
+      - type
   StringSchema:
     type: object
     description: a Schema that represents a string value
@@ -701,8 +697,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -713,8 +707,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -735,8 +727,6 @@ definitions:
         type: string
         description: a regular expression that the string must be validated against
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -747,8 +737,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -759,8 +747,6 @@ definitions:
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - protocol
       - type
@@ -777,8 +763,6 @@ definitions:
         items:
           $ref: './schemas.yaml#/definitions/Schema'
     required:
-      - $key
-      - description
       - language
       - oneOf
       - protocol
