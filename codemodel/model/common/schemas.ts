@@ -33,7 +33,7 @@ export interface Schemas {
   objects?: Array<ObjectSchema>;
 
   /** a string of characters  */
-  strings: Array<StringSchema>;
+  strings?: Array<StringSchema>;
 
   /** UnixTime */
   unixtimes?: Array<UnixTimeSchema>;
