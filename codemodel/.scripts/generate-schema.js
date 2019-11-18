@@ -166,8 +166,16 @@ async function main() {
   delete schema.definitions['T'];
   delete schema.definitions['ElementType'];
   delete schema.definitions['ElementType_1'];
+  delete schema.definitions['ChoiceType'];
   delete schema.definitions['ChoiceType_1'];
+  delete schema.definitions['ConditionalType'];
+  delete schema.definitions['ConditionalType_1'];
   delete schema.definitions['SerializationFormats<SerializationFormat>'];
+
+  schema.definitions['ChoiceSchema'].properties['choiceType'].$ref = '#/definitions/PrimitiveSchema'
+  schema.definitions['SealedChoiceSchema'].properties['choiceType'].$ref = '#/definitions/PrimitiveSchema'
+  schema.definitions['ConditionalSchema'].properties['conditionalType'].$ref = '#/definitions/PrimitiveSchema'
+  schema.definitions['SealedConditionalSchema'].properties['conditionalType'].$ref = '#/definitions/PrimitiveSchema'
 
 
   for (let each in schema.definitions['CodeModel']) {

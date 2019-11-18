@@ -240,7 +240,7 @@ definitions:
     properties:
       choiceType:
         description: the primitive type for the choices
-        $ref: '#/definitions/StringSchema'
+        $ref: '#/definitions/PrimitiveSchema'
       choices:
         type: array
         description: the possible choices for in the set
@@ -249,47 +249,6 @@ definitions:
     required:
       - choiceType
       - choices
-      - language
-      - protocol
-      - type
-  ChoiceType:
-    type: object
-    additionalProperties: false
-    properties:
-      type:
-        description: the schema type
-        $ref: '#/definitions/AllSchemaTypes'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
       - language
       - protocol
       - type
@@ -355,7 +314,7 @@ definitions:
     properties:
       conditionalType:
         description: the primitive type for the conditional
-        $ref: '#/definitions/StringSchema'
+        $ref: '#/definitions/PrimitiveSchema'
       conditions:
         type: array
         description: the possible conditinal values
@@ -370,88 +329,6 @@ definitions:
       - language
       - protocol
       - sourceValue
-      - type
-  ConditionalType:
-    type: object
-    additionalProperties: false
-    properties:
-      type:
-        description: the schema type
-        $ref: '#/definitions/AllSchemaTypes'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
-      - language
-      - protocol
-      - type
-  ConditionalType_1:
-    type: object
-    additionalProperties: false
-    properties:
-      type:
-        description: the schema type
-        $ref: '#/definitions/AllSchemaTypes'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: '#/definitions/ApiVersion'
-      defaultValue:
-        description: 'If the value isn''t sent on the wire, the service will assume this'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: '#/definitions/Deprecation'
-      example:
-        description: example information
-      externalDocs:
-        description: External Documentation Links
-        $ref: '#/definitions/ExternalDocumentation'
-      serialization:
-        description: per-serialization information for this Schema
-        $ref: '#/definitions/SerializationFormats'
-      summary:
-        type: string
-        description: a short description
-      extensions:
-        description: additional metadata extensions dictionary
-        $ref: '#/definitions/Dictionary<any>'
-      language:
-        description: per-language information for Schema
-        $ref: '#/definitions/Languages'
-      protocol:
-        description: per-protocol information for this aspect
-        $ref: '#/definitions/Protocols'
-    required:
-      - language
-      - protocol
       - type
   ConditionalValue:
     type: object
@@ -1845,8 +1722,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/XorSchema'
-    required:
-      - strings
   Scheme:
     type: string
     enum:
@@ -1860,7 +1735,7 @@ definitions:
     properties:
       choiceType:
         description: the primitive type for the choices
-        $ref: '#/definitions/StringSchema'
+        $ref: '#/definitions/PrimitiveSchema'
       choices:
         type: array
         description: the possible choices for in the set
@@ -1881,7 +1756,7 @@ definitions:
     properties:
       conditionalType:
         description: the primitive type for the condition
-        $ref: '#/definitions/StringSchema'
+        $ref: '#/definitions/PrimitiveSchema'
       conditions:
         type: array
         description: the possible conditional values

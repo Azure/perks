@@ -647,7 +647,7 @@
       "type": "object",
       "properties": {
         "choiceType": {
-          "$ref": "#/definitions/StringSchema",
+          "$ref": "#/definitions/PrimitiveSchema",
           "description": "the primitive type for the choices"
         },
         "choices": {
@@ -706,7 +706,7 @@
       "type": "object",
       "properties": {
         "choiceType": {
-          "$ref": "#/definitions/StringSchema",
+          "$ref": "#/definitions/PrimitiveSchema",
           "description": "the primitive type for the choices"
         },
         "choices": {
@@ -1183,7 +1183,7 @@
       "type": "object",
       "properties": {
         "conditionalType": {
-          "$ref": "#/definitions/StringSchema",
+          "$ref": "#/definitions/PrimitiveSchema",
           "description": "the primitive type for the conditional"
         },
         "conditions": {
@@ -1256,7 +1256,7 @@
       "type": "object",
       "properties": {
         "conditionalType": {
-          "$ref": "#/definitions/StringSchema",
+          "$ref": "#/definitions/PrimitiveSchema",
           "description": "the primitive type for the condition"
         },
         "conditions": {
@@ -1671,10 +1671,7 @@
         }
       },
       "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "strings"
-      ]
+      "additionalProperties": false
     },
     "email": {
       "type": "string"
@@ -2830,183 +2827,12 @@
       },
       "defaultProperties": []
     },
-    "ChoiceType": {
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "#/definitions/Languages",
-          "description": "per-language information for Schema"
-        },
-        "type": {
-          "$ref": "#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "type"
-      ]
-    },
     "Dictionary<ComplexSchema>": {
       "type": "object",
       "additionalProperties": {
         "$ref": "#/definitions/ComplexSchema"
       },
       "defaultProperties": []
-    },
-    "ConditionalType": {
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "#/definitions/Languages",
-          "description": "per-language information for Schema"
-        },
-        "type": {
-          "$ref": "#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "type"
-      ]
-    },
-    "ConditionalType_1": {
-      "type": "object",
-      "properties": {
-        "language": {
-          "$ref": "#/definitions/Languages",
-          "description": "per-language information for Schema"
-        },
-        "type": {
-          "$ref": "#/definitions/AllSchemaTypes",
-          "description": "the schema type"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "example": {
-          "description": "example information"
-        },
-        "defaultValue": {
-          "description": "If the value isn't sent on the wire, the service will assume this"
-        },
-        "serialization": {
-          "$ref": "#/definitions/SerializationFormats",
-          "description": "per-serialization information for this Schema"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "protocol": {
-          "$ref": "#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "type"
-      ]
     },
     "ConstantType": {
       "type": "object",
