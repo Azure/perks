@@ -1196,17 +1196,17 @@
             "headers": {
               "value": {
                 "description": "response with header values \"GREY\" or null",
-                "x-ms-enum": {
-                  "name": "GreyscaleColors",
-                  "modelAsString": false
-                },
                 "schema": {
                   "type": "string",
                   "enum": [
                     "White",
                     "black",
                     "GREY"
-                  ]
+                  ],
+                  "x-ms-enum": {
+                    "name": "GreyscaleColors",
+                    "modelAsString": false
+                  },
                 }
               }
             }
