@@ -31,7 +31,6 @@ export interface License extends Extensions {
 
 /** code model information */
 export interface Info extends Extensions {
-
   /** the title of this service. */
   title: string;
 
@@ -47,7 +46,6 @@ export interface Info extends Extensions {
   /** license information for th service */
   license?: License;
 
-  //  tags: Array<Tag>;
   /** External Documentation  */
   externalDocs?: ExternalDocumentation;
 }

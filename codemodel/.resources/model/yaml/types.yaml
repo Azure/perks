@@ -11,6 +11,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - constant
       - credential
       - date
@@ -26,6 +27,7 @@ definitions:
       - odata-query
       - or
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - uri
@@ -65,6 +67,7 @@ definitions:
       - byte-array
       - char
       - choice
+      - conditional
       - credential
       - date
       - date-time
@@ -73,6 +76,7 @@ definitions:
       - integer
       - number
       - sealed-choice
+      - sealed-conditional
       - string
       - unixtime
       - uri

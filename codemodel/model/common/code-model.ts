@@ -20,7 +20,6 @@ export interface CodeModel extends Metadata {
   globalParameters?: Array<Parameter>;
 }
 
-
 export class CodeModel extends Metadata implements CodeModel {
   constructor(title: string, sourceTracking = false, objectInitializer?: DeepPartial<CodeModel>) {
     super();

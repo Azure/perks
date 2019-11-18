@@ -1,6 +1,19 @@
-import { ObjectSchema, ChoiceSchema, DictionarySchema, ConstantSchema, ArraySchema, OrSchema, XorSchema, BooleanSchema, NumberSchema, StringSchema, DateSchema, DateTimeSchema, UnixTimeSchema, CredentialSchema, UriSchema, UuidSchema, DurationSchema, CharSchema, ByteArraySchema, NotSchema, SealedChoiceSchema, FlagSchema, Schema, ComplexSchema, ValueSchema, ODataQuerySchema, BinarySchema, AnySchema, GroupSchema } from './schema';
+import { ChoiceSchema, SealedChoiceSchema } from './schemas/choice';
 import { camelCase } from '@azure-tools/codegen';
 import { SchemaType } from './schema-type';
+import { ArraySchema, ByteArraySchema } from './schemas/array';
+import { DictionarySchema } from './schemas/dictionary';
+import { BooleanSchema, CharSchema } from './schemas/primitive';
+import { NumberSchema } from './schemas/number';
+import { ObjectSchema, GroupSchema } from './schemas/object';
+import { StringSchema, UuidSchema, UriSchema, CredentialSchema, ODataQuerySchema } from './schemas/string';
+import { UnixTimeSchema, DateSchema, DateTimeSchema, DurationSchema } from './schemas/time';
+import { Schema } from './schema';
+import { ConditionalSchema, SealedConditionalSchema } from './schemas/conditional';
+import { FlagSchema } from './schemas/flag';
+import { ConstantSchema } from './schemas/constant';
+import { OrSchema, XorSchema } from './schemas/relationship';
+import { BinarySchema } from './schemas/binary';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
@@ -20,7 +33,7 @@ export interface Schemas {
   objects?: Array<ObjectSchema>;
 
   /** a string of characters  */
-  strings: Array<StringSchema>;
+  strings?: Array<StringSchema>;
 
   /** UnixTime */
   unixtimes?: Array<UnixTimeSchema>;
@@ -58,11 +71,25 @@ export interface Schemas {
   /** a choice between one of several  values (ie, 'enum')
    * 
    * @description - this is essentially can be thought of as an 'enum' 
-   * that is a choice between one of several strings
+   * that is a choice between one of several items, but an unspecified value is permitted.
    */
   choices?: Array<ChoiceSchema>;
 
+  /** a choice between one of several  values (ie, 'enum')
+   *
+   * @description - this is essentially can be thought of as an 'enum'
+   * that is a choice between one of several items, but an unknown value is not allowed.
+   */
   sealedChoices?: Array<SealedChoiceSchema>;
+
+  /** 
+   * a schema that infers a value when a given parameter holds a given value  
+   * 
+   * @description ie, when 'profile' is 'production', use '2018-01-01' for apiversion
+  */
+  conditionals?: Array<ConditionalSchema>;
+
+  sealedConditionals?: Array<SealedConditionalSchema>;
 
   flags?: Array<FlagSchema>;
 
@@ -74,6 +101,7 @@ export interface Schemas {
   xors?: Array<XorSchema>;
 
   binaries?: Array<BinarySchema>;
+
 
   /** the type is not known.
    * 

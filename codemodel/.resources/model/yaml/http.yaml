@@ -103,7 +103,6 @@ definitions:
       - mediaTypes
       - method
       - path
-      - servers
   HttpBinaryResponse:
     type: object
     additionalProperties: false
@@ -146,13 +145,6 @@ definitions:
         description: a collection of security requirements for the service
         items:
           $ref: './http.yaml#/definitions/SecurityRequirement'
-      servers:
-        type: array
-        description: a collection of server definitions for the service
-        items:
-          $ref: './http.yaml#/definitions/HttpServer'
-    required:
-      - servers
   HttpMultiPartRequest:
     type: object
     additionalProperties: false
@@ -173,7 +165,6 @@ definitions:
       - method
       - multipart
       - path
-      - servers
   HttpMultipartRequest:
     type: object
     additionalProperties: false
@@ -208,18 +199,12 @@ definitions:
         default: true
         enum:
           - true
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: './http.yaml#/definitions/HttpServer'
     required:
       - knownMediaType
       - mediaTypes
       - method
       - multipart
       - path
-      - servers
   HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
@@ -258,15 +243,9 @@ definitions:
       method:
         description: the HTTP Method used to process this operation
         $ref: './enums.yaml#/definitions/HttpMethod'
-      servers:
-        type: array
-        description: each method must have one or more servers that it is connected to.
-        items:
-          $ref: './http.yaml#/definitions/HttpServer'
     required:
       - method
       - path
-      - servers
   HttpResponse:
     type: object
     additionalProperties: false
@@ -363,28 +342,6 @@ definitions:
       - knownMediaType
       - mediaTypes
       - statusCodes
-  HttpServer:
-    type: object
-    description: |-
-      An object representing a Server.
-
-      If the uri supports template substitution, then the variables are required.
-    additionalProperties: false
-    properties:
-      url:
-        type: string
-        description: base url for the server
-      variables:
-        type: array
-        description: an optional collection of variables for server templating
-        items:
-          $ref: './http.yaml#/definitions/ServerVariable'
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-    required:
-      - language
-      - url
   HttpWithBodyRequest:
     type: object
     additionalProperties: false
@@ -404,7 +361,6 @@ definitions:
       - mediaTypes
       - method
       - path
-      - servers
   ImplicitOAuthFlow:
     type: object
     additionalProperties: false
@@ -522,39 +478,3 @@ definitions:
       - $ref: './http.yaml#/definitions/OAuth2SecurityScheme'
       - $ref: './http.yaml#/definitions/APIKeySecurityScheme'
       - $ref: './http.yaml#/definitions/OpenIdConnectSecurityScheme'
-  ServerVariable:
-    type: object
-    description: An object representing a Server Variable for server URL template substitution.
-    additionalProperties: false
-    properties:
-      $key:
-        type: string
-        description: common name of the aspect -- in OAI3 this was typically the key in the parent dictionary
-      schema:
-        description: the schema type for the server variable
-        $ref: './schemas.yaml#/definitions/ValueSchema'
-      description:
-        type: string
-        description: description of the aspect.
-      default:
-        type: string
-        description: 'The default value to use for substitution, which SHALL be sent if an alternate value is not supplied.'
-      apiVersions:
-        type: array
-        description: API versions that this applies to. Undefined means all versions
-        items:
-          $ref: './master.yaml#/definitions/ApiVersion'
-      deprecated:
-        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
-        $ref: './master.yaml#/definitions/Deprecation'
-      required:
-        type: boolean
-        description: if the value is marked 'required'.
-      language:
-        description: per-language information for this aspect
-        $ref: './master.yaml#/definitions/Languages'
-    required:
-      - $key
-      - description
-      - language
-      - schema
