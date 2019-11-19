@@ -1,6 +1,6 @@
 import { Aspect } from './aspect';
 import { SerializationFormats } from './formats';
-import { SchemaType, AllSchemaTypes } from './schema-type';
+import { AllSchemaTypes } from './schema-type';
 import { DeepPartial, } from '@azure-tools/codegen';
 import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';

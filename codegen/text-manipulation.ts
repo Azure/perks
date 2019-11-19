@@ -277,10 +277,10 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
   return ids;
 }
 
-export function pascalCase(identifier: string | Array<string>): string {
+export function pascalCase(identifier: string | Array<string>, removeDuplicates = true): string {
   return identifier === undefined ? '' : typeof identifier === 'string' ?
-    pascalCase(fixLeadingNumber(deconstruct(identifier))) :
-    [...removeSequentialDuplicates(identifier)].map(each => each.capitalize()).join('');
+    pascalCase(fixLeadingNumber(deconstruct(identifier)), removeDuplicates) :
+    (removeDuplicates ? [...removeSequentialDuplicates(identifier)] : identifier).map(each => each.capitalize()).join('');
 }
 
 
