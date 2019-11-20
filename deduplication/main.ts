@@ -13,7 +13,6 @@ import { YieldCPU } from '@azure-tools/tasks';
 
 type componentType = 'schemas' | 'responses' | 'parameters' | 'examples' | 'requestBodies' | 'headers' | 'securitySchemes' | 'links' | 'callbacks';
 
-const n = 0;
 function getMergedProfilesMetadata(dict1: Dictionary<string>, dict2: Dictionary<string>, path: string, originalLocations: Array<string>): { [key: string]: string } {
   const result: { [key: string]: string } = {};
   for (const { value, key } of items(dict1)) {
@@ -85,7 +84,7 @@ export class Deduplicator {
 
   // initially the target is the same as the original object
   private target: any;
-  constructor(originalFile: any) {
+  constructor(originalFile: any, protected deduplicateInlineModels = false) {
     this.target = clone(originalFile);
   }
 
@@ -272,7 +271,7 @@ export class Deduplicator {
             // iterate over all the components of the same type of the component
             for (const { key: anotherComponentUid, value: anotherComponent } of visit(this.target.components[type])) {
               // ignore merge with itself && anotherComponent already deleted (i.e. undefined)
-              if (anotherComponent !== undefined && componentUid !== anotherComponentUid && (type === 'schemas' || type === 'headers')) {
+              if (anotherComponent !== undefined && componentUid !== anotherComponentUid) {
 
                 // extract the another component's properties excluding metadata
                 const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
@@ -280,16 +279,24 @@ export class Deduplicator {
                 // TODO: Add more keys to ignore.
                 const keysToIgnore: Array<string> = ['description'];
 
-                const namesMatch =
+                const namesMatch = this.deduplicateInlineModels ?
                   anotherComponent[xMsMetadata].name.replace(/\d*$/, '') === component[xMsMetadata].name.replace(/\d*$/, '') ||
-                  anotherComponent[xMsMetadata].name.indexOf('·') > -1 ||
-                  component[xMsMetadata].name.indexOf('·') > -1;
+                  (anotherComponent[xMsMetadata].name.indexOf('·') > -1 && component[xMsMetadata].name.indexOf('·') > -1) :
 
-                const t1 = component['type'];
-                const t2 = anotherComponent['type'];
+                  anotherComponent[xMsMetadata].name.replace(/\d*$/, '') === component[xMsMetadata].name.replace(/\d*$/, '');
 
+                // const t1 = component['type'];
+                // const t2 = anotherComponent['type'];
+                // const typesAreSame = t1 === t2;
+                // const isObjectSchema = t1 === 'object' || t1 === undefined;
+                // const isStringSchemaWithFormat = !!(t1 === 'string' && component['format']);
+
+                // (type === 'schemas' && t1 === t2 && (t1 === 'object' || (t1 === 'string' && component['format']) || t1 === undefined))
                 // they should have the same name to be merged and they should be similar
-                if (((type === 'schemas' && t1 === t2 && (t1 === 'object' || (t1 === 'string' && component['format']) || t1 === undefined))) && namesMatch && areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {
+                if (namesMatch &&
+                  // typesAreSame &&
+                  // (isObjectSchema || isStringSchemaWithFormat) &&
+                  areSimilar(filteredAnotherComponent, filteredComponent, ...keysToIgnore)) {
 
                   // if the primary has a synthetic name, and the secondary doesn't use the secondary's name
                   if (name.indexOf('·') > 0 && anotherComponent[xMsMetadata].name.indexOf('·') === -1) {
