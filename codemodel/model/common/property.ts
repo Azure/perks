@@ -12,6 +12,15 @@ export interface Property extends Value {
   /** the wire name of this property */
   serializedName: string;
 
+  /** when a property is flattened, the property will be the set of serialized names to get to that target property.
+   * 
+   * If flattenedName is present, then this property is a flattened property.
+   * 
+   * (ie, ['properties','name'] )
+   * 
+   */
+  flattenedNames?: Array<string>;
+
   // add addtional x-ms-mutability-style-stuff 
   /** if this property is used as a discriminator for a polymorphic type */
   isDiscriminator?: boolean;

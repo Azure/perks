@@ -40,6 +40,9 @@ export interface HttpRequest extends Protocol {
    * When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.  */
   path: string;
 
+  /** the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use. */
+  uri: string;
+
   /** the HTTP Method used to process this operation */
   method: HttpMethod;
 }
