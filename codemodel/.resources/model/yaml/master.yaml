@@ -389,6 +389,16 @@ definitions:
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
+      flattenedNames:
+        type: array
+        description: |-
+          when a property is flattened, the property will be the set of serialized names to get to that target property.
+
+          If flattenedName is present, then this property is a flattened property.
+
+          (ie, ['properties','name'] )
+        items:
+          type: string
       isDiscriminator:
         type: boolean
         description: if this property is used as a discriminator for a polymorphic type

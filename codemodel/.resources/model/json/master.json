@@ -357,6 +357,13 @@
           "description": "the wire name of this property",
           "type": "string"
         },
+        "flattenedNames": {
+          "description": "when a property is flattened, the property will be the set of serialized names to get to that target property.\n\nIf flattenedName is present, then this property is a flattened property.\n\n(ie, ['properties','name'] )",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "isDiscriminator": {
           "description": "if this property is used as a discriminator for a polymorphic type",
           "type": "boolean"

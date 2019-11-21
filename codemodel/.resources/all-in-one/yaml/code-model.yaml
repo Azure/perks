@@ -672,6 +672,7 @@ definitions:
       - mediaTypes
       - method
       - path
+      - uri
   HttpBinaryResponse:
     type: object
     additionalProperties: false
@@ -746,6 +747,7 @@ definitions:
       - method
       - multipart
       - path
+      - uri
   HttpMultipartRequest:
     type: object
     additionalProperties: false
@@ -780,12 +782,16 @@ definitions:
         default: true
         enum:
           - true
+      uri:
+        type: string
+        description: the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.
     required:
       - knownMediaType
       - mediaTypes
       - method
       - multipart
       - path
+      - uri
   HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
@@ -824,9 +830,13 @@ definitions:
       method:
         description: the HTTP Method used to process this operation
         $ref: '#/definitions/HttpMethod'
+      uri:
+        type: string
+        description: the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.
     required:
       - method
       - path
+      - uri
   HttpResponse:
     type: object
     additionalProperties: false
@@ -942,6 +952,7 @@ definitions:
       - mediaTypes
       - method
       - path
+      - uri
   ImplementationLocation:
     type: string
     enum:
@@ -1413,6 +1424,16 @@ definitions:
     allOf:
       - $ref: '#/definitions/Value'
     properties:
+      flattenedNames:
+        type: array
+        description: |-
+          when a property is flattened, the property will be the set of serialized names to get to that target property.
+
+          If flattenedName is present, then this property is a flattened property.
+
+          (ie, ['properties','name'] )
+        items:
+          type: string
       isDiscriminator:
         type: boolean
         description: if this property is used as a discriminator for a polymorphic type

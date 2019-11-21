@@ -103,6 +103,7 @@ definitions:
       - mediaTypes
       - method
       - path
+      - uri
   HttpBinaryResponse:
     type: object
     additionalProperties: false
@@ -165,6 +166,7 @@ definitions:
       - method
       - multipart
       - path
+      - uri
   HttpMultipartRequest:
     type: object
     additionalProperties: false
@@ -199,12 +201,16 @@ definitions:
         default: true
         enum:
           - true
+      uri:
+        type: string
+        description: the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.
     required:
       - knownMediaType
       - mediaTypes
       - method
       - multipart
       - path
+      - uri
   HttpParameter:
     type: object
     description: extended metadata for HTTP operation parameters
@@ -243,9 +249,13 @@ definitions:
       method:
         description: the HTTP Method used to process this operation
         $ref: './enums.yaml#/definitions/HttpMethod'
+      uri:
+        type: string
+        description: the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.
     required:
       - method
       - path
+      - uri
   HttpResponse:
     type: object
     additionalProperties: false
@@ -361,6 +371,7 @@ definitions:
       - mediaTypes
       - method
       - path
+      - uri
   ImplicitOAuthFlow:
     type: object
     additionalProperties: false

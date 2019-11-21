@@ -350,6 +350,10 @@
           "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
           "type": "string"
         },
+        "uri": {
+          "description": "the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.",
+          "type": "string"
+        },
         "method": {
           "$ref": "./enums.json#/definitions/HttpMethod",
           "description": "the HTTP Method used to process this operation"
@@ -359,7 +363,8 @@
       "additionalProperties": false,
       "required": [
         "method",
-        "path"
+        "path",
+        "uri"
       ],
       "allOf": [
         {
@@ -388,7 +393,8 @@
         "knownMediaType",
         "mediaTypes",
         "method",
-        "path"
+        "path",
+        "uri"
       ],
       "allOf": [
         {
@@ -413,7 +419,8 @@
         "knownMediaType",
         "mediaTypes",
         "method",
-        "path"
+        "path",
+        "uri"
       ],
       "allOf": [
         {
@@ -439,7 +446,8 @@
         "mediaTypes",
         "method",
         "multipart",
-        "path"
+        "path",
+        "uri"
       ],
       "allOf": [
         {
@@ -473,6 +481,10 @@
           "description": "A relative path to an individual endpoint. \n\nThe field name MUST begin with a slash. \nThe path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. \nPath templating is allowed. \n\nWhen matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.",
           "type": "string"
         },
+        "uri": {
+          "description": "the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.",
+          "type": "string"
+        },
         "method": {
           "$ref": "./enums.json#/definitions/HttpMethod",
           "description": "the HTTP Method used to process this operation"
@@ -485,7 +497,8 @@
         "mediaTypes",
         "method",
         "multipart",
-        "path"
+        "path",
+        "uri"
       ]
     },
     "HttpHeader": {
