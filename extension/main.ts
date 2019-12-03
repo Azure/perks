@@ -424,6 +424,12 @@ export class ExtensionManager {
   }
 
   public async findPackage(name: string, version = 'latest'): Promise<Package> {
+    if (version.endsWith('.tgz')) {
+      // get the package metadata
+      const pm = await fetchPackageMetadata(version);
+
+      return new Package(pm, pm, this);
+    }
     // version can be a version or any one of the formats that
     // npm accepts (path, targz, git repo)
     const resolved = resolveName(name, version);

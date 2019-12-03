@@ -54,4 +54,8 @@ export interface Protocol extends Dictionary<any> {
 }
 
 export class Protocol extends Initializer implements Protocol {
+  constructor(objectInitializer?: DeepPartial<Protocol>) {
+    super();
+    this.apply(objectInitializer);
+  }
 }
