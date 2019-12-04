@@ -427,25 +427,43 @@ export class ExtensionManager {
     if (version.endsWith('.tgz')) {
       // get the package metadata
       const pm = await fetchPackageMetadata(version);
-
       return new Package(pm, pm, this);
     }
-    // version can be a version or any one of the formats that
-    // npm accepts (path, targz, git repo)
-    const resolved = resolveName(name, version);
-    let resolvedName = resolved.raw;
+    try {
+      // version can be a version or any one of the formats that
+      // npm accepts (path, targz, git repo)
+      const resolved = resolveName(name, version);
+      let resolvedName = resolved.raw;
 
-    // get all matching package versions for that
-    if (version.startsWith('~') || version.startsWith('^')) {
-      const vers = (await this.getPackageVersions(resolved.raw)).filter(each => semver.satisfies(each, version));
-      if (vers.length > 0) {
-        resolvedName = `${resolved.name}@${vers[0]}`;
+      // get all matching package versions for that
+      if (version.startsWith('~') || version.startsWith('^')) {
+        const vers = (await this.getPackageVersions(resolved.raw)).filter(each => semver.satisfies(each, version));
+        if (vers.length > 0) {
+          resolvedName = `${resolved.name}@${vers[0]}`;
+        }
       }
-    }
+      // get the package metadata
+      const pm = await fetchPackageMetadata(resolvedName);
+      return new Package(resolved, pm, this);
+    } catch (E) {
+      // in the event that there isn't a matching package by that name 
+      // we can try a fallback to see if a gh release has a package 
+      // (if it is an autorest.<whatever> project)
+      // https://github.com/Azure/${PROJECT}/releases/download/v${VERSION}/autorest/${PROJECT}-${VERSION}.tgz
+      if (name.startsWith('@autorest/')) {
+        const ghurl = `https://github.com/Azure/${name.replace('@autorest/', 'autorest.')}/releases/download/v${version}/${name.replace('@', '')}-${version}.tgz`;
+        try {
+          const pm = await fetchPackageMetadata(ghurl);
+          if (pm) {
+            return new Package(pm, pm, this);
+          }
+        } catch {
+          // no worries, return the previous error
+        }
+      }
 
-    // get the package metadata
-    const pm = await fetchPackageMetadata(resolvedName);
-    return new Package(resolved, pm, this);
+      throw E;
+    }
   }
 
   public async getInstalledExtension(name: string, version: string): Promise<Extension | null> {
