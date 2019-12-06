@@ -36,6 +36,10 @@ export class Oai2ToOai3 {
 
             referencePointer = referencePointer.replace('#', '');
             originalParameter = get(this.original, referencePointer);
+            // $ref'd parameters should be client parameters 
+            if (!originalParameter['x-ms-parameter-location']) {
+              originalParameter['x-ms-parameter-location'] = 'client';
+            }
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
@@ -65,8 +69,10 @@ export class Oai2ToOai3 {
               param.default = '';
             }
           }
-
-          server.variables[parameterName] = param;
+          // don't have empty parameters
+          if (parameterName) {
+            server.variables[parameterName] = param;
+          }
         }
       }
 
