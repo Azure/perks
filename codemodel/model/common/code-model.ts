@@ -34,7 +34,7 @@ export class CodeModel extends Metadata implements CodeModel {
   }
 
   getOperationGroup(group: string) {
-    let result = this.operationGroups.find(each => group === each.$key);
+    let result = this.operationGroups.find(each => group.toLowerCase() === each.$key.toLowerCase());
     if (!result) {
 
       result = new OperationGroup(group);
