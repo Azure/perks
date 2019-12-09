@@ -80,6 +80,11 @@ export enum SerializationStyle {
    * @in body
    */
   Binary = 'binary',
+
+  /**
+   * Tab delimited array
+   */
+  TabDelimited = 'tabDelimited'
 }
 
 export type QueryEncodingStyle =

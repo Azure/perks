@@ -118,6 +118,7 @@ definitions:
       - pipeDelimited
       - simple
       - spaceDelimited
+      - tabDelimited
       - xml
   StatusCode:
     enum:
