@@ -270,6 +270,7 @@ export class Oai2ToOai3 {
           }
         }
         if (parameterValue.collectionFormat === 'multi') {
+          parameterTarget.style = { value: 'form', pointer };
           parameterTarget.explode = { value: true, pointer };
         }
 
