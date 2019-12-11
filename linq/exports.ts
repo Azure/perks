@@ -7,3 +7,4 @@ export * from './new-linq';
 export * from './freeze';
 export * from './visitor';
 export * from './common';
+export * from './factory';
