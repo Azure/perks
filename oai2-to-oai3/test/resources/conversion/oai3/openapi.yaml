@@ -138,6 +138,7 @@
             "description": "Status values that need to be considered for filter",
             "required": true,
             "explode": true,
+            "style": "form",
             "schema": {
               "type": "array",
               "items": {
@@ -203,6 +204,7 @@
             "description": "Tags to filter by",
             "required": true,
             "explode": true,
+            "style": "form",
             "schema": {
               "type": "array",
               "items": {
