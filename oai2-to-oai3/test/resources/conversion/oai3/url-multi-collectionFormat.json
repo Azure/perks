@@ -24,6 +24,7 @@
             "in": "query",
             "description": "a null array of string using the multi-array format",
             "explode": true,
+            "style": "form",
             "schema": {
               "type": "array",
               "items": {
@@ -62,6 +63,7 @@
             "in": "query",
             "description": "an empty array [] of string using the multi-array format",
             "explode": true,
+            "style": "form",
             "schema": {
               "type": "array",
               "items": {
@@ -100,6 +102,7 @@
             "in": "query",
             "description": "an array of string ['ArrayQuery1', 'begin!*'();:@ &=+$,/?#[]end' , null, ''] using the mult-array format",
             "explode": true,
+            "style": "form",
             "schema": {
               "type": "array",
               "items": {

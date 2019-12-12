@@ -8,6 +8,9 @@
           "description": "Supported Cognitive Services endpoints (protocol and hostname, for example: https://westus.api.cognitive.microsoft.com).",
           "x-ms-parameter-location": "client",
           "x-ms-skip-url-encoding": true,
+          "x-ms-original": {
+            "$ref": "#/components/parameters/Endpoint"
+          },
           "default": ""
         }
       }

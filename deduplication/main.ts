@@ -184,7 +184,7 @@ export class Deduplicator {
             const { 'x-ms-metadata': metadataSchema, ...filteredAnotherPath } = anotherPath;
 
             // TODO: Add more keys to ignore.
-            const keysToIgnore: Array<string> = ['description', 'tags'];
+            const keysToIgnore: Array<string> = ['description', 'tags', 'x-ms-original', 'x-ms-examples'];
 
             // they should have the same name to be merged and they should be similar
             if (path[xMsMetadata].path === anotherPath[xMsMetadata].path && areSimilar(filteredPath, filteredAnotherPath, ...keysToIgnore)) {
@@ -277,7 +277,7 @@ export class Deduplicator {
                 const { 'x-ms-metadata': metadataSchema, ...filteredAnotherComponent } = anotherComponent;
 
                 // TODO: Add more keys to ignore.
-                const keysToIgnore: Array<string> = ['description'];
+                const keysToIgnore: Array<string> = ['description', 'x-ms-original', 'x-ms-examples'];
 
                 const namesMatch = this.deduplicateInlineModels ?
                   anotherComponent[xMsMetadata].name.replace(/\d*$/, '') === component[xMsMetadata].name.replace(/\d*$/, '') ||

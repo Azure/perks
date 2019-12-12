@@ -4,7 +4,8 @@
     "outDir": "dist",
     "rootDir": ".",
     "types": [
-      "mocha"
+      "mocha",
+      "node"
     ],
   },
   "include": [

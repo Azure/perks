@@ -33,6 +33,8 @@ export class Oai2ToOai3 {
             if (referencePointer.startsWith(`${this.originalFilename}#/parameters/`)) {
               referencePointer = referencePointer.replace(this.originalFilename, '');
             }
+            const rp = referencePointer;
+
 
             referencePointer = referencePointer.replace('#', '');
             originalParameter = get(this.original, referencePointer);
@@ -40,6 +42,7 @@ export class Oai2ToOai3 {
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
             }
+            originalParameter['x-ms-original'] = { $ref: rp.replace('#/parameters/', '#/components/parameters/') };
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
