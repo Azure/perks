@@ -4,7 +4,7 @@ import { Info } from './info';
 import { OperationGroup } from './operation';
 import { DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
 import { Parameter } from './parameter';
-import { ValueOrFactory, realize } from '@azure-tools/linq';
+import { ValueOrFactory, realize, sort } from '@azure-tools/linq';
 
 
 /** the model that contains all the information required to generate a service api */
@@ -35,6 +35,10 @@ export class CodeModel extends Metadata implements CodeModel {
     this.applyTo($this, objectInitializer);
   }
 
+  private get globals(): Array<Parameter> {
+    return (this.globalParameters || (this.globalParameters = []));
+  }
+
   getOperationGroup(group: string) {
     let result = this.operationGroups.find(each => group.toLowerCase() === each.$key.toLowerCase());
     if (!result) {
@@ -46,24 +50,28 @@ export class CodeModel extends Metadata implements CodeModel {
   }
 
   findGlobalParameter(predicate: (value: Parameter) => boolean) {
-    return this.globalParameters ? this.globalParameters.find(predicate) : undefined;
+    return this.globals.find(predicate);
   }
 
   addGlobalParameter(parameter: Parameter): Parameter
   addGlobalParameter(find: (value: Parameter) => boolean, create: () => Parameter): Parameter
   addGlobalParameter(predicateOrParameter: Parameter | ((value: Parameter) => boolean), create: ValueOrFactory<Parameter> = <any>undefined): Parameter {
+    try {
+      if (typeof predicateOrParameter !== 'function') {
+        // overload : parameter passed
+        this.globals.push(predicateOrParameter);
 
-    if (typeof predicateOrParameter !== 'function') {
-      // overload : parameter passed
-      (this.globalParameters || (this.globalParameters = [])).push(predicateOrParameter);
-      return predicateOrParameter;
-    }
+        return predicateOrParameter;
+      }
 
-    // overload : predicate, parameter passed
-    let p = this.findGlobalParameter(predicateOrParameter);
-    if (!p) {
-      (this.globalParameters || (this.globalParameters = [])).push(p = realize(create));
+      // overload : predicate, parameter passed
+      let p = this.findGlobalParameter(predicateOrParameter);
+      if (!p) {
+        this.globals.push(p = realize(create));
+      }
+      return p;
+    } finally {
+      this.globalParameters = sort.numericly.ascendingInvalidLast(this.globals, each => each.extensions?.['x-ms-priority']);
     }
-    return p;
   }
 }
