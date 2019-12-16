@@ -44,6 +44,7 @@ definitions:
       - path
       - query
       - uri
+      - virtual
   PathEncodingStyle:
     type: string
     enum:
@@ -139,6 +140,7 @@ definitions:
       - 300
       - 301
       - 302
+      - 303
       - 304
       - 305
       - 306
