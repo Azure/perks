@@ -65,3 +65,22 @@ function* _visitor(instance: AnyObject, visited: WeakSet<object>): Iterable<Leaf
 export function visitor(instance: AnyObject): Iterable<Leaf> {
   return _visitor(instance, new WeakSet<object>());
 }
+
+export function refCount(instance: AnyObject, target: AnyObject): number {
+  let count = 0;
+
+  for (const each of visitor(instance)) {
+    if (target === instance.instance) {
+      count++;
+    }
+  }
+  return count;
+}
+
+export function* references(instance: AnyObject, target: AnyObject): Iterable<AnyObject> {
+  for (const each of visitor(instance)) {
+    if (each === instance.instance) {
+      yield instance;
+    }
+  }
+}

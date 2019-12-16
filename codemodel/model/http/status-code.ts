@@ -4,7 +4,7 @@ export type StatusCode = Http1XX | Http2XX | Http3XX | Http4XX | Http5XX | Defau
 
 export type Http1XX = Continue | SwitchingProtocols | Processing | EarlyHints;
 export type Http2XX = OK | Created | Accepted | NonAuthoritativeInformation | NoContent | ResetContent | PartialContent | MultiStatus | AlreadyReported | IMUsed;
-export type Http3XX = MultipleChoices | MovedPermanently | Found | NotModified | UseProxy | SwitchProxy | TemporaryRedirect | PermanentRedirect;
+export type Http3XX = MultipleChoices | MovedPermanently | Found | SeeOther | NotModified | UseProxy | SwitchProxy | TemporaryRedirect | PermanentRedirect;
 export type Http4XX = BadRequest | Unauthorized | PaymentRequired | Forbidden | NotFound | MethodNotAllowed | NotAcceptable | ProxyAuthenticationRequired | RequestTimeout | Conflict | Gone | LengthRequired | PreconditionFailed | PayloadTooLarge | URITooLong | UnsupportedMediaType | RangeNotSatisfiable | ExpectationFailed | ImaTeapot | MisdirectedRequest | UnprocessableEntity | Locked | FailedDependency | TooEarly | UpgradeRequired | PreconditionRequired | TooManyRequests | RequestHeaderFieldsTooLarge | UnavailableForLegalReasons;
 export type Http5XX = InternalServerError | NotImplemented | BadGateway | ServiceUnavailable | GatewayTimeout | HTTPVersionNotSupported | VariantAlsoNegotiates | InsufficientStorage | LoopDetected | NotExtended | NetworkAuthenticationRequired;
 

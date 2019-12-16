@@ -18,6 +18,9 @@ export enum ParameterLocation {
   /** Used to associate the parameter to the Server/Uri (ie, parameterized host ) */
   Uri = 'uri',
 
+  /** Virtual parameters represent a connection to a specific spot in the body */
+  Virtual = 'virtual',
+
   /** Not directly used in a request, but may be used indirectly. */
   None = 'none'
 }
