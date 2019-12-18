@@ -30,7 +30,7 @@ export class IntrinsicOperation extends Extensions implements IntrinsicOperation
     this.details = {
       default: {
         uid: `intrinsic-operation:${uid()}`,
-        description: 'MISSING DESCRIPTION 07',
+        description: initializer?.description || '',
         name,
       }
     };

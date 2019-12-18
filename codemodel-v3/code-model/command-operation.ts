@@ -60,7 +60,7 @@ export class CommandOperation extends Extensions implements CommandOperation {
     this.details = {
       default: {
         uid: `command-operation:${uid()}`,
-        description: 'MISSING DESCRIPTION 01',
+        description: initializer?.description || '',
         name,
       }
     };

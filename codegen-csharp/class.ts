@@ -34,7 +34,7 @@ export class Class extends Type {
     namespace.addClass(this);
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Class ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
   }
 

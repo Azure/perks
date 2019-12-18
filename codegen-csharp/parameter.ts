@@ -31,7 +31,7 @@ export class Parameter extends Variable {
     this.apply(objectInitializer);
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Parameter ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
   }
 

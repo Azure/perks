@@ -15,7 +15,7 @@ export class Interface extends Type {
     parent.addInterface(this);
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Interface ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
   }
 

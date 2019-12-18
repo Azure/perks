@@ -34,7 +34,7 @@ export class Field extends Variable {
     this.apply(objectInitializer);
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Field ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
   }
 

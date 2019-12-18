@@ -43,10 +43,10 @@ export class Method extends Statements {
     }
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Method ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
     if (!this.returnsDescription.trim()) {
-      this.returnsDescription = `FIXME: Method ${name} <returns> is MISSING DESCRIPTION`;
+      this.returnsDescription = '';
     }
   }
 

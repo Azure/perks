@@ -55,7 +55,7 @@ export class Property extends Variable implements Instance {
     this.apply(objectInitializer);
 
     if (!this.description.trim()) {
-      this.description = `FIXME: Property ${name} is MISSING DESCRIPTION`;
+      this.description = '';
     }
   }
 
@@ -172,8 +172,8 @@ ${indent(g, 2)}
     const e = `${this.value}.${methodName}(${parameters.joinWith(valueOf)})`;
     return intersect(
       toExpression(e), {
-        implementation: `${e};`
-      });
+      implementation: `${e};`
+    });
   }
 
 }

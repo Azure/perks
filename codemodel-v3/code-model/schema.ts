@@ -177,7 +177,7 @@ export class Property extends Extensions implements Property {
       default: {
         readOnly: false,
         uid: `property:${uid()}`,
-        description: 'MISSING DESCRIPTION 03',
+        description: initializer?.description || '',
         name,
         required: false
       }

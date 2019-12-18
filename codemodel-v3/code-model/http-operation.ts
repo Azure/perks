@@ -170,7 +170,7 @@ export class NewResponse extends Extensions implements NewResponse {
       default: {
         uid: `response:${uid()}`,
         isErrorResponse: false,
-        description: 'MISSING DESCRIPTION 09',
+        description: description || objectInitializer?.description || '',
         name: `${responseCode} ${mimeTypes.join(' ')}`,
       }
     };
@@ -194,7 +194,7 @@ export class HttpOperation extends Extensions implements HttpOperation {
     this.details = {
       default: {
         uid: `http-operation:${uid()}`,
-        description: 'MISSING DESCRIPTION 05',
+        description: initializer?.description || '',
         name: operationId,
       }
     };
@@ -253,7 +253,7 @@ export class HttpOperationParameter extends Extensions implements HttpOperationP
     this.details = {
       default: {
         uid: `http-parameter:${uid()}`,
-        description: 'MISSING DESCRIPTION 06',
+        description: initializer?.description || '',
         location: implementation,
         name,
       }
