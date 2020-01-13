@@ -6,7 +6,7 @@
 import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@azure-tools/async-io';
 import { Progress, Subscribe } from '@azure-tools/eventing';
 import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@azure-tools/tasks';
-import { ChildProcess, spawn, SpawnOptions } from 'child_process';
+import { ChildProcess, spawn, spawnSync, SpawnOptions } from 'child_process';
 import { resolve as npmResolvePackage } from 'npm-package-arg';
 import { homedir, tmpdir } from 'os';
 import * as pacote from 'pacote';
@@ -14,6 +14,74 @@ import { basename, delimiter, dirname, extname, isAbsolute, join, normalize, res
 import * as semver from 'semver';
 import { readFileSync } from 'fs';
 
+export async function updatePythonPath(command: Array<string>) {
+  const detect = quoteIfNecessary('import sys; print(sys.hexversion >= 0x03060000)');
+  const path = process.env[getPathVariableName()];
+
+  const pyexe = process.env['AUTOREST_PYTHON_EXE'];
+  if (pyexe) {
+    command[0] = pyexe;
+    return;
+  }
+
+  // detect the python interpreter.
+  const py = await getFullPath('py', path);
+  try {
+    if (py && process.platform === 'win32') {
+      // check if 'py -3' works
+      if (spawnSync(py, ['-3', '-c', detect], { encoding: 'utf8', shell: true }).stdout.toLowerCase().trim() === 'true') {
+        command[0] = py;
+        command.splice(1, 0, '-3');
+        return;
+      }
+    }
+  }
+  catch {
+    // no worries
+  }
+
+  const python3 = await getFullPath('python3', path);
+  try {
+    if (python3) {
+      // check if 'python3' works
+      if (spawnSync(python3, ['-c', detect], { encoding: 'utf8', shell: true }).stdout.toLowerCase().trim() === 'true') {
+        command[0] = python3;
+        return;
+      }
+    }
+  }
+  catch {
+    // no worries
+  }
+
+  const python = await getFullPath('python', path);
+  try {
+    if (python) {
+      // check if 'python' works (ie, is a v3)
+
+      if (spawnSync(python, ['-c', detect], { encoding: 'utf8', shell: true }).stdout.toLowerCase().trim() === 'true') {
+        command[0] = python;
+        return;
+      }
+    }
+  }
+  catch {
+    // no worries
+  }
+
+  switch (process.platform) {
+    case 'win32':
+
+      console.error('Python interpreter not found -- please install from Microsoft Store or from python.org (at least 3.6)');
+
+    case 'darwin':
+      console.error('Python interpreter not found -- please install from homebrew (at least 3.6)');
+
+    default:
+      console.error('Python interpreter not found -- please install python >= 3.6');
+  }
+  throw new Error('Python interpreter not available.');
+}
 
 function quoteIfNecessary(text: string): string {
   if (text && text.indexOf(' ') > -1 && text.charAt(0) != '"') {
@@ -638,8 +706,19 @@ export class ExtensionManager {
     env[PathVar] = `${join(extension.modulePath, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
     env[PathVar] = `${join(extension.location, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
 
-    if (command[0] === 'node' || command[0] === 'node.exe') {
-      command[0] = nodePath;
+    // find appropriate path for interpreter 
+    switch (command[0].toLowerCase()) {
+      case 'node':
+      case 'node.exe':
+        command[0] = nodePath;
+        break;
+
+      case 'python':
+      case 'python.exe':
+      case 'python3':
+      case 'python3.exe':
+        await updatePythonPath(command);
+        break;
     }
 
     // ensure parameters requiring quotes have them.
