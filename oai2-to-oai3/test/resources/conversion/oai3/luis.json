@@ -11,6 +11,10 @@
           "x-ms-original": {
             "$ref": "#/components/parameters/Endpoint"
           },
+          "x-in": "path",
+          "x-name": "Endpoint",
+          "x-required": true,
+          "x-type": "string",
           "default": ""
         }
       }
