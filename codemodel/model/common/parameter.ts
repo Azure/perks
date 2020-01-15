@@ -24,7 +24,7 @@ export interface Parameter extends Value {
   /** suggested implementation location for this parameter */
   implementation?: ImplementationLocation;
 
-  /**  */
+  /** When a parameter is flattened, it will be left in the list, but marked hidden (so, don't generate those!) */
   hidden?: boolean;
 }
 
@@ -52,6 +52,6 @@ export class VirtualParameter extends Parameter implements VirtualParameter {
   constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Parameter>) {
     super(name, description, schema);
 
-    this.filteredApply(['schema'], initializer);
+    this.applyWithExclusions(['schema'], initializer);
   }
 }

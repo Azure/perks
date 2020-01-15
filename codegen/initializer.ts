@@ -42,13 +42,13 @@ interface DeepPartialMap<KeyType, ValueType> extends Map<NDeepPartial<KeyType>, 
 
 const empty = new Set<string>();
 
-function applyTo(source: any, target: any, filter: Set<string>, cache = new Set<any>(), ) {
+function applyTo(source: any, target: any, exclusions: Set<string>, cache = new Set<any>(), ) {
   if (cache.has(source)) {
     throw new Error('Circular refrenced models are not permitted in apply() initializers.');
   }
 
   for (const i of <any>keys(source)) {
-    if (filter.has(i)) {
+    if (exclusions.has(i)) {
       continue;
     }
 
@@ -59,7 +59,7 @@ function applyTo(source: any, target: any, filter: Set<string>, cache = new Set<
         if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
           cache.add(source);
           try {
-            applyTo(source[i], target[i], filter, cache);
+            applyTo(source[i], target[i], exclusions, cache);
           } catch (E) {
             console.error(`  in property: ${i} `);
             throw E;
@@ -107,8 +107,8 @@ export class Initializer {
       applyTo(each, this, empty);
     }
   }
-  protected filteredApply<T>(exceptions: Array<string>, ...initializer: Array<DeepPartial<T> | undefined>) {
-    const filter = new Set(exceptions);
+  protected applyWithExclusions<T>(exclusions: Array<string>, ...initializer: Array<DeepPartial<T> | undefined>) {
+    const filter = new Set(exclusions);
     for (const each of initializer) {
       applyTo(each, this, filter);
     }
