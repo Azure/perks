@@ -2,7 +2,7 @@ import { Schema, Type, DEFAULT_SAFE_SCHEMA } from 'js-yaml';
 
 import { CodeModel } from './common/code-model';
 import { Metadata, CSharpLanguage, Language } from './common/metadata';
-import { Parameter } from './common/parameter';
+import { Parameter, VirtualParameter } from './common/parameter';
 import { Property } from './common/property';
 import { Value } from './common/value';
 import { Operation, Request, OperationGroup } from './common/operation';
@@ -53,6 +53,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(BinaryResponse),
   TypeInfo(Response),
   TypeInfo(Parameter),
+  TypeInfo(VirtualParameter),
   TypeInfo(Property),
   TypeInfo(Value),
   TypeInfo(Operation),

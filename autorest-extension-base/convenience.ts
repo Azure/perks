@@ -15,9 +15,11 @@ async function getModel<T>(service: Host, yamlSchema: Schema = DEFAULT_SAFE_SCHE
   if (files.length === 0) {
     throw new Error('Inputs missing.');
   }
+  const content = await service.ReadFile(filename);
+
   return {
     filename,
-    model: deserialize<T>(await service.ReadFile(filename), filename, yamlSchema)
+    model: deserialize<T>(content, filename, yamlSchema)
   };
 }
 
