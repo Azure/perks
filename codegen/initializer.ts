@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { keys } from '@azure-tools/linq';
+import { keys, items } from '@azure-tools/linq';
 
 export type Primitive = string | number | boolean | bigint | symbol | undefined | null;
 
@@ -40,21 +40,30 @@ export type NDeepPartial<T> =
 interface DeepPartialSet<ItemType> extends Set<NDeepPartial<ItemType>> { }
 interface DeepPartialMap<KeyType, ValueType> extends Map<NDeepPartial<KeyType>, NDeepPartial<ValueType>> { }
 
+const empty = new Set<string>();
 
-function applyTo(source: any, target: any, cache = new Set<any>()) {
+function applyTo(source: any, target: any, filter: Set<string>, cache = new Set<any>(), ) {
   if (cache.has(source)) {
     throw new Error('Circular refrenced models are not permitted in apply() initializers.');
   }
 
   for (const i of <any>keys(source)) {
-    switch (typeof source[i]) {
+    if (filter.has(i)) {
+      continue;
+    }
 
+    switch (typeof source[i]) {
       case 'object':
 
         // merge objects
         if (source[i] != null && source[i] != undefined && typeof target[i] === 'object') {
           cache.add(source);
-          applyTo(source[i], target[i], cache);
+          try {
+            applyTo(source[i], target[i], filter, cache);
+          } catch (E) {
+            console.error(`  in property: ${i} `);
+            throw E;
+          }
           cache.delete(source);
           continue;
         }
@@ -95,13 +104,19 @@ function applyTo(source: any, target: any, cache = new Set<any>()) {
 export class Initializer {
   protected apply<T>(...initializer: Array<DeepPartial<T> | undefined>) {
     for (const each of initializer) {
-      applyTo(each, this);
+      applyTo(each, this, empty);
+    }
+  }
+  protected filteredApply<T>(exceptions: Array<string>, ...initializer: Array<DeepPartial<T> | undefined>) {
+    const filter = new Set(exceptions);
+    for (const each of initializer) {
+      applyTo(each, this, filter);
     }
   }
 
   protected applyTo<T>($this: T, ...initializer: Array<DeepPartial<T> | undefined>) {
     for (const each of initializer) {
-      applyTo(each, $this);
+      applyTo(each, $this, empty);
     }
   }
 }
