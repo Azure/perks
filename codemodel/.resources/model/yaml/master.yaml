@@ -375,6 +375,9 @@ definitions:
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
+      hidden:
+        type: boolean
+        description: 'When a parameter is flattened, it will be left in the list, but marked hidden (so, don''t generate those!)'
       implementation:
         description: suggested implementation location for this parameter
         $ref: './enums.yaml#/definitions/ImplementationLocation'
@@ -547,6 +550,80 @@ definitions:
       - language
       - protocol
       - schema
+  VirtualParameter:
+    type: object
+    additionalProperties: false
+    properties:
+      schema:
+        description: the schema of this Value
+        $ref: './schemas.yaml#/definitions/Schema'
+      apiVersions:
+        type: array
+        description: API versions that this applies to. Undefined means all versions
+        items:
+          $ref: './master.yaml#/definitions/ApiVersion'
+      assumedValue:
+        description: the value that the remote will assume if this value is not present
+      clientDefaultValue:
+        description: the value that the client should provide if the consumer doesn't provide one
+      deprecated:
+        description: 'deprecation information -- ie, when this aspect doesn''t apply and why'
+        $ref: './master.yaml#/definitions/Deprecation'
+      externalDocs:
+        description: External Documentation Links
+        $ref: './master.yaml#/definitions/ExternalDocumentation'
+      hidden:
+        type: boolean
+        description: 'When a parameter is flattened, it will be left in the list, but marked hidden (so, don''t generate those!)'
+      implementation:
+        description: suggested implementation location for this parameter
+        $ref: './enums.yaml#/definitions/ImplementationLocation'
+      nullable:
+        type: boolean
+        description: can null be passed in instead
+      required:
+        type: boolean
+        description: if the value is marked 'required'.
+      summary:
+        type: string
+        description: a short description
+      extensions:
+        description: additional metadata extensions dictionary
+        $ref: './master.yaml#/definitions/Dictionary<any>'
+      language:
+        description: per-language information for this aspect
+        $ref: './master.yaml#/definitions/Languages'
+      protocol:
+        description: per-protocol information for this aspect
+        $ref: './master.yaml#/definitions/Protocols'
+    required:
+      - language
+      - protocol
+      - schema
+  VirutalParameter:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: './master.yaml#/definitions/Parameter'
+    properties:
+      originalParameter:
+        description: the original body parameter that this parameter is in effect replacing
+        $ref: './master.yaml#/definitions/Parameter'
+      pathToProperty:
+        type: array
+        description: 'if this parameter is for a nested property, this is the path of properties it takes to get there'
+        items:
+          $ref: './master.yaml#/definitions/Property'
+      targetProperty:
+        description: the target property this virtual parameter represents
+        $ref: './master.yaml#/definitions/Property'
+    required:
+      - language
+      - originalParameter
+      - pathToProperty
+      - protocol
+      - schema
+      - targetProperty
   XmlSerlializationFormat:
     type: object
     additionalProperties: false
