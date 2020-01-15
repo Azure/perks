@@ -33,6 +33,6 @@ export class Property extends Value implements Property {
 
     this.serializedName = name;
     // this.language.default.uid = `property:${uid()}`;
-    this.filteredApply(['name', 'description', 'schema'], initializer);
+    this.filteredApply(['schema'], initializer);
   }
 }
