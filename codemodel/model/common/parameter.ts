@@ -36,7 +36,7 @@ export class Parameter extends Value implements Parameter {
   }
 }
 
-export interface VirutalParameter extends Parameter {
+export interface VirtualParameter extends Parameter {
   /** the original body parameter that this parameter is in effect replacing  */
   originalParameter: Parameter;
 
@@ -45,13 +45,16 @@ export interface VirutalParameter extends Parameter {
 
   /** the target property this virtual parameter represents */
   targetProperty: Property;
-
 }
 
 export class VirtualParameter extends Parameter implements VirtualParameter {
-  constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Parameter>) {
+  constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<VirtualParameter>) {
     super(name, description, schema);
 
     this.applyWithExclusions(['schema'], initializer);
   }
+}
+
+export function isVirtualParameter(parameter: Parameter): parameter is VirtualParameter {
+  return !!((<any>parameter).originalParameter);
 }

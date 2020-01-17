@@ -599,7 +599,7 @@
         }
       ]
     },
-    "VirutalParameter": {
+    "VirtualParameter": {
       "type": "object",
       "properties": {
         "originalParameter": {
@@ -632,75 +632,6 @@
         {
           "$ref": "./master.json#/definitions/Parameter"
         }
-      ]
-    },
-    "VirtualParameter": {
-      "type": "object",
-      "properties": {
-        "implementation": {
-          "$ref": "./enums.json#/definitions/ImplementationLocation",
-          "description": "suggested implementation location for this parameter"
-        },
-        "hidden": {
-          "description": "When a parameter is flattened, it will be left in the list, but marked hidden (so, don't generate those!)",
-          "type": "boolean"
-        },
-        "schema": {
-          "$ref": "./schemas.json#/definitions/Schema",
-          "description": "the schema of this Value"
-        },
-        "required": {
-          "description": "if the value is marked 'required'.",
-          "type": "boolean"
-        },
-        "nullable": {
-          "description": "can null be passed in instead",
-          "type": "boolean"
-        },
-        "assumedValue": {
-          "description": "the value that the remote will assume if this value is not present"
-        },
-        "clientDefaultValue": {
-          "description": "the value that the client should provide if the consumer doesn't provide one"
-        },
-        "summary": {
-          "description": "a short description",
-          "type": "string"
-        },
-        "apiVersions": {
-          "description": "API versions that this applies to. Undefined means all versions",
-          "type": "array",
-          "items": {
-            "$ref": "./master.json#/definitions/ApiVersion"
-          }
-        },
-        "deprecated": {
-          "$ref": "./master.json#/definitions/Deprecation",
-          "description": "deprecation information -- ie, when this aspect doesn't apply and why"
-        },
-        "externalDocs": {
-          "$ref": "./master.json#/definitions/ExternalDocumentation",
-          "description": "External Documentation Links"
-        },
-        "language": {
-          "$ref": "./master.json#/definitions/Languages",
-          "description": "per-language information for this aspect"
-        },
-        "protocol": {
-          "$ref": "./master.json#/definitions/Protocols",
-          "description": "per-protocol information for this aspect"
-        },
-        "extensions": {
-          "$ref": "./master.json#/definitions/Dictionary<any>",
-          "description": "additional metadata extensions dictionary"
-        }
-      },
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "schema"
       ]
     },
     "Response": {

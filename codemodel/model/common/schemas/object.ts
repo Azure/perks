@@ -2,7 +2,7 @@ import { SchemaType } from '../schema-type';
 import { Schema, ComplexSchema } from '../schema';
 import { DeepPartial } from '@azure-tools/codegen';
 import { Property } from '../property';
-import { Dictionary } from '@azure-tools/linq';
+import { Dictionary, values } from '@azure-tools/linq';
 
 export interface Relations {
   immediate: Array<ComplexSchema>;
@@ -77,5 +77,26 @@ export class ObjectSchema extends Schema implements ObjectSchema {
   addProperty(property: Property) {
     (this.properties = this.properties || []).push(property);
     return property;
+  }
+}
+
+export function isObjectSchema(schema: Schema): schema is ObjectSchema {
+  return schema.type === SchemaType.Object;
+}
+
+
+export function* getAllProperties(schema: ObjectSchema): Iterable<Property> {
+  for (const parent of values(schema.parents?.immediate)) {
+    if (isObjectSchema(parent)) {
+      yield* getAllProperties(parent);
+    }
+  }
+  yield* values(schema.properties);
+}
+export function* getAllParentProperties(schema: ObjectSchema): Iterable<Property> {
+  for (const parent of values(schema.parents?.immediate)) {
+    if (isObjectSchema(parent)) {
+      yield* getAllProperties(parent);
+    }
   }
 }

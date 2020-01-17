@@ -7,6 +7,7 @@ const TJS = require("typescript-json-schema");
 const tsm = require('ts-morph');
 
 const project = new tsm.Project({ tsConfigFilePath: `{__dirname}/../tsconfig.json` });
+project.compilerOptions.set({ downlevelIteration: true });
 const x = project.getSourceFiles().map(each => each.getInterfaces());
 
 function flatten(arr) {
