@@ -469,7 +469,9 @@ export class Oai2ToOai3 {
           break;
         case 'additionalProperties':
           if (typeof (value) === 'boolean') {
-            target[key] = { value, pointer };
+            if (value === true) {
+              target[key] = { value, pointer };
+            } // false is assumed anyway in autorest.
           } else {
             target[key] = this.newObject(pointer);
             this.visitSchema(target[key], value, childIterator);
