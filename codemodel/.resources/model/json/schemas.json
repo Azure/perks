@@ -401,7 +401,7 @@
         "properties": {
           "type": "array",
           "items": {
-            "$ref": "./master.json#/definitions/Property"
+            "$ref": "./master.json#/definitions/GroupProperty"
           }
         }
       },

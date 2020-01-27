@@ -638,6 +638,22 @@ definitions:
     required:
       - language
       - value
+  GroupProperty:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/Property'
+    properties:
+      originalParameter:
+        type: array
+        items:
+          $ref: '#/definitions/Parameter'
+    required:
+      - language
+      - originalParameter
+      - protocol
+      - schema
+      - serializedName
   GroupSchema:
     type: object
     additionalProperties: false
@@ -647,7 +663,7 @@ definitions:
       properties:
         type: array
         items:
-          $ref: '#/definitions/Property'
+          $ref: '#/definitions/GroupProperty'
     required:
       - language
       - protocol

@@ -191,6 +191,22 @@ definitions:
     required:
       - language
       - value
+  GroupProperty:
+    type: object
+    additionalProperties: false
+    allOf:
+      - $ref: './master.yaml#/definitions/Property'
+    properties:
+      originalParameter:
+        type: array
+        items:
+          $ref: './master.yaml#/definitions/Parameter'
+    required:
+      - language
+      - originalParameter
+      - protocol
+      - schema
+      - serializedName
   Info:
     type: object
     description: code model information

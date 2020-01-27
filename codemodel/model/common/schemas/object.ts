@@ -3,6 +3,7 @@ import { Schema, ComplexSchema } from '../schema';
 import { DeepPartial } from '@azure-tools/codegen';
 import { Property } from '../property';
 import { Dictionary, values } from '@azure-tools/linq';
+import { Parameter } from '../parameter';
 
 export interface Relations {
   immediate: Array<ComplexSchema>;
@@ -28,9 +29,22 @@ export class Discriminator implements Discriminator {
   }
 }
 
+export interface GroupProperty extends Property {
+  originalParameter: Array<Parameter>;
+}
+
+export class GroupProperty extends Property implements GroupProperty {
+  originalParameter = new Array<Parameter>();
+  constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<GroupProperty>) {
+    super(name, description, schema);
+
+    this.applyWithExclusions(['schema'], initializer);
+  }
+}
+
 export interface GroupSchema extends Schema {
   type: SchemaType.Group;
-  properties?: Array<Property>;
+  properties?: Array<GroupProperty>;
 }
 export class GroupSchema extends Schema implements GroupSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<GroupSchema>) {
@@ -38,7 +52,7 @@ export class GroupSchema extends Schema implements GroupSchema {
     this.apply(objectInitializer);
   }
 
-  add(property: Property) {
+  add(property: GroupProperty) {
     (this.properties = this.properties || []).push(property);
     return property;
   }
@@ -84,6 +98,7 @@ export function isObjectSchema(schema: Schema): schema is ObjectSchema {
   return schema.type === SchemaType.Object;
 }
 
+// gs01: todo/Note -- these two need to be commented out to run the schema generation script
 
 export function* getAllProperties(schema: ObjectSchema): Iterable<Property> {
   for (const parent of values(schema.parents?.immediate)) {
