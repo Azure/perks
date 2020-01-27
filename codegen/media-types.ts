@@ -67,6 +67,11 @@ export function knownMediaType(mediaType: string) {
     if (mt.type === 'multipart' && mt.subtype === 'form-data') {
       return KnownMediaType.Multipart;
     }
+    if (mt.type === application) {
+      // at this point, an unrecognized application/* is considered a binary format 
+      // since we don't have any other way of dealing with it. 
+      return KnownMediaType.Binary;
+    }
     if (mt.type === 'text') {
       return KnownMediaType.Text;
     }
