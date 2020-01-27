@@ -25,7 +25,10 @@ export interface Parameter extends Value {
   implementation?: ImplementationLocation;
 
   /** When a parameter is flattened, it will be left in the list, but marked hidden (so, don't generate those!) */
-  hidden?: boolean;
+  flattened?: boolean;
+
+  /** When a parameter is grouped into another, it will be marked 'grouped' */
+  grouped?: boolean;
 }
 
 export class Parameter extends Value implements Parameter {

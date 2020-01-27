@@ -391,8 +391,12 @@
           "$ref": "./enums.json#/definitions/ImplementationLocation",
           "description": "suggested implementation location for this parameter"
         },
-        "hidden": {
+        "flattened": {
           "description": "When a parameter is flattened, it will be left in the list, but marked hidden (so, don't generate those!)",
+          "type": "boolean"
+        },
+        "grouped": {
+          "description": "When a parameter is grouped into another, it will be marked 'grouped'",
           "type": "boolean"
         }
       },

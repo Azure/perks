@@ -391,9 +391,12 @@ definitions:
     allOf:
       - $ref: './master.yaml#/definitions/Value'
     properties:
-      hidden:
+      flattened:
         type: boolean
         description: 'When a parameter is flattened, it will be left in the list, but marked hidden (so, don''t generate those!)'
+      grouped:
+        type: boolean
+        description: 'When a parameter is grouped into another, it will be marked ''grouped'''
       implementation:
         description: suggested implementation location for this parameter
         $ref: './enums.yaml#/definitions/ImplementationLocation'
