@@ -309,7 +309,7 @@ definitions:
       properties:
         type: array
         items:
-          $ref: './master.yaml#/definitions/Property'
+          $ref: './master.yaml#/definitions/GroupProperty'
     required:
       - language
       - protocol

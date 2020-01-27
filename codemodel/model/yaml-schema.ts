@@ -19,7 +19,7 @@ import { Protocols } from './common/protocols';
 import { ApiVersion } from './common/api-version';
 import { HttpWithBodyRequest, HttpParameter, HttpBinaryRequest, HttpMultipartRequest, HttpBinaryResponse, HttpRequest, HttpResponse, HttpModel, HttpHeader } from './http/http';
 import { Response, SchemaResponse, BinaryResponse } from './common/response';
-import { GroupSchema, ObjectSchema, Discriminator, Relations } from './common/schemas/object';
+import { GroupSchema, ObjectSchema, Discriminator, Relations, GroupProperty } from './common/schemas/object';
 import { FlagSchema, FlagValue } from './common/schemas/flag';
 import { NumberSchema } from './common/schemas/number';
 import { StringSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema } from './common/schemas/string';
@@ -55,6 +55,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(Parameter),
   TypeInfo(VirtualParameter),
   TypeInfo(Property),
+  TypeInfo(GroupProperty),
   TypeInfo(Value),
   TypeInfo(Operation),
   TypeInfo(GroupSchema),
