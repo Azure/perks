@@ -519,7 +519,7 @@ export class ExtensionManager {
       // (if it is an autorest.<whatever> project)
       // https://github.com/Azure/${PROJECT}/releases/download/v${VERSION}/autorest/${PROJECT}-${VERSION}.tgz
       if (name.startsWith('@autorest/')) {
-        const ghurl = `https://github.com/Azure/${name.replace('@autorest/', 'autorest.')}/releases/download/v${version}/${name.replace('@', '').replace('autorest/', 'autorest-')}-${version}.tgz`;
+        const ghurl = `https://github.com/Azure/${name.replace('@autorest/', 'autorest.')}/releases/download/v${version}/${name.replace('@', '').replace('autorest/', 'autorest-')}-${version.replace(/_/g, '-')}.tgz`;
         try {
           const pm = await fetchPackageMetadata(ghurl);
           if (pm) {
