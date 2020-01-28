@@ -394,9 +394,9 @@ definitions:
       flattened:
         type: boolean
         description: 'When a parameter is flattened, it will be left in the list, but marked hidden (so, don''t generate those!)'
-      grouped:
-        type: boolean
-        description: 'When a parameter is grouped into another, it will be marked ''grouped'''
+      groupedBy:
+        description: 'When a parameter is grouped into another, this will tell where the parameter got grouped into.'
+        $ref: './master.yaml#/definitions/Parameter'
       implementation:
         description: suggested implementation location for this parameter
         $ref: './enums.yaml#/definitions/ImplementationLocation'

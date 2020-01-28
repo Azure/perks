@@ -99,7 +99,6 @@ export function isObjectSchema(schema: Schema): schema is ObjectSchema {
 }
 
 // gs01: todo/Note -- these two need to be commented out to run the schema generation script
-
 export function* getAllProperties(schema: ObjectSchema): Iterable<Property> {
   for (const parent of values(schema.parents?.immediate)) {
     if (isObjectSchema(parent)) {
