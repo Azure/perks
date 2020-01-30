@@ -43,19 +43,19 @@ export async function ReadUri(uri: string, headers: { [key: string]: string } = 
   try {
     const readable = await getUriAsync(actualUri, { headers: headers });
 
-    const readAll = new Promise<string>(function (resolve, reject) {
-      let result = '';
-      readable.on('data', data => result += data.toString());
+    const readAll = new Promise<Buffer>(function (resolve, reject) {
+      let result = Buffer.alloc(0);
+      readable.on('data', data => result = Buffer.concat([result, data]));
       readable.on('end', () => resolve(result));
       readable.on('error', err => reject(err));
     });
 
     let result = await readAll;
     // fix up UTF16le files
-    if (result.charCodeAt(0) === 65533 && result.charCodeAt(1) === 65533) {
-      result = Buffer.from(result.slice(2)).toString('utf16le');
+    if (result.readUInt16LE(0) === 65533 && result.readUInt16LE(1) === 65533) {
+      return stripBom(result.slice(2).toString('utf16le'));
     }
-    return stripBom(result);
+    return stripBom(result.toString('utf8'));
   } catch (e) {
     throw new Error(`Failed to load '${uri}' (${e})`);
   }
