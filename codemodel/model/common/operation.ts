@@ -1,10 +1,11 @@
-import { Parameter } from './parameter';
+import { Parameter, ImplementationLocation } from './parameter';
 import { Response } from './response';
 import { Metadata } from './metadata';
 import { Aspect } from './aspect';
 import { ApiVersion } from './api-version';
-import { Dictionary } from '@azure-tools/linq';
+import { Dictionary, values } from '@azure-tools/linq';
 import { DeepPartial } from '@azure-tools/codegen';
+import { SchemaType } from './schema-type';
 
 /** represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)  */
 export interface Operation extends Aspect {
@@ -26,6 +27,10 @@ export interface Operation extends Aspect {
 export interface Request extends Metadata {
   /** the parameter inputs to the operation */
   parameters?: Array<Parameter>;
+
+  /** a filtered list of parameters that is (assumably) the actual method signature parameters */
+  signatureParameters?: Array<Parameter>;
+
 }
 
 
@@ -37,9 +42,20 @@ export class Request extends Metadata implements Request {
 
   addParameter(parameter: Parameter) {
     (this.parameters = this.parameters || []).push(parameter);
+    this.updateSignatureParameters();
     return parameter;
   }
 
+  updateSignatureParameters() {
+    if (this.parameters) {
+      this.signatureParameters = values(this.parameters).where(each =>
+        each.schema.type !== SchemaType.Constant &&
+        each.implementation !== ImplementationLocation.Client &&
+        !each.groupedBy &&
+        !each.flattened
+      ).toArray();
+    }
+  }
 }
 export class Operation extends Aspect implements Operation {
   constructor($key: string, description: string, initializer?: DeepPartial<Operation>) {

@@ -478,6 +478,11 @@ definitions:
         description: the parameter inputs to the operation
         items:
           $ref: './master.yaml#/definitions/Parameter'
+      signatureParameters:
+        type: array
+        description: a filtered list of parameters that is (assumably) the actual method signature parameters
+        items:
+          $ref: './master.yaml#/definitions/Parameter'
     required:
       - language
       - protocol

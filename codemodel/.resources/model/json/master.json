@@ -801,6 +801,13 @@
           "items": {
             "$ref": "./master.json#/definitions/Parameter"
           }
+        },
+        "signatureParameters": {
+          "description": "a filtered list of parameters that is (assumably) the actual method signature parameters",
+          "type": "array",
+          "items": {
+            "$ref": "./master.json#/definitions/Parameter"
+          }
         }
       },
       "defaultProperties": [],
