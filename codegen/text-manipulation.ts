@@ -5,8 +5,6 @@
 
 import { Text, TextPossibilities } from './file-generator';
 import { Dictionary, values } from '@azure-tools/linq';
-import { type } from 'os';
-import { on } from 'cluster';
 
 let indentation = '    ';
 
@@ -232,6 +230,20 @@ export function* convert(num: number): Iterable<string> {
   }
 }
 
+export type formatter = ((identifier: string | string[], removeDuplicates?: boolean | undefined) => string);
+
+export function formatStyle(style: any, fallback: formatter): formatter {
+  switch (`${style}`.toLowerCase()) {
+    case 'camelcase':
+      return camelCase;
+    case 'pascalcase':
+      return pascalCase;
+    case 'snakecase':
+      return snakeCase;
+  }
+  return fallback;
+}
+
 export function fixLeadingNumber(identifier: Array<string>): Array<string> {
   if (identifier.length > 0 && /^\d+/.exec(identifier[0])) {
     return [...convert(parseInt(identifier[0])), ...identifier.slice(1)];
@@ -276,30 +288,35 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
 
   return ids;
 }
+export function kebabCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return normalize(identifier, removeDuplicates).join('-');
+}
+
+export function snakeCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return normalize(identifier, removeDuplicates).join('_');
+}
+
+export function upperCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return normalize(identifier, removeDuplicates).join('_').toUpperCase();
+}
+
+export function normalize(identifier: string | Array<string>, removeDuplicates = true): Array<string> {
+  if (!identifier || identifier.length === 0) {
+    return [''];
+  }
+  return removeDuplicates ? removeSequentialDuplicates(fixLeadingNumber(deconstruct(identifier))) : fixLeadingNumber(deconstruct(identifier));
+}
 
 export function pascalCase(identifier: string | Array<string>, removeDuplicates = true): string {
-  return identifier === undefined ? '' : typeof identifier === 'string' ?
-    pascalCase(fixLeadingNumber(deconstruct(identifier)), removeDuplicates) :
-    (removeDuplicates ? [...removeSequentialDuplicates(identifier)] : identifier).map(each => each.capitalize()).join('');
+  return normalize(identifier, removeDuplicates).map(each => each.capitalize()).join('');
 }
 
-
-export function camelCase(identifier: string | Array<string>): string {
-  if (typeof (identifier) === 'string') {
-    return camelCase(fixLeadingNumber(deconstruct(identifier)));
-  }
-  switch (identifier.length) {
-    case 0:
-      return '';
-    case 1:
-      return identifier[0].uncapitalize();
-  }
-  return `${identifier[0].uncapitalize()}${pascalCase(identifier.slice(1))}`;
+export function camelCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return normalize(identifier, removeDuplicates).map((each, index) => index ? each.capitalize() : each.uncapitalize()).join('');
 }
-
 
 export function getPascalIdentifier(name: string): string {
-  return pascalCase(fixLeadingNumber(deconstruct(name)));
+  return pascalCase(name);
 }
 
 export function escapeString(text: string | undefined): string {
@@ -317,7 +334,6 @@ export function nameof(text: string): string {
   }
   return `nameof(${text})`;
 }
-
 
 export function* getRegions(source: string, prefix: string = '#', postfix: string = '') {
   source = source.replace(/\r?\n|\r/g, '«');
