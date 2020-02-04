@@ -230,32 +230,6 @@ export function* convert(num: number): Iterable<string> {
   }
 }
 
-export type formatter = ((identifier: string | string[], removeDuplicates: boolean | undefined, overrides: Dictionary<string> | undefined) => string);
-
-export function formatStyle(style: any, fallback: formatter): formatter {
-  switch (`${style}`.toLowerCase()) {
-    case 'camelcase':
-    case 'camel':
-      return camelCase;
-    case 'pascalcase':
-    case 'pascal':
-      return pascalCase;
-    case 'snakecase':
-    case 'snake':
-      return snakeCase;
-    case 'uppercase':
-    case 'upper':
-      return upperCase;
-    case 'kebabcase':
-    case 'kebab':
-      return kebabCase;
-    case 'spacecase':
-    case 'space':
-      return spaceCase;
-  }
-  return fallback;
-}
-
 export function fixLeadingNumber(identifier: Array<string>): Array<string> {
   if (identifier.length > 0 && /^\d+/.exec(identifier[0])) {
     return [...convert(parseInt(identifier[0])), ...identifier.slice(1)];
@@ -280,6 +254,7 @@ export function removeProhibitedPrefix(identifier: string, prohibitedPrefix: str
   return identifier;
 }
 
+
 export function isEqual(s1: string, s2: string): boolean {
   // when s2 is undefined and s1 is the string 'undefined', it returns 0, making this true.
   // To prevent that, first we need to check if s2 is undefined.
@@ -300,43 +275,29 @@ export function removeSequentialDuplicates(identifier: Iterable<string>) {
   return ids;
 }
 
-function applyFormat(normalizedContent: Array<string>, overrides: Dictionary<string> = {}, separator: string = '', format: (s: string, i: number) => string = (s, i) => s) {
-  return normalizedContent.map((each, index) => overrides[each.toLowerCase()] || format(each, index)).join(separator);
+export function pascalCase(identifier: string | Array<string>, removeDuplicates = true): string {
+  return identifier === undefined ? '' : typeof identifier === 'string' ?
+    pascalCase(fixLeadingNumber(deconstruct(identifier)), removeDuplicates) :
+    (removeDuplicates ? [...removeSequentialDuplicates(identifier)] : identifier).map(each => each.capitalize()).join('');
 }
 
-export function kebabCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '-');
-}
 
-export function spaceCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '');
-}
-
-export function snakeCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '_');
-}
-
-export function upperCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '_', each => each.toUpperCase());
-}
-
-export function normalize(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): Array<string> {
-  if (!identifier || identifier.length === 0) {
-    return [''];
+export function camelCase(identifier: string | Array<string>): string {
+  if (typeof (identifier) === 'string') {
+    return camelCase(fixLeadingNumber(deconstruct(identifier)));
   }
-  return removeDuplicates ? removeSequentialDuplicates(fixLeadingNumber(deconstruct(identifier))) : fixLeadingNumber(deconstruct(identifier));
+  switch (identifier.length) {
+    case 0:
+      return '';
+    case 1:
+      return identifier[0].uncapitalize();
+  }
+  return `${identifier[0].uncapitalize()}${pascalCase(identifier.slice(1))}`;
 }
 
-export function pascalCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '', each => each.capitalize());
-}
-
-export function camelCase(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-  return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '', (each, index) => index ? each.capitalize() : each.uncapitalize());
-}
 
 export function getPascalIdentifier(name: string): string {
-  return pascalCase(name);
+  return pascalCase(fixLeadingNumber(deconstruct(name)));
 }
 
 export function escapeString(text: string | undefined): string {
@@ -354,6 +315,7 @@ export function nameof(text: string): string {
   }
   return `nameof(${text})`;
 }
+
 
 export function* getRegions(source: string, prefix: string = '#', postfix: string = '') {
   source = source.replace(/\r?\n|\r/g, '«');
