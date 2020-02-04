@@ -55,7 +55,7 @@
     "@azure-tools/tasks": "~3.0.0",
     "@azure-tools/object-comparison": "~3.0.0",
     "@azure-tools/openapi": "~3.0.0",
-    "@azure-tools/codegen": "~2.2.0",
+    "@azure-tools/codegen": "~2.1.0",
     "compare-versions": "^3.4.0"
   }
 }
