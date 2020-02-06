@@ -27,23 +27,10 @@ export interface Property extends Value {
 }
 
 export class Property extends Value implements Property {
-  isDiscriminator?: boolean;
-
   constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Property>) {
     super(name, description, schema);
 
     this.serializedName = name;
     this.applyWithExclusions(['schema'], initializer);
   }
-
-  /** the wire name of this property 
-  get serializedName(): string {
-    return <string>this.language.default.serializedName;
-  }
-
-  /** the wire name of this property 
-  set serializedName(value: string) {
-    this.language.default.serializedName = value;
-  }
-  */
 }
