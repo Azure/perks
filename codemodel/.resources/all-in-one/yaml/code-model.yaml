@@ -431,7 +431,6 @@ definitions:
         description: per-language information for this value
         $ref: '#/definitions/Languages'
     required:
-      - language
       - value
   Contact:
     type: object

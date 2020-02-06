@@ -1458,7 +1458,6 @@
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
-        "language",
         "value"
       ]
     },
@@ -1566,6 +1565,22 @@
       ]
     },
     "BinarySchema": {
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Schema"
+        }
+      ]
+    },
+    "AnySchema": {
       "type": "object",
       "properties": {},
       "defaultProperties": [],
@@ -2070,22 +2085,6 @@
       },
       "defaultProperties": [],
       "additionalProperties": false
-    },
-    "AnySchema": {
-      "type": "object",
-      "properties": {},
-      "defaultProperties": [],
-      "additionalProperties": false,
-      "required": [
-        "language",
-        "protocol",
-        "type"
-      ],
-      "allOf": [
-        {
-          "$ref": "#/definitions/Schema"
-        }
-      ]
     },
     "SerializationStyle": {
       "description": "The Serialization Style used for the parameter.\n\nDescribes how the parameter value will be serialized depending on the type of the parameter value.",
