@@ -18,6 +18,7 @@ export interface IterableWithLinq<T> extends Iterable<T> {
   bifurcate(predicate: (each: T) => boolean): Array<Array<T>>;
   concat(more: Iterable<T>): IterableWithLinq<T>;
   distinct(selector?: (each: T) => any): IterableWithLinq<T>;
+  duplicates(selector?: (each: T) => any): IterableWithLinq<T>;
   first(predicate?: (each: T) => boolean): T | undefined;
   selectNonNullable<V>(selector: (each: T) => V): IterableWithLinq<NonNullable<V>>;
   select<V>(selector: (each: T) => V): IterableWithLinq<V>;
@@ -57,6 +58,7 @@ function linqify<T>(iterable: Iterable<T>): IterableWithLinq<T> {
     bifurcate: <any>bifurcate.bind(iterable),
     concat: <any>concat.bind(iterable),
     distinct: <any>distinct.bind(iterable),
+    duplicates: <any>duplicates.bind(iterable),
     first: <any>first.bind(iterable),
     select: <any>select.bind(iterable),
     selectMany: <any>selectMany.bind(iterable),
@@ -220,7 +222,7 @@ function groupBy<TElement, TValue, TKey>(this: Iterable<TElement>, keySelector: 
     if (!result.has(key)) {
       result.set(key, new Array<TValue>())
     }
-    result.get(key) ?.push(selector(each));
+    result.get(key)?.push(selector(each));
   }
   return result;
 }
@@ -364,6 +366,27 @@ function distinct<T>(this: Iterable<T>, selector?: (each: T) => any): IterableWi
       if (!hash[k]) {
         hash[k] = true;
         yield each;
+      }
+    }
+  }.bind(this)());
+}
+
+function duplicates<T>(this: Iterable<T>, selector?: (each: T) => any): IterableWithLinq<T> {
+  const hash = new Dictionary<boolean>();
+  return linqify(function* (this: Iterable<T>) {
+
+    if (!selector) {
+      selector = i => i;
+    }
+    for (const each of this) {
+      const k = JSON.stringify(selector(each));
+      if (hash[k] === undefined) {
+        hash[k] = false;
+      } else {
+        if (hash[k] === false) {
+          hash[k] = true;
+          yield each;
+        }
       }
     }
   }.bind(this)());

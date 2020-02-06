@@ -195,6 +195,15 @@ export class Session<TInputModel> {
         Text: message,
         Details: details
       });
+    else {
+      this.message({
+        Channel: channel,
+        Key: key,
+        Source: [],
+        Text: message,
+        Details: details
+      });
+    }
   }
 
   public warning(message: string, key: Array<string>, objectOrPath?: string | Object, details?: any) {
