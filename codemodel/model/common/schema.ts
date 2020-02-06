@@ -1,6 +1,6 @@
 import { Aspect } from './aspect';
 import { SerializationFormats } from './formats';
-import { AllSchemaTypes } from './schema-type';
+import { AllSchemaTypes, SchemaType } from './schema-type';
 import { DeepPartial, } from '@azure-tools/codegen';
 import { Dictionary } from '@azure-tools/linq';
 import { Extensions } from './extensions';
@@ -63,6 +63,14 @@ export interface ValueSchema extends Schema {
 /** Schema types that are primitive language values */
 export interface PrimitiveSchema extends ValueSchema {
 
+}
+
+export class PrimitiveSchema extends Schema implements PrimitiveSchema {
+  constructor(name: string, description: string, schemaType: AllSchemaTypes, objectInitializer?: DeepPartial<PrimitiveSchema>) {
+    super(name.indexOf('·') > -1 ? schemaType : name, description, schemaType);
+
+    this.apply(objectInitializer);
+  }
 }
 
 /** schema types that can be objects */

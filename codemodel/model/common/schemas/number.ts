@@ -34,7 +34,7 @@ export interface NumberSchema extends PrimitiveSchema {
   exclusiveMinimum?: boolean;
 }
 
-export class NumberSchema extends Schema implements NumberSchema {
+export class NumberSchema extends PrimitiveSchema implements NumberSchema {
   constructor(name: string, description: string, type: SchemaType.Number | SchemaType.Integer, precision: number, objectInitializer?: DeepPartial<NumberSchema>) {
     super(name, description, type);
     this.apply({ precision }, objectInitializer);

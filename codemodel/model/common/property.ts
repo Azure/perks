@@ -27,12 +27,10 @@ export interface Property extends Value {
 }
 
 export class Property extends Value implements Property {
-
   constructor(name: string, description: string, schema: Schema, initializer?: DeepPartial<Property>) {
     super(name, description, schema);
 
     this.serializedName = name;
-    // this.language.default.uid = `property:${uid()}`;
     this.applyWithExclusions(['schema'], initializer);
   }
 }

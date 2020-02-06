@@ -8,7 +8,7 @@ import { Initializer, DeepPartial } from '@azure-tools/codegen';
 /** a container for the actual constant value */
 export interface ConstantValue extends Extensions {
   /** per-language information for this value */
-  language: Languages;
+  language?: Languages;
 
   /** the actual constant value to use */
   value: any;
@@ -18,12 +18,6 @@ export class ConstantValue extends Initializer implements ConstantValue {
   constructor(value: any, objectInitializer?: DeepPartial<ConstantValue>) {
     super();
     this.value = value;
-    this.language = {
-      default: {
-        name: '',
-        description: ''
-      }
-    };
     this.apply(objectInitializer);
   }
 }

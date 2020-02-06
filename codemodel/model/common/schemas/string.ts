@@ -18,7 +18,7 @@ export interface StringSchema extends PrimitiveSchema {
   pattern?: string; // regex
 }
 
-export class StringSchema extends Schema implements StringSchema {
+export class StringSchema extends PrimitiveSchema implements StringSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<StringSchema>) {
     super(name, description, SchemaType.String);
     this.apply(objectInitializer);
@@ -54,7 +54,7 @@ export interface CredentialSchema extends PrimitiveSchema {
   pattern?: string; // regex
 }
 
-export class CredentialSchema extends Schema implements CredentialSchema {
+export class CredentialSchema extends PrimitiveSchema implements CredentialSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<CredentialSchema>) {
     super(name, description, SchemaType.Credential);
     this.apply(objectInitializer);
@@ -76,7 +76,7 @@ export interface UriSchema extends PrimitiveSchema {
   pattern?: string; // regex
 }
 
-export class UriSchema extends Schema implements UriSchema {
+export class UriSchema extends PrimitiveSchema implements UriSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<UriSchema>) {
     super(name, description, SchemaType.Uri);
     this.apply(objectInitializer);
@@ -88,7 +88,7 @@ export interface UuidSchema extends PrimitiveSchema {
   type: SchemaType.Uuid;
 }
 
-export class UuidSchema extends Schema implements UuidSchema {
+export class UuidSchema extends PrimitiveSchema implements UuidSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<UuidSchema>) {
     super(name, description, SchemaType.Uuid);
     this.apply(objectInitializer);

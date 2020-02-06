@@ -209,7 +209,6 @@ definitions:
         description: per-language information for this value
         $ref: './master.yaml#/definitions/Languages'
     required:
-      - language
       - value
   CredentialSchema:
     type: object

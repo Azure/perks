@@ -8,12 +8,14 @@ import { NumberSchema } from './schemas/number';
 import { ObjectSchema, GroupSchema } from './schemas/object';
 import { StringSchema, UuidSchema, UriSchema, CredentialSchema, ODataQuerySchema } from './schemas/string';
 import { UnixTimeSchema, DateSchema, DateTimeSchema, DurationSchema } from './schemas/time';
-import { Schema } from './schema';
+import { Schema, PrimitiveSchema } from './schema';
 import { ConditionalSchema, SealedConditionalSchema } from './schemas/conditional';
 import { FlagSchema } from './schemas/flag';
 import { ConstantSchema } from './schemas/constant';
 import { OrSchema, XorSchema } from './schemas/relationship';
 import { BinarySchema } from './schemas/binary';
+import { finished } from 'stream';
+import { AnySchema } from './schemas/any';
 
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
@@ -126,6 +128,23 @@ export class Schemas {
     }
 
     const a: Array<Schema> = ((<any>this)[group] || ((<any>this)[group] = new Array<Schema>()));
+
+    // for simple types, go a quick check to see if an exact copy of this is in the collection already 
+    // since we can just return that. (the consumer needs to pay attention tho')
+    if (schema instanceof PrimitiveSchema || schema instanceof AnySchema || schema instanceof ArraySchema || schema instanceof ByteArraySchema || schema instanceof DictionarySchema) {
+      try {
+        const s = JSON.stringify(schema);
+        const found = a.find(each => JSON.stringify(each) === s);
+        if (found) {
+          return <T>found;
+        }
+      }
+      catch {
+        // not the same!
+      }
+    }
+
+
     if (a.indexOf(schema) > -1) {
       throw new Error(`Duplicate ! ${schema.type} : ${schema.language.default.name}`);
       // return schema;

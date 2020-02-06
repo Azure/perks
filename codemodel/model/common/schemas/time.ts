@@ -8,7 +8,7 @@ export interface DurationSchema extends PrimitiveSchema {
   type: SchemaType.Duration;
 }
 
-export class DurationSchema extends Schema implements DurationSchema {
+export class DurationSchema extends PrimitiveSchema implements DurationSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<DurationSchema>) {
     super(name, description, SchemaType.Duration);
     this.apply(objectInitializer);
@@ -24,7 +24,7 @@ export interface DateTimeSchema extends PrimitiveSchema {
   format: 'date-time-rfc1123' | 'date-time';
 }
 
-export class DateTimeSchema extends Schema implements DateTimeSchema {
+export class DateTimeSchema extends PrimitiveSchema implements DateTimeSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<DateTimeSchema>) {
     super(name, description, SchemaType.DateTime);
     this.apply(objectInitializer);
@@ -36,7 +36,7 @@ export interface DateSchema extends PrimitiveSchema {
   type: SchemaType.Date;
 }
 
-export class DateSchema extends Schema implements DateSchema {
+export class DateSchema extends PrimitiveSchema implements DateSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<DateSchema>) {
     super(name, description, SchemaType.Date);
     this.apply(objectInitializer);
@@ -49,7 +49,7 @@ export interface UnixTimeSchema extends PrimitiveSchema {
   type: SchemaType.UnixTime;
 }
 
-export class UnixTimeSchema extends Schema implements UnixTimeSchema {
+export class UnixTimeSchema extends PrimitiveSchema implements UnixTimeSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<UnixTimeSchema>) {
     super(name, description, SchemaType.UnixTime);
     this.apply(objectInitializer);
