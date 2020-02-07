@@ -4,26 +4,32 @@
  *--------------------------------------------------------------------------------------------*/
 import * as vm from 'vm';
 
-/* eslint-disable */
+/**
+ * A sandboxed eval function 
+ * 
+ * @deprecated consumers should create a local sandbox to reuse. (@see createSandbox )
+ *  */
+export const safeEval: <T>(code: string, context?: any) => T = createSandbox();
 
-const sandbox = vm.createContext({});
-
-export function safeEval<T>(code: string, context?: any, opts?: any): T {
-  var resultKey = 'SAFE_EVAL_' + Math.floor(Math.random() * 1000000);
-  sandbox[resultKey] = {};
-  code = resultKey + '=' + code;
-
-  if (context) {
-    const keys = Object.keys(context);
-    keys.forEach(function (key) {
-      sandbox[key] = context[key];
-    })
-    vm.runInContext(code, sandbox, opts)
-    keys.forEach(function (key) {
-      delete sandbox[key];
-    })
-  } else {
-    vm.runInContext(code, sandbox, opts);
+/**
+ * Creates a reusable safe-eval sandbox to execute code in.
+ */
+export function createSandbox(): <T>(code: string, context?: any) => T {
+  const sandbox = vm.createContext({});
+  return (code: string, context?: any) => {
+    var response = 'SAFE_EVAL_' + Math.floor(Math.random() * 1000000);
+    sandbox[response] = {};
+    if (context) {
+      for (const key of Object.keys(context)) {
+        sandbox[key] = context[key];
+      }
+      vm.runInContext(`${response} = ${code}`, sandbox);
+      for (const key of Object.keys(context)) {
+        delete sandbox[key];
+      }
+    } else {
+      vm.runInContext(`${response} = ${code}`, sandbox);
+    }
+    return sandbox[response];
   }
-  return sandbox[resultKey];
 }

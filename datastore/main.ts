@@ -14,8 +14,10 @@ export * from './source-map/source-map';
 export * from './yaml';
 export { Lazy, LazyPromise } from './lazy';
 export * from './parsing/text-utility';
-export * from './safe-eval';
+
 export * from './parsing/yaml';
 export * from './source-map/blaming';
 export * from './parsing/stable-object';
 export * from './processor';
+
+export { safeEval, createSandbox } from '@azure-tools/codegen';

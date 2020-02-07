@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as jsonpath from 'jsonpath';
-import { safeEval } from './safe-eval';
+import { safeEval } from '@azure-tools/codegen';
 
 // patch in smart filter expressions
 const handlers = (<any>jsonpath).handlers;
