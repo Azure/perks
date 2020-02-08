@@ -3,11 +3,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { safeEval, deserialize } from '@azure-tools/codegen';
+import { createSandbox, deserialize } from '@azure-tools/codegen';
 import { Host } from './exports';
 import { Channel, Message, Mapping, RawSourceMap, JsonPath, Position } from './types';
 import { Schema, DEFAULT_SAFE_SCHEMA } from 'js-yaml';
 
+const safeEval = createSandbox();
 
 async function getModel<T>(service: Host, yamlSchema: Schema = DEFAULT_SAFE_SCHEMA) {
   const files = await service.ListInputs();
