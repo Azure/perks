@@ -53,7 +53,7 @@
     "@types/source-map": "0.5.0"
   },
   "dependencies": {
-    "@azure-tools/datastore": "~4.0.0",
+    "@azure-tools/datastore": "~4.1.0",
     "@azure-tools/openapi": "~3.0.0",
     "source-map": "0.5.6"
   }
