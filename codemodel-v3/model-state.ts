@@ -4,8 +4,10 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Channel, Host, JsonPath, Mapping, RawSourceMap, Message } from '@azure-tools/autorest-extension-base';
-import { safeEval, deserialize, Initializer, DeepPartial } from '@azure-tools/codegen';
+import { createSandbox, deserialize, Initializer, DeepPartial } from '@azure-tools/codegen';
 import { Dictionary } from '@azure-tools/linq';
+
+const safeEval = createSandbox();
 
 export class ModelState<T extends Dictionary<any>> extends Initializer {
   public model!: T;
