@@ -125,7 +125,11 @@ export class Processor<TInput extends object, TOutput extends object> extends Tr
 }
 
 export function typeOf(obj: any) {
+  if (obj === null) {
+    return 'null';
+  }
   const t = typeof (obj);
+
   return t === 'object' ?
     Array.isArray(obj) ?
       'array' :
