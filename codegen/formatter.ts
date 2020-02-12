@@ -1,25 +1,40 @@
-import { fixLeadingNumber, isEqual, removeSequentialDuplicates } from './text-manipulation';
+import { fixLeadingNumber, removeSequentialDuplicates } from './text-manipulation';
 import { Dictionary, values } from '@azure-tools/linq';
 
 
 export type Styler = ((identifier: string | Array<string>, removeDuplicates: boolean | undefined, overrides: Dictionary<string> | undefined) => string);
+type StylerWithUppercasePreservation = ((identifier: string | Array<string>, removeDuplicates: boolean | undefined, overrides: Dictionary<string> | undefined, maxUppercasePreserve: number | undefined) => string);
 
-function deconstruct(identifier: string | Array<string>): Array<string> {
+function capitalize(s: string): string {
+  return s ? `${s.charAt(0).toUpperCase()}${s.substr(1)}` : s;
+}
+
+function uncapitalize(s: string): string {
+  return s ? `${s.charAt(0).toLowerCase()}${s.substr(1)}` : s;
+}
+
+function IsFullyUpperCase(identifier: string, maxUppercasePreserve: number) {
+  return identifier.length <= maxUppercasePreserve && identifier === identifier.toUpperCase();
+}
+
+function deconstruct(identifier: string | Array<string>, maxUppercasePreserve: number): Array<string> {
   if (Array.isArray(identifier)) {
-    return [...values(identifier).selectMany(deconstruct)];
+    return [...values(identifier).selectMany(each => deconstruct(each, maxUppercasePreserve))];
   }
+
   return `${identifier}`.
     replace(/([a-z]+)([A-Z])/g, '$1 $2').
     replace(/(\d+)([a-z|A-Z]+)/g, '$1 $2').
+    //replace(/\b([A-Z])([A-Z])([a-z])([A-Z])/g, '$1$2 $3 $4').
     replace(/\b([A-Z]+)([A-Z])([a-z])/g, '$1 $2$3').
-    split(/[\W|_]+/).map(each => each.toLowerCase());
+    split(/[\W|_]+/).map(each => IsFullyUpperCase(each, maxUppercasePreserve) ? each : each.toLowerCase());
 }
 
-function wrap(prefix: string, postfix: string, style: Styler): Styler {
+function wrap(prefix: string, postfix: string, style: StylerWithUppercasePreservation, maxUppercasePreserve: number): Styler {
   if (postfix || prefix) {
-    return (i, r, o) => typeof i === 'string' && typeof (o) === 'object' ? o[i.toLowerCase()] || `${prefix}${style(i, r, o)}${postfix}` : `${prefix}${style(i, r, o)}${postfix}`;
+    return (i, r, o) => typeof i === 'string' && typeof (o) === 'object' ? o[i.toLowerCase()] || `${prefix}${style(i, r, o, maxUppercasePreserve)}${postfix}` : `${prefix}${style(i, r, o, maxUppercasePreserve)}${postfix}`;
   }
-  return style;
+  return (i, r, o) => style(i, r, o, maxUppercasePreserve);
 }
 
 
@@ -27,14 +42,14 @@ function applyFormat(normalizedContent: Array<string>, overrides: Dictionary<str
   return normalizedContent.map((each, index) => overrides[each.toLowerCase()] || formatter(each, index)).join(separator);
 }
 
-function normalize(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): Array<string> {
+function normalize(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): Array<string> {
   if (!identifier || identifier.length === 0) {
     return [''];
   }
-  return typeof identifier === 'string' ? normalize(fixLeadingNumber(deconstruct(identifier))) : removeDuplicates ? removeSequentialDuplicates(identifier) : identifier;
+  return typeof identifier === 'string' ? normalize(fixLeadingNumber(deconstruct(identifier, maxUppercasePreserve))) : removeDuplicates ? removeSequentialDuplicates(identifier) : identifier;
 }
 export class Style {
-  static select(style: any, fallback: Styler): Styler {
+  static select(style: any, fallback: Styler, maxUppercasePreserve: number): Styler {
     if (style) {
       const styles = /^([a-zA-Z0-9_]*?\+?)([a-zA-Z]+)(\+?[a-zA-Z0-9_]*)$/g.exec(style.replace(/\s*/g, ''));
       if (styles) {
@@ -45,48 +60,48 @@ export class Style {
           case 'camelcase':
           case 'camel':
 
-            return wrap(prefix, postfix, Style.camel);
+            return wrap(prefix, postfix, Style.camel, maxUppercasePreserve);
           case 'pascalcase':
           case 'pascal':
-            return wrap(prefix, postfix, Style.pascal);
+            return wrap(prefix, postfix, Style.pascal, maxUppercasePreserve);
           case 'snakecase':
           case 'snake':
-            return wrap(prefix, postfix, Style.snake);
+            return wrap(prefix, postfix, Style.snake, maxUppercasePreserve);
           case 'uppercase':
           case 'upper':
-            return wrap(prefix, postfix, Style.upper);
+            return wrap(prefix, postfix, Style.upper, maxUppercasePreserve);
           case 'kebabcase':
           case 'kebab':
-            return wrap(prefix, postfix, Style.kebab);
+            return wrap(prefix, postfix, Style.kebab, maxUppercasePreserve);
           case 'spacecase':
           case 'space':
-            return wrap(prefix, postfix, Style.space);
+            return wrap(prefix, postfix, Style.space, maxUppercasePreserve);
         }
       }
     }
-    return fallback;
+    return wrap('', '', fallback, maxUppercasePreserve);
   }
 
-  static kebab(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '-');
+  static kebab(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '-');
   }
 
-  static space(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '');
+  static space(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '');
   }
 
-  static snake(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '_');
+  static snake(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_');
   }
 
-  static upper(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '_', each => each.toUpperCase());
+  static upper(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_', each => each.toUpperCase());
   }
-  static pascal(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '', each => each.capitalize());
+  static pascal(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '', each => capitalize(each));
   }
 
-  static camel(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates), overrides, '', (each, index) => index ? each.capitalize() : each.uncapitalize());
+  static camel(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '', (each, index) => index ? capitalize(each) : IsFullyUpperCase(each, maxUppercasePreserve) ? each : uncapitalize(each));
   }
 }
