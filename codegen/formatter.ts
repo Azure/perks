@@ -96,20 +96,21 @@ export class Style {
   }
 
   static kebab(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '-');
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '-').replace(/([^\d])-(\d+)/g, '$1$2');
   }
 
   static space(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '');
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, ' ').replace(/([^\d]) (\d+)/g, '$1$2');
   }
 
   static snake(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_');
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_').replace(/([^\d])_(\d+)/g, '$1$2');
   }
 
   static upper(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
-    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_', each => each.toUpperCase());
+    return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '_', each => each.toUpperCase()).replace(/([^\d])_(\d+)/g, '$1$2');
   }
+
   static pascal(identifier: string | Array<string>, removeDuplicates = true, overrides: Dictionary<string> = {}, maxUppercasePreserve = 0): string {
     return overrides[<string>identifier] || applyFormat(normalize(identifier, removeDuplicates, overrides, maxUppercasePreserve), overrides, '', each => capitalize(each));
   }
