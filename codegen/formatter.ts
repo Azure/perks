@@ -14,7 +14,20 @@ function uncapitalize(s: string): string {
 }
 
 function IsFullyUpperCase(identifier: string, maxUppercasePreserve: number) {
-  return identifier.length <= maxUppercasePreserve && identifier === identifier.toUpperCase();
+  const len = identifier.length;
+  if (len > 1) {
+    if (len <= maxUppercasePreserve && identifier === identifier.toUpperCase()) {
+      return true;
+    }
+
+    if (len <= maxUppercasePreserve + 1 && identifier.endsWith('s')) {
+      const i = identifier.substring(0, len - 1);
+      if (i.toUpperCase() === i) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function deconstruct(identifier: string | Array<string>, maxUppercasePreserve: number): Array<string> {
@@ -22,11 +35,11 @@ function deconstruct(identifier: string | Array<string>, maxUppercasePreserve: n
     return [...values(identifier).selectMany(each => deconstruct(each, maxUppercasePreserve))];
   }
 
-  return `${identifier}`.
-    replace(/([a-z]+)([A-Z])/g, '$1 $2').
-    replace(/(\d+)([a-z|A-Z]+)/g, '$1 $2').
-    //replace(/\b([A-Z])([A-Z])([a-z])([A-Z])/g, '$1$2 $3 $4').
-    replace(/\b([A-Z]+)([A-Z])([a-z])/g, '$1 $2$3').
+  return `${identifier}`.replace(/([a-z]+)([A-Z])/g, '$1 $2').
+    replace(/(\d+)/g, ' $1 ').
+    replace(/\b([A-Z]+)([A-Z])s([^a-z])(.*)/g, '$1$2« $3$4').
+    replace(/\b([A-Z]+)([A-Z])([a-z]+)/g, '$1 $2$3').
+    replace(/«/g, 's').trim().
     split(/[\W|_]+/).map(each => IsFullyUpperCase(each, maxUppercasePreserve) ? each : each.toLowerCase());
 }
 
