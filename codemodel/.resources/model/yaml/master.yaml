@@ -339,17 +339,29 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: './master.yaml#/definitions/ExternalDocumentation'
+      parameters:
+        type: array
+        description: common parameters when there are multiple requests
+        items:
+          $ref: './master.yaml#/definitions/Parameter'
       profile:
         description: the apiVersion to use for a given profile name
         $ref: './master.yaml#/definitions/Dictionary<ApiVersion>'
-      request:
-        description: the inputs that are used to build the request.
-        $ref: './master.yaml#/definitions/Request'
+      requests:
+        type: array
+        description: the different possibilities to build the request.
+        items:
+          $ref: './master.yaml#/definitions/Request'
       responses:
         type: array
         description: responses that indicate a successful call
         items:
           $ref: './master.yaml#/definitions/Response'
+      signatureParameters:
+        type: array
+        description: a common filtered list of parameters that is (assumably) the actual method signature parameters
+        items:
+          $ref: './master.yaml#/definitions/Parameter'
       summary:
         type: string
         description: a short description
@@ -365,7 +377,6 @@ definitions:
     required:
       - language
       - protocol
-      - request
   OperationGroup:
     type: object
     description: an operation group represents a container around set of operations
