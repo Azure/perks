@@ -6,12 +6,18 @@
 import { DEFAULT_SAFE_SCHEMA, dump, safeLoad, Schema } from 'js-yaml';
 
 const propertyPriority = [
+  'info',
   '$key',
-  'primitives',
-  'objects',
+  'booleans',
+  'numbers',
+  'chars',
+  'strings',
+  'choices',
+  'sealedChoices',
+  'constants',
   'dictionaries',
   'compounds',
-  'choices',
+
   'name',
   'schemas',
   'type',
@@ -25,6 +31,8 @@ const propertyPriority = [
 ];
 
 const propertyNegativePriority = [
+  'objects',
+  'arrays',
   'request',
   'responses',
   'exceptions',
