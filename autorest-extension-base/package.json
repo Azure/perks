@@ -35,6 +35,6 @@
   "dependencies": {
     "js-yaml": "3.13.1",
     "vscode-jsonrpc": "^3.5.0",
-    "@azure-tools/codegen": "~2.3.0"
+    "@azure-tools/codegen": "~2.4.0"
   }
 }
