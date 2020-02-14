@@ -58,7 +58,7 @@ export function knownMediaType(mediaType: string) {
     if ((mt.subtype === xml || mt.suffix === xml) && (mt.type === application || mt.type === text)) {
       return KnownMediaType.Xml;
     }
-    if (mt.type === 'audio' || mt.type === 'image' || mt.type === 'video' || mt.subtype === 'octet-stream' || (mt.type === 'text' && mt.subtype === 'plain')) {
+    if (mt.type === 'audio' || mt.type === 'image' || mt.type === 'video' || mt.subtype === 'octet-stream') {
       return KnownMediaType.Binary;
     }
     if (mt.type === application && mt.subtype === formEncoded) {

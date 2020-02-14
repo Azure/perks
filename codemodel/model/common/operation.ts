@@ -10,8 +10,14 @@ import { SchemaType } from './schema-type';
 /** represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)  */
 export interface Operation extends Aspect {
 
-  /** the inputs that are used to build the request. */
-  request: Request;
+  /** common parameters when there are multiple requests */
+  parameters?: Array<Parameter>;
+
+  /** a common filtered list of parameters that is (assumably) the actual method signature parameters */
+  signatureParameters?: Array<Parameter>;
+
+  /** the different possibilities to build the request. */
+  requests?: Array<Request>;
 
   /** responses that indicate a successful call */
   responses?: Array<Response>;
@@ -30,12 +36,11 @@ export interface Request extends Metadata {
 
   /** a filtered list of parameters that is (assumably) the actual method signature parameters */
   signatureParameters?: Array<Parameter>;
-
 }
 
 
 export class Request extends Metadata implements Request {
-  constructor(initializer?: DeepPartial<Operation>) {
+  constructor(initializer?: DeepPartial<Request>) {
     super();
     this.apply(initializer);
   }
@@ -60,9 +65,31 @@ export class Request extends Metadata implements Request {
 export class Operation extends Aspect implements Operation {
   constructor($key: string, description: string, initializer?: DeepPartial<Operation>) {
     super($key, description);
-    this.apply({
-      request: new Request()
-    }, initializer);
+    this.apply(initializer);
+  }
+
+
+  /** add a request to the operation */
+  addRequest(request: Request) {
+    (this.requests = this.requests || []).push(request);
+    return request;
+  }
+
+  addParameter(parameter: Parameter) {
+    (this.parameters = this.parameters || []).push(parameter);
+    this.updateSignatureParameters();
+    return parameter;
+  }
+
+  updateSignatureParameters() {
+    if (this.parameters) {
+      this.signatureParameters = values(this.parameters).where(each =>
+        each.schema.type !== SchemaType.Constant &&
+        each.implementation !== ImplementationLocation.Client &&
+        !each.groupedBy &&
+        !each.flattened
+      ).toArray();
+    }
   }
 
   addResponse(response: Response) {

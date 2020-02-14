@@ -1947,9 +1947,26 @@
       "description": "represents a single callable endpoint with a discrete set of inputs, and any number of output possibilities (responses or exceptions)",
       "type": "object",
       "properties": {
-        "request": {
-          "$ref": "#/definitions/Request",
-          "description": "the inputs that are used to build the request."
+        "parameters": {
+          "description": "common parameters when there are multiple requests",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Parameter"
+          }
+        },
+        "signatureParameters": {
+          "description": "a common filtered list of parameters that is (assumably) the actual method signature parameters",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Parameter"
+          }
+        },
+        "requests": {
+          "description": "the different possibilities to build the request.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Request"
+          }
         },
         "responses": {
           "description": "responses that indicate a successful call",
@@ -2005,8 +2022,7 @@
       "additionalProperties": false,
       "required": [
         "language",
-        "protocol",
-        "request"
+        "protocol"
       ]
     },
     "Request": {

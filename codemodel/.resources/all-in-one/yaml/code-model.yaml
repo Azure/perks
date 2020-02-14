@@ -1297,17 +1297,29 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: '#/definitions/ExternalDocumentation'
+      parameters:
+        type: array
+        description: common parameters when there are multiple requests
+        items:
+          $ref: '#/definitions/Parameter'
       profile:
         description: the apiVersion to use for a given profile name
         $ref: '#/definitions/Dictionary<ApiVersion>'
-      request:
-        description: the inputs that are used to build the request.
-        $ref: '#/definitions/Request'
+      requests:
+        type: array
+        description: the different possibilities to build the request.
+        items:
+          $ref: '#/definitions/Request'
       responses:
         type: array
         description: responses that indicate a successful call
         items:
           $ref: '#/definitions/Response'
+      signatureParameters:
+        type: array
+        description: a common filtered list of parameters that is (assumably) the actual method signature parameters
+        items:
+          $ref: '#/definitions/Parameter'
       summary:
         type: string
         description: a short description
@@ -1323,7 +1335,6 @@ definitions:
     required:
       - language
       - protocol
-      - request
   OperationGroup:
     type: object
     description: an operation group represents a container around set of operations
