@@ -520,6 +520,31 @@ definitions:
       - language
       - protocol
       - schema
+  SchemaUsage:
+    type: object
+    additionalProperties: false
+    properties:
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
   SerializationFormat:
     type: object
     additionalProperties: false
