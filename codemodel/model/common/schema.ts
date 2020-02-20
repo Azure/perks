@@ -10,6 +10,14 @@ export interface SerializationFormat extends Extensions, Dictionary<any> {
 
 }
 
+export enum SchemaContext {
+  /** Schema is used as an input to an operation. */
+  Input = 'input',
+
+  /** Schema is used as an output from an operation. */
+  Output = 'output'
+}
+
 /** The Schema Object allows the definition of input and output data types. */
 export interface Schema extends Aspect {
   /** per-language information for Schema */
@@ -29,6 +37,12 @@ export interface Schema extends Aspect {
 
   /** per-serialization information for this Schema  */
   serialization?: SerializationFormats;
+
+  /** contexts in which the schema is used */
+  contexts?: SchemaContext[];
+
+  /** Known media types in which this schema can be serialized */
+  knownMediaTypes?: string[];
 
   /* are these needed I don't think so? */
   // nullable: boolean;
