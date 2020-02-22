@@ -45,6 +45,13 @@
       ],
       "type": "string"
     },
+    "SchemaContext": {
+      "enum": [
+        "input",
+        "output"
+      ],
+      "type": "string"
+    },
     "SerializationStyle": {
       "description": "The Serialization Style used for the parameter.\n\nDescribes how the parameter value will be serialized depending on the type of the parameter value.",
       "enum": [

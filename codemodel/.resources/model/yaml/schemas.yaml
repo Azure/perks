@@ -309,6 +309,27 @@ definitions:
         type: array
         items:
           $ref: './master.yaml#/definitions/GroupProperty'
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
     required:
       - language
       - protocol
@@ -395,6 +416,27 @@ definitions:
         description: the collection of properties that are in this object
         items:
           $ref: './master.yaml#/definitions/Property'
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
     required:
       - language
       - protocol
@@ -499,7 +541,7 @@ definitions:
       choices:
         type: array
         description: |-
-          - this is essentially can be thought of as an 'enum' 
+          - this is essentially can be thought of as an 'enum'
           that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: './schemas.yaml#/definitions/ChoiceSchema'
@@ -593,7 +635,7 @@ definitions:
       unknowns:
         type: array
         description: |-
-          it's possible that we just may make this an error 
+          it's possible that we just may make this an error
           in representation.
         items:
           $ref: './schemas.yaml#/definitions/Schema'

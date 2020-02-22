@@ -58,6 +58,11 @@ definitions:
       - form
       - pipeDelimited
       - spaceDelimited
+  SchemaContext:
+    type: string
+    enum:
+      - input
+      - output
   SchemaType:
     type: string
     description: possible schema types that indicate the type of schema.
