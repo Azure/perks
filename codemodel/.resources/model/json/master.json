@@ -448,6 +448,40 @@
         }
       ]
     },
+    "SchemaUsage": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "description": "contexts in which the schema is used",
+          "type": "array",
+          "items": {
+            "enum": [
+              "input",
+              "output"
+            ],
+            "type": "string"
+          }
+        },
+        "serializationFormats": {
+          "description": "Known media types in which this schema can be serialized",
+          "type": "array",
+          "items": {
+            "enum": [
+              "binary",
+              "form",
+              "json",
+              "multipart",
+              "text",
+              "unknown",
+              "xml"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false
+    },
     "Relations": {
       "type": "object",
       "properties": {

@@ -4,6 +4,7 @@ import { DeepPartial } from '@azure-tools/codegen';
 import { Property } from '../property';
 import { Dictionary, values } from '@azure-tools/linq';
 import { Parameter } from '../parameter';
+import { SchemaUsage } from './usage';
 
 export interface Relations {
   immediate: Array<ComplexSchema>;
@@ -42,7 +43,7 @@ export class GroupProperty extends Property implements GroupProperty {
   }
 }
 
-export interface GroupSchema extends Schema {
+export interface GroupSchema extends Schema, SchemaUsage {
   type: SchemaType.Group;
   properties?: Array<GroupProperty>;
 }
@@ -59,7 +60,7 @@ export class GroupSchema extends Schema implements GroupSchema {
 }
 
 /** a schema that represents a type with child properties. */
-export interface ObjectSchema extends ComplexSchema {
+export interface ObjectSchema extends ComplexSchema, SchemaUsage {
   /** the schema type  */
   type: SchemaType.Object;
 

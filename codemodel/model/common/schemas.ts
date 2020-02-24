@@ -17,6 +17,8 @@ import { BinarySchema } from './schemas/binary';
 import { finished } from 'stream';
 import { AnySchema } from './schemas/any';
 
+export { SchemaUsage, SchemaContext } from './schemas/usage';
+
 /** the full set of schemas for a given service, categorized into convenient collections */
 export interface Schemas {
   /** a collection of items */
