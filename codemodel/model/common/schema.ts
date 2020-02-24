@@ -10,6 +10,7 @@ export interface SerializationFormat extends Extensions, Dictionary<any> {
 
 }
 
+
 /** The Schema Object allows the definition of input and output data types. */
 export interface Schema extends Aspect {
   /** per-language information for Schema */

@@ -663,6 +663,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/GroupProperty'
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
     required:
       - language
       - protocol
@@ -1247,6 +1268,27 @@ definitions:
         description: the collection of properties that are in this object
         items:
           $ref: '#/definitions/Property'
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
     required:
       - language
       - protocol
@@ -1590,6 +1632,11 @@ definitions:
       - language
       - protocol
       - type
+  SchemaContext:
+    type: string
+    enum:
+      - input
+      - output
   SchemaResponse:
     type: object
     description: a response that should be deserialized into a result of type(schema)
@@ -1638,6 +1685,31 @@ definitions:
       - uri
       - uuid
       - xor
+  SchemaUsage:
+    type: object
+    additionalProperties: false
+    properties:
+      serializationFormats:
+        type: array
+        description: Known media types in which this schema can be serialized
+        items:
+          type: string
+          enum:
+            - binary
+            - form
+            - json
+            - multipart
+            - text
+            - unknown
+            - xml
+      usage:
+        type: array
+        description: contexts in which the schema is used
+        items:
+          type: string
+          enum:
+            - input
+            - output
   Schemas:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
@@ -1670,7 +1742,7 @@ definitions:
       choices:
         type: array
         description: |-
-          - this is essentially can be thought of as an 'enum' 
+          - this is essentially can be thought of as an 'enum'
           that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: '#/definitions/ChoiceSchema'
@@ -1764,7 +1836,7 @@ definitions:
       unknowns:
         type: array
         description: |-
-          it's possible that we just may make this an error 
+          it's possible that we just may make this an error
           in representation.
         items:
           $ref: '#/definitions/Schema'

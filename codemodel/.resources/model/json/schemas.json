@@ -403,6 +403,33 @@
           "items": {
             "$ref": "./master.json#/definitions/GroupProperty"
           }
+        },
+        "usage": {
+          "description": "contexts in which the schema is used",
+          "type": "array",
+          "items": {
+            "enum": [
+              "input",
+              "output"
+            ],
+            "type": "string"
+          }
+        },
+        "serializationFormats": {
+          "description": "Known media types in which this schema can be serialized",
+          "type": "array",
+          "items": {
+            "enum": [
+              "binary",
+              "form",
+              "json",
+              "multipart",
+              "text",
+              "unknown",
+              "xml"
+            ],
+            "type": "string"
+          }
         }
       },
       "defaultProperties": [],
@@ -449,6 +476,33 @@
         },
         "discriminatorValue": {
           "type": "string"
+        },
+        "usage": {
+          "description": "contexts in which the schema is used",
+          "type": "array",
+          "items": {
+            "enum": [
+              "input",
+              "output"
+            ],
+            "type": "string"
+          }
+        },
+        "serializationFormats": {
+          "description": "Known media types in which this schema can be serialized",
+          "type": "array",
+          "items": {
+            "enum": [
+              "binary",
+              "form",
+              "json",
+              "multipart",
+              "text",
+              "unknown",
+              "xml"
+            ],
+            "type": "string"
+          }
         }
       },
       "defaultProperties": [],
@@ -897,7 +951,7 @@
           }
         },
         "choices": {
-          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several items, but an unspecified value is permitted.",
+          "description": "- this is essentially can be thought of as an 'enum'\nthat is a choice between one of several items, but an unspecified value is permitted.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ChoiceSchema"
@@ -955,7 +1009,7 @@
           }
         },
         "unknowns": {
-          "description": "it's possible that we just may make this an error \nin representation.",
+          "description": "it's possible that we just may make this an error\nin representation.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/Schema"
