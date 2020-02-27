@@ -60,7 +60,10 @@ export interface HttpWithBodyRequest extends HttpRequest {
 }
 
 export class HttpWithBodyRequest extends HttpRequest implements HttpWithBodyRequest {
-
+  constructor(objectInitializer?: Partial<HttpWithBodyRequest>) {
+    super();
+    this.apply(objectInitializer);
+  }
 }
 export interface HttpBinaryRequest extends HttpWithBodyRequest {
   /* indicates that the HTTP request should be a binary, not a serialized object */

@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { exists, rmdir, readdir, mkdir, writeFile } from '@azure-tools/async-io';
 import { resolve as uriResolve, parse as uriParse } from 'url';
+import { homedir } from 'os';
 /* eslint-disable */
 
 export function simplifyUri(uri: string) {
@@ -170,9 +171,14 @@ export function ToRawDataUrl(uri: string): string {
  * @returns Absolute URI
  */
 export function ResolveUri(baseUri: string, pathOrUri: string): string {
+  if (pathOrUri.startsWith('~/')) {
+    pathOrUri = pathOrUri.replace(/^~/, homedir())
+  }
   if (isAbsolute(pathOrUri)) {
     return CreateFileOrFolderUri(pathOrUri);
   }
+
+
   // known here: `pathOrUri` is eiher URI (relative or absolute) or relative path - which we can normalize to a relative URI
   pathOrUri = pathOrUri.replace(/\\/g, '/');
   // known here: `pathOrUri` is a URI (relative or absolute)

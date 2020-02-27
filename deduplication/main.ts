@@ -86,6 +86,7 @@ export class Deduplicator {
   private target: any;
   constructor(originalFile: any, protected deduplicateInlineModels = false) {
     this.target = clone(originalFile);
+    this.target.info['x-ms-metadata'].deduplicated = true;
   }
 
   private async init() {
