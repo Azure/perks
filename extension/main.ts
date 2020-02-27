@@ -744,13 +744,13 @@ export class ExtensionManager {
         process.env[PathVar] = `${dirname(fullCommandPath)}${delimiter}${env[PathVar]}`;
 
         // call spawn and return
-        return spawn(basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath });
+        return spawn(basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath, stdio: ['pipe', 'pipe', 'pipe'] });
       } finally {
         // regardless, restore the original path on the way out!
         process.env[PathVar] = originalPath;
       }
     }
 
-    return spawn(fullCommandPath, command.slice(1), { env, cwd: extension.modulePath });
+    return spawn(fullCommandPath, command.slice(1), { env, cwd: extension.modulePath, stdio: ['pipe', 'pipe', 'pipe'] });
   }
 }
