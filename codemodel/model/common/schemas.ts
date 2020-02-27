@@ -133,7 +133,7 @@ export class Schemas {
 
     // for simple types, go a quick check to see if an exact copy of this is in the collection already 
     // since we can just return that. (the consumer needs to pay attention tho')
-    if (schema instanceof ConstantSchema || schema instanceof PrimitiveSchema || schema instanceof AnySchema || schema instanceof ArraySchema || schema instanceof ByteArraySchema || schema instanceof DictionarySchema) {
+    if (schema instanceof ConstantSchema || schema instanceof PrimitiveSchema || schema instanceof AnySchema || schema instanceof ArraySchema || schema instanceof ByteArraySchema || schema instanceof DictionarySchema || schema instanceof ChoiceSchema || schema instanceof SealedChoiceSchema) {
       try {
         const s = JSON.stringify(schema);
         const found = a.find(each => JSON.stringify(each) === s);
