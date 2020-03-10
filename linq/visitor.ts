@@ -70,7 +70,7 @@ export function refCount(instance: AnyObject, target: AnyObject): number {
   let count = 0;
 
   for (const each of visitor(instance)) {
-    if (target === instance.instance) {
+    if (target === each.instance) {
       count++;
     }
   }
