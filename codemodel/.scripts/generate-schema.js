@@ -146,7 +146,7 @@ async function main() {
     noExtraProps: true,
   };
 
-  const program = TJS.getProgramFromFiles(g.sync(`${__dirname}/../model/**/*.ts`), {}, __dirname);
+  const program = TJS.getProgramFromFiles(g.sync(`${__dirname}/../model/**/*.ts`), { downlevelIteration: true }, __dirname);
 
   // We can either get the schema for one file and one type...
   let schema = TJS.generateSchema(program, "*", settings);
