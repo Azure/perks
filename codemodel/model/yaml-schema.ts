@@ -43,9 +43,9 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(HttpModel),
   TypeInfo(HttpParameter),
 
-  TypeInfo(HttpWithBodyRequest),
   TypeInfo(HttpBinaryRequest),
   TypeInfo(HttpMultipartRequest),
+  TypeInfo(HttpWithBodyRequest),
   TypeInfo(HttpRequest),
 
   TypeInfo(HttpBinaryResponse),
