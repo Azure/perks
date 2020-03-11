@@ -7,7 +7,7 @@ const TJS = require("typescript-json-schema");
 const tsm = require('ts-morph');
 
 const project = new tsm.Project({ tsConfigFilePath: `{__dirname}/../tsconfig.json` });
-project.compilerOptions.set({ downlevelIteration: true });
+
 const x = project.getSourceFiles().map(each => each.getInterfaces());
 
 function flatten(arr) {
@@ -146,7 +146,7 @@ async function main() {
     noExtraProps: true,
   };
 
-  const program = TJS.getProgramFromFiles(g.sync(`${__dirname}/../model/**/*.ts`), {}, __dirname);
+  const program = TJS.getProgramFromFiles(g.sync(`${__dirname}/../model/**/*.ts`), { downlevelIteration: true }, __dirname);
 
   // We can either get the schema for one file and one type...
   let schema = TJS.generateSchema(program, "*", settings);
@@ -177,7 +177,6 @@ async function main() {
   schema.definitions['SealedChoiceSchema'].properties['choiceType'].$ref = '#/definitions/PrimitiveSchema'
   schema.definitions['ConditionalSchema'].properties['conditionalType'].$ref = '#/definitions/PrimitiveSchema'
   schema.definitions['SealedConditionalSchema'].properties['conditionalType'].$ref = '#/definitions/PrimitiveSchema'
-
 
   for (let each in schema.definitions['CodeModel']) {
     schema[each] = schema.definitions['CodeModel'][each]
@@ -226,6 +225,12 @@ async function main() {
   schema.definitions['SerializationFormats'].additionalProperties = false; // { type: 'object' };
 
   // console.log(schema.definitions['Language']);
+
+  // Fix up the SchemaUsage spec and its consumers
+  schema.definitions['SchemaUsage'].properties['usage'].items = { $ref: '#/definitions/SchemaContext' };
+  schema.definitions['SchemaUsage'].properties['serializationFormats'].items = { $ref: '#/definitions/KnownMediaType' };
+  refSchemaUsage(schema, 'ObjectSchema');
+  refSchemaUsage(schema, 'GroupSchema');
 
   // write out the full all in one model
   await writemodels('code-model', 'all-in-one', schema);
@@ -319,6 +324,12 @@ async function main() {
   for (const each in all) {
     await writemodels(each, 'model', all[each]);
   }
+}
+
+function refSchemaUsage(schema, schemaName) {
+  delete schema.definitions[schemaName].properties['usage'];
+  delete schema.definitions[schemaName].properties['serializationFormats'];
+  schema.definitions[schemaName].allOf.push({ $ref: `#/definitions/SchemaUsage` });
 }
 
 function moveTo(all, name, target, ) {

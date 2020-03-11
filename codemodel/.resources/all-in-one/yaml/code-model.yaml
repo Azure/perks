@@ -658,32 +658,12 @@ definitions:
     additionalProperties: false
     allOf:
       - $ref: '#/definitions/Schema'
+      - $ref: '#/definitions/SchemaUsage'
     properties:
       properties:
         type: array
         items:
           $ref: '#/definitions/GroupProperty'
-      serializationFormats:
-        type: array
-        description: Known media types in which this schema can be serialized
-        items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
-      usage:
-        type: array
-        description: contexts in which the schema is used
-        items:
-          type: string
-          enum:
-            - input
-            - output
     required:
       - language
       - protocol
@@ -1247,6 +1227,7 @@ definitions:
     additionalProperties: false
     allOf:
       - $ref: '#/definitions/ComplexSchema'
+      - $ref: '#/definitions/SchemaUsage'
     properties:
       children:
         $ref: '#/definitions/Relations'
@@ -1268,27 +1249,6 @@ definitions:
         description: the collection of properties that are in this object
         items:
           $ref: '#/definitions/Property'
-      serializationFormats:
-        type: array
-        description: Known media types in which this schema can be serialized
-        items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
-      usage:
-        type: array
-        description: contexts in which the schema is used
-        items:
-          type: string
-          enum:
-            - input
-            - output
     required:
       - language
       - protocol
@@ -1693,23 +1653,12 @@ definitions:
         type: array
         description: Known media types in which this schema can be serialized
         items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
+          $ref: '#/definitions/KnownMediaType'
       usage:
         type: array
         description: contexts in which the schema is used
         items:
-          type: string
-          enum:
-            - input
-            - output
+          $ref: '#/definitions/SchemaContext'
   Schemas:
     type: object
     description: 'the full set of schemas for a given service, categorized into convenient collections'
