@@ -304,32 +304,12 @@ definitions:
     additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/Schema'
+      - $ref: './schemas.yaml#/definitions/SchemaUsage'
     properties:
       properties:
         type: array
         items:
           $ref: './master.yaml#/definitions/GroupProperty'
-      serializationFormats:
-        type: array
-        description: Known media types in which this schema can be serialized
-        items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
-      usage:
-        type: array
-        description: contexts in which the schema is used
-        items:
-          type: string
-          enum:
-            - input
-            - output
     required:
       - language
       - protocol
@@ -395,6 +375,7 @@ definitions:
     additionalProperties: false
     allOf:
       - $ref: './schemas.yaml#/definitions/ComplexSchema'
+      - $ref: './schemas.yaml#/definitions/SchemaUsage'
     properties:
       children:
         $ref: './master.yaml#/definitions/Relations'
@@ -416,27 +397,6 @@ definitions:
         description: the collection of properties that are in this object
         items:
           $ref: './master.yaml#/definitions/Property'
-      serializationFormats:
-        type: array
-        description: Known media types in which this schema can be serialized
-        items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
-      usage:
-        type: array
-        description: contexts in which the schema is used
-        items:
-          type: string
-          enum:
-            - input
-            - output
     required:
       - language
       - protocol

@@ -528,23 +528,12 @@ definitions:
         type: array
         description: Known media types in which this schema can be serialized
         items:
-          type: string
-          enum:
-            - binary
-            - form
-            - json
-            - multipart
-            - text
-            - unknown
-            - xml
+          $ref: './enums.yaml#/definitions/KnownMediaType'
       usage:
         type: array
         description: contexts in which the schema is used
         items:
-          type: string
-          enum:
-            - input
-            - output
+          $ref: './schemas.yaml#/definitions/SchemaContext'
   SerializationFormat:
     type: object
     additionalProperties: false

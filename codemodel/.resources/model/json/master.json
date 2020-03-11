@@ -455,27 +455,14 @@
           "description": "contexts in which the schema is used",
           "type": "array",
           "items": {
-            "enum": [
-              "input",
-              "output"
-            ],
-            "type": "string"
+            "$ref": "./schemas.json#/definitions/SchemaContext"
           }
         },
         "serializationFormats": {
           "description": "Known media types in which this schema can be serialized",
           "type": "array",
           "items": {
-            "enum": [
-              "binary",
-              "form",
-              "json",
-              "multipart",
-              "text",
-              "unknown",
-              "xml"
-            ],
-            "type": "string"
+            "$ref": "./enums.json#/definitions/KnownMediaType"
           }
         }
       },
