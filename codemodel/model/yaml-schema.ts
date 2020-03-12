@@ -58,10 +58,10 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(BinaryResponse),
   TypeInfo(Response),
 
-  TypeInfo(Parameter),
   TypeInfo(VirtualParameter),
-  TypeInfo(Property),
+  TypeInfo(Parameter),
   TypeInfo(GroupProperty),
+  TypeInfo(Property),
   TypeInfo(Value),
   TypeInfo(Operation),
   TypeInfo(GroupSchema),
