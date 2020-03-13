@@ -234,6 +234,7 @@ export class Oai2ToOai3 {
         'allowEmptyValue',
         'required',
         'x-ms-parameter-location',
+        'x-ms-api-version',
         'x-comment',
         'x-ms-parameter-grouping',
         'x-ms-client-name',
