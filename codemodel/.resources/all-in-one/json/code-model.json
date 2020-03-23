@@ -1753,7 +1753,7 @@
           }
         },
         "choices": {
-          "description": "- this is essentially can be thought of as an 'enum'\nthat is a choice between one of several items, but an unspecified value is permitted.",
+          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several items, but an unspecified value is permitted.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ChoiceSchema"
@@ -1811,7 +1811,7 @@
           }
         },
         "unknowns": {
-          "description": "it's possible that we just may make this an error\nin representation.",
+          "description": "it's possible that we just may make this an error \nin representation.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Schema"
@@ -1822,6 +1822,9 @@
           "items": {
             "$ref": "#/definitions/GroupSchema"
           }
+        },
+        "any": {
+          "$ref": "#/definitions/AnySchema"
         }
       },
       "defaultProperties": [],
