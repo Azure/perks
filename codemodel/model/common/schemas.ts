@@ -115,13 +115,16 @@ export interface Schemas {
   unknowns?: Array<Schema>;
 
   groups?: Array<GroupSchema>;
+
+  any?: AnySchema;
 }
 
 export class Schemas {
+
   add<T extends Schema>(schema: T): T {
 
-    if (schema.type === SchemaType.Any) {
-      return schema;
+    if (schema instanceof AnySchema) {
+      return <T>(this.any || (this.any = schema));
     }
 
     let group = `${camelCase(schema.type)}s`.replace(/rys$/g, 'ries');

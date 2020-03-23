@@ -474,6 +474,8 @@ definitions:
     description: 'the full set of schemas for a given service, categorized into convenient collections'
     additionalProperties: false
     properties:
+      any:
+        $ref: './schemas.yaml#/definitions/AnySchema'
       arrays:
         type: array
         description: a collection of items
@@ -501,7 +503,7 @@ definitions:
       choices:
         type: array
         description: |-
-          - this is essentially can be thought of as an 'enum'
+          - this is essentially can be thought of as an 'enum' 
           that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: './schemas.yaml#/definitions/ChoiceSchema'
@@ -595,7 +597,7 @@ definitions:
       unknowns:
         type: array
         description: |-
-          it's possible that we just may make this an error
+          it's possible that we just may make this an error 
           in representation.
         items:
           $ref: './schemas.yaml#/definitions/Schema'
