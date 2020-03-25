@@ -19,6 +19,7 @@
         "integer",
         "number",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid"
@@ -43,6 +44,7 @@
         "sealed-choice",
         "sealed-conditional",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid"
@@ -85,6 +87,7 @@
         "sealed-choice",
         "sealed-conditional",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid",

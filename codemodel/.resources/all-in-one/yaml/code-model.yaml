@@ -53,6 +53,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - uri
       - uuid
@@ -1450,6 +1451,7 @@ definitions:
       - integer
       - number
       - string
+      - time
       - unixtime
       - uri
       - uuid
@@ -1640,6 +1642,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - unknown
       - uri
@@ -1665,7 +1668,9 @@ definitions:
     additionalProperties: false
     properties:
       any:
-        $ref: '#/definitions/AnySchema'
+        type: array
+        items:
+          $ref: '#/definitions/AnySchema'
       arrays:
         type: array
         description: a collection of items
@@ -1779,6 +1784,11 @@ definitions:
         description: a string of characters
         items:
           $ref: '#/definitions/StringSchema'
+      times:
+        type: array
+        description: a time
+        items:
+          $ref: '#/definitions/ApiVersionimeSchema'
       unixtimes:
         type: array
         description: UnixTime
@@ -1997,6 +2007,16 @@ definitions:
       - language
       - protocol
       - type
+  TimeSchema:
+    type: object
+    description: a schema that represents a Date value
+    additionalProperties: false
+    allOf:
+      - $ref: '#/definitions/PrimitiveSchema'
+    required:
+      - language
+      - protocol
+      - type
   UnixTimeSchema:
     type: object
     description: a schema that represents a UnixTime value
@@ -2111,6 +2131,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - uri
       - uuid

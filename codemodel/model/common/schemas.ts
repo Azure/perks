@@ -7,7 +7,7 @@ import { BooleanSchema, CharSchema } from './schemas/primitive';
 import { NumberSchema } from './schemas/number';
 import { ObjectSchema, GroupSchema } from './schemas/object';
 import { StringSchema, UuidSchema, UriSchema, CredentialSchema, ODataQuerySchema } from './schemas/string';
-import { UnixTimeSchema, DateSchema, DateTimeSchema, DurationSchema } from './schemas/time';
+import { UnixTimeSchema, DateSchema, DateTimeSchema, DurationSchema, TimeSchema } from './schemas/time';
 import { Schema, PrimitiveSchema } from './schema';
 import { ConditionalSchema, SealedConditionalSchema } from './schemas/conditional';
 import { FlagSchema } from './schemas/flag';
@@ -53,6 +53,9 @@ export interface Schemas {
 
   /** a Date */
   dates?: Array<DateSchema>;
+
+  /** a time */
+  times?: Array<TimeSchema>;
 
   /** a DateTime */
   dateTimes?: Array<DateTimeSchema>;
@@ -116,7 +119,7 @@ export interface Schemas {
 
   groups?: Array<GroupSchema>;
 
-  any?: AnySchema;
+  any?: Array<AnySchema>;
 }
 
 export class Schemas {
@@ -124,7 +127,10 @@ export class Schemas {
   add<T extends Schema>(schema: T): T {
 
     if (schema instanceof AnySchema) {
-      return <T>(this.any || (this.any = schema));
+      if (!(this.any && this.any[0])) {
+        this.any = [schema];
+      }
+      return <T>this.any[0];
     }
 
     let group = `${camelCase(schema.type)}s`.replace(/rys$/g, 'ries');

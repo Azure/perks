@@ -26,7 +26,7 @@ import { StringSchema, ODataQuerySchema, CredentialSchema, UriSchema, UuidSchema
 import { ArraySchema, ByteArraySchema } from './common/schemas/array';
 import { ConstantValue, ConstantSchema } from './common/schemas/constant';
 import { BooleanSchema, CharSchema } from './common/schemas/primitive';
-import { DurationSchema, DateTimeSchema, DateSchema, UnixTimeSchema } from './common/schemas/time';
+import { DurationSchema, DateTimeSchema, DateSchema, UnixTimeSchema, TimeSchema } from './common/schemas/time';
 import { AnySchema } from './common/schemas/any';
 import { DictionarySchema } from './common/schemas/dictionary';
 import { OrSchema, XorSchema } from './common/schemas/relationship';
@@ -88,6 +88,7 @@ export const codeModelSchema = Schema.create(DEFAULT_SAFE_SCHEMA, [
   TypeInfo(DurationSchema),
   TypeInfo(DateTimeSchema),
   TypeInfo(DateSchema),
+  TypeInfo(TimeSchema),
   TypeInfo(CharSchema),
   TypeInfo(AnySchema),
   TypeInfo(ByteArraySchema),
