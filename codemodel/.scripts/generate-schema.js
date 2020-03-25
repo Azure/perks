@@ -128,7 +128,7 @@ function fixmodel(schema) {
     .replace(/T_3/g, 'Extensions')
     .replace(/Protocols<Protocol>/g, 'Protocols')
     .replace(/Languages<Language>/g, 'Languages')
-    .replace(/definitions\/T/g, 'definitions/ApiVersion')
+    .replace(/definitions\/T"/g, 'definitions/ApiVersion"')
     .replace(/ElementType_1/g, 'Schema')
     .replace(/ElementType/g, 'Schema')
     .replace(/SerializationFormats<SerializationFormat>/g, 'SerializationFormats')

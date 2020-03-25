@@ -531,6 +531,23 @@
         }
       ]
     },
+    "TimeSchema": {
+      "description": "a schema that represents a Date value",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "./schemas.json#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
     "UnixTimeSchema": {
       "description": "a schema that represents a UnixTime value",
       "type": "object",
@@ -860,6 +877,13 @@
             "$ref": "./schemas.json#/definitions/DateSchema"
           }
         },
+        "times": {
+          "description": "a time",
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/TimeSchema"
+          }
+        },
         "dateTimes": {
           "description": "a DateTime",
           "type": "array",
@@ -974,7 +998,10 @@
           }
         },
         "any": {
-          "$ref": "./schemas.json#/definitions/AnySchema"
+          "type": "array",
+          "items": {
+            "$ref": "./schemas.json#/definitions/AnySchema"
+          }
         }
       },
       "defaultProperties": [],

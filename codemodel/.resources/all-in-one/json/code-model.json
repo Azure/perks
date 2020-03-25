@@ -306,6 +306,7 @@
         "sealed-choice",
         "sealed-conditional",
         "string",
+        "time",
         "unixtime",
         "unknown",
         "uri",
@@ -332,6 +333,7 @@
         "integer",
         "number",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid"
@@ -356,6 +358,7 @@
         "sealed-choice",
         "sealed-conditional",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid"
@@ -398,6 +401,7 @@
         "sealed-choice",
         "sealed-conditional",
         "string",
+        "time",
         "unixtime",
         "uri",
         "uuid",
@@ -1300,6 +1304,23 @@
         }
       ]
     },
+    "TimeSchema": {
+      "description": "a schema that represents a Date value",
+      "type": "object",
+      "properties": {},
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "protocol",
+        "type"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/PrimitiveSchema"
+        }
+      ]
+    },
     "UnixTimeSchema": {
       "description": "a schema that represents a UnixTime value",
       "type": "object",
@@ -1710,6 +1731,13 @@
             "$ref": "#/definitions/DateSchema"
           }
         },
+        "times": {
+          "description": "a time",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimeSchema"
+          }
+        },
         "dateTimes": {
           "description": "a DateTime",
           "type": "array",
@@ -1824,7 +1852,10 @@
           }
         },
         "any": {
-          "$ref": "#/definitions/AnySchema"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnySchema"
+          }
         }
       },
       "defaultProperties": [],

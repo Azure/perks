@@ -475,7 +475,9 @@ definitions:
     additionalProperties: false
     properties:
       any:
-        $ref: './schemas.yaml#/definitions/AnySchema'
+        type: array
+        items:
+          $ref: './schemas.yaml#/definitions/AnySchema'
       arrays:
         type: array
         description: a collection of items
@@ -589,6 +591,11 @@ definitions:
         description: a string of characters
         items:
           $ref: './schemas.yaml#/definitions/StringSchema'
+      times:
+        type: array
+        description: a time
+        items:
+          $ref: './schemas.yaml#/definitions/TimeSchema'
       unixtimes:
         type: array
         description: UnixTime
@@ -656,6 +663,16 @@ definitions:
       pattern:
         type: string
         description: a regular expression that the string must be validated against
+    required:
+      - language
+      - protocol
+      - type
+  TimeSchema:
+    type: object
+    description: a schema that represents a Date value
+    additionalProperties: false
+    allOf:
+      - $ref: './schemas.yaml#/definitions/PrimitiveSchema'
     required:
       - language
       - protocol

@@ -92,6 +92,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - unknown
       - uri

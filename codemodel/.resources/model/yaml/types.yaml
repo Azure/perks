@@ -29,6 +29,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - uri
       - uuid
@@ -56,6 +57,7 @@ definitions:
       - integer
       - number
       - string
+      - time
       - unixtime
       - uri
       - uuid
@@ -78,6 +80,7 @@ definitions:
       - sealed-choice
       - sealed-conditional
       - string
+      - time
       - unixtime
       - uri
       - uuid

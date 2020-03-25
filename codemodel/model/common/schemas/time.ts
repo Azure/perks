@@ -30,6 +30,7 @@ export class DateTimeSchema extends PrimitiveSchema implements DateTimeSchema {
     this.apply(objectInitializer);
   }
 }
+
 /** a schema that represents a Date value */
 export interface DateSchema extends PrimitiveSchema {
   /** the schema type  */
@@ -39,6 +40,19 @@ export interface DateSchema extends PrimitiveSchema {
 export class DateSchema extends PrimitiveSchema implements DateSchema {
   constructor(name: string, description: string, objectInitializer?: DeepPartial<DateSchema>) {
     super(name, description, SchemaType.Date);
+    this.apply(objectInitializer);
+  }
+}
+
+/** a schema that represents a Date value */
+export interface TimeSchema extends PrimitiveSchema {
+  /** the schema type  */
+  type: SchemaType.Time;
+}
+
+export class TimeSchema extends PrimitiveSchema implements TimeSchema {
+  constructor(name: string, description: string, objectInitializer?: DeepPartial<TimeSchema>) {
+    super(name, description, SchemaType.Time);
     this.apply(objectInitializer);
   }
 }

@@ -44,6 +44,9 @@ export enum SchemaType {
   /** a Date */
   Date = 'date',
 
+  /** a Date */
+  Time = 'time',
+
   /** a DateTime */
   DateTime = 'date-time',
 
@@ -115,6 +118,7 @@ export type CompoundSchemaTypes =
 export type PrimitiveSchemaTypes =
   SchemaType.Char |
   SchemaType.Date |
+  SchemaType.Time |
   SchemaType.DateTime |
   SchemaType.Duration |
   SchemaType.Credential |
