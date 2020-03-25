@@ -595,7 +595,7 @@ definitions:
         type: array
         description: a time
         items:
-          $ref: './master.yaml#/definitions/ApiVersionimeSchema'
+          $ref: './schemas.yaml#/definitions/TimeSchema'
       unixtimes:
         type: array
         description: UnixTime

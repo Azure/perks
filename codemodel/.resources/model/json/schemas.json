@@ -881,7 +881,7 @@
           "description": "a time",
           "type": "array",
           "items": {
-            "$ref": "./master.json#/definitions/ApiVersionimeSchema"
+            "$ref": "./schemas.json#/definitions/TimeSchema"
           }
         },
         "dateTimes": {

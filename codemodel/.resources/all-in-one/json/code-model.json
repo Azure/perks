@@ -1735,7 +1735,7 @@
           "description": "a time",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ApiVersionimeSchema"
+            "$ref": "#/definitions/TimeSchema"
           }
         },
         "dateTimes": {

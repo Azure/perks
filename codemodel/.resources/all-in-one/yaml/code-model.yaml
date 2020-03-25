@@ -1788,7 +1788,7 @@ definitions:
         type: array
         description: a time
         items:
-          $ref: '#/definitions/ApiVersionimeSchema'
+          $ref: '#/definitions/TimeSchema'
       unixtimes:
         type: array
         description: UnixTime
