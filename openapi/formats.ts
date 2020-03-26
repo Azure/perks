@@ -18,6 +18,9 @@ export enum StringFormat {
   /** @description A date as defined by full-date - RFC3339 */
   Date = 'date',
 
+  /** @description A time as defined by ISO 8661 */
+  Time = 'time',
+
   /** @description A Date-Time as defined by date-time - RFC3339  */
   DateTime = 'date-time',
 

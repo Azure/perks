@@ -176,6 +176,9 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: './master.yaml#/definitions/ExternalDocumentation'
+      origin:
+        type: string
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'
@@ -450,6 +453,9 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: './master.yaml#/definitions/ExternalDocumentation'
+      origin:
+        type: string
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'

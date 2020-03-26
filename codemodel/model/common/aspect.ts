@@ -8,9 +8,6 @@ const count = 0;
 
 /** the base interface that represents an aspect of the model. */
 export interface Aspect extends Metadata {
-  // / * * a unique id for correlation between cloned objects */
-  // /** @internal */ uid: string;
-
   // ** common name of the aspect -- in OAI3 this was typically the key in the parent dictionary */
   // $key: string;
 
@@ -28,6 +25,9 @@ export interface Aspect extends Metadata {
 
   /** deprecation information -- ie, when this aspect doesn't apply and why */
   deprecated?: Deprecation;
+
+  /** where did this aspect come from (jsonpath or 'modelerfour:<soemthing>') */
+  origin?: string;
 
   /** External Documentation Links */
   externalDocs?: ExternalDocumentation;
