@@ -341,7 +341,7 @@ definitions:
         $ref: './master.yaml#/definitions/ExternalDocumentation'
       origin:
         type: string
-        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       parameters:
         type: array
         description: common parameters when there are multiple requests
@@ -585,7 +585,7 @@ definitions:
         description: can null be passed in instead
       origin:
         type: string
-        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       required:
         type: boolean
         description: if the value is marked 'required'.

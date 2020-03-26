@@ -178,7 +178,7 @@ definitions:
         $ref: './master.yaml#/definitions/ExternalDocumentation'
       origin:
         type: string
-        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'
@@ -455,7 +455,7 @@ definitions:
         $ref: './master.yaml#/definitions/ExternalDocumentation'
       origin:
         type: string
-        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
+        description: 'where did this aspect come from (jsonpath or ''modelerfour:<soemthing>'')'
       serialization:
         description: per-serialization information for this Schema
         $ref: './master.yaml#/definitions/SerializationFormats'

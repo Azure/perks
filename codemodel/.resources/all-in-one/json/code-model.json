@@ -106,7 +106,7 @@
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
         "origin": {
-          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "description": "where did this aspect come from (jsonpath or 'modelerfour:<soemthing>')",
           "type": "string"
         },
         "externalDocs": {
@@ -940,7 +940,7 @@
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
         "origin": {
-          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "description": "where did this aspect come from (jsonpath or 'modelerfour:<soemthing>')",
           "type": "string"
         },
         "externalDocs": {
@@ -2078,7 +2078,7 @@
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
         "origin": {
-          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "description": "where did this aspect come from (jsonpath or 'modelerfour:<soemthing>')",
           "type": "string"
         },
         "externalDocs": {
@@ -3065,7 +3065,7 @@
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
         "origin": {
-          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "description": "where did this aspect come from (jsonpath or 'modelerfour:<soemthing>')",
           "type": "string"
         },
         "externalDocs": {

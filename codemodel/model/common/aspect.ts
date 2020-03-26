@@ -26,7 +26,7 @@ export interface Aspect extends Metadata {
   /** deprecation information -- ie, when this aspect doesn't apply and why */
   deprecated?: Deprecation;
 
-  /** where did this aspec come from (jsonpath or 'm4:<soemthing>') */
+  /** where did this aspect come from (jsonpath or 'modelerfour:<soemthing>') */
   origin?: string;
 
   /** External Documentation Links */
