@@ -320,6 +320,10 @@
           "$ref": "./master.json#/definitions/Deprecation",
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
         },
+        "origin": {
+          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "type": "string"
+        },
         "externalDocs": {
           "$ref": "./master.json#/definitions/ExternalDocumentation",
           "description": "External Documentation Links"
@@ -804,6 +808,10 @@
         "deprecated": {
           "$ref": "./master.json#/definitions/Deprecation",
           "description": "deprecation information -- ie, when this aspect doesn't apply and why"
+        },
+        "origin": {
+          "description": "where did this aspec come from (jsonpath or 'm4:<soemthing>')",
+          "type": "string"
         },
         "externalDocs": {
           "$ref": "./master.json#/definitions/ExternalDocumentation",

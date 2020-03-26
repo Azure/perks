@@ -339,6 +339,9 @@ definitions:
       externalDocs:
         description: External Documentation Links
         $ref: './master.yaml#/definitions/ExternalDocumentation'
+      origin:
+        type: string
+        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
       parameters:
         type: array
         description: common parameters when there are multiple requests
@@ -580,6 +583,9 @@ definitions:
       nullable:
         type: boolean
         description: can null be passed in instead
+      origin:
+        type: string
+        description: 'where did this aspec come from (jsonpath or ''m4:<soemthing>'')'
       required:
         type: boolean
         description: if the value is marked 'required'.
