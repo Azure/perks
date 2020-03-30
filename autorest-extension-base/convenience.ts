@@ -182,7 +182,7 @@ export class Session<TInputModel> {
 
   public checkpoint() {
     if (this.errorCount > 0) {
-      throw new Error();
+      throw new Error(`${this.errorCount} errors occured -- cannot continue.`);
     }
   }
 
