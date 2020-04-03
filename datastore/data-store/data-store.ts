@@ -16,6 +16,8 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { items } from '@azure-tools/linq';
 
+import { createHash } from 'crypto';
+const md5 = (content: any) => content ? createHash('md5').update(JSON.stringify(content)).digest('hex') : null;
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
 
@@ -211,7 +213,11 @@ export class DataStore {
     }
 
     // make a sanitized name
-    const name = join(await this.getCacheFolder(), uri.replace(/[^\w.()]+/g, '-'));
+    let filename = uri.replace(/[^\w.()]+/g, '-');
+    if (filename.length > 64) {
+      filename = `${md5(filename)}-${filename.substr(filename.length - 64)}`;
+    }
+    const name = join(await this.getCacheFolder(), filename);
 
     this.store[uri] = {
       name,
