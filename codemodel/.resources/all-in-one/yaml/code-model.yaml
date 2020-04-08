@@ -1874,6 +1874,16 @@ definitions:
       - protocol
       - sourceValue
       - type
+  Security:
+    type: object
+    description: The security information for the API surface
+    additionalProperties: false
+    properties:
+      authenticationRequired:
+        type: boolean
+        description: indicates that the API surface requires authentication
+    required:
+      - authenticationRequired
   SecurityRequirement:
     type: object
     description: common ways of serializing simple parameters
@@ -2229,6 +2239,8 @@ properties:
     description: All operations
     items:
       $ref: '#/definitions/OperationGroup'
+  security:
+    $ref: '#/definitions/Security'
   extensions:
     description: additional metadata extensions dictionary
     $ref: '#/definitions/Dictionary<any>'
@@ -2244,4 +2256,5 @@ required:
   - operationGroups
   - protocol
   - schemas
+  - security
 title: CodeModel

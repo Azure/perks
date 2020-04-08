@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/codemodel",
-  "version": "3.7.0",
+  "version": "4.13.0",
   "patchOffset": 100,
   "description": "AutoRest code model library",
   "directories": {

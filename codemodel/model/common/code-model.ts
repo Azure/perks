@@ -2,10 +2,22 @@ import { Metadata } from './metadata';
 import { Schemas } from './schemas';
 import { Info } from './info';
 import { OperationGroup } from './operation';
-import { DeepPartial, enableSourceTracking } from '@azure-tools/codegen';
+import { DeepPartial, enableSourceTracking, Initializer } from '@azure-tools/codegen';
 import { Parameter } from './parameter';
 import { ValueOrFactory, realize, sort } from '@azure-tools/linq';
 
+/** The security information for the API surface */
+export interface Security {
+  /** indicates that the API surface requires authentication */
+  authenticationRequired: boolean;
+}
+
+export class Security extends Initializer implements Security {
+  constructor(public authenticationRequired: boolean, objectInitializer?: DeepPartial<Security>) {
+    super();
+    this.apply(objectInitializer);
+  }
+}
 
 /** the model that contains all the information required to generate a service api */
 export interface CodeModel extends Metadata {
@@ -20,6 +32,8 @@ export interface CodeModel extends Metadata {
 
   /** all global parameters (ie, ImplementationLocation = client ) */
   globalParameters?: Array<Parameter>;
+
+  security: Security;
 }
 
 export class CodeModel extends Metadata implements CodeModel {
@@ -31,6 +45,7 @@ export class CodeModel extends Metadata implements CodeModel {
     $this.info = new Info(title);
     $this.schemas = new Schemas();
     $this.operationGroups = [];
+    $this.security = new Security(false);
 
     this.applyTo($this, objectInitializer);
   }

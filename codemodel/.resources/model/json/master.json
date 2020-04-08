@@ -895,6 +895,21 @@
         }
       ]
     },
+    "Security": {
+      "description": "The security information for the API surface",
+      "type": "object",
+      "properties": {
+        "authenticationRequired": {
+          "description": "indicates that the API surface requires authentication",
+          "type": "boolean"
+        }
+      },
+      "defaultProperties": [],
+      "additionalProperties": false,
+      "required": [
+        "authenticationRequired"
+      ]
+    },
     "Example": {
       "description": "example data [UNFINISHED]",
       "type": "object",
@@ -968,6 +983,9 @@
         "$ref": "./master.json#/definitions/Parameter"
       }
     },
+    "security": {
+      "$ref": "./master.json#/definitions/Security"
+    },
     "language": {
       "$ref": "./master.json#/definitions/Languages",
       "description": "per-language information for this aspect"
@@ -988,7 +1006,8 @@
     "language",
     "operationGroups",
     "protocol",
-    "schemas"
+    "schemas",
+    "security"
   ],
   "title": "CodeModel"
 }
