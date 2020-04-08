@@ -537,6 +537,16 @@ definitions:
         description: contexts in which the schema is used
         items:
           $ref: './schemas.yaml#/definitions/SchemaContext'
+  Security:
+    type: object
+    description: The security information for the API surface
+    additionalProperties: false
+    properties:
+      authenticationRequired:
+        type: boolean
+        description: indicates that the API surface requires authentication
+    required:
+      - authenticationRequired
   SerializationFormat:
     type: object
     additionalProperties: false
@@ -670,6 +680,8 @@ properties:
     description: All operations
     items:
       $ref: './master.yaml#/definitions/OperationGroup'
+  security:
+    $ref: './master.yaml#/definitions/Security'
   extensions:
     description: additional metadata extensions dictionary
     $ref: './master.yaml#/definitions/Dictionary<any>'
@@ -685,4 +697,5 @@ required:
   - operationGroups
   - protocol
   - schemas
+  - security
 title: CodeModel
