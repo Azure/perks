@@ -10,8 +10,8 @@ import { Schema, DEFAULT_SAFE_SCHEMA } from 'js-yaml';
 
 const safeEval = createSandbox();
 
-async function getModel<T>(service: Host, yamlSchema: Schema = DEFAULT_SAFE_SCHEMA) {
-  const files = await service.ListInputs();
+async function getModel<T>(service: Host, yamlSchema: Schema = DEFAULT_SAFE_SCHEMA, artifactType?: string) {
+  const files = await service.ListInputs(artifactType);
   const filename = files[0];
   if (files.length === 0) {
     throw new Error('Inputs missing.');
@@ -34,8 +34,8 @@ export class Session<TInputModel> {
   /* @internal */ constructor(public readonly service: Host) {
   }
 
-  /* @internal */ async init<TProject>(project?: TProject, schema: Schema = DEFAULT_SAFE_SCHEMA) {
-    const m = await getModel<TInputModel>(this.service, schema);
+  /* @internal */ async init<TProject>(project?: TProject, schema: Schema = DEFAULT_SAFE_SCHEMA, artifactType?: string) {
+    const m = await getModel<TInputModel>(this.service, schema, artifactType);
     this.model = m.model;
     this.filename = m.filename;
 
@@ -242,6 +242,6 @@ export class Session<TInputModel> {
   }
 }
 
-export async function startSession<TInputModel>(service: Host, project?: any, schema: Schema = DEFAULT_SAFE_SCHEMA) {
-  return await new Session<TInputModel>(service).init(project, schema);
+export async function startSession<TInputModel>(service: Host, project?: any, schema: Schema = DEFAULT_SAFE_SCHEMA, artifactType?: string) {
+  return await new Session<TInputModel>(service).init(project, schema, artifactType);
 }
