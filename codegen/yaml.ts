@@ -93,14 +93,23 @@ export function deserialize<T>(text: string, filename: string, schema: Schema = 
   });
 }
 
-export function serialize<T>(model: T, schema: Schema = DEFAULT_SAFE_SCHEMA): string {
+export interface SerializeOptions {
+  schema?: Schema,
+  sortKeys?: boolean
+}
+
+export function serialize<T>(model: T, schemaOrOptions: Schema | SerializeOptions = DEFAULT_SAFE_SCHEMA): string {
+  const options: SerializeOptions =
+    schemaOrOptions instanceof Schema
+      ? { schema: schemaOrOptions, sortKeys: true }
+      : { schema: DEFAULT_SAFE_SCHEMA, sortKeys: true, ... schemaOrOptions };
+
   return dump(model, {
-    schema: schema,
-    sortKeys: sortWithPriorty,
+    schema: options.schema,
+    sortKeys: options.sortKeys && sortWithPriorty,
     skipInvalid: true,
     noArrayIndent: true,
     lineWidth: 240,
-
   });
   // .replace(/\s*\w*: {}/g, '')
   // .replace(/\s*\w*: \[\]/g, '')
