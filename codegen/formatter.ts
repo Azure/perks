@@ -59,7 +59,9 @@ function normalize(identifier: string | Array<string>, removeDuplicates = true, 
   if (!identifier || identifier.length === 0) {
     return [''];
   }
-  return typeof identifier === 'string' ? normalize(fixLeadingNumber(deconstruct(identifier, maxUppercasePreserve))) : removeDuplicates ? removeSequentialDuplicates(identifier) : identifier;
+  return typeof identifier === 'string'
+    ? normalize(fixLeadingNumber(deconstruct(identifier, maxUppercasePreserve)), removeDuplicates, overrides, maxUppercasePreserve)
+    : removeDuplicates ? removeSequentialDuplicates(identifier) : identifier;
 }
 export class Style {
   static select(style: any, fallback: Styler, maxUppercasePreserve: number): Styler {
