@@ -108,7 +108,6 @@ export function serialize<T>(model: T, schemaOrOptions: Schema | SerializeOption
     schema: options.schema,
     sortKeys: options.sortKeys && sortWithPriorty,
     skipInvalid: true,
-    noArrayIndent: true,
     lineWidth: 240,
   });
   // .replace(/\s*\w*: {}/g, '')
