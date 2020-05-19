@@ -931,14 +931,14 @@
           }
         },
         "choices": {
-          "description": "- this is essentially can be thought of as an 'enum' \nthat is a choice between one of several items, but an unspecified value is permitted.",
+          "description": "- this is essentially can be thought of as an 'enum' \rthat is a choice between one of several items, but an unspecified value is permitted.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/ChoiceSchema"
           }
         },
         "sealedChoices": {
-          "description": "- this is essentially can be thought of as an 'enum'\nthat is a choice between one of several items, but an unknown value is not allowed.",
+          "description": "- this is essentially can be thought of as an 'enum'\rthat is a choice between one of several items, but an unknown value is not allowed.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/SealedChoiceSchema"
@@ -989,7 +989,7 @@
           }
         },
         "unknowns": {
-          "description": "it's possible that we just may make this an error \nin representation.",
+          "description": "it's possible that we just may make this an error \rin representation.",
           "type": "array",
           "items": {
             "$ref": "./schemas.json#/definitions/Schema"

@@ -48,6 +48,7 @@
     },
     "SchemaContext": {
       "enum": [
+        "exception",
         "input",
         "output"
       ],

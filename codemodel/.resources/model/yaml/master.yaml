@@ -5,18 +5,7 @@ additionalProperties: false
 definitions:
   ApiVersion:
     type: object
-    description: |-
-      - since API version formats range from 
-      Azure ARM API date style (2018-01-01) to semver (1.2.3) 
-      and virtually any other text, this value tends to be an 
-      opaque string with the possibility of a modifier to indicate
-      that it is a range.
-
-      options: 
-      - prepend a dash or append a plus to indicate a range 
-      (ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )
-
-      - semver-range style (ie, '^1.0.0' or '~1.0.0' )
+    description: "- since API version formats range from \rAzure ARM API date style (2018-01-01) to semver (1.2.3) \rand virtually any other text, this value tends to be an \ropaque string with the possibility of a modifier to indicate\rthat it is a range.\r\roptions: \r- prepend a dash or append a plus to indicate a range \r(ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )\r\r- semver-range style (ie, '^1.0.0' or '~1.0.0' )"
     additionalProperties: false
     properties:
       range:
