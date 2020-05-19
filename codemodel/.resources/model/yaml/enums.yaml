@@ -61,6 +61,7 @@ definitions:
   SchemaContext:
     type: string
     enum:
+      - exception
       - input
       - output
   SchemaType:

@@ -5,7 +5,10 @@ export enum SchemaContext {
   Input = "input",
 
   /** Schema is used as an output from an operation. */
-  Output = "output"
+  Output = "output",
+
+  /** Schema is used as an exception from an operation. */
+  Exception = "exception"
 }
 
 export interface SchemaUsage {
