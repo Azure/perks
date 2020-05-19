@@ -510,7 +510,9 @@ definitions:
           $ref: './schemas.yaml#/definitions/CharSchema'
       choices:
         type: array
-        description: "- this is essentially can be thought of as an 'enum' \rthat is a choice between one of several items, but an unspecified value is permitted."
+        description: |-
+          - this is essentially can be thought of as an 'enum' 
+          that is a choice between one of several items, but an unspecified value is permitted.
         items:
           $ref: './schemas.yaml#/definitions/ChoiceSchema'
       conditionals:
@@ -577,7 +579,9 @@ definitions:
           $ref: './schemas.yaml#/definitions/OrSchema'
       sealedChoices:
         type: array
-        description: "- this is essentially can be thought of as an 'enum'\rthat is a choice between one of several items, but an unknown value is not allowed."
+        description: |-
+          - this is essentially can be thought of as an 'enum'
+          that is a choice between one of several items, but an unknown value is not allowed.
         items:
           $ref: './schemas.yaml#/definitions/SealedChoiceSchema'
       sealedConditionals:
@@ -605,7 +609,9 @@ definitions:
           $ref: './schemas.yaml#/definitions/UnixTimeSchema'
       unknowns:
         type: array
-        description: "it's possible that we just may make this an error \rin representation."
+        description: |-
+          it's possible that we just may make this an error 
+          in representation.
         items:
           $ref: './schemas.yaml#/definitions/Schema'
       uris:
