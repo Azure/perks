@@ -9,6 +9,9 @@ export interface DictionarySchema<ElementType extends Schema = Schema> extends C
 
   /** the element type of the dictionary. (Keys are always strings) */
   elementType: ElementType;
+
+  /** if elements in the dictionary should be nullable */
+  nullableItems?: boolean;
 }
 
 export class DictionarySchema<ElementType extends Schema = Schema> extends Schema implements DictionarySchema<ElementType>{

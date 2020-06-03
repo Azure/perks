@@ -25,6 +25,9 @@ definitions:
       minItems:
         type: number
         description: minimum number of elements in the array
+      nullableItems:
+        type: boolean
+        description: if elements in the array should be nullable
       uniqueItems:
         type: boolean
         description: if the elements in the array should be unique
@@ -271,6 +274,9 @@ definitions:
       elementType:
         description: the element type of the dictionary. (Keys are always strings)
         $ref: './schemas.yaml#/definitions/Schema'
+      nullableItems:
+        type: boolean
+        description: if elements in the dictionary should be nullable
     required:
       - elementType
       - language

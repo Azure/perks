@@ -19,6 +19,9 @@ export interface ArraySchema<ElementType extends Schema = Schema> extends ValueS
 
   /** if the elements in the array should be unique */
   uniqueItems?: boolean;
+
+  /** if elements in the array should be nullable */
+  nullableItems?: boolean;
 }
 export class ArraySchema<ElementType extends Schema = Schema> extends Schema implements ArraySchema<ElementType>{
   constructor(name: string, description: string, elementType: ElementType, objectInitializer?: DeepPartial<ArraySchema<ElementType>>) {
