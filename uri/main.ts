@@ -52,9 +52,13 @@ export async function ReadUri(uri: string, headers: { [key: string]: string } = 
     });
 
     let result = await readAll;
-    // fix up UTF16le files
-    if (result.readUInt16LE(0) === 65533 && result.readUInt16LE(1) === 65533) {
-      return stripBom(result.slice(2).toString('utf16le'));
+
+    // make sure we can read 4 bytes into the file before trying to fix it!
+    if (result.length > 3) {
+      // fix up UTF16le files
+      if (result.readUInt16LE(0) === 65533 && result.readUInt16LE(1) === 65533) {
+        return stripBom(result.slice(2).toString('utf16le'));
+      }
     }
     return stripBom(result.toString('utf8'));
   } catch (e) {
