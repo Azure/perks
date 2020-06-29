@@ -238,6 +238,7 @@ export class Oai2ToOai3 {
         'x-comment',
         'x-ms-parameter-grouping',
         'x-ms-client-name',
+        'x-ms-client-default',
         'x-ms-client-flatten',
         'x-ms-client-request-id',
         'x-ms-header-collection-prefix'
