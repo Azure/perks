@@ -6,7 +6,7 @@ import { values } from '@azure-tools/linq';
 export function resolvePropertyNames(reservedNames: Iterable<string>, virtualProperties: VirtualProperties) {
   const usedNames = new Set(reservedNames);
 
-  const allProps = values(virtualProperties.owned, virtualProperties.inherited, virtualProperties.inlined).toArray();
+  const allProps = [...virtualProperties.owned, ...virtualProperties.inherited, ...virtualProperties.inlined];
 
   for (const prop of allProps) {
     if (usedNames.has(prop.name)) {
@@ -52,9 +52,9 @@ export function resolveParameterNames(reservedNames: Iterable<string>, virtualPa
 }
 
 export function allVirtualProperties(virtualProperties?: VirtualProperties) {
-  return virtualProperties ? values(virtualProperties.owned, virtualProperties.inherited, virtualProperties.inlined).toArray() : [];
+  return virtualProperties ? [...virtualProperties.owned, ...virtualProperties.inherited, ...virtualProperties.inlined] : [];
 }
 
 export function allVirtualParameters(virtualParameters?: VirtualParameters) {
-  return virtualParameters ? values(virtualParameters.operation, virtualParameters.body).toArray() : [];
+  return virtualParameters ? [...virtualParameters.operation, ...virtualParameters.body] : [];
 }

@@ -3,7 +3,7 @@ import { Response } from './response';
 import { Metadata } from './metadata';
 import { Aspect } from './aspect';
 import { ApiVersion } from './api-version';
-import { Dictionary, values } from '@azure-tools/linq';
+import { Dictionary, values, linq } from '@azure-tools/linq';
 import { DeepPartial } from '@azure-tools/codegen';
 import { SchemaType } from './schema-type';
 
@@ -53,7 +53,7 @@ export class Request extends Metadata implements Request {
 
   updateSignatureParameters() {
     if (this.parameters) {
-      this.signatureParameters = values(this.parameters).where(each =>
+      this.signatureParameters = linq.values(this.parameters).where(each =>
         each.schema.type !== SchemaType.Constant &&
         each.implementation !== ImplementationLocation.Client &&
         !each.groupedBy &&
@@ -83,7 +83,7 @@ export class Operation extends Aspect implements Operation {
 
   updateSignatureParameters() {
     if (this.parameters) {
-      this.signatureParameters = values(this.parameters).where(each =>
+      this.signatureParameters = linq.values(this.parameters).where(each =>
         each.schema.type !== SchemaType.Constant &&
         each.implementation !== ImplementationLocation.Client &&
         !each.groupedBy &&

@@ -1,10 +1,10 @@
 {
   "name": "@azure-tools/tasks",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "patchOffset": 100,
   "description": "Async tasks for Azure Open Source Projects",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.13.0"
   },
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
@@ -39,13 +39,13 @@
   "readme": "https://github.com/Azure/perks/tree/master/tasks/readme.md",
   "devDependencies": {
     "@types/node": "12.7.2",
-    "@types/mocha": "5.2.5",
-    "mocha": "5.2.0",
-    "mocha-typescript": "1.1.17",
-    "typescript": "~3.7.2",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
-    "@typescript-eslint/parser": "~2.6.0",
-    "eslint": "~6.6.0",
+    "@types/mocha": "~7.0.2",
+    "mocha": "7.1.2",
+    "@testdeck/mocha": "~0.1.0",
+    "typescript": "~3.9.5",
+    "@typescript-eslint/eslint-plugin": "2.28.0",
+    "@typescript-eslint/parser": "2.28.0",
+    "eslint": "6.8.0",
     "source-map-support": "0.5.13"
   },
   "dependencies": {}

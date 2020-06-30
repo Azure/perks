@@ -13,12 +13,12 @@
     "declaration": true,
     "stripInternal": true,
     "noEmitHelpers": false,
-    "target": "es2018",
+    "target": "es2019",
     "types": [
       "node"
     ],
     "lib": [
-      "es2018"
+      "es2019"
     ],
     "experimentalDecorators": true,
     "newLine": "LF"

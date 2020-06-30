@@ -1,12 +1,12 @@
 {
   "name": "@azure-tools/datastore",
-  "version": "4.1.0",
+  "version": "5.0.0",
   "patchOffset": 100,
   "description": "Virtualized Filesystem with parsing and sourcemaps (AutoRest)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.13.0"
   },
   "repository": {
     "type": "git",
@@ -39,22 +39,22 @@
   "homepage": "https://github.com/Azure/perks/tree/master/datastore#readme",
   "readme": "https://github.com/Azure/perks/tree/master/datastore/readme.md",
   "devDependencies": {
-    "mocha-typescript": "1.1.17",
-    "@types/mocha": "5.2.5",
+    "@testdeck/mocha": "~0.1.0",
+    "@types/mocha": "~7.0.2",
     "@types/node": "12.7.2",
     "@types/jsonpath": "^0.2.0",
     "@types/source-map": "0.5.0",
-    "mocha": "5.2.0",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
-    "@typescript-eslint/parser": "~2.6.0",
-    "eslint": "~6.6.0",
-    "typescript": "~3.7.2"
+    "mocha": "7.1.2",
+    "@typescript-eslint/eslint-plugin": "2.28.0",
+    "@typescript-eslint/parser": "2.28.0",
+    "eslint": "6.8.0",
+    "typescript": "~3.9.5"
   },
   "dependencies": {
-    "@azure-tools/tasks": "~3.0.0",
-    "@azure-tools/uri": "~3.0.0",
-    "@azure-tools/linq": "~3.1.0",
-    "@azure-tools/codegen": "~2.4.0",
+    "@azure-tools/tasks": "~4.0.0",
+    "@azure-tools/uri": "~4.0.0",
+    "@azure-tools/linq": "~4.0.0",
+    "@azure-tools/codegen": "~3.0.0",
     "jsonpath": "1.0.0",
     "source-map": "0.5.6",
     "yaml-ast-parser": "0.0.40",

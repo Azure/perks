@@ -1,5 +1,5 @@
 import { fixLeadingNumber, removeSequentialDuplicates } from './text-manipulation';
-import { Dictionary, values } from '@azure-tools/linq';
+import { Dictionary, linq } from '@azure-tools/linq';
 
 
 export type Styler = ((identifier: string | Array<string>, removeDuplicates: boolean | undefined, overrides: Dictionary<string> | undefined) => string);
@@ -32,7 +32,7 @@ function IsFullyUpperCase(identifier: string, maxUppercasePreserve: number) {
 
 function deconstruct(identifier: string | Array<string>, maxUppercasePreserve: number): Array<string> {
   if (Array.isArray(identifier)) {
-    return [...values(identifier).selectMany(each => deconstruct(each, maxUppercasePreserve))];
+    return [...linq.values(identifier).selectMany(each => deconstruct(each, maxUppercasePreserve))];
   }
 
   return `${identifier}`.replace(/([a-z]+)([A-Z])/g, '$1 $2').

@@ -1,6 +1,6 @@
-import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as assert from 'assert';
-import { values, length, } from '../new-linq';
+import { length, linq } from '../new-linq';
 
 @suite class NewLinq {
 
@@ -9,7 +9,7 @@ import { values, length, } from '../new-linq';
   @test async 'distinct'() {
 
     const items = ['one', 'two', 'two', 'three'];
-    const distinct = values(items).distinct().toArray();
+    const distinct = linq.values(items).distinct().toArray();
     assert.equal(length(distinct), 3);
 
     const dic = {
@@ -19,18 +19,17 @@ import { values, length, } from '../new-linq';
       maybe: 'foo',
     };
 
-    const result = values(dic).distinct().toArray();
+    const result = linq.values(dic).distinct().toArray();
     assert.equal(length(distinct), 3);
   }
 
   @test async 'iterating thru collections'() {
     // items are items.
-    assert.equal([...values(this.anArray)].join(','), this.anArray.join(','));
+    assert.equal([...linq.values(this.anArray)].join(','), this.anArray.join(','));
 
-    assert.equal(values(this.anArray).count(), 5);
+    assert.equal(linq.values(this.anArray).count(), 5);
 
   }
 
 
 }
-

@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import { toSemver } from '../apiversion';
 
 @suite class ApiVersion {

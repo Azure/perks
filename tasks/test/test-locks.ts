@@ -1,4 +1,4 @@
-import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as assert from 'assert';
 
 import { CriticalSection, Mutex, SharedLock, ManualPromise, Delay, Async } from '../main';
@@ -13,7 +13,7 @@ require('source-map-support').install({ hookRequire: true });
     const cs = new CriticalSection();
 
     const status = new Array<string>();
-    let p!:Promise<() => Promise<void>>;
+    let p!: Promise<() => Promise<void>>;
 
     const first = Async(async () => {
       p = cs.acquire();

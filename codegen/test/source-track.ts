@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import { shadow, enableSourceTracking, getMappings } from '../source-track';
 
 require('source-map-support').install();

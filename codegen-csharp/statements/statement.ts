@@ -89,7 +89,7 @@ export class Statements extends Initializer implements Statement {
   public add(statements: StatementPossibilities): Statements {
     if (statements) {
       if (this.scope.last !== this) {
-        this.scope.last.add(statements);
+        this.scope.last!.add(statements);
         return this;
       }
       if (typeof (statements) === 'string') {

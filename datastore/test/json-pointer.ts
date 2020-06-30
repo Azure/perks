@@ -1,6 +1,6 @@
-import { keys } from '@azure-tools/linq';
+import { linq } from '@azure-tools/linq';
 import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as pointer from '../main';
 
 let rfcExample: any;
@@ -65,7 +65,7 @@ let rfcParsed: any;
   }
 
   @test 'should do examples'() {
-    for (const p of keys(rfcValues)) {
+    for (const p of linq.keys(rfcValues)) {
       const expectedValue = rfcValues[p];
       assert(pointer.get(rfcExample, p) === expectedValue);
     }
@@ -82,11 +82,11 @@ let rfcParsed: any;
 
   @test 'should return a dictionary (pointer -> value)'() {
     const obj = {
-        bla: {
-          test: 'expected'
-        },
-        abc: 'bla'
+      bla: {
+        test: 'expected'
       },
+      abc: 'bla'
+    },
       dict = pointer.toDictionary(obj);
 
     assert(dict['/bla/test'] === 'expected');
@@ -95,11 +95,11 @@ let rfcParsed: any;
 
   @test 'should work with arrays'() {
     const obj = {
-        'users': [
-          { 'name': 'example 1' },
-          { 'name': 'example 2' }
-        ]
-      },
+      'users': [
+        { 'name': 'example 1' },
+        { 'name': 'example 2' }
+      ]
+    },
       dict = pointer.toDictionary(obj),
       pointers = Object.keys(dict);
 
@@ -110,10 +110,10 @@ let rfcParsed: any;
 
   @test 'should work with other arrays'() {
     const obj = {
-        bla: {
-          bli: [4, 5, 6]
-        }
-      },
+      bla: {
+        bli: [4, 5, 6]
+      }
+    },
       dict = pointer.toDictionary(obj);
     assert(dict['/bla/bli/0'] === 4);
     assert(dict['/bla/bli/1'] === 5);

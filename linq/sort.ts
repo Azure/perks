@@ -102,4 +102,4 @@ export const sort = {
     ascendingInvalidFirst: sascendingInvalidFirst,
     descendingInvalidFirst: sdescendingInvalidFirst
   }
-}
+};

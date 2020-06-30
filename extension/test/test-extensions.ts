@@ -2,7 +2,7 @@ import * as asyncio from '@azure-tools/async-io';
 import * as tasks from '@azure-tools/tasks';
 import * as assert from 'assert';
 import * as fs from 'fs';
-import { suite, test } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as os from 'os';
 import { ExtensionManager, InvalidPackageIdentityException, UnresolvedPackageException } from '../main';
 
@@ -18,6 +18,8 @@ require('source-map-support').install();
 
   extensionManager!: ExtensionManager;
 
+  static async before() {
+  }
   async before() {
     this.extensionManager = await ExtensionManager.Create(this.tmpFolder);
   }

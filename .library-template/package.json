@@ -7,7 +7,7 @@
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.13.0"
   },
   "repository": {
     "type": "git",
@@ -40,11 +40,11 @@
   "homepage": "https://github.com/Azure/perks/tree/master/PROJECT#readme",
   "readme": "https://github.com/Azure/perks/tree/master/PROJECT/readme.md",
   "devDependencies": {
-    "mocha-typescript": "1.1.17",
-    "@types/mocha": "5.2.5",
+    "@testdeck/mocha": "~0.1.0",
+    "@types/mocha": "~7.0.2",
     "@types/node": "12.7.2",
-    "mocha": "5.2.0",
-    "typescript": "~3.7.2"
+    "mocha": "7.1.2",
+    "typescript": "~3.9.5"
   },
   "dependencies": {}
 }

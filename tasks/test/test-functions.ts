@@ -1,4 +1,4 @@
-import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as assert from 'assert';
 import { While, CriticalSection, Async } from '../main';
 

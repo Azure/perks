@@ -3,8 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { EnumerateFiles, ResolveUri, ReadUri, WriteString } from '@azure-tools/uri';
-// import { From } from "linq-es2015";
-import { items, keys } from '@azure-tools/linq';
+import { items, keys, linq } from '@azure-tools/linq';
 
 import * as Constants from './constants';
 
@@ -19,10 +18,10 @@ export class MemoryFileSystem implements IFileSystem {
 
   public constructor(files: Map<string, string>) {
     this.filesByUri = new Map<string, string>(
-      items(files).select(
-        each => [
-          ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, each.key),
-          each.value
+      linq.items(files).select(
+        ([key, value]) => [
+          ResolveUri(MemoryFileSystem.DefaultVirtualRootUri, key),
+          value
         ] as [string, string])
     );
     /*
@@ -44,7 +43,7 @@ export class MemoryFileSystem implements IFileSystem {
 
   async EnumerateFileUris(folderUri: string = MemoryFileSystem.DefaultVirtualRootUri): Promise<Array<string>> {
     // return await [...From(this.filesByUri.keys()).Where(uri => {
-    return keys(this.filesByUri).where(uri => {
+    return linq.keys(this.filesByUri).where(uri => {
       // in folder?
       if (!uri.startsWith(folderUri)) {
         return false;

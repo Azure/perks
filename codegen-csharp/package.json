@@ -1,8 +1,11 @@
 {
   "name": "@azure-tools/codegen-csharp",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "patchOffset": 100,
   "description": "AutoRest code generator base classes for CSharp#",
+  "engines": {
+    "node": ">=12.13.0"
+  },
   "directories": {
     "doc": "docs"
   },
@@ -36,17 +39,17 @@
   "readme": "https://github.com/Azure/perks/tree/master/codegen-csharp/readme.md",
   "devDependencies": {
     "@types/js-yaml": "3.12.1",
-    "@types/mocha": "5.2.5",
+    "@types/mocha": "~7.0.2",
     "@types/node": "12.7.2",
-    "mocha": "5.2.0",
-    "mocha-typescript": "1.1.17",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
-    "@typescript-eslint/parser": "~2.6.0",
-    "eslint": "~6.6.0",
-    "typescript": "~3.7.2"
+    "mocha": "7.1.2",
+    "@testdeck/mocha": "~0.1.0",
+    "@typescript-eslint/eslint-plugin": "2.28.0",
+    "@typescript-eslint/parser": "2.28.0",
+    "eslint": "6.8.0",
+    "typescript": "~3.9.5"
   },
   "dependencies": {
-    "@azure-tools/codegen": "~2.4.0",
-    "@azure-tools/linq": "~3.1.0"
+    "@azure-tools/codegen": "~3.0.0",
+    "@azure-tools/linq": "~4.0.0"
   }
 }

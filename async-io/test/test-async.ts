@@ -1,5 +1,5 @@
 import * as assert from 'assert';
-import { suite, test } from 'mocha-typescript';
+import { suite, test } from '@testdeck/mocha';
 import * as os from 'os';
 import * as asyncio from '../main';
 

@@ -2,7 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import { IndexOf, Dictionary } from './common';
+import { Dictionary, IndexOf } from './common';
 
 
 /*
@@ -47,7 +47,7 @@ export interface IterableWithLinq<T> extends Iterable<T> {
 
 /* eslint-disable */
 
-function linqify<T>(iterable: Iterable<T>): IterableWithLinq<T> {
+function linqify<T>(iterable: Iterable<T>|IterableIterator<T>): IterableWithLinq<T> {
   if ((<any>iterable)['linq'] === iterable) {
     return <IterableWithLinq<T>>iterable;
   }
@@ -82,12 +82,38 @@ function len<T>(this: Iterable<T>): number {
   return length(this);
 }
 
+export function keys<K, T>(source: Map<K, T> | null | undefined): Iterable<K>
+export function keys<T, TSrc extends Dictionary<T>>(source: Dictionary<T> | null | undefined): Iterable<string>
+export function keys<T, TSrc extends Array<T>>(source: Array<T> | null | undefined): Iterable<number>
+export function keys<K, T, TSrc>(source: any | undefined | null): Iterable<any>
+export function keys<K, T, TSrc>(source: any): Iterable<any> {
+  if (source) {
+    if (Array.isArray(source)) {
+      return <Iterable<IndexOf<TSrc>>>(<Array<T>>source).keys();
+    }
+
+    if (source instanceof Map) {
+      return <Iterable<K>><unknown>(<Map<K, T>>source).keys();
+    }
+
+    if (source instanceof Set) {
+      throw new Error('Unable to iterate keys on a Set');
+    }
+
+    return <Iterable<IndexOf<TSrc>>>Object.keys(source);
+  }
+  // undefined/null
+  return [];
+}
+
+
+
 /** returns an IterableWithLinq<> for keys in the collection */
-export function keys<K, T>(source: Map<K, T> | null | undefined): IterableWithLinq<K>
-export function keys<T, TSrc extends Dictionary<T>>(source: Dictionary<T> | null | undefined): IterableWithLinq<string>
-export function keys<T, TSrc extends Array<T>>(source: Array<T> | null | undefined): IterableWithLinq<number>
-export function keys<K, T, TSrc>(source: any | undefined | null): IterableWithLinq<any>
-export function keys<K, T, TSrc>(source: any): IterableWithLinq<any> {
+function _keys<K, T>(source: Map<K, T> | null | undefined): IterableWithLinq<K>
+function _keys<T, TSrc extends Dictionary<T>>(source: Dictionary<T> | null | undefined): IterableWithLinq<string>
+function _keys<T, TSrc extends Array<T>>(source: Array<T> | null | undefined): IterableWithLinq<number>
+function _keys<K, T, TSrc>(source: any | undefined | null): IterableWithLinq<any>
+function _keys<K, T, TSrc>(source: any): IterableWithLinq<any> {
   //export function keys<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<IndexOf<TSrc>> {
   if (source) {
     if (Array.isArray(source)) {
@@ -102,7 +128,7 @@ export function keys<K, T, TSrc>(source: any): IterableWithLinq<any> {
       throw new Error('Unable to iterate keys on a Set');
     }
 
-    return <IterableWithLinq<IndexOf<TSrc>>>linqify((Object.getOwnPropertyNames(source)));
+    return <IterableWithLinq<IndexOf<TSrc>>>linqify((Object.keys(source)));
   }
   // undefined/null
   return linqify([]);
@@ -111,75 +137,62 @@ function isIterable<T>(source: any): source is Iterable<T> {
   return !!source && !!source[Symbol.iterator];
 }
 
-/** returns an IterableWithLinq<> for values in the collection 
- * 
- * @note - null/undefined/empty values are considered 'empty'
-*/
-export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(...sources: Array<(Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined>): IterableWithLinq<T> {
-  return linqify({
-    [Symbol.iterator]: function* () {
-      for (const each of sources) {
-        yield* _values(each);
-      }
-    }
-  })
-}
-/** returns an IterableWithLinq<> for values in the collection */
-function _values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined): IterableWithLinq<T> {
+export function values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined): Iterable<T> {
   if (source) {
     // map
     if (source instanceof Map || source instanceof Set) {
-      return linqify(source.values());
+      return source.values();
     }
 
     // any iterable source
     if (isIterable(source)) {
-      return linqify(source);
+      return source;
     }
 
     // dictionary (object keys)
-    return linqify(function* () {
-      for (const key of keys(source)) {
-        const value = source[key];
-        if (typeof value !== 'function') {
-          yield value;
-        }
-      }
-    }());
+    return Object.values(source);
   }
 
   // null/undefined
-  return linqify([]);
+  return [];
+}
+export const linq ={
+  values: _values, 
+  items: _items, 
+  keys: _keys
+};
+ 
+/** returns an IterableWithLinq<> for values in the collection 
+ * 
+ * @note - null/undefined/empty values are considered 'empty'
+*/
+function _values<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T>)>(source: (Iterable<T> | Array<T> | Dictionary<T> | Map<K, T> | Set<T>) | null | undefined): IterableWithLinq<T> {
+  return (source)? linqify(values(source)) : linqify([]);
 }
 
-/** returns an IterableWithLinq<{key,value}> for the source */
-export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T> | undefined | null)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<{ key: IndexOf<TSrc>; value: T }> {
+export function items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T> | undefined | null)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): Iterable<[IndexOf<TSrc>, T]> {
   if (source) {
     if (Array.isArray(source)) {
-      return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (let i = 0; i < source.length; i++) { yield { key: i, value: source[i] }; } }());
+      return <Iterable<[IndexOf<TSrc>, T]>><any>source.entries();
     }
 
     if (source instanceof Map) {
-      return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>>linqify(function* () { for (const [key, value] of source.entries()) { yield { key, value }; } }());
+      return <Iterable<[IndexOf<TSrc>, T]>><any><any>source.entries();
     }
 
     if (source instanceof Set) {
       throw new Error('Unable to iterate items on a Set');
     }
 
-    return <IterableWithLinq<{ key: IndexOf<TSrc>; value: T }>><unknown>linqify(function* () {
-      for (const key of keys(source)) {
-        const value = source[<string>key];
-        if (typeof value !== 'function') {
-          yield {
-            key, value: source[<string>key]
-          };
-        }
-      }
-    }());
+    return <Iterable<[IndexOf<TSrc>, T]>><unknown>Object.entries(source);
   }
   // undefined/null
-  return linqify([]);
+  return [];
+} 
+
+/** returns an IterableWithLinq<{key,value}> for the source */
+function _items<K, T, TSrc extends (Array<T> | Dictionary<T> | Map<K, T> | undefined | null)>(source: TSrc & (Array<T> | Dictionary<T> | Map<K, T>) | null | undefined): IterableWithLinq<[IndexOf<TSrc>,T]> {
+  return <any>linqify (source ? items(<any>source) : [])
 }
 
 export function length<T, K>(source?: string | Iterable<T> | Dictionary<T> | Array<T> | Map<K, T> | Set<T>): number {
@@ -193,7 +206,7 @@ export function length<T, K>(source?: string | Iterable<T> | Dictionary<T> | Arr
     if (isIterable(source)) {
       return [...source].length;
     }
-    return source ? Object.getOwnPropertyNames(source).length : 0;
+    return source ? Object.values(source).length : 0;
   }
   return 0;
 }
@@ -267,9 +280,7 @@ function select<T, V>(this: Iterable<T>, selector: (each: T) => V): IterableWith
 function selectMany<T, V>(this: Iterable<T>, selector: (each: T) => Iterable<V>): IterableWithLinq<V> {
   return linqify(function* (this: Iterable<T>) {
     for (const each of this) {
-      for (const item of selector(each)) {
-        yield item;
-      }
+      yield *selector(each);
     }
   }.bind(this)());
 }

@@ -1,4 +1,3 @@
-
 export type ValueOrFactory<T> = T | (() => T);
 
 export function isFunction<T>(f: ValueOrFactory<T>): f is () => T {

@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { values } from '@azure-tools/linq';
+import { linq } from '@azure-tools/linq';
 import { MappedPosition } from 'source-map';
 import { DataStore } from '../data-store/data-store';
 import { JsonPath } from '../jsonpath';
@@ -53,6 +53,6 @@ export class BlameTree {
       // recurse
       todos.push(...todo.blaming);
     }
-    return values(result).distinct(x => JSON.stringify(x)).toArray();
+    return linq.values(result).distinct(x => JSON.stringify(x)).toArray();
   }
 }

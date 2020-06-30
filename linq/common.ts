@@ -18,8 +18,6 @@ export function ToDictionary<T>(keys: Array<string>, each: (index: string) => T)
 export type IndexOf<T> = T extends Map<T, infer V> ? T : T extends Array<infer V> ? number : string;
 
 /** performs a truthy check on the value, and calls onTrue when the condition is true,and onFalse when it's not */
-export function when<T>(value: T, onTrue: (value: NonNullable<T>) => void, onFalse: () => void = () => { }) {
+export function when<T>(value: T, onTrue: (value: NonNullable<T>) => void, onFalse: () => void = () => { /* */ }) {
   return value ? onTrue(<NonNullable<T>>value) : onFalse();
 }
-
-

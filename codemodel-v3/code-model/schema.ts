@@ -6,7 +6,7 @@
 import { ExternalDocumentation, ImplementationDetails, LanguageDetails } from './components';
 import { Extensions } from './extensions';
 import { DeepPartial, } from '@azure-tools/codegen';
-import { Dictionary, values } from '@azure-tools/linq';
+import { Dictionary, values, linq } from '@azure-tools/linq';
 import { uid } from './uid';
 
 export interface PropertyDetails extends ImplementationDetails {
@@ -119,11 +119,11 @@ export class Schema extends Extensions implements Schema {
 
 export function getPolymorphicBases(schema: Schema): Array<Schema> {
   // are any of my parents polymorphic directly, or any of their parents?
-  return [...values(schema.allOf).where(parent => parent.discriminator ? true : false), ...values(schema.allOf).selectMany(getPolymorphicBases)];
+  return [...linq.values(schema.allOf).where(parent => parent.discriminator ? true : false), ...linq.values(schema.allOf).selectMany(getPolymorphicBases)];
 }
 
 export function getAllProperties(schema: Schema): Array<Property> {
-  return [...values(schema.allOf).selectMany(getAllProperties), ...values(schema.properties)];
+  return [...linq.values(schema.allOf).selectMany(getAllProperties), ...values(schema.properties)];
 }
 
 export function getAllPublicVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -133,7 +133,7 @@ export function getAllPublicVirtualProperties(virtualProperties?: VirtualPropert
     inlined: []
   };
 
-  return values(props.owned, props.inherited, props.inlined).where(each => !each.private).toArray();
+  return linq.values([...props.owned, ...props.inherited, ...props.inlined]).where(each => !each.private).toArray();
 }
 
 export function getAllVirtualProperties(virtualProperties?: VirtualProperties): Array<VirtualProperty> {
@@ -143,7 +143,7 @@ export function getAllVirtualProperties(virtualProperties?: VirtualProperties): 
     inlined: []
   };
 
-  return values(props.owned, props.inherited, props.inlined).toArray();
+  return [...props.owned, ...props.inherited, ...props.inlined];
 }
 
 export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualProperties | undefined, propertyName: string): VirtualProperty | undefined {
@@ -152,7 +152,7 @@ export function getVirtualPropertyFromPropertyName(virtualProperties: VirtualPro
     inherited: [],
     inlined: []
   };
-  return values([...values(props.owned), ...values(props.inherited), ...values(props.inlined)]).first(each => each.property.serializedName === propertyName);
+  return linq.values([...values(props.owned), ...values(props.inherited), ...values(props.inlined)]).first(each => each.property.serializedName === propertyName);
 }
 
 

@@ -136,7 +136,7 @@ export function walk(obj: any, iterator: (value: any, pointer: string) => void, 
     });
   */
   const next = (cur: any) => {
-    for (const { key, value } of items(cur)) {
+    for (const [key, value] of items(cur)) {
       refTokens.push(String(key));
       if (descend(value)) {
         next(value);
@@ -164,7 +164,7 @@ function isObjectOrArray(value: any): boolean {
 export function _visit(obj: any, iterator: (value: any, pointer: string) => boolean, descend: (value: any) => boolean = isObjectOrArray) {
   const refTokens = new Array<string>();
   const next = (cur: any) => {
-    for (const { key, value } of items(cur)) {
+    for (const [key, value] of items(cur)) {
       refTokens.push(String(key));
       if (iterator(value, compile(refTokens)) && descend(value)) {
         next(value);
@@ -176,7 +176,7 @@ export function _visit(obj: any, iterator: (value: any, pointer: string) => bool
 }
 
 export function* visit(obj: any, parentReference: JsonPointerTokens = new Array<string>()): Iterable<Node> {
-  for (const { key, value } of items(obj)) {
+  for (const [key, value] of items(obj)) {
     const reference = [...parentReference, key];
     yield {
       value,
@@ -190,7 +190,7 @@ export function* visit(obj: any, parentReference: JsonPointerTokens = new Array<
 
 
 export function* visitT<T, K extends keyof T>(obj: T, parentReference: JsonPointerTokens = new Array<string>()): Iterable<NodeT<T, K>> {
-  for (const { key, value } of items(<any>obj)) {
+  for (const [key, value] of items(<any>obj)) {
     const reference = [...parentReference, key];
     const v = <T[K]>value;
     yield {

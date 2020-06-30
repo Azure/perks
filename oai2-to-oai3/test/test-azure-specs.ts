@@ -3,7 +3,7 @@ import * as aio from "@azure-tools/async-io"
 import * as datastore from '@azure-tools/datastore';
 import { CancellationToken, FastStringify, stringify } from "@azure-tools/datastore";
 import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from "mocha-typescript";
+import { suite, test } from '@testdeck/mocha';
 import { SourceMapGenerator } from 'source-map';
 import { resolve } from 'path';
 const convertOAI2toOAI3 = async (oa2def: any): Promise<any> => (await require("swagger2openapi").convert(oa2def, { patch: true })).openapi;

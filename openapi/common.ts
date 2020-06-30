@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Dictionary, ToDictionary, items } from '@azure-tools/linq';
+import { Dictionary, ToDictionary, items, linq } from '@azure-tools/linq';
 
 export function includeXDash<T>(dictionary: Dictionary<T>) {
   return Object.keys(dictionary).filter((v, i, a) => v.startsWith('x-'));
@@ -15,7 +15,8 @@ export function excludeXDash<T>(dictionary: Dictionary<T>) {
 export function filterOutXDash<T>(obj: any) {
   if (obj) {
     const result = <any>{};
-    for (const { key, value } of items(obj).where(each => !each.key.startsWith('x-'))) {
+
+    for (const [key, value] of linq.items(obj).where(([key, value]) => !key.startsWith('x-'))) {
       result[key] = <any>value;
     }
     return result;

@@ -27,7 +27,7 @@ export function fail(text: string): never {
 }
 
 export function applyOverrides(content: string, overrides: Dictionary<string>): string {
-  for (const { key: from, value: to } of items(overrides)) {
+  for (const [from, to] of items(overrides)) {
     content = content.replace(new RegExp(from, 'g'), to);
   }
   return content;

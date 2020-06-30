@@ -1,12 +1,12 @@
 {
   "name": "@azure-tools/object-comparison",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "patchOffset": 100,
   "description": "Library to compare objects",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=12.13.0"
   },
   "repository": {
     "type": "git",
@@ -39,14 +39,14 @@
   "homepage": "https://github.com/Azure/perks/tree/master/object-comparison#readme",
   "readme": "https://github.com/Azure/perks/tree/master/object-comparison/readme.md",
   "devDependencies": {
-    "mocha-typescript": "1.1.17",
-    "@types/mocha": "5.2.5",
+    "@testdeck/mocha": "~0.1.0",
+    "@types/mocha": "~7.0.2",
     "@types/node": "12.7.2",
-    "mocha": "5.2.0",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
-    "@typescript-eslint/parser": "~2.6.0",
-    "eslint": "~6.6.0",
-    "typescript": "~3.7.2"
+    "mocha": "7.1.2",
+    "@typescript-eslint/eslint-plugin": "2.28.0",
+    "@typescript-eslint/parser": "2.28.0",
+    "eslint": "6.8.0",
+    "typescript": "~3.9.5"
   },
   "dependencies": {}
 }

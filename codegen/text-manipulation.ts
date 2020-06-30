@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { Text, TextPossibilities } from './file-generator';
-import { Dictionary, values } from '@azure-tools/linq';
+import { Dictionary, values, linq } from '@azure-tools/linq';
 
 let indentation = '    ';
 
@@ -20,7 +20,6 @@ const acronyms = new Set([
 declare global {
   interface Array<T> {
     joinWith(selector: (t: T) => string, separator?: string): string;
-    last: T;
   }
 
   interface String {
@@ -34,16 +33,6 @@ declare global {
 Array.prototype.joinWith = function <T>(selector: (t: T) => string, separator?: string): string {
   return (<Array<T>>this).map(selector).filter(v => v ? true : false).join(separator || CommaChar);
 };
-
-/** todo: can we remove this? */
-/* eslint-disable */
-if (!Array.prototype.hasOwnProperty('last')) {
-  Object.defineProperty(Array.prototype, 'last', {
-    get() {
-      return this[this.length - 1];
-    }
-  });
-}
 
 String.prototype.capitalize = function (): string {
   const result = <string>this;
@@ -176,7 +165,7 @@ export function pall<T, U>(array: Array<T>, callbackfn: (value: T, index: number
 
 export function deconstruct(identifier: string | Array<string>): Array<string> {
   if (Array.isArray(identifier)) {
-    return [...values(identifier).selectMany(deconstruct)];
+    return [...linq.values(identifier).selectMany(deconstruct)];
   }
   return `${identifier}`.
     replace(/([a-z]+)([A-Z])/g, '$1 $2').

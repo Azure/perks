@@ -1,5 +1,6 @@
 import { pascalCase, deconstruct } from './text-manipulation';
-
+import { linq } from '@azure-tools/linq';
+linq;
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -491,7 +492,7 @@ export class EnglishPluralizationService {
     const de = deconstruct(word);
 
     // singularize the last word only
-    de[de.length - 1] = this.capitalize(de.last, w => this.internalSingularize(w));
+    de[de.length - 1] = this.capitalize(de.last!, w => this.internalSingularize(w));
 
     // return the pascal cased whole thing.
     return pascalCase(de);
