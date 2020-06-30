@@ -15,6 +15,13 @@ export enum StringFormat {
    */
   Binary = 'binary',
 
+  /**
+   * @description Any sequence of octets. (ie, a sequence of unencoded bytes)
+   * This may not be used for a parameter or property, as it represents a sequence of bytes,
+   * it may only be used as for a request or response body, and must be used with an appropriate content-type
+   */
+  File = 'file',
+
   /** @description A date as defined by full-date - RFC3339 */
   Date = 'date',
 
@@ -41,6 +48,9 @@ export enum StringFormat {
 
   /** @description a string that should be an URL */
   Url = 'url',
+
+  /** @description a string that should be an URi */
+  Uri = 'url',
 
   /** @description an encoded odata query string */
   OData = 'odata-query',

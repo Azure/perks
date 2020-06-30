@@ -54,7 +54,6 @@
     "@azure-tools/linq": "~4.0.0",
     "@azure-tools/tasks": "~4.0.0",
     "@azure-tools/object-comparison": "~4.0.0",
-    "@azure-tools/openapi": "~4.0.0",
     "@azure-tools/codegen": "~3.0.0",
     "compare-versions": "^3.4.0"
   }

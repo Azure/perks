@@ -1,10 +1,9 @@
 {
   "name": "@azure-tools/openapi",
   "version": "4.0.0",
-  "patchOffset": 100,
-  "description": "OpenAPI common code for Azure Tools.",
-  "main": "./dist/main.js",
-  "typings": "./dist/main.d.ts",
+  "patchOffset": 1000,
+  "description": "OpenAPI (v2, v3) library for typing and manipulation",
+  "main": "dist/exports",
   "engines": {
     "node": ">=12.13.0"
   },
@@ -18,8 +17,8 @@
     "eslint-fix": "eslint  . --fix --ext .ts",
     "eslint": "eslint  . --ext .ts",
     "prepare": "npm run build",
-    "test": "npm run build && mocha dist/test --timeout 50000",
-    "testci": "npm run build && mocha dist/test --timeout 50000",
+    "test": "npm run build && echo - no tests yet mocha dist/test",
+    "testci": "npm run test",
     "clean": "ver > nul 2>&1 nul && npm run --silent clean-cmd || npm run --silent clean-bash",
     "clean-cmd": "if exist dist rmdir /s /q dist && exit 0 || exit 0 ",
     "clean-bash": "rm nul && rm -rf dist && exit 0 || exit 0"
