@@ -39,13 +39,13 @@ steps:
     rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
 
     # build the packages
-    npx @microsoft/rush publish --publish --pack --include-all --tag latest
+    npx @microsoft/rush publish --publish --pack --include-all --tag preview
     rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
 
     # publish the packages (tag as preview by default)
     echo "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" > ./.npmrc 
     for file in common/temp/artifacts/packages/*.tgz 
     do
-     common/temp/pnpm-local/node_modules/.bin/pnpm publish $file --tag latest --access public || echo no-worries 
+     common/temp/pnpm-local/node_modules/.bin/pnpm publish $file --tag preview --access public || echo no-worries 
     done
 
