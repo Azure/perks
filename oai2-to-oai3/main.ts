@@ -531,13 +531,13 @@ export class Oai2ToOai3 {
           target.example = { value, pointer, recurse: true };
           break;
         case 'x-nullable':
-          // NOTE: this matches the previous converter behavior
-          // ... when a $ref is inside the schema
-          // copy the properties as they are
-          // don't update names
-          if (schemaValue.$ref === undefined) {
-            target['nullable'] = { value, pointer };
-          } else {
+          target['nullable'] = { value, pointer };
+
+          // NOTE: this matches the previous converter behavior ... when a $ref
+          // is inside the schema copy the properties as they are don't update
+          // names, but also leave the new `nullable` field so that OpenAPI 3
+          // readers pick it up correctly.
+          if (schemaValue.$ref !== undefined) {
             target['x-nullable'] = { value, pointer };
           }
           break;

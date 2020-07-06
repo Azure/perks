@@ -2013,6 +2013,10 @@
         "schema": {
           "$ref": "#/definitions/Schema",
           "description": "the content returned by the service for a given operaiton"
+        },
+        "nullable": {
+          "description": "indicates whether the response can be 'null'",
+          "type": "boolean"
         }
       },
       "defaultProperties": [],

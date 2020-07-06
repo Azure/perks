@@ -519,6 +519,9 @@ definitions:
       schema:
         description: the content returned by the service for a given operaiton
         $ref: './schemas.yaml#/definitions/Schema'
+      nullable:
+        type: boolean
+        description: indicates whether the response can be 'null'
     required:
       - language
       - protocol

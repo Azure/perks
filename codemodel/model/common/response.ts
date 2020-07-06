@@ -32,6 +32,9 @@ export class BinaryResponse extends Response implements BinaryResponse {
 export interface SchemaResponse extends Response {
   /** the content returned by the service for a given operaiton */
   schema: Schema;
+
+  /** indicates whether the response can be 'null' */
+  nullable?: boolean;
 }
 
 export class SchemaResponse extends Response implements SchemaResponse {
