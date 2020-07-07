@@ -17,6 +17,9 @@ export interface HttpParameter extends Protocol {
   /** the Serialization Style used for the parameter. */
   style?: SerializationStyle;
 
+  /** when set, 'form' style parameters generate separate parameters for each value of an array. */
+  explode?: boolean;
+
   /** when set, this indicates that the content of the parameter should not be subject to URI encoding rules. */
   skipUriEncoding?: boolean;
 }
