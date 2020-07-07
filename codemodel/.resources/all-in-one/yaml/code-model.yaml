@@ -825,6 +825,9 @@ definitions:
     allOf:
       - $ref: '#/definitions/Protocol'
     properties:
+      explode:
+        type: boolean
+        description: 'when set, ''form'' style parameters generate separate parameters for each value of an array.'
       in:
         description: the location that this parameter is placed in the http request
         $ref: '#/definitions/ParameterLocation'

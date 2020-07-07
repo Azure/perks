@@ -259,7 +259,8 @@ export class Oai2ToOai3 {
       }
 
       // Collection Format
-      if (parameterValue.collectionFormat !== undefined && parameterValue.type === 'array') {
+      if (parameterValue.type === 'array') {
+        parameterValue.collectionFormat = parameterValue.collectionFormat || 'csv';
         if ((parameterValue.collectionFormat === 'csv') && ((parameterValue.in === 'query') || (parameterValue.in === 'cookie'))) {
           parameterTarget.style = { value: 'form', pointer };
         }
