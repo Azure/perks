@@ -8,6 +8,7 @@ import { Schema } from '../common/schema';
 import { DeepPartial, KnownMediaType, Initializer } from '@azure-tools/codegen';
 import { Extensions } from '../common/extensions';
 import { GroupSchema } from '../common/schemas/object';
+import { Languages } from '../common/languages';
 
 /** extended metadata for HTTP operation parameters  */
 export interface HttpParameter extends Protocol {
@@ -92,6 +93,7 @@ export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMul
 export interface HttpHeader extends Extensions {
   header: string;
   schema: Schema;
+  language?: Languages;
 }
 export class HttpHeader extends Initializer implements HttpHeader {
   constructor(public header: string, public schema: Schema, objectInitializer?: DeepPartial<HttpHeader>) {

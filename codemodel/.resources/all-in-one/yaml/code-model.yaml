@@ -726,6 +726,8 @@ definitions:
       extensions:
         description: additional metadata extensions dictionary
         $ref: '#/definitions/Dictionary<any>'
+      language:
+        $ref: '#/definitions/Languages'
     required:
       - header
       - schema

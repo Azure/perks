@@ -131,6 +131,8 @@ definitions:
       extensions:
         description: additional metadata extensions dictionary
         $ref: './master.yaml#/definitions/Dictionary<any>'
+      language:
+        $ref: './master.yaml#/definitions/Languages'
     required:
       - header
       - schema

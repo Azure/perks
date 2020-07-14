@@ -514,6 +514,9 @@
         "schema": {
           "$ref": "./schemas.json#/definitions/Schema"
         },
+        "language": {
+          "$ref": "./master.json#/definitions/Languages"
+        },
         "extensions": {
           "$ref": "./master.json#/definitions/Dictionary<any>",
           "description": "additional metadata extensions dictionary"
