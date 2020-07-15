@@ -135,6 +135,7 @@ definitions:
         $ref: './master.yaml#/definitions/Languages'
     required:
       - header
+      - language
       - schema
   HttpModel:
     type: object
