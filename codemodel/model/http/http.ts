@@ -93,7 +93,7 @@ export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMul
 export interface HttpHeader extends Extensions {
   header: string;
   schema: Schema;
-  language?: Languages;
+  language: Languages;
 }
 export class HttpHeader extends Initializer implements HttpHeader {
   constructor(public header: string, public schema: Schema, objectInitializer?: DeepPartial<HttpHeader>) {

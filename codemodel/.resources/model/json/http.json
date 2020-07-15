@@ -526,6 +526,7 @@
       "additionalProperties": false,
       "required": [
         "header",
+        "language",
         "schema"
       ]
     },
