@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "ApiVersion": {
-      "description": "- since API version formats range from \rAzure ARM API date style (2018-01-01) to semver (1.2.3) \rand virtually any other text, this value tends to be an \ropaque string with the possibility of a modifier to indicate\rthat it is a range.\r\roptions: \r- prepend a dash or append a plus to indicate a range \r(ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )\r\r- semver-range style (ie, '^1.0.0' or '~1.0.0' )",
+      "description": "- since API version formats range from \nAzure ARM API date style (2018-01-01) to semver (1.2.3) \nand virtually any other text, this value tends to be an \nopaque string with the possibility of a modifier to indicate\nthat it is a range.\n\noptions: \n- prepend a dash or append a plus to indicate a range \n(ie, '2018-01-01+' or '-2019-01-01', or '1.0+' )\n\n- semver-range style (ie, '^1.0.0' or '~1.0.0' )",
       "type": "object",
       "properties": {
         "version": {
