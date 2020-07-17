@@ -99,7 +99,7 @@
           "$ref": "./master.json#/definitions/Language"
         },
         "csharp": {
-          "$ref": "./master.json#/definitions/CSharpLanguage"
+          "$ref": "./master.json#/definitions/Language"
         },
         "python": {
           "$ref": "./master.json#/definitions/Language"

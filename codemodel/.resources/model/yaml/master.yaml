@@ -262,7 +262,7 @@ definitions:
       cpp:
         $ref: './master.yaml#/definitions/Language'
       csharp:
-        $ref: './master.yaml#/definitions/CSharpLanguage'
+        $ref: './master.yaml#/definitions/Language'
       go:
         $ref: './master.yaml#/definitions/Language'
       java:

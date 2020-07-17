@@ -1075,7 +1075,7 @@ definitions:
       cpp:
         $ref: '#/definitions/Language'
       csharp:
-        $ref: '#/definitions/CSharpLanguage'
+        $ref: '#/definitions/Language'
       go:
         $ref: '#/definitions/Language'
       java:

@@ -160,7 +160,7 @@
           "$ref": "#/definitions/Language"
         },
         "csharp": {
-          "$ref": "#/definitions/CSharpLanguage"
+          "$ref": "#/definitions/Language"
         },
         "python": {
           "$ref": "#/definitions/Language"

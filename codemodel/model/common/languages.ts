@@ -3,7 +3,7 @@ import { Language, CSharpLanguage } from './metadata';
 /** custom extensible metadata for individual language generators */
 export interface Languages {
   default: Language;
-  csharp?: CSharpLanguage;
+  csharp?: Language;
   python?: Language;
   ruby?: Language;
   go?: Language;
