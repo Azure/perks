@@ -65,7 +65,8 @@ paths:
               properties:
                 form_part_1:
                   description: A file transmitted via a mimepart within a multipart form.
-                  type: file
+                  format: binary
+                  type: string
                   x-file-content-types:
                     - application/zip
                     - application/octet-stream
@@ -97,7 +98,8 @@ paths:
               properties:
                 part_1:
                   description: A file transmitted via a mimepart within a multipart form.
-                  type: file
+                  format: binary
+                  type: string
                   x-file-content-types:
                     - application/gzip
                     - application/jpg
