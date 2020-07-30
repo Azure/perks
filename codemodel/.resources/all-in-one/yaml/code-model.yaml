@@ -2211,10 +2211,13 @@ definitions:
         type: string
       prefix:
         type: string
+      text:
+        type: boolean
       wrapped:
         type: boolean
     required:
       - attribute
+      - text
       - wrapped
   XorSchema:
     type: object

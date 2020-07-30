@@ -656,10 +656,13 @@ definitions:
         type: string
       prefix:
         type: string
+      text:
+        type: boolean
       wrapped:
         type: boolean
     required:
       - attribute
+      - text
       - wrapped
   email:
     type: string

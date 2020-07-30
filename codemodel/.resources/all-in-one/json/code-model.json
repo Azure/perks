@@ -430,12 +430,16 @@
         },
         "wrapped": {
           "type": "boolean"
+        },
+        "text": {
+          "type": "boolean"
         }
       },
       "defaultProperties": [],
       "additionalProperties": false,
       "required": [
         "attribute",
+        "text",
         "wrapped"
       ],
       "allOf": [
