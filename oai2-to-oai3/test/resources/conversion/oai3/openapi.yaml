@@ -452,7 +452,8 @@
                   },
                   "file": {
                     "description": "file to upload",
-                    "type": "file"
+                    "format": "binary",
+                    "type": "string"
                   }
                 },
                 "required": []
