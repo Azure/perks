@@ -900,14 +900,13 @@ export class Oai2ToOai3 {
           }
 
           if (parameterValue.type !== undefined) {
-            // NOTE: To be valid 3.x.x it should do the stuff commented below, but the previous converter didn't do it.
-            // if (parameterValue.type === 'file') {
-            //   targetProperty.type = { value: 'string', pointer };
-            //   targetProperty.format = { value: 'binary', pointer };
-            // } else {
-            //   targetProperty.type = { value: parameterValue.type, pointer };
-            // }
-            targetProperty.type = { value: parameterValue.type, pointer };
+            // OpenAPI 3 wants to see `type: file` as `type:string` with `format: binary`
+            if (parameterValue.type === 'file') {
+              targetProperty.type = { value: 'string', pointer };
+              targetProperty.format = { value: 'binary', pointer };
+            } else {
+              targetProperty.type = { value: parameterValue.type, pointer };
+            }
           }
 
           if (schema.required === undefined) {
@@ -931,7 +930,14 @@ export class Oai2ToOai3 {
           }
 
           if (parameterValue.type === 'array' && parameterValue.items !== undefined) {
-            targetProperty.items = { value: parameterValue.items, pointer };
+            // Support the case where an operation can accept multiple files
+            if (contentType === 'multipart/form-data' && parameterValue.items.type === 'file') {
+              targetProperty.items = this.newObject(pointer);
+              targetProperty.items.type = { value: 'string', pointer: `${pointer}/items` };
+              targetProperty.items.format = { value: 'binary', pointer: `${pointer}/items` };
+            } else {
+              targetProperty.items = { value: parameterValue.items, pointer };
+            }
           }
 
           // copy extensions in target property
