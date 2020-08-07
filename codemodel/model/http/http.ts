@@ -77,7 +77,7 @@ export interface HttpBinaryRequest extends HttpWithBodyRequest {
 export class HttpBinaryRequest extends HttpWithBodyRequest implements HttpBinaryRequest {
 }
 
-export interface HttpMultiPartRequest extends HttpWithBodyRequest {
+export interface HttpMultipartRequest extends HttpWithBodyRequest {
   /** indicates that the HTTP Request should be a multipart request 
    * 
    * ie, that it has multiple requests in a single request.
@@ -86,7 +86,7 @@ export interface HttpMultiPartRequest extends HttpWithBodyRequest {
 }
 
 
-export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMultiPartRequest {
+export class HttpMultipartRequest extends HttpWithBodyRequest implements HttpMultipartRequest {
   multipart = <true>true;
 }
 

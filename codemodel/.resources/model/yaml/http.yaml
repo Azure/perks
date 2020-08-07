@@ -149,7 +149,7 @@ definitions:
         description: a collection of security requirements for the service
         items:
           $ref: './http.yaml#/definitions/SecurityRequirement'
-  HttpMultiPartRequest:
+  HttpMultipartRequest:
     type: object
     additionalProperties: false
     allOf:
@@ -163,50 +163,6 @@ definitions:
           ie, that it has multiple requests in a single request.
         enum:
           - true
-    required:
-      - knownMediaType
-      - mediaTypes
-      - method
-      - multipart
-      - path
-      - uri
-  HttpMultipartRequest:
-    type: object
-    additionalProperties: false
-    properties:
-      path:
-        type: string
-        description: |-
-          A relative path to an individual endpoint. 
-
-          The field name MUST begin with a slash. 
-          The path is appended (no relative URL resolution) to the expanded URL from the Server Object's url field in order to construct the full URL. 
-          Path templating is allowed. 
-
-          When matching URLs, concrete (non-templated) paths would be matched before their templated counterparts.
-      method:
-        description: the HTTP Method used to process this operation
-        $ref: './enums.yaml#/definitions/HttpMethod'
-      knownMediaType:
-        description: 'a normalized value for the media type (ie, distills down to a well-known moniker (ie, ''json''))'
-        $ref: './enums.yaml#/definitions/KnownMediaType'
-      mediaTypes:
-        type: array
-        description: must contain at least one media type to send for the body
-        items:
-          type: string
-      multipart:
-        type: boolean
-        description: |-
-          indicates that the HTTP Request should be a multipart request 
-
-          ie, that it has multiple requests in a single request.
-        default: true
-        enum:
-          - true
-      uri:
-        type: string
-        description: the base URI template for the operation. This will be a template that has Uri parameters to craft the base url to use.
     required:
       - knownMediaType
       - mediaTypes
