@@ -33,6 +33,14 @@ import { toSemver } from '../apiversion';
     const expected7 = '1.3.1';
     assert.strictEqual(actual7, expected7);
 
+    const actual8 = toSemver('2020-09');
+    const expected8 = '2020.9.0';
+    assert.strictEqual(actual8, expected8);
+
+    const actual9 = toSemver('2020-09-preview');
+    const expected9 = '2020.9.0-preview';
+    assert.strictEqual(actual9, expected9);
+
     assert.strictEqual(toSemver('v1'), '1.0.0');
 
     assert.strictEqual(toSemver('3.0-preview.1'), '3.0.0-preview.1');
