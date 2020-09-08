@@ -4,6 +4,8 @@ import * as semver from 'semver';
 /*
  Handling:
 
+ yyyy-mm                      n(yyyy).n(mm).0
+ yyyy-mm-preview              n(yyyy).n(mm).0-preview
  yyyy-mm-dd                   n(yyyy).n(mm).n(dd)
  yyyy-mm-dd-preview           n(yyyy).n(mm).n(dd)-preview
  yyyy-mm-dd.x1.x2             (miliseconds since 1970-01-01).x1.x2
@@ -26,7 +28,7 @@ export function toSemver(apiversion: string) {
     const lastNumbers = apiversion.replace(versionedDateRegex, '$2');
     return `${miliseconds}${lastNumbers}`;
   }
-  const [whole, major, minor, revision, tag] = /^(\d+)-(\d+)-(\d+)(.*)/.exec(apiversion) || /(\d*)\.(\d*)\.(\d*)(.*)/.exec(apiversion) || /(\d*)\.(\d*)()(.*)/.exec(apiversion) || /(\d*)()()(.*)/.exec(apiversion) || [];
+  const [whole, major, minor, revision, tag] = /^(\d+)-(\d+)(?:-(\d+))?(.*)/.exec(apiversion) || /(\d*)\.(\d*)\.(\d*)(.*)/.exec(apiversion) || /(\d*)\.(\d*)()(.*)/.exec(apiversion) || /(\d*)()()(.*)/.exec(apiversion) || [];
   return `${Number.parseInt(major || '0') || 0}.${Number.parseInt(minor || '0') || 0}.${Number.parseInt(revision || '0') || 0}${tag?.startsWith('-') ? tag : ''}`;
 }
 
