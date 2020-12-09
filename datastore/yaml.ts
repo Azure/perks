@@ -5,7 +5,7 @@
 
 // TODO: the following is only required because safeDump of "yaml-ast-parser" has this bug: https://github.com/mulesoft-labs/yaml-ast-parser/issues/30
 // PLEASE: remove the entire dependency to js-yaml once that is fixed!
-import { safeDump, safeLoad } from 'js-yaml';
+const { safeDump, safeLoad } = require('js-yaml');
 
 import * as yamlAst from 'yaml-ast-parser';
 import { NewEmptyObject } from './parsing/stable-object';
@@ -126,7 +126,7 @@ function ParseNodeInternal(yamlRootNode: YAMLNode, yamlNode: YAMLNode, onError: 
       const yamlNodeScalar = yamlNode as YAMLScalar;
       return (yamlNode as any).valueFunc = yamlNodeScalar.valueObject !== undefined
         ? memoize(() => yamlNodeScalar.valueObject)
-        : memoize(() => safeLoad(yamlNodeScalar.rawValue));
+        : memoize(() => yamlNodeScalar.value);
     }
     case Kind.MAPPING:
       onError('Syntax error: Encountered bare mapping.', yamlNode.startPosition);
