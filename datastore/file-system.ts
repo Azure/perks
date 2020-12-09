@@ -95,7 +95,11 @@ export class EnhancedFileSystem implements IFileSystem {
     const headers: { [key: string]: string } = {};
 
     // check for GitHub OAuth token
-    if (this.githubAuthToken && uri.startsWith('https://raw.githubusercontent.com')) {
+    if (
+      this.githubAuthToken &&
+        (uri.startsWith('https://raw.githubusercontent.com') ||
+        uri.startsWith('https://github.com'))
+    ) {
       console.log(`Used GitHub authentication token to request '${uri}'.`);
       headers.authorization = `Bearer ${this.githubAuthToken}`;
     }
