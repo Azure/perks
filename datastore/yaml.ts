@@ -124,9 +124,12 @@ function ParseNodeInternal(yamlRootNode: YAMLNode, yamlNode: YAMLNode, onError: 
   switch (yamlNode.kind) {
     case Kind.SCALAR: {
       const yamlNodeScalar = yamlNode as YAMLScalar;
-      return (yamlNode as any).valueFunc = yamlNodeScalar.valueObject !== undefined
-        ? memoize(() => yamlNodeScalar.valueObject)
-        : memoize(() => yamlNodeScalar.value);
+      return ((yamlNode as any).valueFunc =
+        yamlNodeScalar.valueObject !== undefined
+          ? memoize(() => yamlNodeScalar.valueObject)
+          : yamlNodeScalar.singleQuoted 
+            ? memoize(() => yamlNodeScalar.value)
+            : memoize(() => safeLoad(yamlNodeScalar.rawValue)));
     }
     case Kind.MAPPING:
       onError('Syntax error: Encountered bare mapping.', yamlNode.startPosition);
