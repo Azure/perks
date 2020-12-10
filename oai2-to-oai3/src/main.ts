@@ -201,8 +201,6 @@ export class Oai2ToOai3 {
 
   visitParameterDefinitions(parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
-      console.error("Visting param", pointer, value.in);
-
       if (value.in !== 'formData' && value.in !== 'body' && value.type !== 'file') {
         if (this.generated.components === undefined) {
           this.generated.components = this.newObject(pointer);
@@ -216,8 +214,6 @@ export class Oai2ToOai3 {
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
         this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
-
-        console.error("Adding mapping", pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
         this.addMapping(pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
       } else {
         // TODO check if a good idea? Maybe provide a way to navigate the other files intead.

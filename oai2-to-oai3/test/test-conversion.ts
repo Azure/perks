@@ -38,7 +38,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -72,7 +72,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -106,7 +106,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -140,7 +140,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -174,7 +174,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -205,7 +205,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -236,7 +236,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -267,7 +267,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -298,7 +298,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -329,7 +329,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -361,7 +361,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -393,7 +393,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -425,7 +425,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -456,7 +456,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -486,7 +486,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -517,7 +517,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -548,7 +548,7 @@ import { Oai2ToOai3 } from '../src/main';
       const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -583,7 +583,7 @@ import { Oai2ToOai3 } from '../src/main';
       const swag = swaggerdata.ReadObject();
 
       const convert = new Oai2ToOai3(swaggerdata.key, swag, ()=> null, () => Promise.resolve(undefined));
-      const result = convert.convert();
+      const result = await convert.convert();
 
       const sink = ds.getDataSink();
       const text = FastStringify(convert.generated);
