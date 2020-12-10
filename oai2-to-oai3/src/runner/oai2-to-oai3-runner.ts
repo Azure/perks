@@ -1,4 +1,5 @@
 import { DataHandle } from "@azure-tools/datastore";
+import { Oai2ToOai3 } from "../main";
 import { CrossFileReferenceTracker } from "./reference-tracker";
 import { loadInputFiles } from "./utils";
 
@@ -7,19 +8,25 @@ export interface OaiToOai3FileInput {
   schema: any; // OAI2 type?
 }
 
-export const convertOai2ToOai3Files = async (inputFiles: DataHandle[]) => {
+export interface OaiToOai3FileOutput {
+  name: string;
+  result: any; // OAI2 type?
+}
+
+export const convertOai2ToOai3Files = async (inputFiles: DataHandle[]): Promise<OaiToOai3FileOutput[]> => {
   const files = await loadInputFiles(inputFiles);
   const map = new Map<string, OaiToOai3FileInput>();
   for (const file of files) {
     map.set(file.name, file);
   }
+  console.error("Converting files", [...map.keys()]);
   return convertOai2ToOai3(map);
 };
-
-export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>) => {
+ 
+export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>): Promise<OaiToOai3FileOutput[]> => {
   const referenceTracker = new CrossFileReferenceTracker([...inputs.keys()]);
   const resolvingFiles = new Set<string>();
-  const completedFiles = new Set<string>();
+  const completedFiles = new Map<string, OaiToOai3FileOutput>();
 
   const resolveReference: ResolveReferenceFn = async (
     targetfile: string,
@@ -43,6 +50,7 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
       throw new Error(`Circular dependency with file ${input.name}`);
     }
     resolvingFiles.add(input.name);
+    console.error("Resolving file", input.name);
 
     const addMapping: AddMappingFn = (oldRef: string, newRef: string) => {
       const tracker = referenceTracker.getForFile(input.name);
@@ -52,16 +60,21 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
       tracker.addReference(oldRef, newRef);
     };
     const result = await convertOai2ToOai3Schema(input, addMapping, resolveReference);
-    completedFiles.add(input.name);
+    console.error("Result", result);
+    completedFiles.set(input.name, {
+      result,
+      name: input.name,
+    });
     return result;
   };
-
-  for (const input of Object.values(inputs)) {
+   
+  for (const input of inputs.values()) {
     if (completedFiles.has(input.name)) {
       continue;
     }
-    const result = await computeFile(input);
-  }
+    await computeFile(input);
+  } 
+  return [...completedFiles.values()];
 };
 
 /**
@@ -74,4 +87,8 @@ export const convertOai2ToOai3Schema = async (
   { name, schema }: OaiToOai3FileInput,
   addMapping: AddMappingFn,
   resolveReference: ResolveReferenceFn,
-) => {};
+): Promise<any> => {
+  const converter = new Oai2ToOai3(name, schema);
+  await converter.convert();
+  return converter.generated;
+};

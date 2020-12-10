@@ -9,7 +9,7 @@ import { SourceMapGenerator } from 'source-map';
 
 require('source-map-support').install();
 
-import { Oai2ToOai3 } from '../main';
+import { Oai2ToOai3 } from '../src/main';
 
 @suite class MyTests {
 

@@ -3,8 +3,8 @@
   "version": "4.0.0",
   "patchOffset": 100,
   "description": "OpenAPI2 to OpenAPI3 conversion library that maintains souremaps for use with AutoRest",
-  "main": "./dist/main.js",
-  "typings": "./dist/main.d.ts",
+  "main": "./dist/src/index.js",
+  "typings": "./dist/src/index.d.ts",
   "engines": {
     "node": ">=10.12.0"
   },
