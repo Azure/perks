@@ -35,7 +35,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -69,7 +69,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -103,7 +103,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -137,7 +137,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -171,7 +171,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -202,7 +202,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -233,7 +233,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -264,7 +264,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -295,7 +295,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -326,7 +326,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -358,7 +358,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -390,7 +390,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -422,7 +422,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -453,7 +453,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -483,7 +483,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -514,7 +514,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -545,7 +545,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerDataHandle && originalDataHandle) {
       const swag = await swaggerDataHandle.ReadObject();
       const original = await originalDataHandle.ReadObject();
-      const convert = new Oai2ToOai3(swaggerUri, swag);
+      const convert = new Oai2ToOai3(swaggerUri, swag, ()=> null, () => Promise.resolve(undefined));
 
       // run the conversion
       convert.convert();
@@ -582,7 +582,7 @@ import { Oai2ToOai3 } from '../src/main';
     if (swaggerdata) {
       const swag = swaggerdata.ReadObject();
 
-      const convert = new Oai2ToOai3(swaggerdata.key, swag);
+      const convert = new Oai2ToOai3(swaggerdata.key, swag, ()=> null, () => Promise.resolve(undefined));
       const result = convert.convert();
 
       const sink = ds.getDataSink();
