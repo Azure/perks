@@ -1,17 +1,19 @@
 export interface ReferenceEntry {
   readonly oldRef: string;
   readonly newRef: string;
+  readonly referencedEl: any;
 }
 
 export class ReferenceTracker {
   private map = new Map<string, ReferenceEntry>();
 
   public getReference(ref: string): ReferenceEntry | undefined {
+    console.error("Getting ref", ref, "FOR", [...this.map.keys()]);
     return this.map.get(ref);
   }
 
-  public addReference(oldRef: string, newRef: string) {
-    this.map.set(oldRef, { oldRef, newRef });
+  public addReference(oldRef: string, newRef: string, referencedEl: any) {
+    this.map.set(oldRef, { oldRef, newRef, referencedEl });
   }
 }
 

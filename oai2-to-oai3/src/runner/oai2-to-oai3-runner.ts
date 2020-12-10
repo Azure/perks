@@ -1,6 +1,6 @@
 import { DataHandle } from "@azure-tools/datastore";
 import { Oai2ToOai3 } from "../main";
-import { CrossFileReferenceTracker } from "./reference-tracker";
+import { CrossFileReferenceTracker, ReferenceEntry } from "./reference-tracker";
 import { loadInputFiles } from "./utils";
 
 export interface OaiToOai3FileInput {
@@ -31,7 +31,7 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
   const resolveReference: ResolveReferenceFn = async (
     targetfile: string,
     reference: string,
-  ): Promise<string | undefined> => {
+  ): Promise<ReferenceEntry | undefined> => {
     const tracker = referenceTracker.getForFile(targetfile);
     const file = inputs.get(targetfile);
     if (file === undefined || tracker === undefined) {
@@ -41,7 +41,7 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
     if (!completedFiles.has(targetfile)) {
       await computeFile(file);
     }
-    return tracker.getReference(reference)?.newRef;
+    return tracker.getReference(reference);
   };
 
   const computeFile = async (input: OaiToOai3FileInput) => {
@@ -52,15 +52,14 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
     resolvingFiles.add(input.name);
     console.error("Resolving file", input.name);
 
-    const addMapping: AddMappingFn = (oldRef: string, newRef: string) => {
+    const addMapping: AddMappingFn = (oldRef: string, newRef: string, referencedEl: any) => {
       const tracker = referenceTracker.getForFile(input.name);
       if (tracker === undefined) {
         throw new Error(`Unexpected error, this should never have happened.`);
       }
-      tracker.addReference(oldRef, newRef);
+      tracker.addReference(oldRef, newRef, referencedEl);
     };
     const result = await convertOai2ToOai3Schema(input, addMapping, resolveReference);
-    console.error("Result", result);
     completedFiles.set(input.name, {
       result,
       name: input.name,
@@ -80,15 +79,15 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
 /**
  * Callback to resolve a reference.
  */
-export type AddMappingFn = (oldRef: string, newRef: string) => void;
-export type ResolveReferenceFn = (targetfile: string, reference: string) => Promise<string | undefined>;
+export type AddMappingFn = (oldRef: string, newRef: string, referencedEl: any) => void;
+export type ResolveReferenceFn = (targetfile: string, reference: string) => Promise<ReferenceEntry | undefined>;
 
 export const convertOai2ToOai3Schema = async (
   { name, schema }: OaiToOai3FileInput,
   addMapping: AddMappingFn,
   resolveReference: ResolveReferenceFn,
 ): Promise<any> => {
-  const converter = new Oai2ToOai3(name, schema);
+  const converter = new Oai2ToOai3(name, schema, addMapping, resolveReference);
   await converter.convert();
   return converter.generated;
 };

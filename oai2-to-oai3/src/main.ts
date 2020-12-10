@@ -1,5 +1,6 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
+import { AddMappingFn, ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
 // NOTE: after testing references should be changed to OpenAPI 3.x.x references
@@ -8,7 +9,7 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  constructor(protected originalFilename: string, protected original: any, private fileSystem?: IFileSystem) {
+  constructor(protected originalFilename: string, protected original: any, private addMapping: AddMappingFn, private resolveReference: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
   }
 
@@ -200,8 +201,9 @@ export class Oai2ToOai3 {
 
   visitParameterDefinitions(parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
-      if (value.in !== 'formData' && value.in !== 'body' && value.type !== 'file') {
+      console.error("Visting param", pointer, value.in);
 
+      if (value.in !== 'formData' && value.in !== 'body' && value.type !== 'file') {
         if (this.generated.components === undefined) {
           this.generated.components = this.newObject(pointer);
         }
@@ -214,13 +216,15 @@ export class Oai2ToOai3 {
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
         this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
+
+        console.error("Adding mapping", pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
+        this.addMapping(pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
       }
     }
   }
 
 
   visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
-
     if (parameterValue.$ref !== undefined) {
       const cleanReferenceValue = parameterValue.$ref.replace(/\$|\[|\]/g, '_');
       parameterTarget.$ref = { value: cleanReferenceValue.replace('#/parameters/', '#/components/parameters/'), pointer };
@@ -746,8 +750,6 @@ export class Oai2ToOai3 {
 
     
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
-      let currentSpec = this.original;
-      
       if (value.$ref) {
         console.error("Ref is", value.$ref);
         // TODO: Redesign this to reuse behavior
@@ -757,11 +759,11 @@ export class Oai2ToOai3 {
           const paramName = referenceParts.pop();
           const componentType = referenceParts.pop();
           const referencePointer = `/${componentType}/${paramName}`;
-          const dereferencedParameter = get(currentSpec, referencePointer);
+          const dereferencedParameter = get(this.original, referencePointer);
 
           if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
             const parameterName = referencePointer.replace('/parameters/', '');
-            const dereferencedParameters = get(currentSpec, '/parameters');
+            const dereferencedParameters = get(this.original, "/parameters");
             for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
               if (key === parameterName) {
                 childIterator = newChildIterator;
@@ -770,36 +772,33 @@ export class Oai2ToOai3 {
             value = dereferencedParameter;
             pointer = referencePointer;
           }
-        } else if (this.fileSystem) { // TODO: Make sure it's a parameter ref
-          const remoteReferenceParts = value.$ref.split('#');
-          const referencedSpec = JSON.parse(
-            await this.fileSystem.ReadFile(remoteReferenceParts[0])
-          );
-
-          const dereferencedParameter = get(referencedSpec, remoteReferenceParts[1]);
-          const referencePointer = remoteReferenceParts[1];
+        } else if (value.$ref.indexOf("#/parameters/") !== -1) {
+          // TODO: Make sure it's a parameter ref
+          const [referenceFile, reference] = value.$ref.split("#");
+          const newReference = await this.resolveReference(referenceFile, reference);
+          if(!newReference){
+            throw new Error(`Cannot find reference ${value.$ref}`);
+          }
+          console.error("Got new reference", newReference);
+          const dereferencedParameter = newReference.referencedEl;
 
           console.error("Got ref", pointer, value);
-          
+
           if (
             dereferencedParameter.in === "body" ||
             dereferencedParameter.type === "file" ||
             dereferencedParameter.in === "formData"
           ) {
-            const parameterName = referencePointer.replace("/parameters/", "");
-            const dereferencedParameters = get(referencedSpec, "/parameters");
-            for (const { key, childIterator: newChildIterator } of visit(
-              dereferencedParameters
-            )) {
+            const parameterName = newReference.newRef.replace("/parameters/", "");
+            const dereferencedParameters = get(this.original, "/parameters");
+            for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
               if (key === parameterName) {
                 childIterator = newChildIterator;
-                currentSpec = referencedSpec;
               }
             }
             value = dereferencedParameter;
-            pointer = referencePointer;
+            pointer = newReference.newRef;
           }
-
         } else {
           // TODO: Throw exception
           console.error("### CAN'T RESOLVE $ref", value.$ref);
