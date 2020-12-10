@@ -1,4 +1,4 @@
-import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@azure-tools/datastore';
+import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
 import { statusCodes } from './status-codes';
 
@@ -8,11 +8,11 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  constructor(protected originalFilename: string, protected original: any) {
+  constructor(protected originalFilename: string, protected original: any, private fileSystem?: IFileSystem) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
   }
 
-  convert() {
+  async convert() {
     // process servers
     if (this.original['x-ms-parameterized-host']) {
       const xMsPHost: any = this.original['x-ms-parameterized-host'];
@@ -145,7 +145,7 @@ export class Oai2ToOai3 {
           if (!this.generated[newKey]) {
             this.generated[newKey] = this.newObject(pointer);
           }
-          this.visitPaths(this.generated[newKey], children, globalConsumes, globalProduces);
+          await this.visitPaths(this.generated[newKey], children, globalConsumes, globalProduces);
         }
           break;
         case 'host':
@@ -638,13 +638,13 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     for (const { key: uri, pointer, children: pathItemMembers } of paths) {
-      this.visitPath(target, uri, pointer, pathItemMembers, globalConsumes, globalProduces);
+      await this.visitPath(target, uri, pointer, pathItemMembers, globalConsumes, globalProduces);
     }
   }
 
-  visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     target[uri] = this.newObject(jsonPointer);
     const pathItem = target[uri];
     for (const { value, key, pointer, children: pathItemFieldMembers } of pathItemMembers) {
@@ -663,7 +663,7 @@ export class Oai2ToOai3 {
         case 'head':
         case 'patch':
         case 'x-trace':
-          this.visitOperation(pathItem, key, pointer, pathItemFieldMembers, value, globalConsumes, globalProduces);
+          await this.visitOperation(pathItem, key, pointer, pathItemFieldMembers, value, globalConsumes, globalProduces);
           break;
         case 'parameters':
           pathItem.parameters = this.newArray(pointer);
@@ -680,7 +680,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
 
     // trace was not supported on OpenAPI 2.0, it was an extension
     httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
@@ -720,7 +720,7 @@ export class Oai2ToOai3 {
           // handled beforehand for parameters
           break;
         case 'parameters':
-          this.visitParameters(operation, operationFieldItemMembers, consumes, pointer);
+          await this.visitParameters(operation, operationFieldItemMembers, consumes, pointer);
           break;
         case 'produces':
           // handled beforehand for responses
@@ -741,27 +741,40 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
+  async visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
     const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
-      if (value.$ref && (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`))) {
-        // local reference. it's possible to look it up.
-        const referenceParts = value.$ref.split('/');
-        const paramName = referenceParts.pop();
-        const componentType = referenceParts.pop();
-        const referencePointer = `/${componentType}/${paramName}`;
-        const dereferencedParameter = get(this.original, referencePointer);
-        if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
-          const parameterName = referencePointer.replace('/parameters/', '');
-          const dereferencedParameters = get(this.original, '/parameters');
-          for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
-            if (key === parameterName) {
-              childIterator = newChildIterator;
+      if (value.$ref) {
+        // TODO: Redesign this to reuse behavior
+        if (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`)) {
+          // local reference. it's possible to look it up.
+          const referenceParts = value.$ref.split('/');
+          const paramName = referenceParts.pop();
+          const componentType = referenceParts.pop();
+          const referencePointer = `/${componentType}/${paramName}`;
+          const dereferencedParameter = get(this.original, referencePointer);
+
+          if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
+            const parameterName = referencePointer.replace('/parameters/', '');
+            const dereferencedParameters = get(this.original, '/parameters');
+            for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
+              if (key === parameterName) {
+                childIterator = newChildIterator;
+              }
             }
+            value = dereferencedParameter;
+            pointer = referencePointer;
           }
-          value = dereferencedParameter;
-          pointer = referencePointer;
+        // } else if (this.fileSystem) { // TODO: Make sure it's a parameter ref
+        //   const referenceParts = value.$ref.split('#');
+        //   const referencedSpec = JSON.parse(await this.fileSystem.ReadFile(referenceParts[0]));
+
+        //   value = get(referencedSpec, referenceParts[1]);
+        //   pointer = referenceParts[1];
+        } else {
+          // TODO: Throw exception
+          console.error("### CAN'T RESOLVE $ref", value.$ref);
         }
       }
 
