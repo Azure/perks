@@ -766,12 +766,35 @@ export class Oai2ToOai3 {
             value = dereferencedParameter;
             pointer = referencePointer;
           }
-        // } else if (this.fileSystem) { // TODO: Make sure it's a parameter ref
-        //   const referenceParts = value.$ref.split('#');
-        //   const referencedSpec = JSON.parse(await this.fileSystem.ReadFile(referenceParts[0]));
+        } else if (this.fileSystem) { // TODO: Make sure it's a parameter ref
+          const remoteReferenceParts = value.$ref.split('#');
+          const referencedSpec = JSON.parse(
+            await this.fileSystem.ReadFile(remoteReferenceParts[0])
+          );
 
-        //   value = get(referencedSpec, referenceParts[1]);
-        //   pointer = referenceParts[1];
+          const dereferencedParameter = get(referencedSpec, remoteReferenceParts[1]);
+          const referencePointer = remoteReferenceParts[1];
+
+          console.error("Got ref", pointer, value);
+          
+          if (
+            dereferencedParameter.in === "body" ||
+            dereferencedParameter.type === "file" ||
+            dereferencedParameter.in === "formData"
+          ) {
+            const parameterName = referencePointer.replace("/parameters/", "");
+            const dereferencedParameters = get(referencedSpec, "/parameters");
+            for (const { key, childIterator: newChildIterator } of visit(
+              dereferencedParameters
+            )) {
+              if (key === parameterName) {
+                childIterator = newChildIterator;
+              }
+            }
+            value = dereferencedParameter;
+            pointer = referencePointer;
+          }
+
         } else {
           // TODO: Throw exception
           console.error("### CAN'T RESOLVE $ref", value.$ref);
