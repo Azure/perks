@@ -219,6 +219,9 @@ export class Oai2ToOai3 {
 
         console.error("Adding mapping", pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
         this.addMapping(pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
+      } else {
+        // TODO check if a good idea? Maybe provide a way to navigate the other files intead.
+        this.addMapping(pointer, null!, value);
       }
     }
   }
@@ -774,8 +777,8 @@ export class Oai2ToOai3 {
           }
         } else if (value.$ref.indexOf("#/parameters/") !== -1) {
           // TODO: Make sure it's a parameter ref
-          const [referenceFile, reference] = value.$ref.split("#");
-          const newReference = await this.resolveReference(referenceFile, reference);
+          const [referenceFile, referencePath] = value.$ref.split("#");
+          const newReference = await this.resolveReference(referenceFile, referencePath);
           if(!newReference){
             throw new Error(`Cannot find reference ${value.$ref}`);
           }
@@ -789,15 +792,10 @@ export class Oai2ToOai3 {
             dereferencedParameter.type === "file" ||
             dereferencedParameter.in === "formData"
           ) {
-            const parameterName = newReference.newRef.replace("/parameters/", "");
-            const dereferencedParameters = get(this.original, "/parameters");
-            for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
-              if (key === parameterName) {
-                childIterator = newChildIterator;
-              }
-            }
+            const parameterName = referencePath.replace("/parameters/", "");
+            childIterator = () => visit(dereferencedParameter, [parameterName]);
             value = dereferencedParameter;
-            pointer = newReference.newRef;
+            pointer = referencePath;
           }
         } else {
           // TODO: Throw exception
