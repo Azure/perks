@@ -195,7 +195,6 @@ export class Oai2ToOai3 {
           break;
       }
     }
-
     return this.generated;
   }
 
@@ -468,6 +467,7 @@ export class Oai2ToOai3 {
     for (const { key, value, pointer, childIterator } of schemaItemMemebers()) {
       switch (key) {
         case '$ref':
+          console.error("Visit ref schema", value)
           target[key] = { value: this.getNewSchemaReference(value), pointer };
           break;
         case 'additionalProperties':
@@ -743,9 +743,13 @@ export class Oai2ToOai3 {
 
   async visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
     const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
-    for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
+    
+    for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
+      let currentSpec = this.original;
+      
       if (value.$ref) {
+        console.error("Ref is", value.$ref);
         // TODO: Redesign this to reuse behavior
         if (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`)) {
           // local reference. it's possible to look it up.
@@ -753,11 +757,11 @@ export class Oai2ToOai3 {
           const paramName = referenceParts.pop();
           const componentType = referenceParts.pop();
           const referencePointer = `/${componentType}/${paramName}`;
-          const dereferencedParameter = get(this.original, referencePointer);
+          const dereferencedParameter = get(currentSpec, referencePointer);
 
           if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
             const parameterName = referencePointer.replace('/parameters/', '');
-            const dereferencedParameters = get(this.original, '/parameters');
+            const dereferencedParameters = get(currentSpec, '/parameters');
             for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
               if (key === parameterName) {
                 childIterator = newChildIterator;
@@ -789,6 +793,7 @@ export class Oai2ToOai3 {
             )) {
               if (key === parameterName) {
                 childIterator = newChildIterator;
+                currentSpec = referencedSpec;
               }
             }
             value = dereferencedParameter;
@@ -867,7 +872,6 @@ export class Oai2ToOai3 {
   }
 
   visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>) {
-
     if (parameterValue.in === 'formData' || parameterValue.in === 'body' || parameterValue.type === 'file') {
 
       if (targetOperation.requestBody === undefined) {
