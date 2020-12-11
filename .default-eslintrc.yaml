@@ -29,9 +29,6 @@ rules:
   "@typescript-eslint/no-angle-bracket-type-assertion" : 'off'
   "@typescript-eslint/no-use-before-define": "off"
   "require-atomic-updates" : 'off'
-  '@typescript-eslint/consistent-type-assertions' : 
-    - error
-    - assertionStyle: 'angle-bracket'
   '@typescript-eslint/no-floating-promises': error
     
   indent:

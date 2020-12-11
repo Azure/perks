@@ -1,5 +1,6 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
+import { cleanElementName, convertOai2RefToOai3, getOai2SchemaNameFromPath, oai3PathToSchema } from './refs-utils';
 import { AddMappingFn, ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
@@ -209,7 +210,7 @@ export class Oai2ToOai3 {
           this.generated.components.parameters = this.newObject(pointer);
         }
 
-        const cleanParamName = key.replace(/\$|\[|\]/g, '_');
+        const cleanParamName = cleanElementName(key);
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
         await this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
@@ -622,18 +623,8 @@ export class Oai2ToOai3 {
   // NOTE: For the previous converter external references are not
   // converted, but internal references are converted.
   // Decided that updating all references makes more sense.
-  async getNewSchemaReference(oldReference: string): Promise<string> {
-    const [file, path] = oldReference.split("#");
-    if (file !== "" && file !== this.originalFilename) {
-      const reference = await this.resolveReference(file, path);
-      if (reference == undefined) {
-        throw new Error(`Cannot find reference ${oldReference}`);
-      }
-      return `${file}#${reference.newRef}`;
-    }
-
-    const cleanOldReference = oldReference.replace(/\$|\[|\]/g, "_");
-    return cleanOldReference.replace("#/definitions/", "#/components/schemas/");
+  private async getNewSchemaReference(oldReference: string): Promise<string> {
+    return convertOai2RefToOai3(oldReference, this.resolveReference, this.originalFilename);
   }
 
   async visitExtensions(target: any, key: string, value: any, pointer: string) {
