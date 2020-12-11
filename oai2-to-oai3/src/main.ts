@@ -1,6 +1,6 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
-import { cleanElementName, convertOai2RefToOai3 } from './refs-utils';
+import { cleanElementName, convertOai2RefToOai3, parseOai2Path, parseOai2Ref } from './refs-utils';
 import { AddMappingFn, ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
@@ -760,47 +760,40 @@ export class Oai2ToOai3 {
     
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
       if (value.$ref) {
-        // TODO: Redesign this to reuse behavior
-        if (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`)) {
-          // local reference. it's possible to look it up.
-          const referenceParts = value.$ref.split('/');
-          const paramName = referenceParts.pop();
-          const componentType = referenceParts.pop();
-          const referencePointer = `/${componentType}/${paramName}`;
-          const dereferencedParameter = get(this.original, referencePointer);
+        const parsedRef = parseOai2Ref(value.$ref);
+        if(parsedRef === undefined) {
+          throw new Error(`Reference ${value.$ref} is not a valid ref(at ${pointer})`);
+        }
+        const parameterName = parsedRef.componentName;
+        if(parsedRef.basePath === "/parameters/") {
+          if (parsedRef.file == "" || parsedRef.file === this.originalFilename) {
+            const dereferencedParameter = get(this.original, parsedRef.path);
 
-          if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
-            const parameterName = referencePointer.replace('/parameters/', '');
-            const dereferencedParameters = get(this.original, "/parameters");
-            for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
-              if (key === parameterName) {
-                childIterator = newChildIterator;
-              }
+            if (
+              dereferencedParameter.in === "body" ||
+              dereferencedParameter.type === "file" ||
+              dereferencedParameter.in === "formData"
+            ) {
+              childIterator = () => visit(dereferencedParameter, [parameterName]);
+              value = dereferencedParameter;
+              pointer = parsedRef.path;
             }
-            value = dereferencedParameter;
-            pointer = referencePointer;
-          }
-        } else if (value.$ref.indexOf("#/parameters/") !== -1) {
-          // TODO: Make sure it's a parameter ref
-          const [referenceFile, referencePath] = value.$ref.split("#");
-          const newReference = await this.resolveReference(referenceFile, referencePath);
-          if(!newReference){
-            throw new Error(`Cannot find reference ${value.$ref}`);
-          }
-          console.error("Got new reference", newReference);
-          const dereferencedParameter = newReference.referencedEl;
+          } else {
+            const newReference = await this.resolveReference(parsedRef.file, parsedRef.path);
+            if (!newReference) {
+              throw new Error(`Cannot find reference ${value.$ref}`);
+            }
+            const dereferencedParameter = newReference.referencedEl;
 
-          console.error("Got ref", pointer, value);
-
-          if (
-            dereferencedParameter.in === "body" ||
-            dereferencedParameter.type === "file" ||
-            dereferencedParameter.in === "formData"
-          ) {
-            const parameterName = referencePath.replace("/parameters/", "");
-            childIterator = () => visit(dereferencedParameter, [parameterName]);
-            value = dereferencedParameter;
-            pointer = referencePath;
+            if (
+              dereferencedParameter.in === "body" ||
+              dereferencedParameter.type === "file" ||
+              dereferencedParameter.in === "formData"
+            ) {
+              childIterator = () => visit(dereferencedParameter, [parameterName]);
+              value = dereferencedParameter;
+              pointer = parsedRef.path;
+            }
           }
         } else {
           // TODO: Throw exception

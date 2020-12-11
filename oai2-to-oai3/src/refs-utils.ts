@@ -1,4 +1,3 @@
-import { parse } from "path";
 import { ResolveReferenceFn } from "./runner";
 
 export const oai3PathToSchema = (name: string) => `/components/schemas/${name}`;
@@ -49,14 +48,29 @@ export const convertOai2PathToOai3 = (path: string) => {
   return `${oai2PathMapping[parsed.basePath]}${cleanElementName(parsed.componentName)}`;
 };
 
+export interface Oai2ParsedPath {
+  basePath: keyof typeof oai2PathMapping;
+  componentName: string;
+}
+
+export interface Oai2ParsedRef extends Oai2ParsedPath {
+  file: string;
+  path: string;
+}
+
+export enum OpenAPIComponentTypes {
+  Schemas,
+  Parameters,
+  Responses,
+}
 
 /**
  * Extract the component name and base path of a reference path.
- * @exampe 
+ * @exampe
  *  parseOai2Path("/parameters/Foo") -> {basePath: "/parameters/", componentName: "Foo"}
  *  parseOai2Path("/definitions/Foo") -> {basePath: "/definitions/", componentName: "Foo"}
  */
-const parseOai2Path = (path: string): { basePath: keyof typeof oai2PathMapping; componentName: string } | undefined => {
+export const parseOai2Path = (path: string): Oai2ParsedPath | undefined => {
   for (const oai2Path of Object.keys(oai2PathMapping)) {
     if (path.startsWith(oai2Path)) {
       return {
@@ -66,4 +80,17 @@ const parseOai2Path = (path: string): { basePath: keyof typeof oai2PathMapping; 
     }
   }
   return undefined;
+};
+
+export const parseOai2Ref = (oai2Ref: string): Oai2ParsedRef | undefined => {
+  const [file, path] = oai2Ref.split("#");
+  const parsedPath = parseOai2Path(path);
+  if (parsedPath === undefined) {
+    return undefined;
+  }
+  return {
+    file,
+    path,
+    ...parsedPath,
+  };
 };
