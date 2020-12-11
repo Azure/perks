@@ -18,7 +18,6 @@ export const convertOai2ToOai3Files = async (inputFiles: DataHandle[]): Promise<
   for (const file of files) {
     map.set(file.name, file);
   }
-  console.error("Converting files", [...map.keys()]);
   return convertOai2ToOai3(map);
 };
 
@@ -35,9 +34,6 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
       throw new Error(`Ref file ${targetfile} doesn't exists.`);
     }
 
-    if (!completedFiles.has(targetfile)) {
-      await computeFile(file);
-    }
     return get(file.schema, refPath);
   };
 
@@ -58,9 +54,6 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
   };
 
   for (const input of inputs.values()) {
-    if (completedFiles.has(input.name)) {
-      continue;
-    }
     await computeFile(input);
   }
   return [...completedFiles.values()];
