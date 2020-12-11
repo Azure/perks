@@ -15,6 +15,7 @@ parserOptions:
   ecmaVersion: 2018
   sourceType: module
   warnOnUnsupportedTypeScriptVersion : false
+  project: "./tsconfig.json"
 rules:
   "@typescript-eslint/no-this-alias" : 'off'
   "@typescript-eslint/interface-name-prefix": 'off'
@@ -31,6 +32,7 @@ rules:
   '@typescript-eslint/consistent-type-assertions' : 
     - error
     - assertionStyle: 'angle-bracket'
+  '@typescript-eslint/no-floating-promises': error
     
   indent:
   - warn
@@ -41,9 +43,6 @@ rules:
   - 2
   no-undef: 'off'
   no-unused-vars: 'off'
-  linebreak-style:
-  - 'error'
-  - unix
   semi:
   - error
   - always
