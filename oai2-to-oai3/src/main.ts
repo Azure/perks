@@ -228,8 +228,7 @@ export class Oai2ToOai3 {
 
   async visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
     if (parameterValue.$ref !== undefined) {
-      const cleanReferenceValue = parameterValue.$ref.replace(/\$|\[|\]/g, '_');
-      parameterTarget.$ref = { value: cleanReferenceValue.replace('#/parameters/', '#/components/parameters/'), pointer };
+      parameterTarget.$ref = { value: await this.convertReferenceToOai3(parameterValue.$ref), pointer };
     } else {
 
       const parameterUnchangedProperties = [
@@ -486,8 +485,7 @@ export class Oai2ToOai3 {
     for (const { key, value, pointer, childIterator } of schemaItemMemebers()) {
       switch (key) {
         case '$ref':
-          console.error("Visit ref schema", value);
-          target[key] = { value: await this.convertReferenceToOai3(value), pointer };
+          target.$ref = { value: await this.convertReferenceToOai3(value), pointer };
           break;
         case 'additionalProperties':
           if (typeof (value) === 'boolean') {
@@ -762,7 +760,6 @@ export class Oai2ToOai3 {
     
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
       if (value.$ref) {
-        console.error("Ref is", value.$ref);
         // TODO: Redesign this to reuse behavior
         if (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`)) {
           // local reference. it's possible to look it up.
