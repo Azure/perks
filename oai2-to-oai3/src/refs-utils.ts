@@ -1,5 +1,3 @@
-import { ResolveReferenceFn } from "./runner";
-
 export const oai3PathToSchema = (name: string) => `/components/schemas/${name}`;
 
 export const oai3PathToParameter = (name: string) => `/components/parameters/${name}`;
@@ -12,25 +10,9 @@ export const cleanElementName = (name: string) => name.replace(/\$|\[|\]/g, "_")
  * @param resolveReference Optional resolver for references pointing to a different file.
  * @param currentFile Current file to use with `resolveReference`
  */
-export const convertOai2RefToOai3 = async (
-  oai2Ref: string,
-  resolveReference?: ResolveReferenceFn,
-  currentFile?: string,
-): Promise<string> => {
+export const convertOai2RefToOai3 = async (oai2Ref: string): Promise<string> => {
   const [file, path] = oai2Ref.split("#");
-
-  if (file !== "" && file !== currentFile) {
-    if (!resolveReference) {
-      return `${file}#${convertOai2PathToOai3(path)}`;
-    }
-
-    const reference = await resolveReference(file, path);
-    if (reference == undefined) {
-      throw new Error(`Cannot find reference ${oai2Ref}`);
-    }
-    return `${file}#${reference.newRef}`;
-  }
-  return `#${convertOai2PathToOai3(path)}`;
+  return `${file}#${convertOai2PathToOai3(path)}`;
 };
 
 const oai2PathMapping = {

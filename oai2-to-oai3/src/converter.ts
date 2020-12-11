@@ -1,7 +1,7 @@
-import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
+import { createGraphProxy, JsonPointer, Node, visit, get } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
-import { cleanElementName, convertOai2RefToOai3, parseOai2Path, parseOai2Ref } from './refs-utils';
-import { AddMappingFn, ResolveReferenceFn } from './runner';
+import { cleanElementName, convertOai2RefToOai3, parseOai2Ref } from './refs-utils';
+import { ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
 // NOTE: after testing references should be changed to OpenAPI 3.x.x references
@@ -10,8 +10,11 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  constructor(protected originalFilename: string, protected original: any, private addMapping: AddMappingFn, private resolveReference: ResolveReferenceFn) {
+  private resolveReference: ResolveReferenceFn;
+
+  constructor(protected originalFilename: string, protected original: any,  resolveReference?: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
+    this.resolveReference = resolveReference ?? (() => Promise.resolve(undefined));
   }
 
   async convert() {
@@ -214,14 +217,7 @@ export class Oai2ToOai3 {
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
         await this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
-        this.addMapping(
-          pointer, 
-          `/components/parameters/${cleanParamName}`, 
-          this.generated.components.parameters[cleanParamName]);
-      } else {
-        // TODO check if a good idea? Maybe provide a way to navigate the other files intead.
-        this.addMapping(pointer, null!, value);
-      }
+      } 
     }
   }
 
@@ -433,11 +429,6 @@ export class Oai2ToOai3 {
           }
           break;
       }
-      this.addMapping(
-        jsonPointer,
-        `/components/securitySchemes/${schemeName}`,
-        this.generated.components.securitySchemes[schemeName],
-      );
     }
   }
 
@@ -455,7 +446,6 @@ export class Oai2ToOai3 {
       this.generated.components.schemas[cleanSchemaName] = this.newObject(jsonPointer);
       const schemaItem = this.generated.components.schemas[cleanSchemaName];
       await this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
-      this.addMapping(jsonPointer, `/components/schemas/${cleanSchemaName}`, schemaValue);
     }
   }
 
@@ -477,7 +467,6 @@ export class Oai2ToOai3 {
         pointer,
         globalProduces,
       );
-      this.addMapping(pointer, `/components/responses/${key}`, this.generated.components.responses[key]);
     }
   }
 
@@ -619,7 +608,7 @@ export class Oai2ToOai3 {
   }
 
   private async convertReferenceToOai3(oldReference: string): Promise<string> {
-    return convertOai2RefToOai3(oldReference, this.resolveReference, this.originalFilename);
+    return convertOai2RefToOai3(oldReference);
   }
 
   async visitExtensions(target: any, key: string, value: any, pointer: string) {
@@ -779,11 +768,10 @@ export class Oai2ToOai3 {
               pointer = parsedRef.path;
             }
           } else {
-            const newReference = await this.resolveReference(parsedRef.file, parsedRef.path);
-            if (!newReference) {
+            const dereferencedParameter = await this.resolveReference(parsedRef.file, parsedRef.path);
+            if (!dereferencedParameter) {
               throw new Error(`Cannot find reference ${value.$ref}`);
             }
-            const dereferencedParameter = newReference.referencedEl;
 
             if (
               dereferencedParameter.in === "body" ||
