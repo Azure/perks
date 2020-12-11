@@ -44,7 +44,7 @@ export class Oai2ToOai3 {
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
             }
-            originalParameter['x-ms-original'] = { $ref: rp.replace('#/parameters/', '#/components/parameters/') };
+            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(rp)};
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
@@ -1052,7 +1052,7 @@ export class Oai2ToOai3 {
     for (const { key, value, pointer, childIterator } of responsesItemMembers) {
       target[key] = this.newObject(pointer);
       if (value.$ref) {
-        target[key].$ref = { value: this.convertReferenceToOai3(value.$ref), pointer };
+        target[key].$ref = { value: await this.convertReferenceToOai3(value.$ref), pointer };
       } else if (key.startsWith('x-')) {
         await this.visitExtensions(target[key], key, value, pointer);
       } else {

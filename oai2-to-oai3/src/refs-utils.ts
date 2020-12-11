@@ -31,7 +31,7 @@ export const convertOai2RefToOai3 = async (
     }
     return `${file}#${reference.newRef}`;
   }
-  return convertOai2PathToOai3(path);
+  return `#${convertOai2PathToOai3(path)}`;
 };
 
 const oai2PathMapping = {
