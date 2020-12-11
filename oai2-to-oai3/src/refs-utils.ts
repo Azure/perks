@@ -1,7 +1,7 @@
-export const oai3PathToSchema = (name: string) => `/components/schemas/${name}`;
-
-export const oai3PathToParameter = (name: string) => `/components/parameters/${name}`;
-
+/**
+ * Clean a component name to use in OpenAPI 3.0.
+ * @param name OpenApi2.0 component name to clean.
+ */
 export const cleanElementName = (name: string) => name.replace(/\$|\[|\]/g, "_");
 
 /**
@@ -35,22 +35,12 @@ export interface Oai2ParsedPath {
   componentName: string;
 }
 
-export interface Oai2ParsedRef extends Oai2ParsedPath {
-  file: string;
-  path: string;
-}
-
-export enum OpenAPIComponentTypes {
-  Schemas,
-  Parameters,
-  Responses,
-}
-
 /**
  * Extract the component name and base path of a reference path.
- * @exampe
+ * @example
  *  parseOai2Path("/parameters/Foo") -> {basePath: "/parameters/", componentName: "Foo"}
  *  parseOai2Path("/definitions/Foo") -> {basePath: "/definitions/", componentName: "Foo"}
+ *  parseOai2Path("/unknown/Foo") -> undefined
  */
 export const parseOai2Path = (path: string): Oai2ParsedPath | undefined => {
   for (const oai2Path of Object.keys(oai2PathMapping)) {
@@ -64,6 +54,18 @@ export const parseOai2Path = (path: string): Oai2ParsedPath | undefined => {
   return undefined;
 };
 
+export interface Oai2ParsedRef extends Oai2ParsedPath {
+  file: string;
+  path: string;
+}
+
+/**
+ * Parse a OpenAPI2.0 json ref.
+ * @example
+ *  parseOai2Path("#/parameters/Foo") -> {file: "", path: "/parameters/Foo", basePath: "/parameters/", componentName: "Foo"}
+ *  parseOai2Path("bar.json#/definitions/Foo") -> {file: "bar.json", path: "/definitions/Foo", basePath: "/definitions/", componentName: "Foo"}
+ *  parseOai2Path("other.json#/unknown/Foo") -> undefined
+ */
 export const parseOai2Ref = (oai2Ref: string): Oai2ParsedRef | undefined => {
   const [file, path] = oai2Ref.split("#");
   const parsedPath = parseOai2Path(path);
