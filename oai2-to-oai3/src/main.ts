@@ -214,7 +214,10 @@ export class Oai2ToOai3 {
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
         this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
-        this.addMapping(pointer, cleanParamName, this.generated.components.parameters[cleanParamName]);
+        this.addMapping(
+          pointer, 
+          `/components/parameters/${cleanParamName}`, 
+          this.generated.components.parameters[cleanParamName]);
       } else {
         // TODO check if a good idea? Maybe provide a way to navigate the other files intead.
         this.addMapping(pointer, null!, value);
@@ -432,6 +435,11 @@ export class Oai2ToOai3 {
           }
           break;
       }
+      this.addMapping(
+        jsonPointer,
+        `/components/securitySchemes/${schemeName}`,
+        this.generated.components.securitySchemes[schemeName],
+      );
     }
   }
 
@@ -449,6 +457,7 @@ export class Oai2ToOai3 {
       this.generated.components.schemas[cleanSchemaName] = this.newObject(jsonPointer);
       const schemaItem = this.generated.components.schemas[cleanSchemaName];
       this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
+      this.addMapping(jsonPointer, `/components/schemas/${cleanSchemaName}`, schemaValue);
     }
   }
 
@@ -463,6 +472,7 @@ export class Oai2ToOai3 {
     for (const { key, pointer, value, childIterator } of responses) {
       this.generated.components.responses[key] = this.newObject(pointer);
       this.visitResponse(this.generated.components.responses[key], value, key, childIterator, pointer, globalProduces);
+      this.addMapping(pointer, `/components/responses/${key}`, this.generated.components.responses[key]);
     }
   }
 
