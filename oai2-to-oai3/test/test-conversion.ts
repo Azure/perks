@@ -1,15 +1,14 @@
-import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 import * as assert from 'assert';
 import * as aio from '@azure-tools/async-io';
 import * as datastore from '@azure-tools/datastore';
-import { stringify, CancellationToken, FastStringify } from '@azure-tools/datastore';
-import { SourceMapGenerator } from 'source-map';
+import { FastStringify } from '@azure-tools/datastore';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 require('source-map-support').install();
 
-import { Oai2ToOai3 } from '../main';
+import { Oai2ToOai3 } from '../src/converter';
 
 @suite class MyTests {
 
@@ -38,7 +37,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -72,7 +71,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -106,7 +105,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -140,7 +139,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       // const swaggerAsText = FastStringify(convert.generated);
       // console.log(swaggerAsText);
@@ -174,7 +173,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -205,7 +204,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -236,7 +235,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -267,7 +266,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -298,7 +297,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -329,7 +328,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -361,7 +360,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -393,7 +392,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -425,7 +424,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -456,7 +455,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -486,7 +485,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -517,7 +516,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -548,7 +547,7 @@ import { Oai2ToOai3 } from '../main';
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
       // run the conversion
-      convert.convert();
+      await convert.convert();
 
       assert.deepStrictEqual(convert.generated, original, 'Should be the same');
     }
@@ -583,7 +582,7 @@ import { Oai2ToOai3 } from '../main';
       const swag = swaggerdata.ReadObject();
 
       const convert = new Oai2ToOai3(swaggerdata.key, swag);
-      const result = convert.convert();
+      const result = await convert.convert();
 
       const sink = ds.getDataSink();
       const text = FastStringify(convert.generated);

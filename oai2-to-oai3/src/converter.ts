@@ -1,5 +1,7 @@
-import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get } from '@azure-tools/datastore';
+import { createGraphProxy, JsonPointer, Node, visit, get } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
+import { cleanElementName, convertOai2RefToOai3, parseOai2Ref } from './refs-utils';
+import { ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
 // NOTE: after testing references should be changed to OpenAPI 3.x.x references
@@ -8,11 +10,14 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  constructor(protected originalFilename: string, protected original: any) {
+  private resolveReference: ResolveReferenceFn;
+
+  constructor(protected originalFilename: string, protected original: any,  resolveReference?: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
+    this.resolveReference = resolveReference ?? (() => Promise.resolve(undefined));
   }
 
-  convert() {
+  async convert() {
     // process servers
     if (this.original['x-ms-parameterized-host']) {
       const xMsPHost: any = this.original['x-ms-parameterized-host'];
@@ -42,7 +47,7 @@ export class Oai2ToOai3 {
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
             }
-            originalParameter['x-ms-original'] = { $ref: rp.replace('#/parameters/', '#/components/parameters/') };
+            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(rp)};
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
@@ -91,13 +96,12 @@ export class Oai2ToOai3 {
         const server: any = {};
         server.url = (s ? s + ':' : '') + '//' + this.original.host + (this.original.basePath ? this.original.basePath : '/');
 
-        /* eslint-disable */
         extractServerParameters(server);
 
         this.generated.servers.__push__({ value: server, pointer });
       }
     } else if (this.original.basePath) {
-      let server: any = {};
+      const server: any = {};
       server.url = this.original.basePath;
       extractServerParameters(server);
       if (this.generated.servers === undefined) {
@@ -136,7 +140,7 @@ export class Oai2ToOai3 {
           break;
         case 'info':
           this.generated.info = this.newObject(pointer);
-          this.visitInfo(children);
+          await this.visitInfo(children);
           break;
         case 'x-ms-paths':
         case 'paths': {
@@ -145,7 +149,7 @@ export class Oai2ToOai3 {
           if (!this.generated[newKey]) {
             this.generated[newKey] = this.newObject(pointer);
           }
-          this.visitPaths(this.generated[newKey], children, globalConsumes, globalProduces);
+          await this.visitPaths(this.generated[newKey], children, globalConsumes, globalProduces);
         }
           break;
         case 'host':
@@ -159,24 +163,24 @@ export class Oai2ToOai3 {
           // PENDING
           break;
         case 'definitions':
-          this.visitDefinitions(children);
+          await this.visitDefinitions(children);
           break;
         case 'parameters':
-          this.visitParameterDefinitions(children);
+          await this.visitParameterDefinitions(children);
           break;
         case 'responses':
           if (!this.generated.components) {
             this.generated.components = this.newObject(pointer);
           }
           this.generated.components.responses = this.newObject(pointer);
-          this.visitResponsesDefinitions(children, globalProduces);
+          await this.visitResponsesDefinitions(children, globalProduces);
           break;
         case 'securityDefinitions':
           if (!this.generated.components) {
             this.generated.components = this.newObject(pointer);
           }
           this.generated.components.securitySchemes = this.newObject(pointer);
-          this.visitSecurityDefinitions(children);
+          await this.visitSecurityDefinitions(children);
           break;
         // no changes to security from OA2 to OA3
         case 'security':
@@ -184,25 +188,23 @@ export class Oai2ToOai3 {
           break;
         case 'tags':
           this.generated.tags = this.newArray(pointer);
-          this.visitTags(children);
+          await this.visitTags(children);
           break;
         case 'externalDocs':
           this.visitExternalDocs(this.generated, key, value, pointer);
           break;
         default:
           // handle stuff liks x-* and things not recognized
-          this.visitExtensions(this.generated, key, value, pointer);
+          await this.visitExtensions(this.generated, key, value, pointer);
           break;
       }
     }
-
     return this.generated;
   }
 
-  visitParameterDefinitions(parameters: Iterable<Node>) {
+  async visitParameterDefinitions(parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
       if (value.in !== 'formData' && value.in !== 'body' && value.type !== 'file') {
-
         if (this.generated.components === undefined) {
           this.generated.components = this.newObject(pointer);
         }
@@ -211,20 +213,18 @@ export class Oai2ToOai3 {
           this.generated.components.parameters = this.newObject(pointer);
         }
 
-        const cleanParamName = key.replace(/\$|\[|\]/g, '_');
+        const cleanParamName = cleanElementName(key);
 
         this.generated.components.parameters[cleanParamName] = this.newObject(pointer);
-        this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
-      }
+        await this.visitParameter(this.generated.components.parameters[cleanParamName], value, pointer, childIterator);
+      } 
     }
   }
 
 
-  visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
-
+  async visitParameter(parameterTarget: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>) {
     if (parameterValue.$ref !== undefined) {
-      const cleanReferenceValue = parameterValue.$ref.replace(/\$|\[|\]/g, '_');
-      parameterTarget.$ref = { value: cleanReferenceValue.replace('#/parameters/', '#/components/parameters/'), pointer };
+      parameterTarget.$ref = { value: await this.convertReferenceToOai3(parameterValue.$ref), pointer };
     } else {
 
       const parameterUnchangedProperties = [
@@ -315,7 +315,7 @@ export class Oai2ToOai3 {
           if (parameterTarget.schema.items === undefined) {
             parameterTarget.schema.items = this.newObject(jsonPointer);
           }
-          this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
+          await this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
         } else if (schemaKeys.indexOf(key) !== -1) {
           parameterTarget.schema[key] = { value: parameterValue[key], pointer, recurse: true };
         }
@@ -330,14 +330,14 @@ export class Oai2ToOai3 {
         parameterTarget.schema.items = this.newObject(pointer);
         for (const { key, childIterator } of parameterItemMembers()) {
           if (key === 'items') {
-            this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
+            await this.visitSchema(parameterTarget.schema.items, parameterValue.items, childIterator);
           }
         }
       }
     }
   }
 
-  visitInfo(info: Iterable<Node>) {
+  async visitInfo(info: Iterable<Node>) {
     for (const { value, key, pointer, children } of info) {
       switch (key) {
         case 'title':
@@ -349,13 +349,13 @@ export class Oai2ToOai3 {
           this.generated.info[key] = { value, pointer };
           break;
         default:
-          this.visitExtensions(this.generated.info, key, value, pointer);
+          await this.visitExtensions(this.generated.info, key, value, pointer);
           break;
       }
     }
   }
 
-  visitSecurityDefinitions(securityDefinitions: Iterable<Node>) {
+  async visitSecurityDefinitions(securityDefinitions: Iterable<Node>) {
     for (const { key: schemeName, value: v, pointer: jsonPointer, children: securityDefinitionsItemMembers } of securityDefinitions) {
       this.generated.components.securitySchemes[schemeName] = this.newObject(jsonPointer);
       const securityScheme = this.generated.components.securitySchemes[schemeName];
@@ -370,7 +370,7 @@ export class Oai2ToOai3 {
                 securityScheme[key] = { value, pointer };
                 break;
               default:
-                this.visitExtensions(securityScheme, key, value, pointer);
+                await this.visitExtensions(securityScheme, key, value, pointer);
                 break;
             }
           }
@@ -386,7 +386,7 @@ export class Oai2ToOai3 {
                 securityScheme.scheme = { value: 'basic', pointer };
                 break;
               default:
-                this.visitExtensions(securityScheme, key, value, pointer);
+                await this.visitExtensions(securityScheme, key, value, pointer);
                 break;
             }
           }
@@ -413,7 +413,6 @@ export class Oai2ToOai3 {
             securityScheme.flows[flowName] = this.newObject(jsonPointer);
             let authorizationUrl;
             let tokenUrl;
-            let scopes;
 
             if (v.authorizationUrl) {
               authorizationUrl = v.authorizationUrl.split('?')[0].trim() || '/';
@@ -425,7 +424,7 @@ export class Oai2ToOai3 {
               securityScheme.flows[flowName].tokenUrl = { value: tokenUrl, pointer: jsonPointer };
             }
 
-            scopes = v.scopes || {};
+            const scopes = v.scopes || {};
             securityScheme.flows[flowName].scopes = { value: scopes, pointer: jsonPointer };
           }
           break;
@@ -433,7 +432,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitDefinitions(definitions: Iterable<Node>) {
+  async visitDefinitions(definitions: Iterable<Node>) {
     for (const { key: schemaName, value: schemaValue, pointer: jsonPointer, childIterator: definitionsItemMembers } of definitions) {
       if (this.generated.components === undefined) {
         this.generated.components = this.newObject(jsonPointer);
@@ -446,29 +445,36 @@ export class Oai2ToOai3 {
       const cleanSchemaName = schemaName.replace(/\[|\]/g, '_');
       this.generated.components.schemas[cleanSchemaName] = this.newObject(jsonPointer);
       const schemaItem = this.generated.components.schemas[cleanSchemaName];
-      this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
+      await this.visitSchema(schemaItem, schemaValue, definitionsItemMembers);
     }
   }
 
-  visitProperties(target: any, propertiesItemMembers: () => Iterable<Node>) {
+  async visitProperties(target: any, propertiesItemMembers: () => Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of propertiesItemMembers()) {
       target[key] = this.newObject(pointer);
-      this.visitSchema(target[key], value, childIterator);
+      await this.visitSchema(target[key], value, childIterator);
     }
   }
 
-  visitResponsesDefinitions(responses: Iterable<Node>, globalProduces: Array<string>) {
+  async visitResponsesDefinitions(responses: Iterable<Node>, globalProduces: Array<string>) {
     for (const { key, pointer, value, childIterator } of responses) {
       this.generated.components.responses[key] = this.newObject(pointer);
-      this.visitResponse(this.generated.components.responses[key], value, key, childIterator, pointer, globalProduces);
+      await this.visitResponse(
+        this.generated.components.responses[key],
+        value,
+        key,
+        childIterator,
+        pointer,
+        globalProduces,
+      );
     }
   }
 
-  visitSchema(target: any, schemaValue: any, schemaItemMemebers: () => Iterable<Node>) {
+  async visitSchema(target: any, schemaValue: any, schemaItemMemebers: () => Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of schemaItemMemebers()) {
       switch (key) {
         case '$ref':
-          target[key] = { value: this.getNewSchemaReference(value), pointer };
+          target.$ref = { value: await this.convertReferenceToOai3(value), pointer };
           break;
         case 'additionalProperties':
           if (typeof (value) === 'boolean') {
@@ -477,7 +483,7 @@ export class Oai2ToOai3 {
             } // false is assumed anyway in autorest.
           } else {
             target[key] = this.newObject(pointer);
-            this.visitSchema(target[key], value, childIterator);
+            await this.visitSchema(target[key], value, childIterator);
           }
           break;
         case 'required':
@@ -503,15 +509,15 @@ export class Oai2ToOai3 {
           break;
         case 'allOf':
           target.allOf = this.newArray(pointer);
-          this.visitAllOf(target.allOf, childIterator);
+          await this.visitAllOf(target.allOf, childIterator);
           break;
         case 'items':
           target[key] = this.newObject(pointer);
-          this.visitSchema(target[key], value, childIterator);
+          await this.visitSchema(target[key], value, childIterator);
           break;
         case 'properties':
           target[key] = this.newObject(pointer);
-          this.visitProperties(target[key], childIterator);
+          await this.visitProperties(target[key], childIterator);
           break;
         case 'type':
         case 'format':
@@ -543,16 +549,16 @@ export class Oai2ToOai3 {
           }
           break;
         default:
-          this.visitExtensions(target, key, value, pointer);
+          await this.visitExtensions(target, key, value, pointer);
           break;
       }
     }
   }
 
-  visitAllOf(target: any, allOfMembers: () => Iterable<Node>) {
+  async visitAllOf(target: any, allOfMembers: () => Iterable<Node>) {
     for (const { key: index, value, pointer, childIterator } of allOfMembers()) {
       target.__push__(this.newObject(pointer));
-      this.visitSchema(target[index], value, childIterator);
+      await this.visitSchema(target[index], value, childIterator);
     }
   }
 
@@ -576,13 +582,13 @@ export class Oai2ToOai3 {
     target[key] = { value, pointer, recurse: true };
   }
 
-  visitTags(tags: Iterable<Node>) {
+  async visitTags(tags: Iterable<Node>) {
     for (const { key: index, pointer, children: tagItemMembers } of tags) {
-      this.visitTag(parseInt(index), pointer, tagItemMembers);
+      await this.visitTag(parseInt(index), pointer, tagItemMembers);
     }
   }
 
-  visitTag(index: number, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
+  async visitTag(index: number, jsonPointer: JsonPointer, tagItemMembers: Iterable<Node>) {
     this.generated.tags.__push__(this.newObject(jsonPointer));
 
     for (const { key, pointer, value } of tagItemMembers) {
@@ -595,24 +601,20 @@ export class Oai2ToOai3 {
           this.visitExternalDocs(this.generated.tags[index], key, value, pointer);
           break;
         default:
-          this.visitExtensions(this.generated.tags[index], key, value, pointer);
+          await this.visitExtensions(this.generated.tags[index], key, value, pointer);
           break;
       }
     }
   }
 
-  // NOTE: For the previous converter external references are not
-  // converted, but internal references are converted.
-  // Decided that updating all references makes more sense.
-  getNewSchemaReference(oldReference: string) {
-    const cleanOldReference = oldReference.replace(/\$|\[|\]/g, '_');
-    return cleanOldReference.replace('#/definitions/', '#/components/schemas/');
+  private async convertReferenceToOai3(oldReference: string): Promise<string> {
+    return convertOai2RefToOai3(oldReference);
   }
 
-  visitExtensions(target: any, key: string, value: any, pointer: string) {
+  async visitExtensions(target: any, key: string, value: any, pointer: string) {
     switch (key) {
       case 'x-ms-odata':
-        target[key] = { value: this.getNewSchemaReference(value), pointer };
+        target[key] = { value: await this.convertReferenceToOai3(value), pointer };
         break;
       default:
         target[key] = { value, pointer, recurse: true };
@@ -629,7 +631,7 @@ export class Oai2ToOai3 {
   }
 
   newObject(pointer: JsonPointer) {
-    return <any>{ value: createGraphProxy(this.originalFilename, pointer, this.mappings), pointer };
+    return { value: createGraphProxy(this.originalFilename, pointer, this.mappings), pointer };
   }
 
   visitUnspecified(nodes: Iterable<Node>) {
@@ -638,13 +640,13 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitPaths(target: any, paths: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     for (const { key: uri, pointer, children: pathItemMembers } of paths) {
-      this.visitPath(target, uri, pointer, pathItemMembers, globalConsumes, globalProduces);
+      await this.visitPath(target, uri, pointer, pathItemMembers, globalConsumes, globalProduces);
     }
   }
 
-  visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitPath(target: any, uri: string, jsonPointer: JsonPointer, pathItemMembers: Iterable<Node>, globalConsumes: Array<string>, globalProduces: Array<string>) {
     target[uri] = this.newObject(jsonPointer);
     const pathItem = target[uri];
     for (const { value, key, pointer, children: pathItemFieldMembers } of pathItemMembers) {
@@ -663,24 +665,24 @@ export class Oai2ToOai3 {
         case 'head':
         case 'patch':
         case 'x-trace':
-          this.visitOperation(pathItem, key, pointer, pathItemFieldMembers, value, globalConsumes, globalProduces);
+          await this.visitOperation(pathItem, key, pointer, pathItemFieldMembers, value, globalConsumes, globalProduces);
           break;
         case 'parameters':
           pathItem.parameters = this.newArray(pointer);
-          this.visitPathParameters(pathItem.parameters, pathItemFieldMembers);
+          await this.visitPathParameters(pathItem.parameters, pathItemFieldMembers);
           break;
       }
     }
   }
 
-  visitPathParameters(target: any, parameters: Iterable<Node>) {
+  async visitPathParameters(target: any, parameters: Iterable<Node>) {
     for (const { key, value, pointer, childIterator } of parameters) {
       target.__push__(this.newObject(pointer));
-      this.visitParameter(target[target.length - 1], value, pointer, childIterator);
+      await this.visitParameter(target[target.length - 1], value, pointer, childIterator);
     }
   }
 
-  visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
 
     // trace was not supported on OpenAPI 2.0, it was an extension
     httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
@@ -720,14 +722,14 @@ export class Oai2ToOai3 {
           // handled beforehand for parameters
           break;
         case 'parameters':
-          this.visitParameters(operation, operationFieldItemMembers, consumes, pointer);
+          await this.visitParameters(operation, operationFieldItemMembers, consumes, pointer);
           break;
         case 'produces':
           // handled beforehand for responses
           break;
         case 'responses':
           operation.responses = this.newObject(pointer);
-          this.visitResponses(operation.responses, operationFieldItemMembers, produces);
+          await this.visitResponses(operation.responses, operationFieldItemMembers, produces);
           break;
         case 'schemes':
           break;
@@ -735,33 +737,55 @@ export class Oai2ToOai3 {
           operation.security = { value, pointer, recurse: true };
           break;
         default:
-          this.visitExtensions(operation, key, value, pointer);
+          await this.visitExtensions(operation, key, value, pointer);
           break;
       }
     }
   }
 
-  visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
+  async visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
     const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
-    for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
 
-      if (value.$ref && (value.$ref.match(/^#\/parameters\//g) || value.$ref.startsWith(`${this.originalFilename}#/parameters/`))) {
-        // local reference. it's possible to look it up.
-        const referenceParts = value.$ref.split('/');
-        const paramName = referenceParts.pop();
-        const componentType = referenceParts.pop();
-        const referencePointer = `/${componentType}/${paramName}`;
-        const dereferencedParameter = get(this.original, referencePointer);
-        if (dereferencedParameter.in === 'body' || dereferencedParameter.type === 'file' || dereferencedParameter.in === 'formData') {
-          const parameterName = referencePointer.replace('/parameters/', '');
-          const dereferencedParameters = get(this.original, '/parameters');
-          for (const { key, childIterator: newChildIterator } of visit(dereferencedParameters)) {
-            if (key === parameterName) {
-              childIterator = newChildIterator;
+    
+    for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
+      if (value.$ref) {
+        const parsedRef = parseOai2Ref(value.$ref);
+        if(parsedRef === undefined) {
+          throw new Error(`Reference ${value.$ref} is not a valid ref(at ${pointer})`);
+        }
+        const parameterName = parsedRef.componentName;
+        if(parsedRef.basePath === "/parameters/") {
+          if (parsedRef.file == "" || parsedRef.file === this.originalFilename) {
+            const dereferencedParameter = get(this.original, parsedRef.path);
+
+            if (
+              dereferencedParameter.in === "body" ||
+              dereferencedParameter.type === "file" ||
+              dereferencedParameter.in === "formData"
+            ) {
+              childIterator = () => visit(dereferencedParameter, [parameterName]);
+              value = dereferencedParameter;
+              pointer = parsedRef.path;
+            }
+          } else {
+            const dereferencedParameter = await this.resolveReference(parsedRef.file, parsedRef.path);
+            if (!dereferencedParameter) {
+              throw new Error(`Cannot find reference ${value.$ref}`);
+            }
+
+            if (
+              dereferencedParameter.in === "body" ||
+              dereferencedParameter.type === "file" ||
+              dereferencedParameter.in === "formData"
+            ) {
+              childIterator = () => visit(dereferencedParameter, [parameterName]);
+              value = dereferencedParameter;
+              pointer = parsedRef.path;
             }
           }
-          value = dereferencedParameter;
-          pointer = referencePointer;
+        } else {
+          // TODO: Throw exception
+          console.error("### CAN'T RESOLVE $ref", value.$ref);
         }
       }
 
@@ -797,7 +821,7 @@ export class Oai2ToOai3 {
         requestBodyTracker.index += 1;
       }
 
-      this.visitOperationParameter(targetOperation, value, pointer, childIterator, consumes);
+      await this.visitOperationParameter(targetOperation, value, pointer, childIterator, consumes);
     }
 
     if (targetOperation.requestBody !== undefined) {
@@ -830,8 +854,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>) {
-
+  async visitOperationParameter(targetOperation: any, parameterValue: any, pointer: string, parameterItemMembers: () => Iterable<Node>, consumes: Array<any>) {
     if (parameterValue.in === 'formData' || parameterValue.in === 'body' || parameterValue.type === 'file') {
 
       if (targetOperation.requestBody === undefined) {
@@ -876,7 +899,7 @@ export class Oai2ToOai3 {
         if (parameterValue.schema !== undefined) {
           for (const { key, value, childIterator } of parameterItemMembers()) {
             if (key === 'schema') {
-              this.visitSchema(targetOperation.requestBody.content[contentType].schema, value, childIterator);
+              await this.visitSchema(targetOperation.requestBody.content[contentType].schema, value, childIterator);
             }
           }
         } else {
@@ -962,7 +985,7 @@ export class Oai2ToOai3 {
           consumesTempArray.push('application/json');
         }
 
-        for (let mimetype of consumesTempArray) {
+        for (const mimetype of consumesTempArray) {
           if (targetOperation.requestBody.content[mimetype] === undefined) {
             targetOperation.requestBody.content[mimetype] = this.newObject(pointer);
           }
@@ -974,7 +997,7 @@ export class Oai2ToOai3 {
           if (parameterValue.schema !== undefined) {
             for (const { key, value, childIterator } of parameterItemMembers()) {
               if (key === 'schema') {
-                this.visitSchema(targetOperation.requestBody.content[mimetype].schema, value, childIterator);
+                await this.visitSchema(targetOperation.requestBody.content[mimetype].schema, value, childIterator);
               }
             }
           } else {
@@ -999,32 +1022,30 @@ export class Oai2ToOai3 {
 
       targetOperation.parameters.__push__(this.newObject(pointer));
       const parameter = targetOperation.parameters[targetOperation.parameters.length - 1];
-      this.visitParameter(parameter, parameterValue, pointer, parameterItemMembers);
+      await this.visitParameter(parameter, parameterValue, pointer, parameterItemMembers);
     }
   }
 
-  visitResponses(target: any, responsesItemMembers: Iterable<Node>, produces: Array<string>) {
+  async visitResponses(target: any, responsesItemMembers: Iterable<Node>, produces: Array<string>) {
     for (const { key, value, pointer, childIterator } of responsesItemMembers) {
       target[key] = this.newObject(pointer);
       if (value.$ref) {
-        let newReferenceValue = value.$ref.replace('#/responses/', '#/components/responses/');
-
-        target[key].$ref = { value: newReferenceValue, pointer };
+        target[key].$ref = { value: await this.convertReferenceToOai3(value.$ref), pointer };
       } else if (key.startsWith('x-')) {
-        this.visitExtensions(target[key], key, value, pointer);
+        await this.visitExtensions(target[key], key, value, pointer);
       } else {
-        this.visitResponse(target[key], value, key, childIterator, pointer, produces);
+        await this.visitResponse(target[key], value, key, childIterator, pointer, produces);
       }
     }
   }
 
-  visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
+  async visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
 
     // NOTE: The previous converter patches the description of the response because
     // every response should have a description.
     // So, to match previous behavior we do too.
     if (responseValue.description === undefined || responseValue.description === '') {
-      let sc = statusCodes.find((e) => {
+      const sc = statusCodes.find((e) => {
         return e.code === responseName;
       });
 
@@ -1035,16 +1056,16 @@ export class Oai2ToOai3 {
 
     if (responseValue.schema) {
       responseTarget.content = this.newObject(jsonPointer);
-      for (let mimetype of produces) {
+      for (const mimetype of produces) {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);
         responseTarget.content[mimetype].schema = this.newObject(jsonPointer);
         for (const { key, value, childIterator } of responsesFieldMembers()) {
           if (key === 'schema') {
-            this.visitSchema(responseTarget.content[mimetype].schema, value, childIterator);
+            await this.visitSchema(responseTarget.content[mimetype].schema, value, childIterator);
           }
         }
         if (responseValue.examples && responseValue.examples[mimetype]) {
-          let example: any = {};
+          const example: any = {};
           example.value = responseValue.examples[mimetype];
           responseTarget.content[mimetype].examples = this.newObject(jsonPointer);
           responseTarget.content[mimetype].examples.response = { value: example, pointer: jsonPointer };
@@ -1053,7 +1074,7 @@ export class Oai2ToOai3 {
     }
 
     // examples outside produces
-    for (let mimetype in responseValue.examples) {
+    for (const mimetype in responseValue.examples) {
       if (responseTarget.content === undefined) {
         responseTarget.content = this.newObject(jsonPointer);
       }
@@ -1071,9 +1092,9 @@ export class Oai2ToOai3 {
 
     if (responseValue.headers) {
       responseTarget.headers = this.newObject(jsonPointer);
-      for (let h in responseValue.headers) {
+      for (const h in responseValue.headers) {
         responseTarget.headers[h] = this.newObject(jsonPointer);
-        this.visitHeader(responseTarget.headers[h], responseValue.headers[h], jsonPointer);
+        await this.visitHeader(responseTarget.headers[h], responseValue.headers[h], jsonPointer);
       }
     }
 
@@ -1114,11 +1135,9 @@ export class Oai2ToOai3 {
     'uniqueItems'
   ];
 
-  visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
+  async visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
     if (headerValue.$ref) {
-      // GS01/CRITICAL-TO-DO-NELSON -- should that be /components/headers ????
-      const newReferenceValue = `#/components/responses/${headerValue.schema.$ref.replace('#/responses/', '')}`;
-      targetHeader.$ref = { value: newReferenceValue, pointer: jsonPointer };
+      targetHeader.$ref = { value: this.convertReferenceToOai3(headerValue.schema.$ref), pointer: jsonPointer };
     } else {
       if (headerValue.type && headerValue.schema === undefined) {
         targetHeader.schema = this.newObject(jsonPointer);
@@ -1130,7 +1149,7 @@ export class Oai2ToOai3 {
 
       for (const { key, childIterator } of visit(headerValue)) {
         if (key === 'schema') {
-          this.visitSchema(targetHeader.schema.items, headerValue.items, childIterator);
+          await this.visitSchema(targetHeader.schema.items, headerValue.items, childIterator);
         } else if (this.parameterTypeProperties.includes(key) || this.arrayProperties.includes(key)) {
           targetHeader.schema[key] = { value: headerValue[key], pointer: jsonPointer, recurse: true };
         } else if (key.startsWith('x-') && targetHeader[key] === undefined) {
