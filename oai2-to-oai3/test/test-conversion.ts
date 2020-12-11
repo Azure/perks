@@ -1,15 +1,14 @@
-import { suite, test, slow, timeout, skip, only } from 'mocha-typescript';
+import { suite, test } from 'mocha-typescript';
 import * as assert from 'assert';
 import * as aio from '@azure-tools/async-io';
 import * as datastore from '@azure-tools/datastore';
-import { stringify, CancellationToken, FastStringify } from '@azure-tools/datastore';
-import { SourceMapGenerator } from 'source-map';
+import { FastStringify } from '@azure-tools/datastore';
 
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 require('source-map-support').install();
 
-import { Oai2ToOai3 } from '../src/main';
+import { Oai2ToOai3 } from '../src/converter';
 
 @suite class MyTests {
 
