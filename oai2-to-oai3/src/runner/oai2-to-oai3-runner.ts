@@ -1,5 +1,5 @@
 import { DataHandle } from "@azure-tools/datastore";
-import { Oai2ToOai3 } from "../main";
+import { Oai2ToOai3 } from "../converter";
 import { CrossFileReferenceTracker, ReferenceEntry } from "./reference-tracker";
 import { loadInputFiles } from "./utils";
 
