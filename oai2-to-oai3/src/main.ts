@@ -1,6 +1,6 @@
 import { createGraphProxy, JsonPointer, Node, visit, FastStringify, parsePointer, get, IFileSystem } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
-import { cleanElementName, convertOai2RefToOai3, getOai2SchemaNameFromPath, oai3PathToSchema } from './refs-utils';
+import { cleanElementName, convertOai2RefToOai3 } from './refs-utils';
 import { AddMappingFn, ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
 
@@ -487,7 +487,7 @@ export class Oai2ToOai3 {
       switch (key) {
         case '$ref':
           console.error("Visit ref schema", value);
-          target[key] = { value: await this.getNewSchemaReference(value), pointer };
+          target[key] = { value: await this.convertReferenceToOai3(value), pointer };
           break;
         case 'additionalProperties':
           if (typeof (value) === 'boolean') {
@@ -620,17 +620,14 @@ export class Oai2ToOai3 {
     }
   }
 
-  // NOTE: For the previous converter external references are not
-  // converted, but internal references are converted.
-  // Decided that updating all references makes more sense.
-  private async getNewSchemaReference(oldReference: string): Promise<string> {
+  private async convertReferenceToOai3(oldReference: string): Promise<string> {
     return convertOai2RefToOai3(oldReference, this.resolveReference, this.originalFilename);
   }
 
   async visitExtensions(target: any, key: string, value: any, pointer: string) {
     switch (key) {
       case 'x-ms-odata':
-        target[key] = { value: await this.getNewSchemaReference(value), pointer };
+        target[key] = { value: await this.convertReferenceToOai3(value), pointer };
         break;
       default:
         target[key] = { value, pointer, recurse: true };
@@ -1055,9 +1052,7 @@ export class Oai2ToOai3 {
     for (const { key, value, pointer, childIterator } of responsesItemMembers) {
       target[key] = this.newObject(pointer);
       if (value.$ref) {
-        const newReferenceValue = value.$ref.replace('#/responses/', '#/components/responses/');
-
-        target[key].$ref = { value: newReferenceValue, pointer };
+        target[key].$ref = { value: this.convertReferenceToOai3(value.$ref), pointer };
       } else if (key.startsWith('x-')) {
         await this.visitExtensions(target[key], key, value, pointer);
       } else {
@@ -1164,9 +1159,7 @@ export class Oai2ToOai3 {
 
   async visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
     if (headerValue.$ref) {
-      // GS01/CRITICAL-TO-DO-NELSON -- should that be /components/headers ????
-      const newReferenceValue = `#/components/responses/${headerValue.schema.$ref.replace('#/responses/', '')}`;
-      targetHeader.$ref = { value: newReferenceValue, pointer: jsonPointer };
+      targetHeader.$ref = { value: this.convertReferenceToOai3(headerValue.schema.$ref), pointer: jsonPointer };
     } else {
       if (headerValue.type && headerValue.schema === undefined) {
         targetHeader.schema = this.newObject(jsonPointer);
