@@ -10,11 +10,9 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  private resolveReference: ResolveReferenceFn;
 
-  constructor(protected originalFilename: string, protected original: any,  resolveReference?: ResolveReferenceFn) {
+  constructor(protected originalFilename: string, protected original: any,  private resolveExternalReference?: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
-    this.resolveReference = resolveReference ?? (() => Promise.resolve(undefined));
   }
 
   async convert() {
@@ -34,9 +32,21 @@ export class Oai2ToOai3 {
           let originalParameter: any = {};
           const param: any = {};
           if (xMsPHost.parameters[msp].$ref !== undefined) {
-            const [file, referencePointer] = xMsPHost.parameters[msp].$ref.split('#');
+            const parsedRef = parseOai2Ref(xMsPHost.parameters[msp].$ref);
             
-            originalParameter = this.resolveReference(file, referencePointer);
+            if (parsedRef === undefined) {
+              throw new Error(
+                `Reference ${xMsPHost.parameters[msp].$ref} is invalid. Check the syntax.`
+              );
+            }
+
+            originalParameter = await this.resolveReference(parsedRef.file, parsedRef.path);
+            if(originalParameter === undefined) {
+              throw new Error(
+                `Unable to resolve ${xMsPHost.parameters[msp].$ref}.`
+              );
+            }
+
             // $ref'd parameters should be client parameters 
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
@@ -603,6 +613,17 @@ export class Oai2ToOai3 {
 
   private async convertReferenceToOai3(oldReference: string): Promise<string> {
     return convertOai2RefToOai3(oldReference);
+  }
+
+  private async resolveReference(file: string, path: string): Promise<any | undefined> {
+    if(file === "" || file === this.originalFilename) {
+      return get(this.original, path);
+    } else {
+      if (this.resolveExternalReference) {
+        return await this.resolveExternalReference(file, path);
+      }
+      return undefined;
+    }
   }
 
   async visitExtensions(target: any, key: string, value: any, pointer: string) {
