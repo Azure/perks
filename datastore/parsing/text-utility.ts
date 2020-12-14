@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { DataHandle } from '../data-store/data-store';
-import { Position as sourceMapPosition } from 'source-map';
+import { DataHandle } from "../data-store/data-store";
+import { Position as sourceMapPosition } from "source-map";
 
 const regexNewLine = /\r?\n/g;
 
@@ -30,14 +30,20 @@ const top = { column: 1, line: 1 };
  * @param text Source.
  * @param index Index.
  */
-export function IndexToPosition(text: DataHandle | string, index: number): sourceMapPosition {
-  const startIndices = typeof text === "string" ? LineIndices(text) : text.metadata.lineIndices.Value;
+export function IndexToPosition(
+  text: DataHandle | string,
+  index: number
+): sourceMapPosition {
+  const startIndices =
+    typeof text === "string"
+      ? LineIndices(text)
+      : text.metadata.lineIndices.Value;
 
   // bin. search for last `<item> <= index`
   let lineIndexMin = 0;
   let lineIndexMax = startIndices.length;
   while (lineIndexMin < lineIndexMax - 1) {
-    const lineIndex = (lineIndexMin + lineIndexMax) / 2 | 0;
+    const lineIndex = ((lineIndexMin + lineIndexMax) / 2) | 0;
     if (startIndices[lineIndex] <= index) {
       lineIndexMin = lineIndex;
     } else {

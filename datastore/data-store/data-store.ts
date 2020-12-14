@@ -201,7 +201,7 @@ export class DataStore {
 
   private uid = 0;
 
-  private async WriteDataInternal(uri: string, data: string, artifactType: string, identity: Array<string>): Promise<DataHandle> {
+  private async WriteDataInternal(uri: string, data: string, artifactType: string, identity: Array<string>, metadata: Metadata): Promise<DataHandle> {
     this.ThrowIfCancelled();
     if (this.store[uri]) {
       throw new Error(`can only write '${uri}' once`);
@@ -218,8 +218,9 @@ export class DataStore {
       name,
       cached: data,
       artifactType,
-      identity
-    } as any;
+      identity,
+      metadata,
+    };
 
     return this.Read(uri);
   }
@@ -230,7 +231,7 @@ export class DataStore {
     // metadata
     const metadata: Metadata = {} as any;
 
-    const result = await this.WriteDataInternal(uri, data, artifact, identity);
+    const result = await this.WriteDataInternal(uri, data, artifact, identity, metadata);
 
     // metadata.artifactType = artifact;
 
@@ -274,7 +275,6 @@ export class DataStore {
     metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
     metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
 
-    result.metadata = metadata;
     return result;
   }
 
@@ -490,10 +490,6 @@ export class DataHandle {
     return this.item.metadata;
   }
 
-  public set metadata(value: Metadata) {
-    this.item.metadata  = value;
-  }
-  
   public get artifactType(): string {
     return this.item.artifactType;
   }
