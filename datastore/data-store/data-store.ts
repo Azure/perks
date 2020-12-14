@@ -26,11 +26,11 @@ const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
  ********************************************/
 
 export interface Metadata {
-  inputSourceMap: LazyPromise<RawSourceMap>;
   lineIndices: Lazy<Array<number>>;
-
-  sourceMap: LazyPromise<RawSourceMap>;
-  sourceMapEachMappingByLine: LazyPromise<Array<Array<MappingItem>>>;
+  
+  // inputSourceMap: LazyPromise<RawSourceMap>;
+  // sourceMap: LazyPromise<RawSourceMap>;
+  // sourceMapEachMappingByLine: LazyPromise<Array<Array<MappingItem>>>;
 }
 
 export interface Data {
@@ -235,44 +235,44 @@ export class DataStore {
 
     // metadata.artifactType = artifact;
 
-    metadata.sourceMap = new LazyPromise(async () => {
-      if (!sourceMapFactory) {
-        return new SourceMapGenerator().toJSON();
-      }
-      const sourceMap = await sourceMapFactory(result);
+    // metadata.sourceMap = new LazyPromise(async () => {
+    //   if (!sourceMapFactory) {
+    //     return new SourceMapGenerator().toJSON();
+    //   }
+    //   const sourceMap = await sourceMapFactory(result);
 
-      // validate
-      const inputFiles = sourceMap.sources.concat(sourceMap.file);
-      for (const inputFile of inputFiles) {
-        if (!this.store[inputFile]) {
-          throw new Error(`Source map of '${uri}' references '${inputFile}' which does not exist`);
-        }
-      }
+    //   // validate
+    //   const inputFiles = sourceMap.sources.concat(sourceMap.file);
+    //   for (const inputFile of inputFiles) {
+    //     if (!this.store[inputFile]) {
+    //       throw new Error(`Source map of '${uri}' references '${inputFile}' which does not exist`);
+    //     }
+    //   }
 
-      return sourceMap;
-    });
+    //   return sourceMap;
+    // });
 
 
-    metadata.sourceMapEachMappingByLine = new LazyPromise<Array<Array<MappingItem>>>(async () => {
-      const result: Array<Array<MappingItem>> = [];
+    // metadata.sourceMapEachMappingByLine = new LazyPromise<Array<Array<MappingItem>>>(async () => {
+    //   const result: Array<Array<MappingItem>> = [];
 
-      const sourceMapConsumer = new SourceMapConsumer(await metadata.sourceMap);
+    //   const sourceMapConsumer = new SourceMapConsumer(await metadata.sourceMap);
 
-      // does NOT support multiple sources :(
-      // `singleResult` has null-properties if there is no original
+    //   // does NOT support multiple sources :(
+    //   // `singleResult` has null-properties if there is no original
 
-      // get coinciding sources
-      sourceMapConsumer.eachMapping(mapping => {
-        while (result.length <= mapping.generatedLine) {
-          result.push([]);
-        }
-        result[mapping.generatedLine].push(mapping);
-      });
+    //   // get coinciding sources
+    //   sourceMapConsumer.eachMapping(mapping => {
+    //     while (result.length <= mapping.generatedLine) {
+    //       result.push([]);
+    //     }
+    //     result[mapping.generatedLine].push(mapping);
+    //   });
 
-      return result;
-    });
+    //   return result;
+    // });
 
-    metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
+    // metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
     metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
 
     return result;
@@ -320,7 +320,7 @@ export class DataStore {
       name: `blameRoot (${JSON.stringify(position)})`
     });
   }
-
+  /* DISABLING SOURCE MAP SUPPORT 
   private async CreateInputSourceMapFor(absoluteUri: string): Promise<RawSourceMap> {
     const data = this.ReadStrictSync(absoluteUri);
 
@@ -345,9 +345,10 @@ export class DataStore {
       }
     }
     const sourceMapGenerator = new SourceMapGenerator({ file: absoluteUri });
-    await Compile(mappings, sourceMapGenerator);
+    Compile(mappings, sourceMapGenerator);
     return sourceMapGenerator.toJSON();
   }
+  */
 }
 
 /********************************************

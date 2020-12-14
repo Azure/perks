@@ -8,6 +8,10 @@ import { Position as sourceMapPosition } from "source-map";
 
 const regexNewLine = /\r?\n/g;
 
+/**
+ * Return an array containg the indexes where each line start. Each cell has the index to its coresponding line.
+ * @param text Text to index.
+ */
 export function LineIndices(text: string): Array<number> {
   const indices = [0];
 
