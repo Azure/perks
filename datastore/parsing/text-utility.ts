@@ -23,8 +23,6 @@ export function Lines(text: string): Array<string> {
   return text.split(regexNewLine);
 }
 
-const top = { column: 1, line: 1 };
-
 /**
  * Retrieve the position(Line,Column) from the index in the source.
  * @param text Source.
