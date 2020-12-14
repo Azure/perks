@@ -34,20 +34,14 @@ export class Oai2ToOai3 {
           let originalParameter: any = {};
           const param: any = {};
           if (xMsPHost.parameters[msp].$ref !== undefined) {
-            let referencePointer = xMsPHost.parameters[msp].$ref;
-            if (referencePointer.startsWith(`${this.originalFilename}#/parameters/`)) {
-              referencePointer = referencePointer.replace(this.originalFilename, '');
-            }
-            const rp = referencePointer;
-
-
-            referencePointer = referencePointer.replace('#', '');
-            originalParameter = get(this.original, referencePointer);
+            const [file, referencePointer] = xMsPHost.parameters[msp].$ref.split('#');
+            
+            originalParameter = this.resolveReference(file, referencePointer);
             // $ref'd parameters should be client parameters 
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
             }
-            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(rp)};
+            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(xMsPHost.parameters[msp].$ref)};
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
