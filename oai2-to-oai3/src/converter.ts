@@ -749,6 +749,7 @@ export class Oai2ToOai3 {
         }
         const parameterName = parsedRef.componentName;
         if(parsedRef.basePath === "/parameters/") {
+          // TODO: I think we don't need this at all and can just call the else. TO check when adding the unit tests.
           if (parsedRef.file == "" || parsedRef.file === this.originalFilename) {
             const dereferencedParameter = get(this.original, parsedRef.path);
 
