@@ -3,9 +3,9 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { OperationCanceledException, Delay } from '@azure-tools/tasks';
+import { OperationCanceledException, Delay, LazyPromise, Lazy } from '@azure-tools/tasks';
 import { ReadUri, ResolveUri, ParentFolderUri } from '@azure-tools/uri';
-import { MappedPosition, Position, RawSourceMap, SourceMapGenerator } from 'source-map';
+import { MappedPosition, MappingItem, Position, RawSourceMap, SourceMapConsumer, SourceMapGenerator } from 'source-map';
 import { CancellationToken } from '../cancellation';
 import { IFileSystem } from '../file-system';
 import { FastStringify, ParseNode, ParseToAst as parseAst, YAMLNode, parseYaml } from '../yaml';
@@ -14,9 +14,9 @@ import { Compile, CompilePosition, Mapping, SmartPosition } from '../source-map/
 import { promises as fs } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { items } from '@azure-tools/linq';
 
 import { createHash } from 'crypto';
+import { LineIndices } from '../main';
 const md5 = (content: any) => content ? createHash('md5').update(JSON.stringify(content)).digest('hex') : null;
 
 const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
@@ -26,22 +26,17 @@ const FALLBACK_DEFAULT_OUTPUT_ARTIFACT = '';
  ********************************************/
 
 export interface Metadata {
+  inputSourceMap: LazyPromise<RawSourceMap>;
+  lineIndices: Lazy<Array<number>>;
 
-
-  /* disabling source-map-support */
-  // inputSourceMap: LazyPromise<RawSourceMap>;
-  // lineIndices: Lazy<Array<number>>;
-
-  // sourceMap: LazyPromise<RawSourceMap>;
-  // sourceMapEachMappingByLine: LazyPromise<Array<Array<MappingItem>>>;
-
-
+  sourceMap: LazyPromise<RawSourceMap>;
+  sourceMapEachMappingByLine: LazyPromise<Array<Array<MappingItem>>>;
 }
 
 export interface Data {
   name: string;
   artifactType: string;
-  // metadata: Metadata;
+  metadata: Metadata;
   identity: Array<string>;
 
   writeToDisk?: Promise<void>;
@@ -224,23 +219,21 @@ export class DataStore {
       cached: data,
       artifactType,
       identity
-    };
+    } as any;
 
     return this.Read(uri);
   }
 
   public async WriteData(description: string, data: string, artifact: string, identity: Array<string>, sourceMapFactory?: (self: DataHandle) => Promise<RawSourceMap>): Promise<DataHandle> {
     const uri = this.createUri(description);
-    return await this.WriteDataInternal(uri, data, artifact, identity);
 
     // metadata
-    // const metadata: Metadata = <any>{};
+    const metadata: Metadata = {} as any;
 
-    // const result = await this.WriteDataInternal(uri, data, artifact, identity);
+    const result = await this.WriteDataInternal(uri, data, artifact, identity);
 
     // metadata.artifactType = artifact;
 
-    /*  DISABLING SOURCE-MAP-SUPPORT 
     metadata.sourceMap = new LazyPromise(async () => {
       if (!sourceMapFactory) {
         return new SourceMapGenerator().toJSON();
@@ -257,10 +250,8 @@ export class DataStore {
 
       return sourceMap;
     });
-    */
 
 
-    /*  DISABLING SOURCE-MAP-SUPPORT 
     metadata.sourceMapEachMappingByLine = new LazyPromise<Array<Array<MappingItem>>>(async () => {
       const result: Array<Array<MappingItem>> = [];
 
@@ -280,11 +271,11 @@ export class DataStore {
       return result;
     });
 
-    */
-    // metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
-    // metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
+    metadata.inputSourceMap = new LazyPromise(() => this.CreateInputSourceMapFor(uri));
+    metadata.lineIndices = new Lazy<Array<number>>(() => LineIndices(data));
 
-    //return result;
+    result.metadata = metadata;
+    return result;
   }
 
   private createUri(description: string): string {
@@ -330,7 +321,6 @@ export class DataStore {
     });
   }
 
-  /* DISABLING SOURCE MAP SUPPORT 
   private async CreateInputSourceMapFor(absoluteUri: string): Promise<RawSourceMap> {
     const data = this.ReadStrictSync(absoluteUri);
 
@@ -355,10 +345,9 @@ export class DataStore {
       }
     }
     const sourceMapGenerator = new SourceMapGenerator({ file: absoluteUri });
-    Compile(mappings, sourceMapGenerator);
+    await Compile(mappings, sourceMapGenerator);
     return sourceMapGenerator.toJSON();
   }
-  */
 }
 
 /********************************************
@@ -496,11 +485,15 @@ export class DataHandle {
     // return the cachedAst or get it, then return it.
     return this.item.cachedAst || (this.item.cachedAst = parseAst(await this.ReadData()));
   }
-  /*
-    public get metadata(): Metadata {
-      return this.item.metadata;
-    }
-  */
+
+  public get metadata(): Metadata {
+    return this.item.metadata;
+  }
+
+  public set metadata(value: Metadata) {
+    this.item.metadata  = value;
+  }
+  
   public get artifactType(): string {
     return this.item.artifactType;
   }
