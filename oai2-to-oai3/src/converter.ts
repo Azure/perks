@@ -10,11 +10,9 @@ export class Oai2ToOai3 {
   public generated: any;
   public mappings = new Array<Mapping>();
 
-  private resolveReference: ResolveReferenceFn;
 
-  constructor(protected originalFilename: string, protected original: any,  resolveReference?: ResolveReferenceFn) {
+  constructor(protected originalFilename: string, protected original: any,  private resolveExternalReference?: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
-    this.resolveReference = resolveReference ?? (() => Promise.resolve(undefined));
   }
 
   async convert() {
@@ -34,20 +32,26 @@ export class Oai2ToOai3 {
           let originalParameter: any = {};
           const param: any = {};
           if (xMsPHost.parameters[msp].$ref !== undefined) {
-            let referencePointer = xMsPHost.parameters[msp].$ref;
-            if (referencePointer.startsWith(`${this.originalFilename}#/parameters/`)) {
-              referencePointer = referencePointer.replace(this.originalFilename, '');
+            const parsedRef = parseOai2Ref(xMsPHost.parameters[msp].$ref);
+            
+            if (parsedRef === undefined) {
+              throw new Error(
+                `Reference ${xMsPHost.parameters[msp].$ref} is invalid. Check the syntax.`
+              );
             }
-            const rp = referencePointer;
 
+            originalParameter = await this.resolveReference(parsedRef.file, parsedRef.path);
+            if(originalParameter === undefined) {
+              throw new Error(
+                `Unable to resolve ${xMsPHost.parameters[msp].$ref}.`
+              );
+            }
 
-            referencePointer = referencePointer.replace('#', '');
-            originalParameter = get(this.original, referencePointer);
             // $ref'd parameters should be client parameters 
             if (!originalParameter['x-ms-parameter-location']) {
               originalParameter['x-ms-parameter-location'] = 'client';
             }
-            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(rp)};
+            originalParameter['x-ms-original'] = { $ref: await this.convertReferenceToOai3(xMsPHost.parameters[msp].$ref)};
           } else {
             originalParameter = xMsPHost.parameters[msp];
           }
@@ -611,6 +615,17 @@ export class Oai2ToOai3 {
     return convertOai2RefToOai3(oldReference);
   }
 
+  private async resolveReference(file: string, path: string): Promise<any | undefined> {
+    if(file === "" || file === this.originalFilename) {
+      return get(this.original, path);
+    } else {
+      if (this.resolveExternalReference) {
+        return await this.resolveExternalReference(file, path);
+      }
+      return undefined;
+    }
+  }
+
   async visitExtensions(target: any, key: string, value: any, pointer: string) {
     switch (key) {
       case 'x-ms-odata':
@@ -755,6 +770,7 @@ export class Oai2ToOai3 {
         }
         const parameterName = parsedRef.componentName;
         if(parsedRef.basePath === "/parameters/") {
+          // TODO: I think we don't need this at all and can just call the else. TO check when adding the unit tests.
           if (parsedRef.file == "" || parsedRef.file === this.originalFilename) {
             const dereferencedParameter = get(this.original, parsedRef.path);
 
