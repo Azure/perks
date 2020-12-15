@@ -43,7 +43,6 @@ export const convertOai2ToOai3 = async (inputs: Map<string, OaiToOai3FileInput>)
       throw new Error(`Circular dependency with file ${input.name}`);
     }
     resolvingFiles.add(input.name);
-    console.error("Resolving file", input.name);
 
     const result = await convertOai2ToOai3Schema(input, resolveReference);
     completedFiles.set(input.name, {
