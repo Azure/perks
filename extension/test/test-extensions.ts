@@ -4,7 +4,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import { suite, test } from 'mocha-typescript';
 import * as os from 'os';
-import { ExtensionManager, InvalidPackageIdentityException, UnresolvedPackageException } from '../main';
+import { ExtensionManager, InvalidPackageIdentityException, UnresolvedPackageException } from '../src/main';
 
 require('source-map-support').install();
 
