@@ -58,6 +58,9 @@ jspm_packages/
 # Common toolchain intermediate files
 temp
 
+# MacOS
+.DS_Store
+
 # Rush files
 common/temp/**
 common/temp/**

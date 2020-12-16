@@ -12,7 +12,7 @@ import { homedir, tmpdir } from 'os';
 import * as pacote from 'pacote';
 import { basename, delimiter, dirname, extname, isAbsolute, join, normalize, resolve } from 'path';
 import * as semver from 'semver';
-import { readFileSync } from 'fs';
+import { npm } from './npm';
 
 export async function updatePythonPath(command: Array<string>) {
   const detect = quoteIfNecessary('import sys; print(sys.hexversion >= 0x03060000)');
@@ -71,14 +71,14 @@ export async function updatePythonPath(command: Array<string>) {
 
   switch (process.platform) {
     case 'win32':
-
       console.error('Python interpreter not found -- please install from Microsoft Store or from python.org (at least 3.6)');
-
+      break;
     case 'darwin':
       console.error('Python interpreter not found -- please install from homebrew (at least 3.6)');
-
+      break;
     default:
       console.error('Python interpreter not found -- please install python >= 3.6');
+      break;
   }
   throw new Error('Python interpreter not available.');
 }
@@ -328,86 +328,15 @@ export class LocalExtension extends Extension {
   }
 }
 
-interface MoreOptions extends SpawnOptions {
-  onCreate?(cp: ChildProcess): void;
-  onStdOutData?(chunk: any): void;
-  onStdErrData?(chunk: any): void;
-}
-
-let _cli = '';
-async function cli(): Promise<string> {
-  if (!_cli) {
-    for (const each of Object.keys(process.env)) {
-      if (each.startsWith('npm_')) {
-        delete process.env[each];
-      }
-    }
-    // if we can see the cli on disk, that's ok
-    const fname = resolve(`${__dirname}/../yarn/cli.js`);
-    if ((await isFile(fname))) {
-      _cli = fname;
-    }
-    else {
-      // otherwise, we might be in a 'static-linked' library and
-      // we should try to load it and put a copy in $tmp somewhere.
-      _cli = join(tmpdir(), 'yarn-cli.js');
-
-      // did we copy it already?
-      if ((await isFile(_cli))) {
-        return _cli;
-      }
-      // no, let's copy it now.
-      await writeFile(_cli, <string><any>readFileSync(fname));
-    }
-  }
-  return _cli;
-}
-
-
-function execute(command: string, cmdlineargs: Array<string>, options: MoreOptions): Promise<{ stdout: string; stderr: string; error: Error | null; code: number }> {
-  return new Promise((r, j) => {
-    const cp = spawn(command, cmdlineargs, { ...options, stdio: 'pipe' });
-    if (options.onCreate) {
-      options.onCreate(cp);
-    }
-
-    options.onStdOutData ? cp.stdout.on('data', options.onStdOutData) : cp;
-    options.onStdErrData ? cp.stderr.on('data', options.onStdErrData) : cp;
-
-    let err = '';
-    let out = '';
-    cp.stderr.on('data', (chunk) => {
-      err += chunk;
-    });
-    cp.stdout.on('data', (chunk) => {
-      out += chunk;
-    });
-    cp.on('close', (code, signal) => r({ stdout: out, stderr: err, error: code ? new Error('Process Failed.') : null, code }));
-  });
-}
-
-async function yarn(folder: string, cmd: string, ...args: Array<string>) {
-  const output = await execute(process.execPath, [
-    await cli(),
-    '--no-node-version-check',
-    '--no-lockfile',
-    '--json',
-    '--registry',
-    process.env.autorest_registry || 'https://registry.npmjs.org',
-    cmd,
-    ...args
-  ], { cwd: folder });
-
-  return output;
-}
-
 async function install(directory: string, ...pkgs: Array<string>) {
-  const output = await yarn(directory,
-    'add',
-    '--global-folder', directory.replace(/\\/g, '/'),
-
-    ...pkgs);
-
+  const output = await npm(
+    directory,
+    "install",
+    "--save",
+    "--prefix",
+    directory.replace(/\\/g, "/"),
+    ...pkgs
+  );
   if (output.error) {
     throw Error(`Failed to install package '${pkgs}' -- ${output.error}`);
   }
@@ -473,7 +402,7 @@ export class ExtensionManager {
       // recreate the folder
       await mkdir(this.installationPath);
 
-      await yarn(this.installationPath, 'cache', 'clean', '--force');
+      await npm(this.installationPath, 'cache', 'clean', '--force');
     } catch (e) {
       throw new ExtensionFolderLocked(this.installationPath);
     } finally {
@@ -487,7 +416,7 @@ export class ExtensionManager {
   }
 
   public async getPackageVersions(name: string): Promise<Array<string>> {
-    const versions = await yarn(process.cwd(), 'info', name, 'versions');
+    const versions = await npm(process.cwd(), 'view', name, 'versions', "--json");
     return JSON.parse(versions.stdout).data.sort((b, a) => semver.compare(a, b));
   }
 
