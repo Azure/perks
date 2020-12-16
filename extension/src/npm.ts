@@ -15,7 +15,6 @@ export const npm = async (cwd: string, ...args: string[]) => {
     process.env.autorest_registry || DEFAULT_NPM_REGISTRY,
     ...args,
   ];
-  console.error("Args used", procArgs);
   return await execute(process.execPath, procArgs, { cwd });
 };
 
