@@ -566,7 +566,6 @@ export class ExtensionManager {
       // create the folder
       await mkdir(extension.location);
 
-      // run YARN ADD for the package.
       progress.NotifyMessage(`Installing ${pkg.name}, ${pkg.version}`);
 
       const results = force ? install(extension.location, '--force', pkg.packageMetadata._resolved) : install(extension.location, pkg.packageMetadata._resolved);
