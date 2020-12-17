@@ -9,16 +9,33 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+jobs:
+  - job: windows
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
 
-- script: |
-    npm install -g npm 
-    npx @microsoft/rush update 
-    npx @microsoft/rush rebuild 
-    npx @microsoft/rush test 
-    
-  displayName: 'Rush install, build and test'
+    - script: |
+        npm install -g npm 
+        npx @microsoft/rush update 
+        npx @microsoft/rush rebuild 
+        npx @microsoft/rush test 
+        
+      displayName: 'Rush install, build and test'
+      
+  - job: linux
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '10.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install -g npm 
+        npx @microsoft/rush update 
+        npx @microsoft/rush rebuild 
+        npx @microsoft/rush test 
+        
+      displayName: 'Rush install, build and test'
