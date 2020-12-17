@@ -1,11 +1,11 @@
-import { resolve } from "path";
+import { dirname, resolve } from "path";
 import { execute } from "./exec-cmd";
 import { InstallOptions, PackageManager } from "./package-manager";
 
 export const DEFAULT_NPM_REGISTRY = "https://registry.npmjs.org";
 
 const getPathToNpmCli = () => {
-  const npmPath = require.resolve("npm");
+  const npmPath = dirname(require.resolve("npm/package.json"));
   return resolve(`${npmPath}/bin/npm-cli.js`);
 };
 
@@ -55,6 +55,7 @@ export class Npm implements PackageManager {
       "versions",
       "--json"
     );
+    
     return JSON.parse(result.stdout).data;
   }
 }
