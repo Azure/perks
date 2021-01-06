@@ -1,11 +1,10 @@
-import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
 import { shadow, enableSourceTracking, getMappings } from '../source-track';
 
 require('source-map-support').install();
-@suite class SourceTrackTests {
 
-  @test async 'one'() {
+describe("SourceTrackTests", () => {
+
+  it("one", () => {
     const sourceModel = {
       abc: {
         cde: {
@@ -39,5 +38,5 @@ require('source-map-support').install();
     console.log(getMappings(target));
 
 
-  }
-}
+  });
+});
