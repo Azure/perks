@@ -1,10 +1,8 @@
 import * as assert from 'assert';
-import { only, skip, slow, suite, test, timeout } from 'mocha-typescript';
 import { toSemver } from '../apiversion';
 
-@suite class ApiVersion {
-
-  @test async 'to semver conversion'() {
+describe("ApiVersion", () => {
+  it("to semver conversion", () => {
     const actual1 = toSemver('6.2.0.9');
     const expected1 = '6.2.0';
     assert.strictEqual(actual1, expected1);
@@ -44,5 +42,5 @@ import { toSemver } from '../apiversion';
     assert.strictEqual(toSemver('v1'), '1.0.0');
 
     assert.strictEqual(toSemver('3.0-preview.1'), '3.0.0-preview.1');
-  }
-}
+  });
+});
