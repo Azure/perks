@@ -1,26 +1,52 @@
 import { Style } from "../formatter";
 
+const testMapping = (
+  convert: (x: string) => string,
+  mapping: Array<[string, string]>
+) => {
+  for (const [input, expected] of mapping) {
+    it(`convert ${input} -> ${expected}`, () => {
+      expect(convert(input)).toEqual(expected);
+    });
+  }
+};
+
 describe("Formatter", () => {
-  describe("Snake case", () => {
-    it("convert camel case words", () => {
-      expect(Style.snake("fooBar")).toEqual("foo_bar");
-    });
+  describe("snake_case", () => {
+    testMapping((x) => Style.snake(x), [
+      ["snake_case", "snake_case"],
+      ["snakeCase", "snake_case"],
+      ["SnakeCase", "snake_case"],
+      ["snake_Case", "snake_case"],
+      ["Snake", "snake"],
+      ["s_nake", "s_nake"],
+      ["SNaKE", "sna_ke"],
+      ["SNaKEr", "sna_ker"],
+      ["s_na_k_er", "s_na_k_er"],
+      ["snakeSnakECase", "snake_snak_ecase"],
+      ["MikhailGorbachevUSSR", "mikhail_gorbachev_ussr"],
+      ["MAX_of_MLD", "max_of_mld"],
+      ["someSQLConnection", "some_sql_connection"],
+      ["diskMBpsReadWrite", "disk_mbps_read_write"],
+      ["instanceIDs", "instance_ids"],
+    ]);
+  });
 
-    it("convert word with spaces", () => {
-      expect(Style.snake("foo bar")).toEqual("foo_bar");
-    });
-
-    it("convert word with numbers", () => {
-      expect(Style.snake("foo123bar")).toEqual("foo123_bar");
-    });
-
-    it("convert words with upper cased words", () => {
-      expect(Style.snake("someSQLConnection")).toEqual("some_sql_connection");
-    });
-
-    it("it doesn't split upper case words with less than 2 characters", () => {
-      expect(Style.snake("diskMBpsReadWrite")).toEqual("disk_mbps_read_write");
-      expect(Style.snake("instanceIDs")).toEqual("instance_ids");
-    });
+  describe("PascalCase", () => {
+    testMapping((x) => Style.pascal(x), [
+      ["pascal", "Pascal"],
+      ["pascalCase", "PascalCase"],
+      ["PascalCase", "PascalCase"],
+      ["pascalcase", "Pascalcase"],
+      ["Pascalcase", "Pascalcase"],
+      ["pascal_case", "PascalCase"],
+      ["pascal_case_", "PascalCase"],
+      ["_pascal_case", "PascalCase"],
+      ["___pascal____case6666", "PascalCase6666"],
+      ["MAX_of_MLD", "MaxOfMld"],
+      ["someSQLConnection", "SomeSqlConnection"],
+      ["diskMBpsReadWrite", "DiskMbpsReadWrite"],
+      ["instanceIDs", "InstanceIds"],
+    ]);
   });
 });
