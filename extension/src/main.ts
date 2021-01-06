@@ -6,13 +6,15 @@
 import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@azure-tools/async-io';
 import { Progress, Subscribe } from '@azure-tools/eventing';
 import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@azure-tools/tasks';
-import { ChildProcess, spawn, spawnSync, SpawnOptions } from 'child_process';
+import { ChildProcess, spawn, spawnSync } from 'child_process';
 import { resolve as npmResolvePackage } from 'npm-package-arg';
 import { homedir, tmpdir } from 'os';
 import * as pacote from 'pacote';
 import { basename, delimiter, dirname, extname, isAbsolute, join, normalize, resolve } from 'path';
 import * as semver from 'semver';
-import { readFileSync } from 'fs';
+import { Npm } from './npm';
+import { PackageManager, PackageManagerType } from './package-manager';
+import { Yarn } from './yarn';
 
 export async function updatePythonPath(command: Array<string>) {
   const detect = quoteIfNecessary('import sys; print(sys.hexversion >= 0x03060000)');
@@ -71,14 +73,14 @@ export async function updatePythonPath(command: Array<string>) {
 
   switch (process.platform) {
     case 'win32':
-
       console.error('Python interpreter not found -- please install from Microsoft Store or from python.org (at least 3.6)');
-
+      break;
     case 'darwin':
       console.error('Python interpreter not found -- please install from homebrew (at least 3.6)');
-
+      break;
     default:
       console.error('Python interpreter not found -- please install python >= 3.6');
+      break;
   }
   throw new Error('Python interpreter not available.');
 }
@@ -328,91 +330,6 @@ export class LocalExtension extends Extension {
   }
 }
 
-interface MoreOptions extends SpawnOptions {
-  onCreate?(cp: ChildProcess): void;
-  onStdOutData?(chunk: any): void;
-  onStdErrData?(chunk: any): void;
-}
-
-let _cli = '';
-async function cli(): Promise<string> {
-  if (!_cli) {
-    for (const each of Object.keys(process.env)) {
-      if (each.startsWith('npm_')) {
-        delete process.env[each];
-      }
-    }
-    // if we can see the cli on disk, that's ok
-    const fname = resolve(`${__dirname}/../yarn/cli.js`);
-    if ((await isFile(fname))) {
-      _cli = fname;
-    }
-    else {
-      // otherwise, we might be in a 'static-linked' library and
-      // we should try to load it and put a copy in $tmp somewhere.
-      _cli = join(tmpdir(), 'yarn-cli.js');
-
-      // did we copy it already?
-      if ((await isFile(_cli))) {
-        return _cli;
-      }
-      // no, let's copy it now.
-      await writeFile(_cli, <string><any>readFileSync(fname));
-    }
-  }
-  return _cli;
-}
-
-
-function execute(command: string, cmdlineargs: Array<string>, options: MoreOptions): Promise<{ stdout: string; stderr: string; error: Error | null; code: number }> {
-  return new Promise((r, j) => {
-    const cp = spawn(command, cmdlineargs, { ...options, stdio: 'pipe' });
-    if (options.onCreate) {
-      options.onCreate(cp);
-    }
-
-    options.onStdOutData ? cp.stdout.on('data', options.onStdOutData) : cp;
-    options.onStdErrData ? cp.stderr.on('data', options.onStdErrData) : cp;
-
-    let err = '';
-    let out = '';
-    cp.stderr.on('data', (chunk) => {
-      err += chunk;
-    });
-    cp.stdout.on('data', (chunk) => {
-      out += chunk;
-    });
-    cp.on('close', (code, signal) => r({ stdout: out, stderr: err, error: code ? new Error('Process Failed.') : null, code }));
-  });
-}
-
-async function yarn(folder: string, cmd: string, ...args: Array<string>) {
-  const output = await execute(process.execPath, [
-    await cli(),
-    '--no-node-version-check',
-    '--no-lockfile',
-    '--json',
-    '--registry',
-    process.env.autorest_registry || 'https://registry.npmjs.org',
-    cmd,
-    ...args
-  ], { cwd: folder });
-
-  return output;
-}
-
-async function install(directory: string, ...pkgs: Array<string>) {
-  const output = await yarn(directory,
-    'add',
-    '--global-folder', directory.replace(/\\/g, '/'),
-
-    ...pkgs);
-
-  if (output.error) {
-    throw Error(`Failed to install package '${pkgs}' -- ${output.error}`);
-  }
-}
-
 async function fetchPackageMetadata(spec: string): Promise<any> {
   try {
     return await pacote.manifest(spec, {
@@ -436,31 +353,39 @@ function resolveName(name: string, version: string) {
 }
 
 export class ExtensionManager {
-  private static instances: Array<ExtensionManager> = [];
-
   public dotnetPath = normalize(`${homedir()}/.dotnet`);
 
-  public static async Create(installationPath: string): Promise<ExtensionManager> {
-    if (!await exists(installationPath)) {
+  public static async Create(
+    installationPath: string,
+    packageManagerType: PackageManagerType = "yarn"
+  ): Promise<ExtensionManager> {
+    if (!(await exists(installationPath))) {
       await mkdir(installationPath);
     }
-    if (!await isDirectory(installationPath)) {
-      throw new Exception(`Extension folder '${installationPath}' is not a valid directory`);
+    if (!(await isDirectory(installationPath))) {
+      throw new Exception(
+        `Extension folder '${installationPath}' is not a valid directory`
+      );
     }
     const lock = new SharedLock(installationPath);
-
-    return new ExtensionManager(installationPath, lock, await lock.acquire());
+    const packageManager = packageManagerType === "yarn" ? new Yarn() : new Npm();
+    return new ExtensionManager(
+      installationPath,
+      lock,
+      await lock.acquire(),
+      packageManager,
+    );
   }
 
   public async dispose() {
     await this.disposeLock();
-    this.disposeLock = async () => { };
+    this.disposeLock = async () => {};
     this.sharedLock = null;
   }
 
   public async reset() {
     if (!this.sharedLock) {
-      throw new Exception('Extension manager has been disposed.');
+      throw new Exception("Extension manager has been disposed.");
     }
 
     // get the exclusive lock
@@ -473,7 +398,7 @@ export class ExtensionManager {
       // recreate the folder
       await mkdir(this.installationPath);
 
-      await yarn(this.installationPath, 'cache', 'clean', '--force');
+      await this.packageManager.clean(this.installationPath);
     } catch (e) {
       throw new ExtensionFolderLocked(this.installationPath);
     } finally {
@@ -482,17 +407,21 @@ export class ExtensionManager {
     }
   }
 
-  private constructor(private installationPath: string, private sharedLock: SharedLock | null, private disposeLock: () => Promise<void>) {
-
+  private constructor(
+    private installationPath: string,
+    private sharedLock: SharedLock | null,
+    private disposeLock: () => Promise<void>,
+    private packageManager: PackageManager,
+  ) {
   }
 
   public async getPackageVersions(name: string): Promise<Array<string>> {
-    const versions = await yarn(process.cwd(), 'info', name, 'versions');
-    return JSON.parse(versions.stdout).data.sort((b, a) => semver.compare(a, b));
+    const versions = await this.packageManager.getPackageVersions(process.cwd(), name);
+    return versions.sort((b, a) => semver.compare(a, b));
   }
 
-  public async findPackage(name: string, version = 'latest'): Promise<Package> {
-    if (version.endsWith('.tgz')) {
+  public async findPackage(name: string, version = "latest"): Promise<Package> {
+    if (version.endsWith(".tgz")) {
       // get the package metadata
       const pm = await fetchPackageMetadata(version);
       return new Package(pm, pm, this);
@@ -504,8 +433,10 @@ export class ExtensionManager {
       let resolvedName = resolved.raw;
 
       // get all matching package versions for that
-      if (version.startsWith('~') || version.startsWith('^')) {
-        const vers = (await this.getPackageVersions(resolved.raw)).filter(each => semver.satisfies(each, version));
+      if (version.startsWith("~") || version.startsWith("^")) {
+        const vers = (
+          await this.getPackageVersions(resolved.raw)
+        ).filter((each) => semver.satisfies(each, version));
         if (vers.length > 0) {
           resolvedName = `${resolved.name}@${vers[0]}`;
         }
@@ -514,12 +445,20 @@ export class ExtensionManager {
       const pm = await fetchPackageMetadata(resolvedName);
       return new Package(resolved, pm, this);
     } catch (E) {
-      // in the event that there isn't a matching package by that name 
-      // we can try a fallback to see if a gh release has a package 
+      // in the event that there isn't a matching package by that name
+      // we can try a fallback to see if a gh release has a package
       // (if it is an autorest.<whatever> project)
       // https://github.com/Azure/${PROJECT}/releases/download/v${VERSION}/autorest/${PROJECT}-${VERSION}.tgz
-      if (name.startsWith('@autorest/')) {
-        const ghurl = `https://github.com/Azure/${name.replace('@autorest/', 'autorest.')}/releases/download/v${version}/${name.replace('@', '').replace('autorest/', 'autorest-')}-${version.replace(/_/g, '-')}.tgz`;
+      if (name.startsWith("@autorest/")) {
+        const ghurl = `https://github.com/Azure/${name.replace(
+          "@autorest/",
+          "autorest."
+        )}/releases/download/v${version}/${name
+          .replace("@", "")
+          .replace("autorest/", "autorest-")}-${version.replace(
+          /_/g,
+          "-"
+        )}.tgz`;
         try {
           const pm = await fetchPackageMetadata(ghurl);
           if (pm) {
@@ -534,7 +473,10 @@ export class ExtensionManager {
     }
   }
 
-  public async getInstalledExtension(name: string, version: string): Promise<Extension | null> {
+  public async getInstalledExtension(
+    name: string,
+    version: string
+  ): Promise<Extension | null> {
     if (!semver.validRange(version)) {
       // if they asked for something that isn't a valid range, we have to find out what version
       // the target package actually is.
@@ -559,7 +501,6 @@ export class ExtensionManager {
     for (const folder of await readdir(this.installationPath)) {
       const fullpath = join(this.installationPath, folder);
       if (await isDirectory(fullpath)) {
-
         const split = /((@.+)_)?(.+)@(.+)/.exec(folder);
         if (split) {
           try {
@@ -567,11 +508,18 @@ export class ExtensionManager {
             const name = split[3];
             const version = split[4];
 
-            const actualPath = org ? normalize(`${fullpath}/node_modules/${org}/${name}`) : normalize(`${fullpath}/node_modules/${name}`);
+            const actualPath = org
+              ? normalize(`${fullpath}/node_modules/${org}/${name}`)
+              : normalize(`${fullpath}/node_modules/${name}`);
             const pm = await fetchPackageMetadata(actualPath);
-            const ext = new Extension(new Package(null, pm, this), this.installationPath);
+            const ext = new Extension(
+              new Package(null, pm, this),
+              this.installationPath
+            );
             if (fullpath !== ext.location) {
-              console.trace(`WARNING: Not reporting '${fullpath}' since its package.json claims it should be at '${ext.location}' (probably symlinked once and modified later)`);
+              console.trace(
+                `WARNING: Not reporting '${fullpath}' since its package.json claims it should be at '${ext.location}' (probably symlinked once and modified later)`
+              );
               continue;
             }
             results.push(ext);
@@ -589,9 +537,14 @@ export class ExtensionManager {
 
   private static criticalSection = new CriticalSection();
 
-  public async installPackage(pkg: Package, force?: boolean, maxWait: number = 5 * 60 * 1000, progressInit: Subscribe = () => { }): Promise<Extension> {
+  public async installPackage(
+    pkg: Package,
+    force?: boolean,
+    maxWait: number = 5 * 60 * 1000,
+    progressInit: Subscribe = () => {}
+  ): Promise<Extension> {
     if (!this.sharedLock) {
-      throw new Exception('Extension manager has been disposed.');
+      throw new Exception("Extension manager has been disposed.");
     }
 
     const progress = new Progress(progressInit);
@@ -602,9 +555,11 @@ export class ExtensionManager {
     // we need this so that only one extension at a time can start installing
     // in this process (since to use NPM right, we have to do a change dir before runinng it)
     // if we ran NPM out-of-proc, this probably wouldn't be necessary.
-    const extensionRelease = await ExtensionManager.criticalSection.acquire(maxWait);
+    const extensionRelease = await ExtensionManager.criticalSection.acquire(
+      maxWait
+    );
 
-    if (!await exists(this.installationPath)) {
+    if (!(await exists(this.installationPath))) {
       await mkdir(this.installationPath);
     }
 
@@ -626,7 +581,9 @@ export class ExtensionManager {
 
         // force removal first
         try {
-          progress.NotifyMessage(`Removing existing extension ${extension.location}`);
+          progress.NotifyMessage(
+            `Removing existing extension ${extension.location}`
+          );
           await Delay(100);
           await rmdir(extension.location);
         } catch (e) {
@@ -637,15 +594,15 @@ export class ExtensionManager {
       // create the folder
       await mkdir(extension.location);
 
-      // run YARN ADD for the package.
       progress.NotifyMessage(`Installing ${pkg.name}, ${pkg.version}`);
 
-      const results = force ? install(extension.location, '--force', pkg.packageMetadata._resolved) : install(extension.location, pkg.packageMetadata._resolved);
-
+      const results = this.packageManager.install(extension.location, [pkg.packageMetadata._resolved], { force });
       await extensionRelease();
 
       await results;
-      progress.NotifyMessage(`Package Install completed ${pkg.name}, ${pkg.version}`);
+      progress.NotifyMessage(
+        `Package Install completed ${pkg.name}, ${pkg.version}`
+      );
 
       return extension;
     } catch (e) {
@@ -655,7 +612,9 @@ export class ExtensionManager {
       }
       // clean up the attempted install directory
       if (await isDirectory(extension.location)) {
-        progress.NotifyMessage(`Cleaning up failed installation: ${extension.location}`);
+        progress.NotifyMessage(
+          `Cleaning up failed installation: ${extension.location}`
+        );
         await Delay(100);
         await rmdir(extension.location);
       }
@@ -664,7 +623,11 @@ export class ExtensionManager {
         throw e;
       }
       if (e instanceof Error) {
-        throw new PackageInstallationException(pkg.name, pkg.version, e.message + e.stack);
+        throw new PackageInstallationException(
+          pkg.name,
+          pkg.version,
+          e.message + e.stack
+        );
       }
       throw new PackageInstallationException(pkg.name, pkg.version, `${e}`);
     } finally {
@@ -682,13 +645,19 @@ export class ExtensionManager {
     }
   }
 
-  public async start(extension: Extension, enableDebugger = false): Promise<ChildProcess> {
+  public async start(
+    extension: Extension,
+    enableDebugger = false
+  ): Promise<ChildProcess> {
     const PathVar = getPathVariableName();
     if (!extension.definition.scripts) {
       throw new MissingStartCommandException(extension);
     }
 
-    const script = enableDebugger && extension.definition.scripts.debug ? extension.definition.scripts.debug : extension.definition.scripts.start;
+    const script =
+      enableDebugger && extension.definition.scripts.debug
+        ? extension.definition.scripts.debug
+        : extension.definition.scripts.start;
 
     // look at the extension for the
     if (!script) {
@@ -703,20 +672,28 @@ export class ExtensionManager {
     const env = shallowCopy(process.env);
 
     // add potential .bin folders (depends on platform and npm version)
-    env[PathVar] = `${join(extension.modulePath, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
-    env[PathVar] = `${join(extension.location, 'node_modules', '.bin')}${delimiter}${env[PathVar]}`;
+    env[PathVar] = `${join(
+      extension.modulePath,
+      "node_modules",
+      ".bin"
+    )}${delimiter}${env[PathVar]}`;
+    env[PathVar] = `${join(
+      extension.location,
+      "node_modules",
+      ".bin"
+    )}${delimiter}${env[PathVar]}`;
 
-    // find appropriate path for interpreter 
+    // find appropriate path for interpreter
     switch (command[0].toLowerCase()) {
-      case 'node':
-      case 'node.exe':
+      case "node":
+      case "node.exe":
         command[0] = nodePath;
         break;
 
-      case 'python':
-      case 'python.exe':
-      case 'python3':
-      case 'python3.exe':
+      case "python":
+      case "python.exe":
+      case "python3":
+      case "python3.exe":
         await updatePythonPath(command);
         break;
     }
@@ -726,9 +703,16 @@ export class ExtensionManager {
       command[i] = quoteIfNecessary(command[i]);
     }
     // spawn the command via the shell (since that how npm would have done it anyway.)
-    const fullCommandPath = await getFullPath(command[0], env[getPathVariableName()]);
+    const fullCommandPath = await getFullPath(
+      command[0],
+      env[getPathVariableName()]
+    );
     if (!fullCommandPath) {
-      throw new Exception(`Unable to resolve full path for executable '${command[0]}' -- (cmdline '${command.join(' ')}')`);
+      throw new Exception(
+        `Unable to resolve full path for executable '${
+          command[0]
+        }' -- (cmdline '${command.join(" ")}')`
+      );
     }
 
     // == special case ==
@@ -736,21 +720,35 @@ export class ExtensionManager {
     // then we're going to have to add the folder to the PATH
     // and execute it by just the filename
     // and set the path back when we're done.
-    if (process.platform === 'win32' && fullCommandPath.indexOf(' ') > -1 && !/.exe$/ig.exec(fullCommandPath)) {
+    if (
+      process.platform === "win32" &&
+      fullCommandPath.indexOf(" ") > -1 &&
+      !/.exe$/gi.exec(fullCommandPath)
+    ) {
       // preserve the current path
       const originalPath = process.env[PathVar];
       try {
         // insert the dir into the path
-        process.env[PathVar] = `${dirname(fullCommandPath)}${delimiter}${env[PathVar]}`;
+        process.env[PathVar] = `${dirname(fullCommandPath)}${delimiter}${
+          env[PathVar]
+        }`;
 
         // call spawn and return
-        return spawn(basename(fullCommandPath), command.slice(1), { env, cwd: extension.modulePath, stdio: ['pipe', 'pipe', 'pipe'] });
+        return spawn(basename(fullCommandPath), command.slice(1), {
+          env,
+          cwd: extension.modulePath,
+          stdio: ["pipe", "pipe", "pipe"],
+        });
       } finally {
         // regardless, restore the original path on the way out!
         process.env[PathVar] = originalPath;
       }
     }
 
-    return spawn(fullCommandPath, command.slice(1), { env, cwd: extension.modulePath, stdio: ['pipe', 'pipe', 'pipe'] });
+    return spawn(fullCommandPath, command.slice(1), {
+      env,
+      cwd: extension.modulePath,
+      stdio: ["pipe", "pipe", "pipe"],
+    });
   }
 }

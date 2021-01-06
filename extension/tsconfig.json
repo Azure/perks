@@ -3,15 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "noImplicitAny": false,
+    "noImplicitAny": false
   },
-  "include": [
-    "."
-  ],
-  "exclude": [
-    "dist",
-    "resources",
-    "node_modules",
-    "**/*.d.ts"
-  ]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["dist", "resources", "node_modules", "**/*.d.ts"]
 }
