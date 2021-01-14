@@ -36,6 +36,10 @@ export class Npm implements PackageManager {
       ...packages
     );
     if (output.error) {
+      console.error("NPM log:");
+      console.log("-".repeat(50));
+      console.error(output.log);
+      console.log("-".repeat(50));
       throw Error(`Failed to install package '${packages}' -- ${output.error}`);
     }
   }

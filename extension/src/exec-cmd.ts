@@ -9,6 +9,11 @@ interface MoreOptions extends SpawnOptions {
 export interface ExecResult {
   stdout: string;
   stderr: string;
+  
+  /**
+   * Union of stdout and stderr.
+   */
+  log: string;
   error: Error | null;
   code: number;
 }
@@ -29,19 +34,23 @@ export const execute = (
 
     let err = "";
     let out = "";
+    let all = "";
     cp.stderr.on("data", (chunk) => {
       err += chunk;
+      all += chunk;
     });
     cp.stdout.on("data", (chunk) => {
       out += chunk;
+      all += chunk;
     });
     cp.on("close", (code, signal) =>
       r({
         stdout: out,
         stderr: err,
+        log: all,
         error: code ? new Error("Process Failed.") : null,
         code,
-      })
+      }),
     );
   });
 };
