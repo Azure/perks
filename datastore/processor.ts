@@ -152,16 +152,29 @@ export class TransformerViaPointer extends Transformer<AnyObject, AnyObject> {
 
   async defaultCopy(target: AnyObject, ivalue: AnyObject, ikey: string, ipointer: string, originalNodes: Iterable<Node>) {
     switch (typeOf(ivalue)) {
-      case 'object':
+      case "object": {
         // objects recurse
         const newTarget = this.newObject(target, ikey, ipointer);
         for (const { value, key, pointer, children } of originalNodes) {
-          if (!await this.visitLeaf(newTarget, value, key, pointer, children)) {
+          if (
+            !(await this.visitLeaf(newTarget, value, key, pointer, children))
+          ) {
             await this.defaultCopy(newTarget, value, key, pointer, children);
           }
         }
+      }
         break;
-
+      case "array": {
+        const newTarget = this.newArray(target, ikey, ipointer);
+        for (const { value, key, pointer, children } of originalNodes) {
+          if (
+            !(await this.visitLeaf(newTarget, value, key, pointer, children))
+          ) {
+            await this.defaultCopy(newTarget, value, key, pointer, children);
+          }
+        }
+      }
+        break;
       default:
         // everything else, just clone.
         this.clone(target, ikey, ipointer, ivalue);
