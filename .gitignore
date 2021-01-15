@@ -72,4 +72,4 @@ package-deps.json
 **/dist/*
 node_modules/*
 package-lock.json
-common/config/rush/shrinkwrap.yaml
+common/config/rush/pnpm-lock.yaml
