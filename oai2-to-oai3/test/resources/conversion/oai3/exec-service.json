@@ -37,7 +37,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The request failed. Bad request.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -92,7 +92,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The request failed. Bad request.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -207,7 +207,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The service has run out of storage space",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -236,7 +236,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -265,7 +265,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -294,7 +294,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -391,7 +391,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The request failed. Space name is invalid.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -446,7 +446,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The request failed. Specified space cannot be deleted.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -493,7 +493,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure. The request failed. Bad request.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -590,7 +590,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }
@@ -619,7 +619,7 @@
           "default": {
             "description": "Error response describing the reason for operation failure.",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExecServiceErrorResponse"
                 }

@@ -1064,7 +1064,7 @@ export class Oai2ToOai3 {
     if (responseValue.schema) {
       if (produces.length === 0 || (produces.length === 1 && produces[0] === "*/*")) {
         throw new Error(
-          `Operation response '${jsonPointer}' is missing a produces field and there isn't any global value. Please add "produces": [<contentType>]"`,
+          `Operation response '${jsonPointer}' produces type couldn't be resolved. Operation is probably is missing a produces field and there isn't any global value. Please add "produces": [<contentType>]"`,
         );
       }
 
