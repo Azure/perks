@@ -20,8 +20,6 @@ export const resolveOperationProduces = (
       : [...new Set([...operationProduces])]
     : globalProduces;
 
-  console.error("Produces", produces);
-
   // default
   if (produces.length === 0 || (produces.length === 1 && produces[0] === "*/*")) {
     throw new Error(
