@@ -1,7 +1,7 @@
 import { createGraphProxy, JsonPointer, Node, visit, get } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
 import { resolveOperationConsumes, resolveOperationProduces } from './content-type-utils';
-import { OpenAPI2Document, OpenAPI2Operation } from './oai2';
+import { OpenAPI2Document, OpenAPI2Header, OpenAPI2Operation, OpenAPI2OperationResponse } from './oai2';
 import { cleanElementName, convertOai2RefToOai3, parseOai2Ref } from './refs-utils';
 import { ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
@@ -1046,7 +1046,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  async visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
+  async visitResponse(responseTarget: any, responseValue: OpenAPI2OperationResponse, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
 
     // NOTE: The previous converter patches the description of the response because
     // every response should have a description.
@@ -1148,7 +1148,7 @@ export class Oai2ToOai3 {
     'uniqueItems'
   ];
 
-  async visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
+  async visitHeader(targetHeader: any, headerValue: OpenAPI2Header, jsonPointer: string) {
     if (headerValue.$ref) {
       targetHeader.$ref = { value: this.convertReferenceToOai3(headerValue.schema.$ref), pointer: jsonPointer };
     } else {

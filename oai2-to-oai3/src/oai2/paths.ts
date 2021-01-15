@@ -1,3 +1,5 @@
+import { OpenAPI2Definition, OpenAPI2Reference } from "./definition";
+
 /**
  * Custom http method verb for autorest.
  */
@@ -24,5 +26,17 @@ export type OpenAPI2OperationResponses = { [statusCode: string]: OpenAPI2Operati
 
 export interface OpenAPI2OperationResponse {
   description: string;
-  schema: any;
+  schema?: OpenAPI2Definition;
+  examples?: { [exampleName: string]: unknown };
+  headers?: { [headerName: string]: OpenAPI2Header };
+}
+
+export type OpenAPI2Header = OpenAPI2Reference & OpenAPI2HeaderDefinition;
+
+export interface OpenAPI2HeaderDefinition {
+  type: "string" | "number" | "integer" | "boolean" | "array";
+  schema: OpenAPI2Reference & OpenAPI2Definition;
+  description: string;
+  items: any;
+  collectionFormat: "csv" | "ssv" | "tsv" | "pipes" | "multi";
 }
