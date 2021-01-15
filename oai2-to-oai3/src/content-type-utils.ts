@@ -1,4 +1,3 @@
-import { JsonPointer } from "@azure-tools/datastore";
 import { OpenAPI2Operation } from "./oai2";
 
 /**
@@ -6,10 +5,8 @@ import { OpenAPI2Operation } from "./oai2";
  * @param operationProduces: List of content type produces by the operation.
  * @param globalProduces: List of default content type produced by the API.
  * @returns list of produced content types. Array will have at least one entry.
- * @throws {Error} if no content type could be resolved.
  */
 export const resolveOperationProduces = (
-  jsonPointer: JsonPointer,
   operation: OpenAPI2Operation,
   globalProduces: string[],
 ): string[] => {
@@ -21,10 +18,8 @@ export const resolveOperationProduces = (
     : globalProduces;
 
   // default
-  if (produces.length === 0 || (produces.length === 1 && produces[0] === "*/*")) {
-    throw new Error(
-      `Operation '${operation.operationId}' (${jsonPointer}) is missing a produces field and there isn't any global value. Please add "produces": [<contentType>]"`,
-    );
+  if (produces.length === 0) {
+    produces.push("*/*");
   }
 
   return produces;
@@ -35,10 +30,7 @@ export const resolveOperationProduces = (
  * @param operationConsumes: List of content type consumed by the operation.
  * @param globalConsumes: List of default content type consumed by the API.
  */
-export const resolveOperationConsumes = (
-  operation: OpenAPI2Operation,
-  globalConsumes: string[],
-): string[] => {
+export const resolveOperationConsumes = (operation: OpenAPI2Operation, globalConsumes: string[]): string[] => {
   const operationConsumes = operation.consumes;
   return operationConsumes
     ? operationConsumes.indexOf("application/octet-stream") !== -1

@@ -709,7 +709,7 @@ export class Oai2ToOai3 {
     const operation = pathItem[httpMethod];
 
     // preprocess produces and consumes for responses and parameters respectively;
-    const produces = resolveOperationProduces(jsonPointer, operationValue, globalProduces);
+    const produces = resolveOperationProduces(operationValue, globalProduces);
     const consumes = resolveOperationConsumes(operationValue, globalConsumes);
 
     for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
@@ -1062,6 +1062,12 @@ export class Oai2ToOai3 {
     }
 
     if (responseValue.schema) {
+      if (produces.length === 0 || (produces.length === 1 && produces[0] === "*/*")) {
+        throw new Error(
+          `Operation response '${jsonPointer}' is missing a produces field and there isn't any global value. Please add "produces": [<contentType>]"`,
+        );
+      }
+
       responseTarget.content = this.newObject(jsonPointer);
       for (const mimetype of produces) {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);

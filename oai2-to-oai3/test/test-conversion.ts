@@ -13,7 +13,7 @@ import { OpenAPI2Document } from '../src/oai2';
 
 @suite class MyTests {
 
-  @test.only  async 'test conversion - simple'() {
+  @test  async 'test conversion - simple'() {
     const swaggerUri = 'mem://swagger.yaml';
     const oai3Uri = 'mem://oai3.yaml';
 
