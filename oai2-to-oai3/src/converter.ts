@@ -1,5 +1,7 @@
 import { createGraphProxy, JsonPointer, Node, visit, get } from '@azure-tools/datastore';
 import { Mapping } from 'source-map';
+import { resolveOperationConsumes, resolveOperationProduces } from './content-type-utils';
+import { OpenAPI2Document, OpenAPI2Header, OpenAPI2Operation, OpenAPI2OperationResponse } from './oai2';
 import { cleanElementName, convertOai2RefToOai3, parseOai2Ref } from './refs-utils';
 import { ResolveReferenceFn } from './runner';
 import { statusCodes } from './status-codes';
@@ -11,7 +13,7 @@ export class Oai2ToOai3 {
   public mappings = new Array<Mapping>();
 
 
-  constructor(protected originalFilename: string, protected original: any,  private resolveExternalReference?: ResolveReferenceFn) {
+  constructor(protected originalFilename: string, protected original: OpenAPI2Document,  private resolveExternalReference?: ResolveReferenceFn) {
     this.generated = createGraphProxy(this.originalFilename, '', this.mappings);
   }
 
@@ -697,7 +699,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  async visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: any, globalConsumes: Array<string>, globalProduces: Array<string>) {
+  async visitOperation(pathItem: any, httpMethod: string, jsonPointer: JsonPointer, operationItemMembers: Iterable<Node>, operationValue: OpenAPI2Operation, globalConsumes: Array<string>, globalProduces: Array<string>) {
 
     // trace was not supported on OpenAPI 2.0, it was an extension
     httpMethod = (httpMethod !== 'x-trace') ? httpMethod : 'trace';
@@ -707,20 +709,9 @@ export class Oai2ToOai3 {
     const operation = pathItem[httpMethod];
 
     // preprocess produces and consumes for responses and parameters respectively;
-    const produces = (operationValue.produces) ?
-      (operationValue.produces.indexOf('application/json') !== -1) ?
-        operationValue.produces :
-        [...new Set([...operationValue.produces])] :
-      globalProduces;
+    const produces = resolveOperationProduces(operationValue, globalProduces);
+    const consumes = resolveOperationConsumes(operationValue, globalConsumes);
 
-    // default
-    if (produces.length === 0) {
-      produces.push('*/*');
-    }
-
-    const consumes = (operationValue.consumes) ? (operationValue.consumes.indexOf('application/octet-stream') !== -1) ? operationValue.consumes
-      : [...new Set([...operationValue.consumes])]
-      : globalConsumes;
     for (const { value, key, pointer, children: operationFieldItemMembers } of operationItemMembers) {
       switch (key) {
         case 'tags':
@@ -1055,7 +1046,7 @@ export class Oai2ToOai3 {
     }
   }
 
-  async visitResponse(responseTarget: any, responseValue: any, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
+  async visitResponse(responseTarget: any, responseValue: OpenAPI2OperationResponse, responseName: string, responsesFieldMembers: () => Iterable<Node>, jsonPointer: string, produces: Array<string>) {
 
     // NOTE: The previous converter patches the description of the response because
     // every response should have a description.
@@ -1071,6 +1062,12 @@ export class Oai2ToOai3 {
     }
 
     if (responseValue.schema) {
+      if (produces.length === 0 || (produces.length === 1 && produces[0] === "*/*")) {
+        throw new Error(
+          `Operation response '${jsonPointer}' produces type couldn't be resolved. Operation is probably is missing a produces field and there isn't any global value. Please add "produces": [<contentType>]"`,
+        );
+      }
+
       responseTarget.content = this.newObject(jsonPointer);
       for (const mimetype of produces) {
         responseTarget.content[mimetype] = this.newObject(jsonPointer);
@@ -1151,7 +1148,7 @@ export class Oai2ToOai3 {
     'uniqueItems'
   ];
 
-  async visitHeader(targetHeader: any, headerValue: any, jsonPointer: string) {
+  async visitHeader(targetHeader: any, headerValue: OpenAPI2Header, jsonPointer: string) {
     if (headerValue.$ref) {
       targetHeader.$ref = { value: this.convertReferenceToOai3(headerValue.schema.$ref), pointer: jsonPointer };
     } else {

@@ -9,6 +9,7 @@ import { FastStringify } from '@azure-tools/datastore';
 require('source-map-support').install();
 
 import { Oai2ToOai3 } from '../src/converter';
+import { OpenAPI2Document } from '../src/oai2';
 
 @suite class MyTests {
 
@@ -32,7 +33,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -66,7 +67,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -100,7 +101,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -134,7 +135,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -168,7 +169,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -199,7 +200,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -230,7 +231,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -261,7 +262,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -292,7 +293,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -323,7 +324,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -355,7 +356,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -387,7 +388,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -419,7 +420,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -450,7 +451,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -480,7 +481,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -511,7 +512,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -542,7 +543,7 @@ import { Oai2ToOai3 } from '../src/converter';
     assert(originalDataHandle != null);
 
     if (swaggerDataHandle && originalDataHandle) {
-      const swag = await swaggerDataHandle.ReadObject();
+      const swag = await swaggerDataHandle.ReadObject<OpenAPI2Document>();
       const original = await originalDataHandle.ReadObject();
       const convert = new Oai2ToOai3(swaggerUri, swag);
 
@@ -579,7 +580,7 @@ import { Oai2ToOai3 } from '../src/converter';
 
     assert(swaggerdata != null);
     if (swaggerdata) {
-      const swag = swaggerdata.ReadObject();
+      const swag = await swaggerdata.ReadObject<OpenAPI2Document>();
 
       const convert = new Oai2ToOai3(swaggerdata.key, swag);
       const result = await convert.convert();

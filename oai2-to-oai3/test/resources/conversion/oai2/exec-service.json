@@ -5,6 +5,7 @@
     "title": "ExecService",
     "description": "Azure Dev Spaces ExecService v3.2"
   },
+  
   "paths": {
     "/api/v3.2/AzdsTraces": {
       "post": {
@@ -13,7 +14,7 @@
         ],
         "operationId": "AzdsTraces_PostAzdsUserClusterLogsAsync",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "onbehalfof",
@@ -54,7 +55,7 @@
           "text/json",
           "application/*+json"
         ],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "spaceName",
@@ -151,7 +152,7 @@
         ],
         "operationId": "Liveness_LivenessCheck",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -173,7 +174,7 @@
         ],
         "operationId": "Ping_CheckUserAuth",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -201,7 +202,7 @@
         ],
         "operationId": "Ping_CheckWhitelistAndUserAuth",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -229,7 +230,7 @@
         ],
         "operationId": "Ping_CheckWhitelistOnlyAuth",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -286,7 +287,7 @@
         ],
         "operationId": "Spaces_CreateSpace",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "spaceName",
@@ -325,7 +326,7 @@
         ],
         "operationId": "Spaces_DeleteSpace",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "spaceName",
@@ -374,7 +375,7 @@
         ],
         "operationId": "Spaces_CreateSpaceFromNamespace",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [
           {
             "name": "namespaceName",
@@ -454,7 +455,7 @@
         ],
         "operationId": "Traces_ReportRequestAsync",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
@@ -482,7 +483,7 @@
         ],
         "operationId": "Traces_ReportResponseAsync",
         "consumes": [],
-        "produces": [],
+        "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
