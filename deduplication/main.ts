@@ -361,20 +361,30 @@ export class Deduplicator {
 
   private async crawlObject(obj: any) {
     for (const { key, value } of visit(obj)) {
-      if (key === '$ref') {
-        const refParts = value.split('/');
+      // We don't want to navigate the examples.
+      if (key === "x-ms-examples") {
+        continue;
+      }
+
+      if (key === "$ref") {
+        const refParts = value.split("/");
         const componentUid = refParts.pop();
         const type = refParts.pop();
         await this.deduplicateComponent(componentUid, type);
-      } else if (value && typeof (value) === 'object') {
+      } else if (value && typeof value === "object") {
         await this.crawlObject(value);
       }
     }
   }
 
   private updateRefs(obj: any): void {
-    for (const { value } of visit(obj)) {
-      if (value && typeof value === 'object') {
+    for (const { key, value } of visit(obj)) {
+      // We don't want to navigate the examples.
+      if (key === "x-ms-examples") {
+        continue;
+      }
+
+      if (value && typeof value === "object") {
         const ref = value.$ref;
         if (ref) {
           // see if this object has a $ref
