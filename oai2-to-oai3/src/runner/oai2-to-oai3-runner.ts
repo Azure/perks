@@ -1,10 +1,11 @@
 import { DataHandle, get } from "@azure-tools/datastore";
 import { Oai2ToOai3 } from "../converter";
+import { OpenAPI2Document } from "../oai2";
 import { loadInputFiles } from "./utils";
 
 export interface OaiToOai3FileInput {
   name: string;
-  schema: any; // OAI2 type?
+  schema: OpenAPI2Document; // OAI2 type?
 }
 
 export interface OaiToOai3FileOutput {
