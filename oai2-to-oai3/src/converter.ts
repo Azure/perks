@@ -832,8 +832,6 @@ export class Oai2ToOai3 {
     }
 
     if (targetOperation.requestBody !== undefined) {
-
-
       if (requestBodyTracker.wasParamRequired) {
         targetOperation.requestBody.required = { value: requestBodyTracker.wasParamRequired, pointer };
       }
@@ -866,6 +864,10 @@ export class Oai2ToOai3 {
 
       if (targetOperation.requestBody === undefined) {
         targetOperation.requestBody = this.newObject(pointer);
+      }
+      
+      if (targetOperation.requestBody.required === undefined) {
+        targetOperation.requestBody.required = { value: parameterValue.required, pointer };
       }
 
       if (targetOperation.requestBody.content === undefined) {
