@@ -878,10 +878,6 @@ export class Oai2ToOai3 {
       targetOperation.requestBody = this.newObject(pointer);
     }
 
-    if (targetOperation.requestBody.required === undefined) {
-      targetOperation.requestBody.required = { value: parameterValue.required, pointer };
-    }
-
     if (targetOperation.requestBody.content === undefined) {
       targetOperation.requestBody.content = this.newObject(pointer);
     }
