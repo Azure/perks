@@ -750,9 +750,8 @@ export class Oai2ToOai3 {
   }
 
   async visitParameters(targetOperation: any, parametersFieldItemMembers: any, consumes: any, pointer: string) {
-    const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: false };
+    const requestBodyTracker = { xmsname: undefined, name: undefined, description: undefined, index: -1, keepTrackingIndex: true, wasSpecialParameterFound: false, wasParamRequired: undefined };
 
-    
     for (let { pointer, value, childIterator } of parametersFieldItemMembers) {
       if (value.$ref) {
         const parsedRef = parseOai2Ref(value.$ref);
@@ -832,7 +831,7 @@ export class Oai2ToOai3 {
     }
 
     if (targetOperation.requestBody !== undefined) {
-      if (requestBodyTracker.wasParamRequired) {
+      if (requestBodyTracker.wasParamRequired !== undefined) {
         targetOperation.requestBody.required = { value: requestBodyTracker.wasParamRequired, pointer };
       }
 
