@@ -101,6 +101,7 @@
           }
         },
         "requestBody": {
+          "required": false,
           "x-ms-requestBody-name": "log",
           "content": {
             "application/json-patch+json": {
@@ -684,6 +685,7 @@
           }
         },
         "requestBody": {
+          "required": false,
           "x-ms-requestBody-name": "request",
           "content": {
             "application/json-patch+json": {
