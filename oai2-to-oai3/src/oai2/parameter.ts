@@ -1,3 +1,4 @@
+import { Schema } from "inspector";
 import { OpenAPI2Definition } from "./definition";
 import { OpenAPI2HeaderDefinition } from "./header";
 
@@ -11,6 +12,7 @@ export type OpenAPI2Parameter =
 export interface OpenAPI2BodyParameter {
   name: string;
   in: "body";
+  type?: undefined;
   schema: OpenAPI2Definition;
   description?: string;
   required?: boolean;
@@ -34,6 +36,10 @@ export interface OpenApi2FormDataParameter {
   required?: boolean;
   format?: string;
   example?: unknown;
+  enum?: string[];
+  allOf?: OpenAPI2Definition[];
+  default?: unknown;
+  items?: PrimitiveItems;
 }
 
 export interface OpenApi2QueryParameter {
@@ -56,4 +62,12 @@ export interface OpenApi2PathParameter {
   required?: boolean;
   format?: string;
    enum?: string[];
+}
+
+
+export interface PrimitiveItems {
+  type: "string" | "number" | "integer" | "boolean" | "array" | "file";
+  format?: string;
+  items?: PrimitiveItems;
+  default?: unknown;
 }
