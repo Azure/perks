@@ -120,22 +120,27 @@ export class Deduplicator {
 
   private deduplicateAdditionalFieldMembers(fieldName: string) {
     const deduplicatedMembers = new Set<string>();
+    const element = this.target[fieldName];
+
+    // If it is a string there is nothing to deduplicate.
+    if (typeof element === "string") {
+      return;
+    }
 
     // TODO: remaining fields are arrays and not maps, so when a member is deleted
     // it leaves an empty item. Figure out what is the best way to handle this.
     // convert to map and then delete?
-    for (const { key: memberUid } of visit(this.target[fieldName])) {
+    for (const { key: memberUid } of visit(element)) {
       if (!deduplicatedMembers.has(memberUid)) {
-        const member = this.target[fieldName][memberUid];
+        const member = element[memberUid];
 
         // iterate over all the members
-        for (const { key: anotherMemberUid, value: anotherMember } of visit(this.target[fieldName])) {
+        for (const { key: anotherMemberUid, value: anotherMember } of visit(element)) {
 
           // ignore merge with itself
           if (memberUid !== anotherMemberUid && areSimilar(member, anotherMember)) {
-
             // finish up
-            delete this.target[fieldName][anotherMemberUid];
+            delete element[anotherMemberUid];
             this.updateMappings(`/${fieldName}/${anotherMemberUid}`, `/${fieldName}/${memberUid}`);
             deduplicatedMembers.add(anotherMemberUid);
           }
