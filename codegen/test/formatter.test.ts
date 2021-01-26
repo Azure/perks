@@ -12,6 +12,7 @@ const testMapping = (
 };
 
 describe("Formatter", () => {
+  // Disabled some test as part of reverting change https://github.com/Azure/perks/pull/148
   describe("snake_case", () => {
     testMapping((x) => Style.snake(x), [
       ["snake_case", "snake_case"],
@@ -20,15 +21,15 @@ describe("Formatter", () => {
       ["snake_Case", "snake_case"],
       ["Snake", "snake"],
       ["s_nake", "s_nake"],
-      ["SNaKE", "sna_ke"],
-      ["SNaKEr", "sna_ker"],
+      // ["SNaKEr", "sna_ker"],
+      // ["SNaKE", "sna_ke"],
       ["s_na_k_er", "s_na_k_er"],
-      ["snakeSnakECase", "snake_snak_ecase"],
+      // ["snakeSnakECase", "snake_snak_ecase"],
       ["MikhailGorbachevUSSR", "mikhail_gorbachev_ussr"],
       ["MAX_of_MLD", "max_of_mld"],
       ["someSQLConnection", "some_sql_connection"],
-      ["diskMBpsReadWrite", "disk_mbps_read_write"],
-      ["instanceIDs", "instance_ids"],
+      // ["diskMBpsReadWrite", "disk_mbps_read_write"],
+      // ["instanceIDs", "instance_ids"],
     ]);
   });
 
@@ -45,8 +46,8 @@ describe("Formatter", () => {
       ["___pascal____case6666", "PascalCase6666"],
       ["MAX_of_MLD", "MaxOfMld"],
       ["someSQLConnection", "SomeSqlConnection"],
-      ["diskMBpsReadWrite", "DiskMbpsReadWrite"],
-      ["instanceIDs", "InstanceIds"],
+      // ["diskMBpsReadWrite", "DiskMbpsReadWrite"],
+      // ["instanceIDs", "InstanceIds"],
     ]);
   });
 });
