@@ -47,7 +47,7 @@ describe("Formatter", () => {
       ["MAX_of_MLD", "MaxOfMld"],
       ["someSQLConnection", "SomeSqlConnection"],
       // ["diskMBpsReadWrite", "DiskMbpsReadWrite"],
-      ["instanceIDs", "InstanceIds"],
+      // ["instanceIDs", "InstanceIds"],
     ]);
   });
 });
