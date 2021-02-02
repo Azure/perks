@@ -2,7 +2,7 @@
 
 Perks are a collection of common libraries that provide useful functionality (originall targeted at the AutoRest project.)
 
-## Package moved
+## Notice: Packages moved to Azure/autorest
 
 Some pacakges were moved to https://github.com/Azure/autorest, see [legacy branch](https://github.com/Azure/perks/tree/legacy/) for the code before move.
 
