@@ -65,32 +65,8 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@azure-tools/oai2-to-oai3",
-      "projectFolder": "oai2-to-oai3",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
-      "packageName": "@azure-tools/autorest-extension-base",
-      "projectFolder": "autorest-extension-base",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
       "packageName": "@azure-tools/codemodel-v3",
       "projectFolder": "codemodel-v3",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
-      "packageName": "@azure-tools/codemodel",
-      "projectFolder": "codemodel",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
-      "packageName": "@azure-tools/codegen",
-      "projectFolder": "codegen",
       "reviewCategory": "production",
       "shouldPublish": true
     },
