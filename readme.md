@@ -11,6 +11,7 @@ Some pacakges were moved to https://github.com/Azure/autorest, see [legacy branc
 - [@azure-tools/codemodel](https://github.com/Azure/perks/tree/legacy/codemodel)
 - [@azure-tools/autorest-extension-base](https://github.com/Azure/perks/tree/legacy/autorest-extension-base)
 - [@azure-tools/deduplication](https://github.com/Azure/perks/tree/legacy/deduplication)
+- [@azure-tools/datastore](https://github.com/Azure/perks/tree/legacy/datastore)
 
 ## Building
 

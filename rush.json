@@ -41,12 +41,6 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@azure-tools/datastore",
-      "projectFolder": "datastore",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
       "packageName": "@azure-tools/linq",
       "projectFolder": "linq",
       "reviewCategory": "production",
