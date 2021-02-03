@@ -81,12 +81,6 @@
       "projectFolder": "object-comparison",
       "reviewCategory": "production",
       "shouldPublish": true
-    },
-    {
-      "packageName": "@azure-tools/deduplication",
-      "projectFolder": "deduplication",
-      "reviewCategory": "production",
-      "shouldPublish": true
     }
   ]
 }
