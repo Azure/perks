@@ -47,12 +47,6 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@azure-tools/openapi",
-      "projectFolder": "openapi",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
       "packageName": "@azure-tools/uri",
       "projectFolder": "uri",
       "reviewCategory": "production",
