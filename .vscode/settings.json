@@ -111,16 +111,12 @@
       "directory": "./uri"
     }
   ],
-  "eslint.autoFixOnSave": true,
-  "eslint.validate": [
-    "javascript",
-    {
-      "language": "typescript",
-      "autoFix": true,
-    },
-    {
-      "language": "typescriptreact",
-      "autoFix": false
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": false
     }
-  ],
+  },
 }
