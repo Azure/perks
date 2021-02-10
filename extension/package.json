@@ -9,8 +9,8 @@
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",
   "scripts": {
-    "build": "tsc -p .",
-    "watch": "tsc -p . --watch",
+    "build": "tsc -p ./tsconfig.build.json",
+    "watch": "tsc -p ./tsconfig.build.json --watch",
     "eslint-fix": "eslint  . --fix --ext .ts",
     "eslint": "eslint  . --ext .ts",
     "prepare": "npm run build",
