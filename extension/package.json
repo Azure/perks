@@ -6,11 +6,11 @@
   "engines": {
     "node": ">=10.12.0"
   },
-  "main": "./dist/main.js",
-  "typings": "./dist/main.d.ts",
+  "main": "./dist/src/main.js",
+  "typings": "./dist/src/main.d.ts",
   "scripts": {
-    "build": "tsc -p ./tsconfig.build.json",
-    "watch": "tsc -p ./tsconfig.build.json --watch",
+    "build": "tsc -p .",
+    "watch": "tsc -p . --watch",
     "eslint-fix": "eslint  . --fix --ext .ts",
     "eslint": "eslint  . --ext .ts",
     "prepare": "npm run build",
