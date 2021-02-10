@@ -6,8 +6,8 @@
   "engines": {
     "node": ">=10.12.0"
   },
-  "main": "./dist/src/main.js",
-  "typings": "./dist/src/main.d.ts",
+  "main": "./dist/main.js",
+  "typings": "./dist/main.d.ts",
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch",
