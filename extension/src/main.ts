@@ -3,7 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir, writeFile } from '@azure-tools/async-io';
+import { exists, isDirectory, isFile, mkdir, readdir, readFile, rmdir } from '@azure-tools/async-io';
 import { Progress, Subscribe } from '@azure-tools/eventing';
 import { CriticalSection, Delay, Exception, Mutex, shallowCopy, SharedLock } from '@azure-tools/tasks';
 import { ChildProcess, spawn, spawnSync } from 'child_process';
@@ -15,6 +15,7 @@ import * as semver from 'semver';
 import { Npm } from './npm';
 import { PackageManager, PackageManagerType } from './package-manager';
 import { Yarn } from './yarn';
+import * as fs from "fs";
 
 export async function updatePythonPath(command: Array<string>) {
   const detect = quoteIfNecessary('import sys; print(sys.hexversion >= 0x03060000)');
@@ -288,7 +289,12 @@ export class Extension extends Package {
 
   /** the loaded package.json information */
   public get definition(): any {
-    return require(this.packageJsonPath);
+    const content = fs.readFileSync(this.packageJsonPath).toString();
+    try {
+      return JSON.parse(content);
+    } catch(e) {
+      throw new Error(`Failed to parse package definition at '${this.packageJsonPath}'. ${e}`);
+    }
   }
 
   public get configuration(): Promise<string> {
