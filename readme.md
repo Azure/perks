@@ -13,6 +13,7 @@ Some pacakges were moved to https://github.com/Azure/autorest, see [legacy branc
 - [@azure-tools/deduplication](https://github.com/Azure/perks/tree/legacy/deduplication)
 - [@azure-tools/datastore](https://github.com/Azure/perks/tree/legacy/datastore)
 - [@azure-tools/openapi](https://github.com/Azure/perks/tree/legacy/openapi)
+- [@azure-tools/extension](https://github.com/Azure/perks/tree/2590a33e5f8549e03e2b8d7b0196fde23ec57f08/extension)
 
 ## Building
 
