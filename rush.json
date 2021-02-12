@@ -35,12 +35,6 @@
       "shouldPublish": true
     },
     {
-      "packageName": "@azure-tools/extension",
-      "projectFolder": "extension",
-      "reviewCategory": "production",
-      "shouldPublish": true
-    },
-    {
       "packageName": "@azure-tools/linq",
       "projectFolder": "linq",
       "reviewCategory": "production",
