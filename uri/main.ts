@@ -5,7 +5,6 @@
 import { exists, rmdir, readdir, mkdir, writeFile } from '@azure-tools/async-io';
 import { resolve as uriResolve, parse as uriParse } from 'url';
 import { homedir } from 'os';
-/* eslint-disable */
 
 export function simplifyUri(uri: string) {
   return uriResolve(`${uriParse(uri).protocol}://`, uri);
@@ -41,29 +40,25 @@ function getUriAsync(uri: string, options: { headers: { [key: string]: string } 
  */
 export async function ReadUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
   const actualUri = ToRawDataUrl(uri);
-  try {
-    const readable = await getUriAsync(actualUri, { headers: headers });
+  const readable = await getUriAsync(actualUri, { headers: headers });
 
-    const readAll = new Promise<Buffer>(function (resolve, reject) {
-      let result = Buffer.alloc(0);
-      readable.on('data', data => result = Buffer.concat([result, data]));
-      readable.on('end', () => resolve(result));
-      readable.on('error', err => reject(err));
-    });
+  const readAll = new Promise<Buffer>(function (resolve, reject) {
+    let result = Buffer.alloc(0);
+    readable.on('data', data => result = Buffer.concat([result, data]));
+    readable.on('end', () => resolve(result));
+    readable.on('error', err => reject(err));
+  });
 
-    let result = await readAll;
+  let result = await readAll;
 
-    // make sure we can read 4 bytes into the file before trying to fix it!
-    if (result.length > 3) {
-      // fix up UTF16le files
-      if (result.readUInt16LE(0) === 65533 && result.readUInt16LE(1) === 65533) {
-        return stripBom(result.slice(2).toString('utf16le'));
-      }
+  // make sure we can read 4 bytes into the file before trying to fix it!
+  if (result.length > 3) {
+    // fix up UTF16le files
+    if (result.readUInt16LE(0) === 65533 && result.readUInt16LE(1) === 65533) {
+      return stripBom(result.slice(2).toString('utf16le'));
     }
-    return stripBom(result.toString('utf8'));
-  } catch (e) {
-    throw new Error(`Failed to load '${uri}' (${e})`);
   }
+  return stripBom(result.toString('utf8'));
 }
 
 export async function ExistsUri(uri: string): Promise<boolean> {
