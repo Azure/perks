@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable node/no-deprecated-api */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
@@ -234,8 +236,7 @@ export function MakeRelativeUri(baseUri: string, absoluteUri: string): string {
  * OS abstraction (writing files, enumerating files)
  ***********************/
 
-import { lstatSync, unlinkSync, rmdirSync } from "fs";
-import { url } from "inspector";
+import { lstatSync } from "fs";
 
 function isAccessibleFile(localPath: string) {
   try {
@@ -278,7 +279,9 @@ export async function EnumerateFiles(folderUri: string, probeFiles: Array<string
     let files: Array<string> = [];
     try {
       files = await readdir(FileUriToLocalPath(folderUri));
-    } catch (e) {}
+    } catch (e) {
+      // noop
+    }
     results.push(...files.map((f) => ResolveUri(folderUri, f)).filter((f) => isAccessibleFile(FileUriToLocalPath(f))));
   } else {
     for (const candid of probeFiles.map((f) => ResolveUri(folderUri, f))) {
