@@ -67,7 +67,7 @@ export class ManualPromise<T> implements Promise<T> {
 
   public constructor() {
     this.p = new Promise<T>((r, j) => {
-      this.resolve = (v: T | PromiseLike<T> | undefined) => { this.state = 'resolved'; r(v); };
+      this.resolve = (v: T | PromiseLike<T> | undefined) => { this.state = 'resolved'; r(v as any); };
       this.reject = (e: any) => { this.state = 'rejected'; j(e); };
     });
   }
