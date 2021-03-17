@@ -3,8 +3,8 @@
   "version": "3.0.0",
   "patchOffset": 100,
   "description": "Common URI handling code.",
-  "main": "./dist/main.js",
-  "typings": "./dist/main.d.ts",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "engines": {
     "node": ">=10.12.0"
   },
@@ -13,16 +13,14 @@
     "url": "git+https://github.com/Azure/perks.git"
   },
   "scripts": {
-    "build": "tsc -p .",
-    "watch": "tsc -p . --watch",
-    "eslint-fix": "eslint  . --fix --ext .ts",
-    "eslint": "eslint  . --ext .ts",
+    "build": "tsc -p ./tsconfig.build.json",
+    "watch": "tsc -p ./tsconfig.build.json --watch",
+    "lint:fix": "eslint ./src --fix --ext .ts",
+    "lint": "eslint ./src --ext .ts --max-warnings=0",
     "prepare": "npm run build",
-    "test": "npm run build && mocha dist/test --timeout 50000",
-    "testci": "npm run build && mocha dist/test --timeout 50000",
-    "clean": "ver > nul 2>&1 nul && npm run --silent clean-cmd || npm run --silent clean-bash",
-    "clean-cmd": "if exist dist rmdir /s /q dist && exit 0 || exit 0 ",
-    "clean-bash": "rm nul && rm -rf dist && exit 0 || exit 0"
+    "test": "jest --watchAll --coverage=false",
+    "test:ci": "jest --ci",
+    "clean": "rimraf ./dist"
   },
   "keywords": [
     "perks",
@@ -39,14 +37,19 @@
   "homepage": "https://github.com/Azure/perks/tree/master/uri#readme",
   "readme": "https://github.com/Azure/perks/tree/master/uri/readme.md",
   "devDependencies": {
-    "mocha-typescript": "1.1.17",
-    "@types/mocha": "5.2.5",
-    "@types/node": "12.7.2",
-    "mocha": "5.2.0",
-    "@typescript-eslint/eslint-plugin": "~2.6.0",
-    "@typescript-eslint/parser": "~2.6.0",
-    "eslint": "~6.6.0",
-    "typescript": "~3.9.7"
+    "@types/jest": "^26.0.20",
+    "@types/node": "~14.14.20",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "eslint-plugin-node": "~11.1.0",
+    "eslint-plugin-prettier": "~3.2.0",
+    "eslint-plugin-unicorn": "~27.0.0",
+    "eslint": "^7.17.0",
+    "jest": "^26.6.3",
+    "prettier": "~2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.4",
+    "typescript": "~4.2.3"
   },
   "dependencies": {
     "get-uri": "~2.0.2",

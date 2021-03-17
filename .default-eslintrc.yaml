@@ -1,52 +1,75 @@
 ---
 parser: "@typescript-eslint/parser"
 plugins:
-- "@typescript-eslint"
+  - "@typescript-eslint"
+  - prettier
+  - unicorn
+  - node
+
 env:
   es6: true
   node: true
+
 extends:
-- eslint:recommended
-- plugin:@typescript-eslint/recommended
+  - eslint:recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:node/recommended
+
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
 parserOptions:
   ecmaVersion: 2018
   sourceType: module
-  warnOnUnsupportedTypeScriptVersion : false
-  project: "./tsconfig.json"
-rules:
-  "@typescript-eslint/no-this-alias" : 'off'
-  "@typescript-eslint/interface-name-prefix": 'off'
-  "@typescript-eslint/explicit-function-return-type": 'off'
-  "@typescript-eslint/no-explicit-any": 'off'
-  "@typescript-eslint/no-empty-interface": 'off'
-  "@typescript-eslint/no-namespace": 'off'
-  "@typescript-eslint/explicit-member-accessibility": 'off'
-  "@typescript-eslint/no-unused-vars": 'off'
-  "@typescript-eslint/no-parameter-properties": 'off'
-  "@typescript-eslint/no-angle-bracket-type-assertion" : 'off'
-  "@typescript-eslint/no-use-before-define": "off"
-  "require-atomic-updates" : 'off'
-  '@typescript-eslint/no-floating-promises': error
-    
-  indent:
-  - warn
-  - 2
-  - SwitchCase : 1
-  "@typescript-eslint/indent":
-  - 0
-  - 2
-  no-undef: 'off'
-  no-unused-vars: 'off'
-  semi:
-  - error
-  - always
-  no-multiple-empty-lines: 
-  - error
-  - max: 2
-    maxBOF: 0
-    maxEOF: 1
+  warnOnUnsupportedTypeScriptVersion: false
+  project: ./tsconfig.json
 
-  
+rules:
+  "@typescript-eslint/no-this-alias": "off"
+  "@typescript-eslint/interface-name-prefix": "off"
+  "@typescript-eslint/explicit-function-return-type": "off"
+  "@typescript-eslint/no-explicit-any": "off"
+  "@typescript-eslint/no-empty-interface": "off"
+  "@typescript-eslint/no-namespace": "off"
+  "@typescript-eslint/explicit-member-accessibility": "off"
+  "@typescript-eslint/no-unused-vars": "off"
+  "@typescript-eslint/no-parameter-properties": "off"
+  "@typescript-eslint/no-angle-bracket-type-assertion": "off"
+  "@typescript-eslint/no-use-before-define": "off"
+  "@typescript-eslint/no-var-requires": "off"
+  "@typescript-eslint/no-empty-function": "off"
+  "@typescript-eslint/explicit-module-boundary-types": "off"
+  "@typescript-eslint/ban-types": "off"
+  "@typescript-eslint/consistent-type-assertions": "off"
+  "@typescript-eslint/no-floating-promises": "warn"
+
+  "require-atomic-updates": "off"
+
+  # Prettier config https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
+  prettier/prettier: "warn"
+  arrow-body-style: "off"
+  prefer-arrow-callback: "off"
+
+  # Unicorn plugin config
+  unicorn/filename-case: warn
+
+  # =================================================
+  # Node plugin
+  # =================================================
+  # Prevent from using method that are not yet availalbe in the supported version of node.(see engines field of package.json)
+  node/no-unsupported-features/node-builtins:
+    [error, { "ignores": ["fs.promises"] }]
+  node/no-unsupported-features/es-builtins: error
+  node/no-unsupported-features/es-syntax: off # Disabling this one otherwise it will complain about typescript imports which get transpiled.
+  node/no-missing-import: off
+  node/shebang: off
+
+  # Basic config
+  no-console: warn
+  no-undef: "off"
+  no-unused-vars: "off"
+  no-multiple-empty-lines:
+    - warn
+    - max: 2
+      maxBOF: 0
+      maxEOF: 1

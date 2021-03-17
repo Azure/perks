@@ -1,122 +1,39 @@
 // Place your settings in this file to overwrite default and user settings.
 {
   "files.eol": "\n",
+  "search.exclude": {
+    "**/dist/**": true
+  },
   "files.exclude": {
-    "**/common/temp/**": true,
-    "node_modules/**": true,
-    "**/dist/**": true,
     "**/node_modules/**": true,
-    "**/*.js.map": true,
-    "**/*.js": {
-      "when": "$(basename).ts"
-    },
-    "**/*.d.tsx": {
-      "when": "$(basename).ts"
-    },
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
+    "**/*.log": true,
+    "**/package-deps.json": true,
     "**/.DS_Store": true
   },
   "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[jsonc]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "editor.tabSize": 2,
-    "editor.detectIndentation": false
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.associations": {
-    "rush.json": "jsonc"
+    "rush.json": "jsonc",
+    "command-line.json": "jsonc",
+    "common-versions.json": "jsonc"
   },
-  "eslint.workingDirectories": [
-    {
-      "changeProcessCWD": true,
-      "directory": "./async-io",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./autorest-extension-base",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./codegen",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./codegen-csharp",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./codemodel-v3",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./codemodel",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./datastore",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./deduplication",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./eventing",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./extension",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./linq",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./oai2-to-oai3",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./object-comparison",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./openapi",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./tasks",
-    },
-    {
-      "changeProcessCWD": true,
-      "directory": "./uri"
-    }
-  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  },
-  "[typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": false
-    }
-  },
+  }
 }
