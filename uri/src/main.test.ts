@@ -181,7 +181,11 @@ describe("Uri", () => {
     );
   });
 
-  describe("simplifyUri", () => {
+  fdescribe("simplifyUri", () => {
+    it("use null:// protocol if none provided", () => {
+      expect(uri.simplifyUri("readme.md")).toEqual("null://readme.md");
+    });
+
     it("simplify an uri with ..", () => {
       expect(uri.simplifyUri("https://github.com/foo/bar/some/path/../../readme.md")).toEqual(
         "https://github.com/foo/bar/readme.md",

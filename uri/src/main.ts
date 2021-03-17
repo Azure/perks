@@ -5,11 +5,21 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import { exists, rmdir, readdir, mkdir, writeFile } from "@azure-tools/async-io";
-import { resolve as uriResolve, parse as uriParse } from "url";
+import { URL } from "url";
 import { homedir } from "os";
 
-export function simplifyUri(uri: string) {
-  return uriResolve(`${uriParse(uri).protocol}://`, uri);
+export function simplifyUri(uri: string): string {
+  try {
+    return new URL(uri).toString();
+  } catch (e) {
+    try {
+      // Try with null protocol
+      return new URL(`null://${uri}`).toString();
+    } catch {
+      // Throw original error
+      throw e;
+    }
+  }
 }
 
 export function IsUri(uri: string): boolean {
