@@ -16,7 +16,7 @@ jobs:
       - script: |
           npm install -g npm 
           npx @microsoft/rush update
-        displayName: "Rush install"
+        displayName: Install dependencies
 
       - script: npx @microsoft/rush rebuild
         displayName: "Build"
