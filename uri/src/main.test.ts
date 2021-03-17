@@ -180,4 +180,18 @@ describe("Uri", () => {
       "c:/arm-web/2015-08-01/AppServiceCertificateOrders.json",
     );
   });
+
+  fdescribe("simplifyUri", () => {
+    it("simplify an uri with ..", () => {
+      expect(uri.simplifyUri("https://github.com/foo/bar/some/path/../../readme.md")).toEqual(
+        "https://github.com/foo/bar/readme.md",
+      );
+    });
+
+    it("simplify an uri duplicate forward slash", () => {
+      expect(uri.simplifyUri("https://github.com/foo/bar//some/path/../../readme.md")).toEqual(
+        "https://github.com/foo/bar//readme.md",
+      );
+    });
+  });
 });
