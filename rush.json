@@ -4,7 +4,7 @@
   "pnpmVersion": "5.13.5",
   "pnpmOptions": {},
   "nodeSupportedVersionRange": ">=8.9.4 <15.0.0",
-  "ensureConsistentVersions": true,
+  "ensureConsistentVersions": false,
   "projectFolderMinDepth": 1,
   "projectFolderMaxDepth": 2,
   "repository": {},
