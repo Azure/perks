@@ -9,22 +9,36 @@ trigger:
 pool:
   vmImage: "ubuntu-latest"
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: "10.x"
-    displayName: "Install Node.js"
+jobs:
+  - template: ./templates/build-and-test-job.yaml
+    parameters:
+      name: node10
+      nodeVersion: 10.x
+  - template: ./templates/build-and-test-job.yaml
+    parameters:
+      name: node12
+      nodeVersion: 12.x
+  - template: ./templates/build-and-test-job.yaml
+    parameters:
+      name: node14
+      nodeVersion: 14.x
+  - template: ./templates/build-and-test-job.yaml
+    parameters:
+      name: node15
+      nodeVersion: 15.x
 
-  - script: |
-      npm install -g npm 
-      npx @microsoft/rush update
-    displayName: "Rush install"
+  - job: lint
+    displayName: Linting
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "14.x"
+        displayName: "Install Node.js"
+      
+      - script: |
+          npm install -g npm 
+          npx @microsoft/rush update
+        displayName: Install dependencies
 
-  - script: npx @microsoft/rush rebuild
-    displayName: "Build"
-
-  - script: npx @microsoft/rush test:ci
-    displayName: Test
-
-  - script: npx @microsoft/rush lint
-    displayName: Lint
+      - script: npx @microsoft/rush lint
+        displayName: Lint
