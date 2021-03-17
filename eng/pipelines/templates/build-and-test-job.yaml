@@ -4,14 +4,14 @@ parameters:
   - name: nodeVersion
     type: string
 
-jobs: 
+jobs:
   - job: ${{ parameters.name }}
     displayName: Build/Test Node ${{ parameters.nodeVersion }}
     steps:
       - task: NodeTool@0
-          inputs:
-            versionSpec: ${{ parameters.nodeVersion }}
-          displayName: "Install Node.js  $(parameters.nodeVersion)"
+        inputs:
+          versionSpec: ${{ parameters.nodeVersion }}
+        displayName: "Install Node.js  $(parameters.nodeVersion)"
 
       - script: |
           npm install -g npm 
