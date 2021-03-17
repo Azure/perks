@@ -2,13 +2,7 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-import {
-  exists,
-  rmdir,
-  readdir,
-  mkdir,
-  writeFile,
-} from "@azure-tools/async-io";
+import { exists, rmdir, readdir, mkdir, writeFile } from "@azure-tools/async-io";
 import { resolve as uriResolve, parse as uriParse } from "url";
 import { homedir } from "os";
 
@@ -18,7 +12,7 @@ export function simplifyUri(uri: string) {
 
 export function IsUri(uri: string): boolean {
   return /^([a-z0-9+.-]+):(?:\/\/(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(\/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(\/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/i.test(
-    uri
+    uri,
   );
 }
 
@@ -38,22 +32,14 @@ function stripBom(text: string): string {
 
 const getUri = require("get-uri");
 
-function getUriAsync(
-  uri: string,
-  options: { headers: { [key: string]: string } }
-): Promise<Readable> {
-  return new Promise((r, j) =>
-    getUri(uri, options, (err: any, rs: Readable) => (err ? j(err) : r(rs)))
-  );
+function getUriAsync(uri: string, options: { headers: { [key: string]: string } }): Promise<Readable> {
+  return new Promise((r, j) => getUri(uri, options, (err: any, rs: Readable) => (err ? j(err) : r(rs))));
 }
 
 /**
  * Loads a UTF8 string from given URI.
  */
-export async function ReadUri(
-  uri: string,
-  headers: { [key: string]: string } = {}
-): Promise<string> {
+export async function ReadUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
   const actualUri = ToRawDataUrl(uri);
   const readable = await getUriAsync(actualUri, { headers: headers });
 
@@ -90,10 +76,7 @@ export async function ExistsUri(uri: string): Promise<boolean> {
  ***********************/
 import { dirname } from "path";
 const URI = require("urijs");
-const fileUri: (
-  path: string,
-  options: { resolve: boolean }
-) => string = require("file-url");
+const fileUri: (path: string, options: { resolve: boolean }) => string = require("file-url");
 
 /**
  *  remake of path.isAbsolute... because it's platform dependent:
@@ -121,9 +104,7 @@ function isUriAbsolute(url: string): boolean {
  */
 export function CreateFileOrFolderUri(absolutePath: string): string {
   if (!isAbsolute(absolutePath)) {
-    throw new Error(
-      `Can only create file URIs from absolute paths. Got '${absolutePath}'`
-    );
+    throw new Error(`Can only create file URIs from absolute paths. Got '${absolutePath}'`);
   }
   let result = fileUri(absolutePath, { resolve: false });
   // handle UNCs
@@ -153,8 +134,7 @@ export function GetFilename(uri: string): string {
 
 export function GetFilenameWithoutExtension(uri: string): string {
   const lastPart = GetFilename(uri);
-  const ext =
-    lastPart.indexOf(".") === -1 ? "" : lastPart.split(".").reverse()[0];
+  const ext = lastPart.indexOf(".") === -1 ? "" : lastPart.split(".").reverse()[0];
   return lastPart.substr(0, lastPart.length - ext.length - 1);
 }
 
@@ -166,21 +146,15 @@ export function ToRawDataUrl(uri: string): string {
   if (uri.startsWith("https://github.com")) {
     uri = uri.replace(
       /^https?:\/\/(github.com)(\/[^\/]+\/[^\/]+\/)(blob|tree)\/(.*)$/gi,
-      "https://raw.githubusercontent.com$2$4"
+      "https://raw.githubusercontent.com$2$4",
     );
   }
   // - GitHub gist
   if (uri.startsWith("gist://")) {
-    uri = uri.replace(
-      /^gist:\/\/([^\/]+\/[^\/]+)$/gi,
-      "https://gist.githubusercontent.com/$1/raw/"
-    );
+    uri = uri.replace(/^gist:\/\/([^\/]+\/[^\/]+)$/gi, "https://gist.githubusercontent.com/$1/raw/");
   }
   if (uri.startsWith("https://gist.github.com")) {
-    uri = uri.replace(
-      /^https?:\/\/gist.github.com\/([^\/]+\/[^\/]+)$/gi,
-      "https://gist.githubusercontent.com/$1/raw/"
-    );
+    uri = uri.replace(/^https?:\/\/gist.github.com\/([^\/]+\/[^\/]+)$/gi, "https://gist.githubusercontent.com/$1/raw/");
   }
   if (uri.startsWith("null://")) {
     uri = uri.substr(7);
@@ -212,17 +186,12 @@ export function ResolveUri(baseUri: string, pathOrUri: string): string {
   }
   // known here: `pathOrUri` is a relative URI
   if (!baseUri) {
-    throw new Error(
-      "'pathOrUri' was detected to be relative so 'baseUri' is required"
-    );
+    throw new Error("'pathOrUri' was detected to be relative so 'baseUri' is required");
   }
   try {
     const base = new URI(baseUri);
     const relative = new URI(pathOrUri);
-    if (
-      baseUri.startsWith("untitled:///") &&
-      pathOrUri.startsWith("untitled:")
-    ) {
+    if (baseUri.startsWith("untitled:///") && pathOrUri.startsWith("untitled:")) {
       return pathOrUri;
     }
     const result = relative.absoluteTo(base);
@@ -284,7 +253,7 @@ function FileUriToLocalPath(fileUri: string): string {
         (!fileUri.startsWith("file://")
           ? `Protocol '${uri.protocol}' not supported for writing.`
           : "UNC paths not supported for writing.") +
-        " Make sure to specify a local, absolute path as target file/folder."
+        " Make sure to specify a local, absolute path as target file/folder.",
     );
   }
   // convert to path
@@ -302,10 +271,7 @@ function FileUriToLocalPath(fileUri: string): string {
   return decodeURI(p);
 }
 
-export async function EnumerateFiles(
-  folderUri: string,
-  probeFiles: Array<string> = []
-): Promise<Array<string>> {
+export async function EnumerateFiles(folderUri: string, probeFiles: Array<string> = []): Promise<Array<string>> {
   const results = new Array<string>();
   folderUri = EnsureIsFolderUri(folderUri);
   if (folderUri.startsWith("file:")) {
@@ -313,11 +279,7 @@ export async function EnumerateFiles(
     try {
       files = await readdir(FileUriToLocalPath(folderUri));
     } catch (e) {}
-    results.push(
-      ...files
-        .map((f) => ResolveUri(folderUri, f))
-        .filter((f) => isAccessibleFile(FileUriToLocalPath(f)))
-    );
+    results.push(...files.map((f) => ResolveUri(folderUri, f)).filter((f) => isAccessibleFile(FileUriToLocalPath(f))));
   } else {
     for (const candid of probeFiles.map((f) => ResolveUri(folderUri, f))) {
       if (await ExistsUri(candid)) {
@@ -340,10 +302,7 @@ async function CreateDirectoryFor(filePath: string): Promise<void> {
   }
 }
 
-async function WriteDataInternal(
-  fileName: string,
-  data: string | Buffer
-): Promise<void> {
+async function WriteDataInternal(fileName: string, data: string | Buffer): Promise<void> {
   await CreateDirectoryFor(fileName);
   await writeFile(fileName, data);
 }
@@ -363,10 +322,7 @@ export function WriteString(fileUri: string, data: string): Promise<void> {
  * @param data     String to write (encoding - base64 encoded UTF8).
  */
 export function WriteBinary(fileUri: string, data: string): Promise<void> {
-  return WriteDataInternal(
-    FileUriToLocalPath(fileUri),
-    Buffer.from(data, "base64")
-  );
+  return WriteDataInternal(FileUriToLocalPath(fileUri), Buffer.from(data, "base64"));
 }
 
 /**
@@ -374,15 +330,10 @@ export function WriteBinary(fileUri: string, data: string): Promise<void> {
  * @param folderUri  Folder uri.
  */
 
-export async function ClearFolder(
-  folderUri: string,
-  exceptions?: Array<string>
-): Promise<void> {
+export async function ClearFolder(folderUri: string, exceptions?: Array<string>): Promise<void> {
   return await rmdir(
     FileUriToLocalPath(folderUri),
-    new Set(
-      (exceptions || []).map((each) => FileUriToLocalPath(each).toLowerCase())
-    )
+    new Set((exceptions || []).map((each) => FileUriToLocalPath(each).toLowerCase())),
   );
 }
 
