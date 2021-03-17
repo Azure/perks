@@ -181,7 +181,7 @@ describe("Uri", () => {
     );
   });
 
-  fdescribe("simplifyUri", () => {
+  describe("simplifyUri", () => {
     it("simplify an uri with ..", () => {
       expect(uri.simplifyUri("https://github.com/foo/bar/some/path/../../readme.md")).toEqual(
         "https://github.com/foo/bar/readme.md",
