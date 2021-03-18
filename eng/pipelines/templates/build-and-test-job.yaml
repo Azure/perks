@@ -3,10 +3,15 @@ parameters:
     type: string
   - name: nodeVersion
     type: string
+  - name: vmImage
+    type: string
+    default: ubuntu-latest
 
 jobs:
   - job: ${{ parameters.name }}
     displayName: Build/Test Node ${{ parameters.nodeVersion }}
+    pool:
+      vmImage: ${{ parameters.vmImage }}
     steps:
       - task: NodeTool@0
         inputs:

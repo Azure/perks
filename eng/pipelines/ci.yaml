@@ -26,6 +26,11 @@ jobs:
     parameters:
       name: node15
       nodeVersion: 15.x
+  - template: ./templates/build-and-test-job.yaml
+    parameters:
+      name: node15
+      nodeVersion: 14.x
+      vmImage: windows-latest
 
   - job: lint
     displayName: Linting
