@@ -148,5 +148,13 @@ describe("Uri Manipulation", () => {
         "https://github.com/foo/bar//readme.md",
       );
     });
+
+    it("simplify a local url", () => {
+      expect(simplifyUri("file:///foo/bar/some/path/../../readme.md")).toEqual("file:///foo/bar/readme.md");
+    });
+
+    it("simplify a local url with extra slash", () => {
+      expect(simplifyUri("file:///foo/bar//some/path/../../readme.md")).toEqual("file:///foo/bar//readme.md");
+    });
   });
 });
