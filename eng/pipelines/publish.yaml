@@ -8,45 +8,28 @@ trigger:
 
 pool:
   vmImage: "ubuntu-latest"
+jobs:
+  - job: stable
+    displayName: Publish stable
+    steps:
+      - template: ./templates/build.yaml
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: "10.x"
-    displayName: "Install Node.js"
+      - script: npx @microsoft/rush publish --publish --pack --include-all
+        displayName: Pack packages
 
-  - script: |
-      # ensure latest npm is installed
-      npm install -g npm 
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
+      - script: |
+          NPM_AUTH_TOKEN="$(azure-sdk-npm-token)" npx @microsoft/rush publish --publish --include-all --set-access-level public
+        displayName: Publish packages
 
-      # make sure the versions are all synchronized and pull in dependencies
-      npx @microsoft/rush sync-versions
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
-      npx @microsoft/rush update 
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
+  - job: prerelease
+    displayName: Publish prerelease
+    dependsOn: stable # Publish prerelease after to prevent race condition.
+    steps:
+      - template: ./templates/build.yaml
 
-      # set the actual package versions and update again
-      npx @microsoft/rush set-versions
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
-      npx @microsoft/rush sync-versions
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
-      npx @microsoft/rush update 
-      rc=$?; if [ $rc -ne 0 ]; then exit $rc ; fi 
-    displayName: Install dependencies & Update versions
+      - script: node ./eng/bump-for-prerelease.js
+        displayName: Bump version to prerelease targets
 
-  - script: npx @microsoft/rush rebuild 
-    displayName: Build
-
-  - script: npx @microsoft/rush publish --publish --pack --include-all --tag latest
-    displayName: Pack
-
-  - script: |
-      # publish the packages (tag as preview by default)
-      echo "//registry.npmjs.org/:_authToken=$(azure-sdk-npm-token)" > ./.npmrc 
-      for file in common/temp/artifacts/packages/*.tgz 
-      do
-        echo "Trying to publish $file:"
-        common/temp/pnpm-local/node_modules/.bin/pnpm publish $file --tag latest --access public --no-git-checks || echo no-worries 
-      done
-    displayName: Publish packages
+      - script: |
+          NPM_AUTH_TOKEN="$(azure-sdk-npm-token)" npx @microsoft/rush publish --publish --include-all --set-access-level public --tag next
+        displayName: Publish packages

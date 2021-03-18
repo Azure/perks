@@ -13,6 +13,7 @@ jobs:
     pool:
       vmImage: ${{ parameters.vmImage }}
     steps:
+<<<<<<< HEAD
       - task: NodeTool@0
         inputs:
           versionSpec: ${{ parameters.nodeVersion }}
@@ -26,6 +27,11 @@ jobs:
 
       - script: npx @microsoft/rush rebuild
         displayName: "Build"
+=======
+      - template: ./build.yaml
+        parameters:
+          nodeVersion: ${{ parameters.nodeVersion }}
+>>>>>>> 469a5bfb533497800531e14714fd838ea2a17da5
 
       - script: npx @microsoft/rush test:ci
         displayName: Test

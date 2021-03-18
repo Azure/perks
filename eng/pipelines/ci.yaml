@@ -35,6 +35,9 @@ jobs:
   - job: lint
     displayName: Linting
     steps:
+      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./templates/verify-changes.yaml
+        
       - task: NodeTool@0
         inputs:
           versionSpec: "14.x"

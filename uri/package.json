@@ -1,7 +1,6 @@
 {
   "name": "@azure-tools/uri",
-  "version": "3.0.0",
-  "patchOffset": 100,
+  "version": "3.0.257",
   "description": "Common URI handling code.",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
