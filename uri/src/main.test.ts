@@ -1,5 +1,4 @@
-import * as assert from "assert";
-import { EnumerateFiles, ExistsUri, ReadUri } from "./main";
+import { EnumerateFiles } from "./main";
 import { CreateFileUri, CreateFolderUri } from "./uri-manipulation";
 
 describe("Uri", () => {
@@ -18,25 +17,5 @@ describe("Uri", () => {
       "README.md",
     ]);
     expect(files).not.toHaveLength(0);
-  });
-
-  it("ExistsUri", async () => {
-    assert.strictEqual(
-      await ExistsUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md"),
-      true,
-    );
-    assert.strictEqual(
-      await ExistsUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/READMEx.md"),
-      false,
-    );
-    expect(await ExistsUri(CreateFileUri(__filename))).toEqual(true);
-    expect(await ExistsUri(CreateFileUri(__filename + "_"))).toEqual(false);
-  });
-
-  it("ReadUri", async () => {
-    assert.ok(
-      (await ReadUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md")).length > 0,
-    );
-    assert.ok((await ReadUri(CreateFileUri(__filename))).length > 0);
   });
 });
