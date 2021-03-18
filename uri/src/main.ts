@@ -5,6 +5,7 @@
  *--------------------------------------------------------------------------------------------*/
 import { exists, rmdir, readdir, mkdir, writeFile } from "@azure-tools/async-io";
 import { dirname } from "path";
+import * as getUri from "get-uri";
 
 /***********************
  * Data aquisition
@@ -20,10 +21,9 @@ function stripBom(text: string): string {
   return text;
 }
 
-const getUri = require("get-uri");
-
 function getUriAsync(uri: string, options: { headers: { [key: string]: string } }): Promise<Readable> {
-  return new Promise((r, j) => getUri(uri, options, (err: any, rs: Readable) => (err ? j(err) : r(rs))));
+  // headers being passed is not described in the typing but does works.
+  return getUri(uri, options as getUri.GetUriOptions);
 }
 
 /**

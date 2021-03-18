@@ -14,13 +14,10 @@ describe("Uri", () => {
   });
 
   it("EnumerateFiles remote", async () => {
-    let foundSomething = false;
-    for (const file of await EnumerateFiles("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", [
+    const files = await EnumerateFiles("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", [
       "README.md",
-    ])) {
-      foundSomething = true;
-    }
-    expect(foundSomething).toEqual(true);
+    ]);
+    expect(files).not.toHaveLength(0);
   });
 
   it("ExistsUri", async () => {

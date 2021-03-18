@@ -37,7 +37,6 @@
   "homepage": "https://github.com/Azure/perks/tree/master/uri#readme",
   "readme": "https://github.com/Azure/perks/tree/master/uri/readme.md",
   "devDependencies": {
-    "@types/file-url": "~3.0.2",
     "@types/jest": "^26.0.20",
     "@types/node": "~14.14.20",
     "@types/urijs": "~1.19.14",
@@ -54,7 +53,7 @@
     "typescript": "~4.2.3"
   },
   "dependencies": {
-    "get-uri": "~2.0.2",
+    "get-uri": "~3.0.2",
     "urijs": "~1.19.1",
     "file-url": "3.0.0",
     "@azure-tools/async-io": "~3.0.0"
