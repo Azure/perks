@@ -39,11 +39,10 @@ jobs:
         inputs:
           versionSpec: "14.x"
         displayName: "Install Node.js"
-
-      - script: npm install -g npm
-        displayName: Update npm
-        
-      - script: npx @microsoft/rush update
+      
+      - script: |
+          npm install -g npm 
+          npx @microsoft/rush update
         displayName: Install dependencies
 
       - script: npx @microsoft/rush lint

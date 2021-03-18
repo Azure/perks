@@ -18,9 +18,10 @@ jobs:
           versionSpec: ${{ parameters.nodeVersion }}
         displayName: Install Node.js  ${{ parameters.nodeVersion }}
 
-      - script: |
-          npm install -g npm 
-          npx @microsoft/rush update
+      - script: npm install -g npm 
+        displayName: Install dependencies
+
+      - script: npx @microsoft/rush update
         displayName: Install dependencies
 
       - script: npx @microsoft/rush rebuild
