@@ -28,7 +28,7 @@ jobs:
       nodeVersion: 15.x
   - template: ./templates/build-and-test-job.yaml
     parameters:
-      name: node15
+      name: node14windows
       nodeVersion: 14.x
       vmImage: windows-latest
 

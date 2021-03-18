@@ -9,7 +9,7 @@ parameters:
 
 jobs:
   - job: ${{ parameters.name }}
-    displayName: Build/Test Node ${{ parameters.nodeVersion }}
+    displayName: Build/Test Node ${{ parameters.nodeVersion }} - ${{ parameters.vmImage }}
     pool:
       vmImage: ${{ parameters.vmImage }}
     steps:
