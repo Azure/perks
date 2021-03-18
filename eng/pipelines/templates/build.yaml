@@ -1,0 +1,20 @@
+parameters:
+  - name: nodeVersion
+    type: string
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: ${{ parameters.nodeVersion }}
+    displayName: Install Node.js  ${{ parameters.nodeVersion }}
+
+  - script: |
+      npm install -g npm 
+      npx @microsoft/rush update
+    displayName: Install dependencies
+
+  - script: npx @microsoft/rush rebuild
+    displayName: "Build"
+
+  - script: npx @microsoft/rush test:ci
+    displayName: Test
