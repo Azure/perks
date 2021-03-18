@@ -37,8 +37,10 @@
   "homepage": "https://github.com/Azure/perks/tree/master/uri#readme",
   "readme": "https://github.com/Azure/perks/tree/master/uri/readme.md",
   "devDependencies": {
+    "@types/file-url": "~3.0.2",
     "@types/jest": "^26.0.20",
     "@types/node": "~14.14.20",
+    "@types/urijs": "~1.19.14",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "eslint-plugin-node": "~11.1.0",
@@ -54,7 +56,7 @@
   "dependencies": {
     "get-uri": "~2.0.2",
     "urijs": "~1.19.1",
-    "file-url": "2.0.2",
+    "file-url": "3.0.0",
     "@azure-tools/async-io": "~3.0.0"
   }
 }
