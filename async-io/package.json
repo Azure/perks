@@ -1,7 +1,6 @@
 {
   "name": "@azure-tools/async-io",
-  "version": "3.0.0",
-  "patchOffset": 100,
+  "version": "3.0.254",
   "description": "Asynchronous IO (for Azure Open Source Projects)",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

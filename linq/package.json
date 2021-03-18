@@ -1,7 +1,6 @@
 {
   "name": "@azure-tools/linq",
-  "version": "3.1.0",
-  "patchOffset": 100,
+  "version": "3.1.263",
   "description": "LINQ-like functionality for Typescript.",
   "main": "./dist/exports.js",
   "typings": "./dist/exports.d.ts",
