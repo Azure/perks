@@ -1,7 +1,7 @@
-import { EnumerateFiles } from "./main";
+import { EnumerateFiles } from "./os-abstractions";
 import { CreateFileUri, CreateFolderUri } from "./uri-manipulation";
 
-describe("Uri", () => {
+describe("Uri Os Abstractions", () => {
   it("EnumerateFiles local", async () => {
     let foundMyself = false;
     for (const file of await EnumerateFiles(CreateFolderUri(__dirname))) {
