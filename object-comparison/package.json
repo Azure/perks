@@ -1,7 +1,6 @@
 {
   "name": "@azure-tools/object-comparison",
-  "version": "3.0.0",
-  "patchOffset": 100,
+  "version": "3.0.253",
   "description": "Library to compare objects",
   "main": "./dist/main.js",
   "typings": "./dist/main.d.ts",

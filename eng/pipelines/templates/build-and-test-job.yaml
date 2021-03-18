@@ -8,18 +8,9 @@ jobs:
   - job: ${{ parameters.name }}
     displayName: Build/Test Node ${{ parameters.nodeVersion }}
     steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: ${{ parameters.nodeVersion }}
-        displayName: Install Node.js  ${{ parameters.nodeVersion }}
-
-      - script: |
-          npm install -g npm 
-          npx @microsoft/rush update
-        displayName: Install dependencies
-
-      - script: npx @microsoft/rush rebuild
-        displayName: "Build"
+      - template: ./build.yaml
+        parameters:
+          nodeVersion: ${{ parameters.nodeVersion }}
 
       - script: npx @microsoft/rush test:ci
         displayName: Test
