@@ -13,6 +13,8 @@ jobs:
     displayName: Publish stable
     steps:
       - template: ./templates/build.yaml
+        parameters:
+          nodeVersion: 14.x
 
       - script: npx @microsoft/rush publish --publish --pack --include-all
         displayName: Pack packages
