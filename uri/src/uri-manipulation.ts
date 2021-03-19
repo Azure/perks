@@ -4,18 +4,35 @@ import { URL } from "url";
 import * as URI from "urijs";
 import * as fileUri from "file-url";
 
-export function simplifyUri(uri: string): string {
-  try {
-    return new URL(uri).toString();
-  } catch (e) {
-    try {
-      // Try with null protocol
-      return new URL(`null://${uri}`).toString();
-    } catch {
-      // Throw original error
-      throw e;
-    }
+const RELATIVE_PROTOCOL = "relative:///";
+
+/**
+ * Remove extra / in the url path.
+ * @param url
+ */
+function cleanUrlPath(url: URL): URL {
+  const pathname = url.pathname
+    .replace(/\\/g, "/") // Replace \ => /
+    .replace(/\/\//g, "/"); // Replace // => /;
+
+  // Means the url is a windows absolute path without the file:// protocol(drive letter gets parsed as the protocol.)
+  if (url.protocol.length === 2) {
+    return new URL(`${url.protocol}${pathname}`);
   }
+
+  const newUrl = new URL(url.toString());
+  newUrl.pathname = pathname;
+  return newUrl;
+}
+
+/**
+ * Simplify the given uri by resolving relative paths.
+ *
+ * @param uri
+ * @returns fully qualified url with protocol. Defaults to null:// if not provided
+ */
+export function simplifyUri(uri: string): string {
+  return cleanUrlPath(new URL(uri, RELATIVE_PROTOCOL)).toString();
 }
 
 export function isUri(uri: string): boolean {
@@ -102,8 +119,8 @@ export function toRawDataUrl(uri: string): string {
   if (uri.startsWith("https://gist.github.com")) {
     uri = uri.replace(/^https?:\/\/gist.github.com\/([^\/]+\/[^\/]+)$/gi, "https://gist.githubusercontent.com/$1/raw/");
   }
-  if (uri.startsWith("null://")) {
-    uri = uri.substr(7);
+  if (uri.startsWith(RELATIVE_PROTOCOL)) {
+    uri = uri.substr(RELATIVE_PROTOCOL.length);
   }
 
   return uri;

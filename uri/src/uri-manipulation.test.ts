@@ -88,53 +88,62 @@ describe("Uri Manipulation", () => {
     );
   });
 
-  it("ToRawDataUrl", async () => {
-    // GitHub blob
-    expect(toRawDataUrl("https://github.com/Microsoft/vscode/blob/master/.gitignore")).toEqual(
-      "https://raw.githubusercontent.com/Microsoft/vscode/master/.gitignore",
-    );
-    expect(toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/README.md")).toEqual(
-      "https://raw.githubusercontent.com/Microsoft/TypeScript/master/README.md",
-    );
-    expect(
-      toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/tests/cases/compiler/APISample_watcher.ts"),
-    ).toEqual(
-      "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
-    );
-    expect(
-      toRawDataUrl(
-        "https://github.com/Azure/azure-rest-api-specs/blob/master/arm-web/2015-08-01/AppServiceCertificateOrders.json",
-      ),
-    ).toEqual(
-      "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/arm-web/2015-08-01/AppServiceCertificateOrders.json",
-    );
-
-    // unknown / already raw
-    expect(
-      toRawDataUrl(
+  describe("ToRawDataUrl", () => {
+    it("convert github urls to their raw data", async () => {
+      // GitHub blob
+      expect(toRawDataUrl("https://github.com/Microsoft/vscode/blob/master/.gitignore")).toEqual(
+        "https://raw.githubusercontent.com/Microsoft/vscode/master/.gitignore",
+      );
+      expect(toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/README.md")).toEqual(
+        "https://raw.githubusercontent.com/Microsoft/TypeScript/master/README.md",
+      );
+      expect(
+        toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/tests/cases/compiler/APISample_watcher.ts"),
+      ).toEqual(
         "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
-      ),
-    ).toEqual(
-      "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
-    );
-    expect(
-      toRawDataUrl(
+      );
+      expect(
+        toRawDataUrl(
+          "https://github.com/Azure/azure-rest-api-specs/blob/master/arm-web/2015-08-01/AppServiceCertificateOrders.json",
+        ),
+      ).toEqual(
+        "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/arm-web/2015-08-01/AppServiceCertificateOrders.json",
+      );
+    });
+
+    it("keeps githubusercontent urls as they are", async () => {
+      expect(
+        toRawDataUrl(
+          "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
+        ),
+      ).toEqual(
+        "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
+      );
+    });
+
+    it("keeps unkown urls as they are", async () => {
+      expect(
+        toRawDataUrl(
+          "https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png",
+        ),
+      ).toEqual(
         "https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png",
-      ),
-    ).toEqual(
-      "https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png",
-    );
-    expect(toRawDataUrl("README.md")).toEqual("README.md");
-    expect(toRawDataUrl("compiler/APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
-    expect(toRawDataUrl("compiler\\APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
-    expect(toRawDataUrl("C:\\arm-web\\2015-08-01\\AppServiceCertificateOrders.json")).toEqual(
-      "c:/arm-web/2015-08-01/AppServiceCertificateOrders.json",
-    );
+      );
+    });
+
+    it("ToRawDataUrl", async () => {
+      expect(toRawDataUrl("README.md")).toEqual("README.md");
+      expect(toRawDataUrl("compiler/APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
+      expect(toRawDataUrl("compiler\\APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
+      expect(toRawDataUrl("C:\\arm-web\\2015-08-01\\AppServiceCertificateOrders.json")).toEqual(
+        "c:/arm-web/2015-08-01/AppServiceCertificateOrders.json",
+      );
+    });
   });
 
-  fdescribe("simplifyUri", () => {
-    it("use null:// protocol if none provided", () => {
-      expect(simplifyUri("readme.md")).toEqual("null://readme.md");
+  describe("simplifyUri", () => {
+    it("use relative:// protocol if none provided", () => {
+      expect(simplifyUri("readme.md")).toEqual("relative:///readme.md");
     });
 
     it("simplify an uri with ..", () => {
@@ -143,9 +152,13 @@ describe("Uri Manipulation", () => {
       );
     });
 
+    it("removes extra slashes", () => {
+      expect(simplifyUri("file:///foo//bar//some//other//readme.md")).toEqual("file:///foo/bar/some/other/readme.md");
+    });
+
     it("simplify an uri duplicate forward slash", () => {
       expect(simplifyUri("https://github.com/foo/bar//some/path/../../readme.md")).toEqual(
-        "https://github.com/foo/bar//readme.md",
+        "https://github.com/foo/bar/readme.md",
       );
     });
 
@@ -154,7 +167,7 @@ describe("Uri Manipulation", () => {
     });
 
     it("simplify a local url with extra slash", () => {
-      expect(simplifyUri("file:///foo/bar//some/path/../../readme.md")).toEqual("file:///foo/bar//readme.md");
+      expect(simplifyUri("file:///foo/bar//some/path/../../readme.md")).toEqual("file:///foo/bar/readme.md");
     });
   });
 });
