@@ -1,70 +1,70 @@
 import {
-  CreateFileUri,
-  CreateFolderUri,
-  ParentFolderUri,
-  ResolveUri,
+  createFileUri,
+  createFolderUri,
+  parentFolderUri,
+  resolveUri,
   simplifyUri,
-  ToRawDataUrl,
+  toRawDataUrl,
 } from "./uri-manipulation";
 
 describe("Uri Manipulation", () => {
   it("CreateFileUri", async () => {
-    expect(CreateFileUri("C:\\windows\\path\\file.txt")).toEqual("file:///C:/windows/path/file.txt");
-    expect(CreateFileUri("/linux/path/file.txt")).toEqual("file:///linux/path/file.txt");
-    expect(() => CreateFileUri("relpath\\file.txt")).toThrow();
-    expect(() => CreateFileUri("relpath/file.txt")).toThrow();
+    expect(createFileUri("C:\\windows\\path\\file.txt")).toEqual("file:///C:/windows/path/file.txt");
+    expect(createFileUri("/linux/path/file.txt")).toEqual("file:///linux/path/file.txt");
+    expect(() => createFileUri("relpath\\file.txt")).toThrow();
+    expect(() => createFileUri("relpath/file.txt")).toThrow();
   });
 
   it("CreateFolderUri", async () => {
-    expect(CreateFolderUri("C:\\windows\\path\\")).toEqual("file:///C:/windows/path/");
-    expect(CreateFolderUri("/linux/path/")).toEqual("file:///linux/path/");
-    expect(() => CreateFolderUri("relpath\\")).toThrow();
-    expect(() => CreateFolderUri("relpath/")).toThrow();
-    expect(() => CreateFolderUri("relpath")).toThrow();
-    expect(() => CreateFolderUri("relpath")).toThrow();
+    expect(createFolderUri("C:\\windows\\path\\")).toEqual("file:///C:/windows/path/");
+    expect(createFolderUri("/linux/path/")).toEqual("file:///linux/path/");
+    expect(() => createFolderUri("relpath\\")).toThrow();
+    expect(() => createFolderUri("relpath/")).toThrow();
+    expect(() => createFolderUri("relpath")).toThrow();
+    expect(() => createFolderUri("relpath")).toThrow();
   });
 
   it("ParentFolderUri", async () => {
-    expect(ParentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md")).toEqual(
+    expect(parentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md")).toEqual(
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/",
     );
-    expect(ParentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/")).toEqual(
+    expect(parentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/")).toEqual(
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/",
     );
-    expect(ParentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/")).toEqual(
+    expect(parentFolderUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/")).toEqual(
       "https://raw.githubusercontent.com/Azure/",
     );
-    expect(ParentFolderUri("https://raw.githubusercontent.com/Azure/")).toEqual("https://raw.githubusercontent.com/");
-    expect(ParentFolderUri("https://raw.githubusercontent.com/")).toEqual("https://");
-    expect(ParentFolderUri("https://")).toEqual(null);
+    expect(parentFolderUri("https://raw.githubusercontent.com/Azure/")).toEqual("https://raw.githubusercontent.com/");
+    expect(parentFolderUri("https://raw.githubusercontent.com/")).toEqual("https://");
+    expect(parentFolderUri("https://")).toEqual(null);
   });
 
   it("ResolveUri", async () => {
-    expect(ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "README.md")).toEqual(
+    expect(resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "README.md")).toEqual(
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md",
     );
-    expect(ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "../README.md")).toEqual(
+    expect(resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "../README.md")).toEqual(
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/README.md",
     );
-    expect(ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "README.md")).toEqual(
+    expect(resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "README.md")).toEqual(
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/README.md",
     );
     expect(
-      ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "file:///README.md"),
+      resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "file:///README.md"),
     ).toEqual("file:///README.md");
-    expect(ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "/README.md")).toEqual(
+    expect(resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "/README.md")).toEqual(
       "file:///README.md",
     );
-    expect(ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "C:\\README.md")).toEqual(
+    expect(resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master", "C:\\README.md")).toEqual(
       "file:///C:/README.md",
     );
     // multi-slash collapsing
     expect(
-      ResolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "folder///file.md"),
+      resolveUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/", "folder///file.md"),
     ).toEqual("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/folder/file.md");
     // token forwarding
     expect(
-      ResolveUri(
+      resolveUri(
         "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/file1.json?token=asd%3Dnot_really_a_token123%3D",
         "./file2.json",
       ),
@@ -72,37 +72,37 @@ describe("Uri Manipulation", () => {
       "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/file2.json?token=asd%3Dnot_really_a_token123%3D",
     );
     expect(
-      ResolveUri(
+      resolveUri(
         "https://myprivatepage.com/file1.json?token=asd%3Dnot_really_a_token123%3D",
         "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/file2.json",
       ),
     ).toEqual("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/file2.json");
     expect(
-      ResolveUri(
+      resolveUri(
         "https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/file1.json?token=asd%3Dnot_really_a_token123%3D",
         "https://evil.com/file2.json",
       ),
     ).toEqual("https://evil.com/file2.json");
-    expect(ResolveUri("https://somewhere.com/file1.json?token=asd%3Dnot_really_a_token123%3D", "./file2.json")).toEqual(
+    expect(resolveUri("https://somewhere.com/file1.json?token=asd%3Dnot_really_a_token123%3D", "./file2.json")).toEqual(
       "https://somewhere.com/file2.json",
     );
   });
 
   it("ToRawDataUrl", async () => {
     // GitHub blob
-    expect(ToRawDataUrl("https://github.com/Microsoft/vscode/blob/master/.gitignore")).toEqual(
+    expect(toRawDataUrl("https://github.com/Microsoft/vscode/blob/master/.gitignore")).toEqual(
       "https://raw.githubusercontent.com/Microsoft/vscode/master/.gitignore",
     );
-    expect(ToRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/README.md")).toEqual(
+    expect(toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/README.md")).toEqual(
       "https://raw.githubusercontent.com/Microsoft/TypeScript/master/README.md",
     );
     expect(
-      ToRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/tests/cases/compiler/APISample_watcher.ts"),
+      toRawDataUrl("https://github.com/Microsoft/TypeScript/blob/master/tests/cases/compiler/APISample_watcher.ts"),
     ).toEqual(
       "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
     );
     expect(
-      ToRawDataUrl(
+      toRawDataUrl(
         "https://github.com/Azure/azure-rest-api-specs/blob/master/arm-web/2015-08-01/AppServiceCertificateOrders.json",
       ),
     ).toEqual(
@@ -111,23 +111,23 @@ describe("Uri Manipulation", () => {
 
     // unknown / already raw
     expect(
-      ToRawDataUrl(
+      toRawDataUrl(
         "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
       ),
     ).toEqual(
       "https://raw.githubusercontent.com/Microsoft/TypeScript/master/tests/cases/compiler/APISample_watcher.ts",
     );
     expect(
-      ToRawDataUrl(
+      toRawDataUrl(
         "https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png",
       ),
     ).toEqual(
       "https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png",
     );
-    expect(ToRawDataUrl("README.md")).toEqual("README.md");
-    expect(ToRawDataUrl("compiler/APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
-    expect(ToRawDataUrl("compiler\\APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
-    expect(ToRawDataUrl("C:\\arm-web\\2015-08-01\\AppServiceCertificateOrders.json")).toEqual(
+    expect(toRawDataUrl("README.md")).toEqual("README.md");
+    expect(toRawDataUrl("compiler/APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
+    expect(toRawDataUrl("compiler\\APISample_watcher.ts")).toEqual("compiler/APISample_watcher.ts");
+    expect(toRawDataUrl("C:\\arm-web\\2015-08-01\\AppServiceCertificateOrders.json")).toEqual(
       "c:/arm-web/2015-08-01/AppServiceCertificateOrders.json",
     );
   });

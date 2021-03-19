@@ -18,7 +18,7 @@ export function simplifyUri(uri: string): string {
   }
 }
 
-export function IsUri(uri: string): boolean {
+export function isUri(uri: string): boolean {
   return /^([a-z0-9+.-]+):(?:\/\/(?:((?:[a-z0-9-._~!$&'()*+,;=:]|%[0-9A-F]{2})*)@)?((?:[a-z0-9-._~!$&'()*+,;=]|%[0-9A-F]{2})*)(?::(\d*))?(\/(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?|(\/?(?:[a-z0-9-._~!$&'()*+,;=:@]|%[0-9A-F]{2})+(?:[a-z0-9-._~!$&'()*+,;=:@/]|%[0-9A-F]{2})*)?)(?:\?((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?(?:#((?:[a-z0-9-._~!$&'()*+,;=:/?@]|%[0-9A-F]{2})*))?$/i.test(
     uri,
   );
@@ -48,7 +48,7 @@ function isUriAbsolute(url: string): boolean {
  * - "C:\swagger\storage.yaml" -> "file:///C:/swagger/storage.yaml"
  * - "/input/swagger.yaml" -> "file:///input/swagger.yaml"
  */
-export function CreateFileOrFolderUri(absolutePath: string): string {
+export function createFileOrFolderUri(absolutePath: string): string {
   if (!isAbsolute(absolutePath)) {
     throw new Error(`Can only create file URIs from absolute paths. Got '${absolutePath}'`);
   }
@@ -60,31 +60,31 @@ export function CreateFileOrFolderUri(absolutePath: string): string {
   return result;
 }
 
-export function EnsureIsFileUri(uri: string): string {
+export function ensureIfFileUri(uri: string): string {
   return uri.replace(/\/$/g, "");
 }
 
-export function EnsureIsFolderUri(uri: string): string {
-  return EnsureIsFileUri(uri) + "/";
+export function ensureIsFolderUri(uri: string): string {
+  return ensureIfFileUri(uri) + "/";
 }
-export function CreateFileUri(absolutePath: string): string {
-  return EnsureIsFileUri(CreateFileOrFolderUri(absolutePath));
+export function createFileUri(absolutePath: string): string {
+  return ensureIfFileUri(createFileOrFolderUri(absolutePath));
 }
-export function CreateFolderUri(absolutePath: string): string {
-  return EnsureIsFolderUri(CreateFileOrFolderUri(absolutePath));
+export function createFolderUri(absolutePath: string): string {
+  return ensureIsFolderUri(createFileOrFolderUri(absolutePath));
 }
 
-export function GetFilename(uri: string): string {
+export function getFilename(uri: string): string {
   return uri.split("/").reverse()[0].split("\\").reverse()[0];
 }
 
-export function GetFilenameWithoutExtension(uri: string): string {
-  const lastPart = GetFilename(uri);
+export function getFilenameWithoutExtension(uri: string): string {
+  const lastPart = getFilename(uri);
   const ext = lastPart.indexOf(".") === -1 ? "" : lastPart.split(".").reverse()[0];
   return lastPart.substr(0, lastPart.length - ext.length - 1);
 }
 
-export function ToRawDataUrl(uri: string): string {
+export function toRawDataUrl(uri: string): string {
   uri = simplifyUri(uri);
 
   // special URI handlers (the 'if's shouldn't be necessary but provide some additional isolation in case there is anything wrong with one of the regexes)
@@ -116,12 +116,12 @@ export function ToRawDataUrl(uri: string): string {
  * @param pathOrUri Relative/absolute path/URI
  * @returns Absolute URI
  */
-export function ResolveUri(baseUri: string, pathOrUri: string): string {
+export function resolveUri(baseUri: string, pathOrUri: string): string {
   if (pathOrUri.startsWith("~/")) {
     pathOrUri = pathOrUri.replace(/^~/, homedir());
   }
   if (isAbsolute(pathOrUri)) {
-    return CreateFileOrFolderUri(pathOrUri);
+    return createFileOrFolderUri(pathOrUri);
   }
 
   // known here: `pathOrUri` is eiher URI (relative or absolute) or relative path - which we can normalize to a relative URI
@@ -158,7 +158,7 @@ export function ResolveUri(baseUri: string, pathOrUri: string): string {
   }
 }
 
-export function ParentFolderUri(uri: string): string | null {
+export function parentFolderUri(uri: string): string | null {
   // root?
   if (uri.endsWith("//")) {
     return null;
@@ -172,6 +172,57 @@ export function ParentFolderUri(uri: string): string | null {
   return uri.slice(0, uri.length - compLen);
 }
 
-export function MakeRelativeUri(baseUri: string, absoluteUri: string): string {
+export function makeRelativeUri(baseUri: string, absoluteUri: string): string {
   return new URI(absoluteUri).relativeTo(baseUri).toString();
 }
+//------------------------------------------
+// Legacy names, will be removed in next major version
+//------------------------------------------
+/**
+ * @deprecated use isUri instead.
+ */
+export const IsUri = isUri;
+/**
+ * @deprecated use createFileOrFolderUri instead.
+ */
+export const CreateFileOrFolderUri = createFileOrFolderUri;
+/**
+ * @deprecated use ensureIfFileUri instead.
+ */
+export const EnsureIfFileUri = ensureIfFileUri;
+/**
+ * @deprecated use ensureIsFolderUri instead.
+ */
+export const EnsureIsFolderUri = ensureIsFolderUri;
+/**
+ * @deprecated use createFileUri instead.
+ */
+export const CreateFileUri = createFileUri;
+/**
+ * @deprecated use createFolderUri instead.
+ */
+export const CreateFolderUri = createFolderUri;
+/**
+ * @deprecated use toRawDataUrl instead.
+ */
+export const ToRawDataUrl = toRawDataUrl;
+/**
+ * @deprecated use getFilename instead.
+ */
+export const GetFilename = getFilename;
+/**
+ * @deprecated use getFilenameWithoutExtension instead.
+ */
+export const GetFilenameWithoutExtension = getFilenameWithoutExtension;
+/**
+ * @deprecated use resolveUri instead.
+ */
+export const ResolveUri = resolveUri;
+/**
+ * @deprecated use parentFolderUri instead.
+ */
+export const ParentFolderUri = parentFolderUri;
+/**
+ * @deprecated use makeRelativeUri instead.
+ */
+export const MakeRelativeUri = makeRelativeUri;

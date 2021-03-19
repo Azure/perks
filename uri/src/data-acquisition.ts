@@ -1,5 +1,5 @@
 import * as getUri from "get-uri";
-import { ToRawDataUrl } from "./uri-manipulation";
+import { toRawDataUrl } from "./uri-manipulation";
 import { Readable } from "stream";
 
 function stripBom(text: string): string {
@@ -16,9 +16,10 @@ function getUriAsync(uri: string, options: { headers: { [key: string]: string } 
 
 /**
  * Loads a UTF8 string from given URI.
+ * @uri to load. Can be a remote url or a local file path(using file: protocol).
  */
-export async function ReadUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
-  const actualUri = ToRawDataUrl(uri);
+export async function readUri(uri: string, headers: { [key: string]: string } = {}): Promise<string> {
+  const actualUri = toRawDataUrl(uri);
   const readable = await getUriAsync(actualUri, { headers: headers });
 
   const readAll = new Promise<Buffer>(function (resolve, reject) {
@@ -40,11 +41,21 @@ export async function ReadUri(uri: string, headers: { [key: string]: string } = 
   return stripBom(result.toString("utf8"));
 }
 
-export async function ExistsUri(uri: string): Promise<boolean> {
+export async function existsUri(uri: string): Promise<boolean> {
   try {
-    await ReadUri(uri);
+    await readUri(uri);
     return true;
   } catch (e) {
     return false;
   }
 }
+
+/**
+ * @deprecated use readUri instead
+ */
+export const ReadUri = readUri;
+
+/**
+ * @deprecated use existsUri instead
+ */
+export const ExistsUri = existsUri;
