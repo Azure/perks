@@ -1,6 +1,6 @@
 {
   "name": "@azure-tools/uri",
-  "version": "3.0.257",
+  "version": "3.1.0",
   "description": "Common URI handling code.",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
