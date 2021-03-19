@@ -6,7 +6,7 @@
 import { exists, rmdir, readdir, mkdir, writeFile } from "@azure-tools/async-io";
 import { dirname, extname } from "path";
 import { lstatSync } from "fs";
-import { EnsureIsFolderUri, ResolveUri } from "./uri-manipulation";
+import { ensureIsFolderUri, resolveUri } from "./uri-manipulation";
 import { fileURLToPath } from "url";
 import { ExistsUri } from "./data-acquisition";
 
@@ -22,7 +22,7 @@ function isAccessibleFile(localPath: string) {
   }
 }
 
-function FileUriToLocalPath(fileUri: string): string {
+function fileUriToLocalPath(fileUri: string): string {
   if (!fileUri.startsWith("file:///")) {
     throw new Error(
       `Cannot write data to '${fileUri}'. ` +
@@ -36,19 +36,19 @@ function FileUriToLocalPath(fileUri: string): string {
   return decodeURI(fileURLToPath(fileUri));
 }
 
-export async function EnumerateFiles(folderUri: string, probeFiles: Array<string> = []): Promise<Array<string>> {
+export async function enumerateFiles(folderUri: string, probeFiles: Array<string> = []): Promise<Array<string>> {
   const results = new Array<string>();
-  folderUri = EnsureIsFolderUri(folderUri);
+  folderUri = ensureIsFolderUri(folderUri);
   if (folderUri.startsWith("file:")) {
     let files: Array<string> = [];
     try {
-      files = await readdir(FileUriToLocalPath(folderUri));
+      files = await readdir(fileUriToLocalPath(folderUri));
     } catch (e) {
       // noop
     }
-    results.push(...files.map((f) => ResolveUri(folderUri, f)).filter((f) => isAccessibleFile(FileUriToLocalPath(f))));
+    results.push(...files.map((f) => resolveUri(folderUri, f)).filter((f) => isAccessibleFile(fileUriToLocalPath(f))));
   } else {
-    for (const candid of probeFiles.map((f) => ResolveUri(folderUri, f))) {
+    for (const candid of probeFiles.map((f) => resolveUri(folderUri, f))) {
       if (await ExistsUri(candid)) {
         results.push(candid);
       }
@@ -57,10 +57,10 @@ export async function EnumerateFiles(folderUri: string, probeFiles: Array<string
   return results;
 }
 
-async function CreateDirectoryFor(filePath: string): Promise<void> {
+async function createDirectoryFor(filePath: string): Promise<void> {
   const dir: string = dirname(filePath);
   if (!(await exists(dir))) {
-    await CreateDirectoryFor(dir);
+    await createDirectoryFor(dir);
     try {
       await mkdir(dir);
     } catch (e) {
@@ -69,8 +69,8 @@ async function CreateDirectoryFor(filePath: string): Promise<void> {
   }
 }
 
-async function WriteDataInternal(fileName: string, data: string | Buffer): Promise<void> {
-  await CreateDirectoryFor(fileName);
+async function writeDataInternal(fileName: string, data: string | Buffer): Promise<void> {
+  await createDirectoryFor(fileName);
   await writeFile(fileName, data);
 }
 
@@ -79,8 +79,8 @@ async function WriteDataInternal(fileName: string, data: string | Buffer): Promi
  * @param fileUri  Target file uri.
  * @param data     String to write (encoding: UTF8).
  */
-export function WriteString(fileUri: string, data: string): Promise<void> {
-  return WriteDataInternal(FileUriToLocalPath(fileUri), data);
+export function writeString(fileUri: string, data: string): Promise<void> {
+  return writeDataInternal(fileUriToLocalPath(fileUri), data);
 }
 
 /**
@@ -88,30 +88,62 @@ export function WriteString(fileUri: string, data: string): Promise<void> {
  * @param fileUri  Target file uri.
  * @param data     String to write (encoding - base64 encoded UTF8).
  */
-export function WriteBinary(fileUri: string, data: string): Promise<void> {
-  return WriteDataInternal(FileUriToLocalPath(fileUri), Buffer.from(data, "base64"));
+export function writeBinary(fileUri: string, data: string): Promise<void> {
+  return writeDataInternal(fileUriToLocalPath(fileUri), Buffer.from(data, "base64"));
 }
 
 /**
  * Clears a folder on the local file system.
  * @param folderUri  Folder uri.
  */
-
-export async function ClearFolder(folderUri: string, exceptions?: Array<string>): Promise<void> {
+export async function clearFolder(folderUri: string, exceptions?: Array<string>): Promise<void> {
   return await rmdir(
-    FileUriToLocalPath(folderUri),
-    new Set((exceptions || []).map((each) => FileUriToLocalPath(each).toLowerCase())),
+    fileUriToLocalPath(folderUri),
+    new Set((exceptions || []).map((each) => fileUriToLocalPath(each).toLowerCase())),
   );
 }
 
-export function FileUriToPath(fileUri: string): string {
+export function fileUriToPath(fileUri: string): string {
   return fileURLToPath(fileUri);
 }
 
-export function GetExtension(name: string) {
+export function getExtension(name: string) {
   const ext = extname(name);
   if (ext) {
     return ext.substr(1).toLowerCase();
   }
   return ext;
 }
+
+//------------------------------------------
+// Legacy names, will be removed in next major version
+//------------------------------------------
+/**
+ * @deprecated use enumerateFiles instead.
+ */
+export const EnumerateFiles = enumerateFiles;
+
+/**
+ * @deprecated use writeString instead.
+ */
+export const WriteString = writeString;
+
+/**
+ * @deprecated use writeBinary instead.
+ */
+export const WriteBinary = writeBinary;
+
+/**
+ * @deprecated use clearFolder instead.
+ */
+export const ClearFolder = clearFolder;
+
+/**
+ * @deprecated use fileUriToPath instead.
+ */
+export const FileUriToPath = fileUriToPath;
+
+/**
+ * @deprecated use getExtension instead.
+ */
+export const GetExtension = getExtension;
