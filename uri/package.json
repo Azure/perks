@@ -52,7 +52,7 @@
     "typescript": "~4.2.3"
   },
   "dependencies": {
-    "get-uri": "~3.0.2",
+    "get-uri": "~4.0.0",
     "urijs": "~1.19.1",
     "file-url": "3.0.0",
     "@azure-tools/async-io": "~3.0.0"

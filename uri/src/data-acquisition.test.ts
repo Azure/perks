@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { existsUri, readUri } from "./data-acquisition";
 import { createFileUri } from "./uri-manipulation";
 
@@ -16,5 +17,11 @@ describe("Uri data acquisition", () => {
       (await readUri("https://raw.githubusercontent.com/Azure/azure-rest-api-specs/master/README.md")).length > 0,
     ).toBeTruthy();
     expect((await readUri(createFileUri(__filename))).length > 0).toBeTruthy();
+  });
+
+  it.only("reads local file with # in name", async () => {
+    const uri = createFileUri(resolve(__dirname, "fixtures/c#.json"));
+    const content = await readUri(uri);
+    expect(content).toEqual("Content of c#.txt");
   });
 });
